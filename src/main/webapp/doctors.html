@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/doctors.js"></script>
+<title>Doctors</title>
+</head>
+<body>
+<h3>Doctors</h3>
+<table border="2" id="doctors">
+	<tr>
+		<td>Email</td>
+		<td>Password</td>
+		<td>Name</td>
+		<td>Surname</td>
+		<td>Address</td>
+		<td>City</td>
+		<td>Country</td>
+		<td>Phone</td>
+		<td>Id</td>
+	</tr>
+</table>
+
+<br><br><br>
+<h3>Add doctor</h3>
+		
+<form method="POST" action="/doctors" id="addDoctor">
+	<table>
+		<tr>
+			<td>Email:</td>
+			<td><input type="text" name="email" /></td>
+		</tr>
+		
+		<tr>
+			<td>Password:</td>
+			<td><input type="password" name="password" /></td>
+		</tr>
+		<tr>
+			<td>Name:</td>
+			<td><input type="text" name="name" /></td>
+		</tr>
+		<tr>
+			<td>Surname:</td>
+			<td><input type="text" name="surname" /></td>
+		</tr>
+		<tr>
+			<td>Address:</td>
+			<td><input type="text" name="address" /></td>
+		</tr>
+		<tr>
+			<td>City:</td>
+			<td><input type="text" name="city" /></td>
+		</tr>
+		<tr>
+			<td>Country:</td>
+			<td><input type="text" name="country" /></td>
+		</tr>
+		<tr>
+			<td>Phone:</td>
+			<td><input type="text" name="phone" /></td>
+		</tr>
+		<tr>
+			<td>Id:</td>
+			<td><input type="number" name="id" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit"/></td>
+		</tr>		
+	</table>
+</form>
+</body>
+
+</body>
+</html>
