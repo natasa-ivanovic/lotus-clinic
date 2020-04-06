@@ -2,31 +2,15 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Patients</title>
 <script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/patients.js"></script>
+<script type="text/javascript" src="js/edit_patient.js"></script>
+<title>Edit patient</title>
 </head>
 <body>
-<h1><a href="/">Return to main page</a></h1>
-<h1>List of patients</h1>
-	<table border="2" id="patients">
-		<tr>
-			<th>Email</th>
-			<th>Password</th>
-			<th>Name</th>
-			<th>Surname</th>
-			<th>Address</th>
-			<th>City</th>
-			<th>Country</th>
-			<th>Phone</th>
-			<th>Id</th>
-			<th>Edit</th>
-			<th>Delete</th>
-		</tr>
-	</table>
 
-<h1>Add patient</h1>
-<form method="POST" action="/patients" id="addPatient">
+<h1>Edit patient</h1>
+		
+<form method="PUT" action="/patients" id="editPatient">
 	<table>
 		<tr>
 			<td>Email:</td>
@@ -71,7 +55,7 @@
 		</tr>		
 	</table>
 </form>
-
+</body>
 
 </body>
 </html>
