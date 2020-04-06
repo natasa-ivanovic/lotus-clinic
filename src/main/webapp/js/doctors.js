@@ -6,7 +6,7 @@ function getDoctors() {
 			renderList(e);
 		},
 		error : function(e) {
-			alert('Something bad happened!');
+			alert("Couldn't fetch doctors!");
 		}
 	})
 }
@@ -17,7 +17,7 @@ function renderList(list) {
 	
 	list.forEach(function(doctor) {
 		var tr = $('<tr></tr>');
-		var link = "edit_doctor.html#"
+		var link = "edit_doctor.html#" + doctor.id;
 		tr.append('<td>' + doctor.email + '</td>' +
 				  '<td>' + doctor.password + '</td>' +
 				  '<td>' + doctor.name + '</td>' +
@@ -27,9 +27,24 @@ function renderList(list) {
 				  '<td>' + doctor.country + '</td>' +
 				  '<td>' + doctor.phone + '</td>' +
 				  '<td>' + doctor.id + '</td>' +
-				  '<td>' + '<a href="' + link + doctor.id + '">Edit</a></td>');
+				  '<td>' + '<a href="' + link + '">Edit</a></td>' + 
+				  '<td><a href="javascript:deleteDoctor(' + doctor.id + ')">Delete</a></td>');
 		$("#doctors").append(tr);
 	});
+}
+
+function deleteDoctor(id) {
+	$.ajax({
+		type: 'DELETE',
+		url: '/doctors/' + id,
+		success: function(msg) {
+			window.location.replace("doctors.html");
+		},
+		error: function(msg) {
+			alert("Couldn't delete!");
+		}
+		
+	})
 }
 
 $(document).on('submit', '#addDoctor', function(e) {
@@ -60,7 +75,7 @@ $(document).on('submit', '#addDoctor', function(e) {
 			window.location.replace("doctors.html");
 		},
 		error: function(msg) {
-			alert("Something bad happened!");
+			alert("Couldn't add doctor!");
 		}
 		
 	})

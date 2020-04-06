@@ -19,8 +19,7 @@ function getUser(userID) {
 				renderUser(e);
 			},
 			error: function(e) {
-				alert("Something bad happened!");
-				//window.location.replace("doctors.html");
+				alert("Couldn't fetch doctor");
 			}
 		})	
 }
@@ -52,8 +51,7 @@ $(document).on('submit', '#editDoctor', function(e) {
 			window.location.replace("doctors.html");
 		},
 		error: function(data) {
-			alert("Something bad happened!");
-			//window.location.replace("doctors.html");
+			alert("Couldn't update user!");
 		}
 	})
 });
