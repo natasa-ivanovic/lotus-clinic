@@ -19,33 +19,63 @@ public class PatientController {
 	
 	public static HashMap<Integer, Patient> patients;
 	
+	/**
+	 * This method is used for getting the list of patients.
+	 * @param Nothing.
+	 * @return ResponseEntity This returns the list of patients and the HTTP status code.
+	 * */
 	@GetMapping("/patients")
 	public ResponseEntity<Object> getPatients() {
 		loadPatients();
 		return new ResponseEntity<>(patients.values(), HttpStatus.OK);
 	}
 	
+	/**
+	 * This method is used for getting a patient.
+	 * @param id This is requested patient's id.
+	 * @return Patient This returns the requested patient.
+	 * */
 	@GetMapping("/patients/{id}")
 	public Patient getPatient(@PathVariable("id") int id) {
 		loadPatients();
 		return patients.get(id);
 	}
 	
+	/**
+	 * This method is used for adding a patient.
+	 * @param patient This is a patient object from the HTTP request.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 * */
 	@PostMapping("/patients")
-	public Patient addPatient(@RequestBody Patient p) {
+	public ResponseEntity<Object> addPatient(@RequestBody Patient patient) {
 		loadPatients();
-		System.out.println(p);
-		return patients.put(p.getId(), p);
+		if (patients.containsKey(patient.getId()))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		System.out.println(patient);
+		patients.put(patient.getId(), patient);
+		return new ResponseEntity<>(HttpStatus.OK);	
+		
 	}
-
+	
+	/**
+	 * This method is used for editing a patient.
+	 * @param patient This is a patient object from the HTTP request.
+	 * @param id This is the id of the edited patient.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 * */
 	@PutMapping("/patients/{id}")
-	public ResponseEntity<Object> editPatient(@RequestBody Patient p, @PathVariable("id") int id) {
+	public ResponseEntity<Object> editPatient(@RequestBody Patient patient, @PathVariable("id") int id) {
 		loadPatients();
 		patients.remove(id);
-		patients.put(p.getId(), p);
+		patients.put(patient.getId(), patient);
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 	
+	/**
+	 * This method is used for deleting a patient.
+	 * @param id This is the id of the deleted patient.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 * */
 	@DeleteMapping("/patients/{id}")
 	public ResponseEntity<Object> deletePatient(@PathVariable("id") int id) {
 		loadPatients();
@@ -54,7 +84,11 @@ public class PatientController {
 	}
 	
 	
-	
+	/**
+	 * This method is used for loading patients.
+	 * @param Nothing.
+	 * @return Nothing.
+	 * */
 	private void loadPatients() {
 		if (patients == null) {
 			patients = new HashMap<Integer, Patient>();

@@ -81,7 +81,7 @@ public class DoctorController {
 	
 	/**
 	 * This method is used for deleting a doctor.
-	 * @param id This is the ud of the deleted doctor.
+	 * @param id This is the id of the deleted doctor.
 	 * @return ResponseEntity This returns the HTTP status code.
 	 * */
 	@DeleteMapping("/doctors/{id}")
