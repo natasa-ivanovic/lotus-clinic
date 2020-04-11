@@ -54,9 +54,9 @@ public class ClinicCentreAdminController {
 	 * @return ClinCentreAdmin This returns the requested clinic centre admin.
 	 * */
 	@GetMapping("/clinicCentreAdmins/{id}")
-	public ClinicCentreAdmin getDoctor(@PathVariable("id") int id) {
+	public ResponseEntity<Object> getDoctor(@PathVariable("id") int id) {
 		loadClinicCentreAdmins();
-		return clinicCentreAdmins.get(id);
+		return new ResponseEntity<>(clinicCentreAdmins.get(id), HttpStatus.OK);
 		
 	}
 	

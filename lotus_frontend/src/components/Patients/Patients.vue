@@ -15,7 +15,7 @@
           <th>Edit</th>
           <th>Delete</th>
         </tr>
-        <tr v-bind:key="p.id" v-for="p in patients">
+        <tr v-for="(p, k) in patients" :key="k">
           <td>{{p.email}}</td>
           <td>{{p.password}}</td>
           <td>{{p.name}}</td>
@@ -25,8 +25,8 @@
           <td>{{p.country}}</td>
           <td>{{p.phone}}</td>
           <td>{{p.id}}</td>
-          <td>{{p.edit}}</td>
-          <td>{{p.delete}}</td>
+          <td><button v-on:click="editPatient(p.id)">Edit</button></td>
+          <td><button v-on:click="deletePatient(p.id)">Delete</button></td>
         </tr>
       </table>
       <h3 v-else>No patients in the database!</h3>
@@ -124,6 +124,22 @@ export default {
         .then(pats => {
           this.patients = pats;
         })
+    },
+    deletePatient: function(id) {
+      fetch(apiURL + '/' + id, {method: 'DELETE'})
+        .then(response => {
+          if (response.status != 200)
+            alert("Couldn't delete patient!");
+          else
+            return response.json();
+        })
+        .then(pats => {
+          this.patients = pats;
+        })
+    },
+    editPatient: function(editId) {
+      //alert(editId);
+      this.$router.push({ name: "editPatient", params: {id: editId}})
     }
   }
 }

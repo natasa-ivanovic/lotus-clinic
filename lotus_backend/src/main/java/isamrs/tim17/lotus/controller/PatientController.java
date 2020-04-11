@@ -46,7 +46,7 @@ public class PatientController {
 	/**
 	 * This method is used for adding a patient.
 	 * @param patient This is a patient object from the HTTP request.
-	 * @return ResponseEntity This returns the HTTP status code.
+	 * @return ResponseEntity This returns the HTTP status code along with the current patients.
 	 * */
 	@PostMapping("/patients")
 	public ResponseEntity<Object> addPatient(@RequestBody Patient patient) {
@@ -55,7 +55,7 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		System.out.println(patient);
 		patients.put(patient.getId(), patient);
-		return new ResponseEntity<>(HttpStatus.OK);	
+		return new ResponseEntity<>(patients.values(), HttpStatus.OK);	
 		
 	}
 	
@@ -76,13 +76,13 @@ public class PatientController {
 	/**
 	 * This method is used for deleting a patient.
 	 * @param id This is the id of the deleted patient.
-	 * @return ResponseEntity This returns the HTTP status code.
+	 * @return ResponseEntity This returns the HTTP status code along with the current patients.
 	 * */
 	@DeleteMapping("/patients/{id}")
 	public ResponseEntity<Object> deletePatient(@PathVariable("id") int id) {
 		loadPatients();
 		patients.remove(id);
-		return new ResponseEntity<>(HttpStatus.OK);	
+		return new ResponseEntity<>(patients.values(), HttpStatus.OK);	
 	}
 	
 	

@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <Patients />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Patients from './components/Patients';
 
 export default {
   name: 'App',
   components: {
-    Patients
+
   },
   data() {
     return {
