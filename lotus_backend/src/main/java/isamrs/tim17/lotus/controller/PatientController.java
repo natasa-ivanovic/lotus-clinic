@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.model.Gender;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.UserType;
+
 
 @RestController
 @RequestMapping("/api")
@@ -94,9 +98,9 @@ public class PatientController {
 	private void loadPatients() {
 		if (patients == null) {
 			patients = new HashMap<Integer, Patient>();
-			Patient p1 = new Patient("mario@gmail.com", "mario", "Mario", "Kujundzic", "Jovana Jovanovic Zmaja 4", "Subotica", "Srbija", "066 126 215", 1);
-			Patient p2 = new Patient("natasa@gmail.com", "nat", "Natasa", "Ivanovic", "Bulevara Oslobodjenja", "Novi Sad", "Srbija", "066 555 225", 2);
-			Patient p3 = new Patient("crna@gmail.com", "beva", "Bela", "Vajda", "Neka adresa", "Novi Sad", "Srbija", "066 546 487", 3);
+			Patient p1 = new Patient("mario@gmail.com", "mario", "Mario", "Kujundzic", "Jovana Jovanovic Zmaja 4", "Subotica", "Srbija", "066 126 215", 1, UserType.patient, new Date(), Gender.male);
+			Patient p2 = new Patient("natasa@gmail.com", "nat", "Natasa", "Ivanovic", "Bulevara Oslobodjenja", "Novi Sad", "Srbija", "066 555 225", 2, UserType.patient, new Date(), Gender.female);
+			Patient p3 = new Patient("crna@gmail.com", "beva", "Bela", "Vajda", "Neka adresa", "Novi Sad", "Srbija", "066 546 487", 3, UserType.patient, new Date(), Gender.male);
 			patients.put(p1.getId(), p1);
 			patients.put(p2.getId(), p2);
 			patients.put(p3.getId(), p3);

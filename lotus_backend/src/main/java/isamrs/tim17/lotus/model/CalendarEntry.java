@@ -1,14 +1,16 @@
 package isamrs.tim17.lotus.model;
 /***********************************************************************
- * Module:  Doctor.java
+ * Module:  CalendarEntry.java
  * Author:  Shejv
- * Purpose: Defines the Class Doctor
+ * Purpose: Defines the Class CalendarEntry
  ***********************************************************************/
 
 import java.util.*;
 
-public class Doctor extends MedicalStaff {
-   public AppointmentType speciality;
-   public Operation operation;
+public enum CalendarEntry {
+   operation,
+   appointment,
+   vacation,
+   sickLeave;
 
 }

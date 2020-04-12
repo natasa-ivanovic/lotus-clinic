@@ -1,14 +1,13 @@
 package isamrs.tim17.lotus.model;
 /***********************************************************************
- * Module:  Doctor.java
+ * Module:  ClinicalCentreAdministrator.java
  * Author:  Shejv
- * Purpose: Defines the Class Doctor
+ * Purpose: Defines the Class ClinicalCentreAdministrator
  ***********************************************************************/
 
 import java.util.*;
 
-public class Doctor extends MedicalStaff {
-   public AppointmentType speciality;
-   public Operation operation;
+public class ClinicalCentreAdministrator extends User {
+   public ClinicalCentre clinicCentre;
 
 }

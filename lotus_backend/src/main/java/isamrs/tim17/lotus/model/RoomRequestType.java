@@ -1,14 +1,15 @@
 package isamrs.tim17.lotus.model;
 /***********************************************************************
- * Module:  Doctor.java
+ * Module:  RoomRequestType.java
  * Author:  Shejv
- * Purpose: Defines the Class Doctor
+ * Purpose: Defines the Class RoomRequestType
  ***********************************************************************/
 
 import java.util.*;
 
-public class Doctor extends MedicalStaff {
-   public AppointmentType speciality;
-   public Operation operation;
+public enum RoomRequestType {
+   patientApp,
+   doctorApp,
+   doctorOper;
 
 }

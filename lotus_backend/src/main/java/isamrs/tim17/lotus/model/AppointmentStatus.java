@@ -1,14 +1,17 @@
 package isamrs.tim17.lotus.model;
 /***********************************************************************
- * Module:  Doctor.java
+ * Module:  AppointmentStatus.java
  * Author:  Shejv
- * Purpose: Defines the Class Doctor
+ * Purpose: Defines the Class AppointmentStatus
  ***********************************************************************/
 
 import java.util.*;
 
-public class Doctor extends MedicalStaff {
-   public AppointmentType speciality;
-   public Operation operation;
+public enum AppointmentStatus {
+   premade,
+   scheduled,
+   canceled,
+   ongoing,
+   finished;
 
 }
