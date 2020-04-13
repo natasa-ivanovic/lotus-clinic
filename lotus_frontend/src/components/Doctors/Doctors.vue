@@ -115,7 +115,7 @@ export default {
     addDoctor: function() {
       var form = document.forms['addDoctor'];
       
-      var patient = {
+      var doctor = {
           email : form.email.value,
           password : form.password.value,
           name : form.name.value,
@@ -130,18 +130,18 @@ export default {
       };
       fetch(apiURL, {method: 'POST', 
                       headers: {'Content-Type': 'application/json'}, 
-                      body: JSON.stringify(patient)})
+                      body: JSON.stringify(doctor)})
         .then(response => {
           if (response.status != 200)
             alert("Couldn't add doctor!");
           else
             return response.json();
         })
-        .then(pats => {
-          this.patients = pats;
+        .then(docs => {
+          this.doctors = docs;
         })
     },
-    deletePatient: function(id) {
+    deleteDoctor: function(id) {
       fetch(apiURL + '/' + id, {method: 'DELETE'})
         .then(response => {
           if (response.status != 200)
@@ -149,12 +149,12 @@ export default {
           else
             return response.json();
         })
-        .then(pats => {
-          this.patients = pats;
+        .then(docs => {
+          this.doctors = docs;
         })
     },
-    editPatient: function(editId) {
-      this.$router.push({ name: "editDoctor", params: {id: editId}})
+    editDoctor: function(editId) {
+      this.$router.push({ name: "edit", params: {id: editId, role: "doctors"}})
     }
   }
 }

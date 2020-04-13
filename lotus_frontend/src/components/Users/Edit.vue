@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Edit patient</h1>
-    <form id="editPatient" v-on:submit.prevent="editPatient()">
+    <form id="editUser" v-on:submit.prevent="editUser()">
         <table>
         <tr>
             <td>Email:</td>
@@ -20,6 +20,20 @@
             <td><input type="text" name="surname" /></td>
         </tr>
         <tr>
+          <td>Birth date:</td>
+          <td><input type="date" name="birthDate" /></td>
+        </tr>
+        <tr>
+          <td>Gender</td>
+          <td>
+            <select name="gender">
+              <option value="1">Male</option>
+              <option value="0">Female</option>
+              <option value="2">Other</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
             <td>Address:</td>
             <td><input type="text" name="address" /></td>
         </tr>
@@ -32,8 +46,8 @@
             <td><input type="text" name="country" /></td>
         </tr>
         <tr>
-            <td>Phone:</td>
-            <td><input type="text" name="phone" /></td>
+          <td>Phone:</td>
+          <td><input type="text" name="phoneNumber" /></td>
         </tr>
         <tr>
             <td>Id:</td>
@@ -49,56 +63,62 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:8090/api/patients";
+
+const apiURL = "http://localhost:9001/api/";
 
 export default {
-  name: "EditPatient",
-  props: ['id'],
+  name: "EditUser",
+  props: ['id', 'role'],
   data() {
     return {
     }
   },
   mounted() {
-    fetch(apiURL + "/" + this.id)
+    fetch(apiURL + "/" + this.role + "/" + this.id)
       .then(response => {
         return response.json();
       })
-      .then(pat => {
-        var form = document.forms['editPatient'];
-        form.email.value = pat.email;
-        form.password.value = pat.password;
-        form.name.value = pat.name;
-        form.surname.value = pat.surname;
-        form.address.value = pat.address;
-        form.city.value = pat.city;
-        form.country.value = pat.country;
-        form.phone.value = pat.phone;
-        form.id.value = pat.id;
+      .then(user => {
+        var form = document.forms['editUser'];
+        form.email.value = user.email;
+        form.password.value = user.password;
+        form.name.value = user.name;
+        form.surname.value = user.surname;
+        //alert(Vue.dateToString(user.birthDate));
+        //form.birthDate.value = Vue.dateToString(user.birthDate);
+        form.gender.value = user.gender;
+        form.address.value = user.address;
+        form.city.value = user.city;
+        form.country.value = user.country;
+        form.phoneNumber.value = user.phoneNumber;
+        form.id.value = user.id;
       })
   },
   methods: {
-      editPatient: function() {
-      var form = document.forms['editPatient'];
+      editUser: function() {
+      var form = document.forms['editUser'];
       
-      var patient = {
+      var user = {
           email : form.email.value,
           password : form.password.value,
           name : form.name.value,
           surname : form.surname.value,
+          birthDate : form.birthDate.value,
+          gender : form.gender.value,
           address : form.address.value,
           city : form.city.value,
           country : form.country.value,
-          phone : form.phone.value,
+          phoneNumber : form.phoneNumber.value,
           id : form.id.value
       };
-      fetch(apiURL + "/" + this.id, {method: 'PUT', 
+      fetch(apiURL + "/" + this.role + "/" + this.id, {method: 'PUT', 
                       headers: {'Content-Type': 'application/json'}, 
-                      body: JSON.stringify(patient)})
+                      body: JSON.stringify(user)})
         .then(response => {
           if (response.status != 200)
-            alert("Couldn't edit patient!");
+            alert("Couldn't update profile!");
           else
-            this.$router.push({ name: "patients"})
+            this.$router.push({ name: this.role })
         })
     },
   }

@@ -23,7 +23,7 @@
           <td>{{p.address}}</td>
           <td>{{p.city}}</td>
           <td>{{p.country}}</td>
-          <td>{{p.phone}}</td>
+          <td>{{p.phoneNumber}}</td>
           <td>{{p.id}}</td>
           <td><button v-on:click="editPatient(p.id)">Edit</button></td>
           <td><button v-on:click="deletePatient(p.id)">Delete</button></td>
@@ -106,10 +106,11 @@ export default {
           password : form.password.value,
           name : form.name.value,
           surname : form.surname.value,
+          birthDate : form.birthDate,
           address : form.address.value,
           city : form.city.value,
           country : form.country.value,
-          phone : form.phone.value,
+          phoneNumber : form.phoneNumber.value,
           id : form.id.value
       };
       fetch(apiURL, {method: 'POST', 
@@ -139,7 +140,7 @@ export default {
     },
     editPatient: function(editId) {
       //alert(editId);
-      this.$router.push({ name: "editPatient", params: {id: editId}})
+      this.$router.push({ name: "edit", params: {id: editId, role: "patients"}})
     }
   }
 }

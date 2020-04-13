@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
-import EditPatient from "../components/Patients/Edit"
+import Edit from "../components/Users/Edit"
 const routes = [
     {   
         component: Patients,
@@ -18,9 +18,9 @@ const routes = [
         path: "/doctors/"
     },
     {   
-        component: EditPatient,
-        name: "editPatient",
-        path: "/patients/:id",
+        component: Edit,
+        name: "edit",
+        path: "/:role/:id",
         props: true
     }
     
