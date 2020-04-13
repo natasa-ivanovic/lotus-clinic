@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>List of patients</h1>
-      <table v-if="patients.length" border="2" id="patients">
+    <h1>List of doctors</h1>
+      <table v-if="doctors.length" border="2" id="doctors">
         <tr>
           <th>Email</th>
           <th>Password</th>
@@ -15,23 +15,23 @@
           <th>Edit</th>
           <th>Delete</th>
         </tr>
-        <tr v-for="(p, k) in patients" :key="k">
-          <td>{{p.email}}</td>
-          <td>{{p.password}}</td>
-          <td>{{p.name}}</td>
-          <td>{{p.surname}}</td>
-          <td>{{p.address}}</td>
-          <td>{{p.city}}</td>
-          <td>{{p.country}}</td>
-          <td>{{p.phone}}</td>
-          <td>{{p.id}}</td>
-          <td><button v-on:click="editPatient(p.id)">Edit</button></td>
-          <td><button v-on:click="deletePatient(p.id)">Delete</button></td>
+        <tr v-for="(d, k) in doctors" :key="k">
+          <td>{{d.email}}</td>
+          <td>{{d.password}}</td>
+          <td>{{d.name}}</td>
+          <td>{{d.surname}}</td>
+          <td>{{d.address}}</td>
+          <td>{{d.city}}</td>
+          <td>{{d.country}}</td>
+          <td>{{d.phoneNumber}}</td>
+          <td>{{d.id}}</td>
+          <td><button v-on:click="editDoctor(d.id)">Edit</button></td>
+          <td><button v-on:click="deleteDoctor(d.id)">Delete</button></td>
         </tr>
       </table>
-      <h3 v-else>No patients in the database!</h3>
-      <h1>Add patient</h1>
-        <form id="addPatient" v-on:submit.prevent="addPatient()">
+      <h3 v-else>No doctors in the database!</h3>
+      <h1>Add doctor</h1>
+        <form id="addDoctor" v-on:submit.prevent="addDoctor()">
           <table>
             <tr>
               <td>Email:</td>
@@ -50,6 +50,20 @@
               <td><input type="text" name="surname" /></td>
             </tr>
             <tr>
+              <td>Birth date:</td>
+              <td><input type="date" name="birthDate" /></td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td>
+                <select name="gender">
+                  <option value="1">Male</option>
+                  <option value="0">Female</option>
+                  <option value="2">Other</option>
+                </select>
+              </td>
+            </tr>
+            <tr> 
               <td>Address:</td>
               <td><input type="text" name="address" /></td>
             </tr>
@@ -63,7 +77,7 @@
             </tr>
             <tr>
               <td>Phone:</td>
-              <td><input type="text" name="phone" /></td>
+              <td><input type="text" name="phoneNumber" /></td>
             </tr>
             <tr>
               <td>Id:</td>
@@ -78,14 +92,14 @@
   </div>
 </template>
 
-<script>
-const apiURL = "http://localhost:9001/api/patients";
 
+<script>
+const apiURL = "http://localhost:9001/api/doctors";
 export default {
-  name: "Patients",
+    name: "Doctors",
   data() {
     return {
-      patients: []
+      doctors: []
     }
   },
   mounted() {
@@ -93,23 +107,25 @@ export default {
       .then(response => {
         return response.json();
       })
-      .then(pats => {
-        this.patients = pats;
+      .then(docs => {
+        this.doctors = docs;
       })
   },
   methods: {
-    addPatient: function() {
-      var form = document.forms['addPatient'];
+    addDoctor: function() {
+      var form = document.forms['addDoctor'];
       
       var patient = {
           email : form.email.value,
           password : form.password.value,
           name : form.name.value,
           surname : form.surname.value,
+          birthDate : form.birthDate.value,
+          gender : form.gender.value,
           address : form.address.value,
           city : form.city.value,
           country : form.country.value,
-          phone : form.phone.value,
+          phoneNumber : form.phoneNumber.value,
           id : form.id.value
       };
       fetch(apiURL, {method: 'POST', 
@@ -117,7 +133,7 @@ export default {
                       body: JSON.stringify(patient)})
         .then(response => {
           if (response.status != 200)
-            alert("Couldn't add patient!");
+            alert("Couldn't add doctor!");
           else
             return response.json();
         })
@@ -129,7 +145,7 @@ export default {
       fetch(apiURL + '/' + id, {method: 'DELETE'})
         .then(response => {
           if (response.status != 200)
-            alert("Couldn't delete patient!");
+            alert("Couldn't delete doctor!");
           else
             return response.json();
         })
@@ -138,12 +154,13 @@ export default {
         })
     },
     editPatient: function(editId) {
-      //alert(editId);
-      this.$router.push({ name: "editPatient", params: {id: editId}})
+      this.$router.push({ name: "editDoctor", params: {id: editId}})
     }
   }
 }
+    
 </script>
+
 
 <style scoped>
 

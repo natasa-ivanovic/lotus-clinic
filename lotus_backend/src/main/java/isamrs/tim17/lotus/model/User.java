@@ -5,10 +5,12 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class User
  ***********************************************************************/
 
-import java.util.*;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -35,8 +37,6 @@ public abstract class User {
 	private String country;
 	@Column(name = "phoneNumber", unique = false, nullable = false)
 	private String phoneNumber;
-	@Column(name = "type", unique = false, nullable = false)
-	private UserType type;
 	@Column(name = "birthDate", unique = false, nullable = false)
 	private Date birthDate;
 	@Column(name = "gender", unique = false, nullable = false)
@@ -56,7 +56,6 @@ public abstract class User {
 		this.country = country;
 		this.phoneNumber = phoneNumber;
 		this.id = id;
-		this.type = type;
 		this.birthDate = birthDate;
 		this.gender = gender;
 	}
@@ -131,14 +130,6 @@ public abstract class User {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public UserType getType() {
-		return type;
-	}
-
-	public void setType(UserType type) {
-		this.type = type;
 	}
 
 	public Date getBirthDate() {

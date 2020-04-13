@@ -19,15 +19,12 @@ public class Patient extends User {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Clinic clinic;
 
-	public Patient() {
-	}
+	public Patient() {}
+	
 	public Patient(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, int id, UserType type, Date birthDate, Gender gender) {
+			String phoneNumber, int id, UserType type, Date birthDate, Gender gender, Clinic clinic) {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender);
+		this.clinic = clinic;
 	}
-	public Patient(Clinic clinicId) {
-		super();
-		this.clinic = clinicId;
-	}
-
+	
 }

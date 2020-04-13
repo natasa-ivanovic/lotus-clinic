@@ -29,8 +29,21 @@ public class Clinic {
 	private String description;
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Patient> patients = new HashSet<Patient>();
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<MedicalStaff> staff = new HashSet<MedicalStaff>();
+
 
 	//TODO
-	//	public ClinicalCentre clinicCentreId;
+	//public ClinicalCentre clinicCentreId;
+	
+	public Clinic() {}
+	
+	public Clinic(String name, String address, String description) {
+		this.name = name;
+		this.address = address;
+		this.description = description;
+	}
+	
+	
 
 }
