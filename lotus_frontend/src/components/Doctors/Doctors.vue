@@ -138,7 +138,7 @@ export default {
             return response.json();
         })
         .then(docs => {
-          this.doctors = docs;
+          this.doctors.push(docs);
         })
     },
     deleteDoctor: function(id) {
@@ -150,7 +150,7 @@ export default {
             return response.json();
         })
         .then(doc => {
-          this.doctors.push(doc);
+          this.doctors.pop(doc);
         })
     },
     editDoctor: function(editId) {

@@ -107,8 +107,8 @@ export default {
       .then(response => {
         return response.json();
       })
-      .then(pats => {
-        this.patients = pats;
+      .then(pat => {
+        this.patients = pat;
       })
   },
   methods: {
@@ -149,8 +149,8 @@ export default {
           else
             return response.json();
         })
-        .then(pats => {
-          this.patients = pats;
+        .then(pat => {
+          this.patients.pop(pat);
         })
     },
     editPatient: function(editId) {

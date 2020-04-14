@@ -85,8 +85,6 @@ export default {
         form.password.value = user.password;
         form.name.value = user.name;
         form.surname.value = user.surname;
-        //alert(dateMixin.dateToString(user.birthDate));
-        //form.birthDate.value = Vue.dateToString(user.birthDate);
         form.birthDate.value = util.dateToString(user.birthDate);
         form.gender.value = user.gender;
         form.address.value = user.address;
