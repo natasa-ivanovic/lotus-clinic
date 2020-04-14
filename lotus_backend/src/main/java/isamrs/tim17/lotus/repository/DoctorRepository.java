@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
-	Patient findOneById(String id);
+	Doctor findOneById(String id);
 	/*
 	 * Pronalazi sve objekte tipa Doctor i vraca onoliko objekata koliko je
 	 * specificirano kroz Pageable objekat. Npr. ako se prosledi objekat: new
