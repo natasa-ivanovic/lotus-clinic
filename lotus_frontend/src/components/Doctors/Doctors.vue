@@ -149,8 +149,8 @@ export default {
           else
             return response.json();
         })
-        .then(docs => {
-          this.doctors = docs;
+        .then(doc => {
+          this.doctors.push(doc);
         })
     },
     editDoctor: function(editId) {

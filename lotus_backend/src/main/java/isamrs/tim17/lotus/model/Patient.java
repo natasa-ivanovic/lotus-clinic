@@ -22,7 +22,7 @@ public class Patient extends User {
 	public Patient() {}
 	
 	public Patient(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, int id, UserType type, Date birthDate, Gender gender, Clinic clinic) {
+			String phoneNumber, long id, UserType type, Date birthDate, Gender gender, Clinic clinic) {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender);
 		this.clinic = clinic;
 	}

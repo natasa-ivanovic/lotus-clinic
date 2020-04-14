@@ -50,6 +50,20 @@
               <td><input type="text" name="surname" /></td>
             </tr>
             <tr>
+              <td>Birth date:</td>
+              <td><input type="date" name="birthDate" /></td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td>
+                <select name="gender">
+                  <option value="1">Male</option>
+                  <option value="0">Female</option>
+                  <option value="2">Other</option>
+                </select>
+              </td>
+            </tr>
+            <tr> 
               <td>Address:</td>
               <td><input type="text" name="address" /></td>
             </tr>
@@ -63,7 +77,7 @@
             </tr>
             <tr>
               <td>Phone:</td>
-              <td><input type="text" name="phone" /></td>
+              <td><input type="text" name="phoneNumber" /></td>
             </tr>
             <tr>
               <td>Id:</td>
@@ -106,7 +120,8 @@ export default {
           password : form.password.value,
           name : form.name.value,
           surname : form.surname.value,
-          birthDate : form.birthDate,
+          birthDate : form.birthDate.value,
+          gender : form.gender.value,
           address : form.address.value,
           city : form.city.value,
           country : form.country.value,
@@ -122,8 +137,8 @@ export default {
           else
             return response.json();
         })
-        .then(pats => {
-          this.patients = pats;
+        .then(pat => {
+          this.patients.push(pat);
         })
     },
     deletePatient: function(id) {
