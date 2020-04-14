@@ -30,12 +30,12 @@ public class Room {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Clinic clinic;
 	
-	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	/*@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operation> operations = new HashSet<Operation>();
 	
 	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
-
+*/
 	public Room() {
 	}
 

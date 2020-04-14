@@ -55,7 +55,7 @@ public class PatientController {
 	 * @return Patient This returns the requested patient.
 	 */
 	@GetMapping("/patients/{id}")
-	public ResponseEntity<Patient> getPatient(@PathVariable("id") int id) {
+	public ResponseEntity<Patient> getPatient(@PathVariable("id") long id) {
 		Patient patient = service.findOne(id);
 		if (patient == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -123,25 +123,6 @@ public class PatientController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	/**
-	 * This method is used for loading patients.
-	 * 
-	 * @param Nothing.
-	 * @return Nothing.
-	 */
-	/*private void loadPatients() {
-		if (patients == null) {
-			Clinic c = new Clinic("Lotus", "Bulevar Oslobodjenja", "Covid19 klinika");
-			patients = new HashMap<Long, Patient>();
-			Patient p1 = new Patient("mario@gmail.com", "mario", "Mario", "Kujundzic", "Jovana Jovanovic Zmaja 4", "Subotica", "Srbija", "066 126 215", 1, UserType.patient, new Date(), Gender.male, c);
-			Patient p2 = new Patient("natasa@gmail.com", "nat", "Natasa", "Ivanovic", "Bulevara Oslobodjenja", "Novi Sad", "Srbija", "066 555 225", 2, UserType.patient, new Date(), Gender.female, c);
-			Patient p3 = new Patient("crna@gmail.com", "beva", "Bela", "Vajda", "Neka adresa", "Novi Sad", "Srbija", "066 546 487", 3, UserType.patient, new Date(), Gender.male, c);
-			patients.put(p1.getId(), p1);
-			patients.put(p2.getId(), p2);
-			patients.put(p3.getId(), p3);
-		}
-	}*/
-	
 	private boolean isEmptyOrNull(Patient patient) {
 		if (patient == null)
 			return true;
