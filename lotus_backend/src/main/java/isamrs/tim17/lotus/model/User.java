@@ -59,6 +59,15 @@ public abstract class User {
 		this.birthDate = birthDate;
 		this.gender = gender;
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", address=" + address + ", city=" + city + ", country=" + country + ", phoneNumber="
+				+ phoneNumber + ", birthDate=" + birthDate + ", gender=" + gender + "]";
+	}
 
 	public String getEmail() {
 		return email;

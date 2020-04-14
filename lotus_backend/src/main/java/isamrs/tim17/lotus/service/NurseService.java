@@ -14,7 +14,7 @@ public class NurseService {
 	@Autowired
 	private NurseRepository nurses;
 	
-	public Nurse findOne(int id) {
+	public Nurse findOne(long id) {
 		return nurses.findById(id).orElseGet(null);
 	}
 
@@ -26,7 +26,7 @@ public class NurseService {
 		return nurses.save(doctor);
 	}
 
-	public void remove(int id) {
+	public void remove(long id) {
 		nurses.deleteById(id);
 	}
 
