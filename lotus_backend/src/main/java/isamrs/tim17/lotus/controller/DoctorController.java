@@ -91,7 +91,8 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/{id}")
-	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable long id) {
+
+	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
 		
 		if (id != newDoctor.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -133,6 +134,6 @@ public class DoctorController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		service.remove(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
 }

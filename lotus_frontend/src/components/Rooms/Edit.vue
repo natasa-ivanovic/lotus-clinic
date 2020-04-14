@@ -23,7 +23,7 @@
 
 <script>
 
-const apiURL = "https://localhost:9001/api/rooms";
+const apiURL = "http://localhost:9001/api/rooms";
 
 export default {
     name: "editRoom",

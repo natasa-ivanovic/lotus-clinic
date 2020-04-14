@@ -120,14 +120,14 @@ public class RoomController {
 	 */
 	@DeleteMapping("/rooms/{id}")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
-		
+		System.out.println(id);
 		Room room = service.findOne(id);
 
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+		System.out.println("Deleting " + room);
 		service.remove(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(room, HttpStatus.OK);
 	}
 
 

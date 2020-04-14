@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public abstract class MedicalStaff extends User {
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;
 
 	public MedicalStaff() {}

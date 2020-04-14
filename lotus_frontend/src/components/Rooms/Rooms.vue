@@ -35,7 +35,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/rooms";
+const apiURL = "http://localhost:9001/api/rooms/";
 export default {
     name: "rooms",
   data() {
@@ -74,7 +74,7 @@ export default {
         })
     },
     deleteRoom: function(id) {
-      fetch(apiURL + '/' + id, {method: 'DELETE'})
+      fetch(apiURL + id, {method: 'DELETE'})
         .then(response => {
           if (response.status != 200)
             alert("Couldn't delete room!");
@@ -86,7 +86,7 @@ export default {
         })
     },
     editRoom: function(editId) {
-      //alert(editId);
+      alert(editId);
       this.$router.push({name: "editRoom", params: {id : editId}});
     }
   }
