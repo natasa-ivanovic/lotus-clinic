@@ -7,7 +7,7 @@ import isamrs.tim17.lotus.model.User;
 
 public class UserDTO {
 	
-	private int id;
+	private long id;
 	private String email;
 	private String password;
 	private String name;
@@ -35,7 +35,7 @@ public class UserDTO {
 		this.gender = user.getGender();
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 

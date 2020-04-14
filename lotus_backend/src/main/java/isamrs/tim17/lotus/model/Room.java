@@ -1,5 +1,9 @@
 package isamrs.tim17.lotus.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 
 /***********************************************************************
@@ -9,33 +13,38 @@ import javax.persistence.Column;
  ***********************************************************************/
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "rooms")
 public class Room {
 	@Id
-	private int id;
+	private Long id;
 	@Column(name= "name", unique = false, nullable = false)
 	private String name;
 
-	// public Clinic clinic;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	public Clinic clinic;
+	
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Operation> operations = new HashSet<Operation>();
+	
+	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Appointment> appointments = new HashSet<Appointment>();
 
 	public Room() {
 	}
 
-	public Room(String name, int id) {
+	public Room(String name, Long id) {
 		super();
 		this.name = name;
 		this.id = id;
 	}
 	
-	public boolean isEmptyOrNull() {
-		if (this.getName() == null || "".equals(this.getName()))
-			return true;
-		return false;
-	}
 	
 	@Override
 	public String toString() {
@@ -50,11 +59,11 @@ public class Room {
 		this.name = name;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

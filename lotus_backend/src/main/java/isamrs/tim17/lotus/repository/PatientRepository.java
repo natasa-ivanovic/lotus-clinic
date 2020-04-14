@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import isamrs.tim17.lotus.model.Patient;
 
-public interface PatientRepository extends JpaRepository<Patient, Integer> {
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 	
 	Patient findOneById(String id);
 	Page<Patient> findAll(Pageable pageable);

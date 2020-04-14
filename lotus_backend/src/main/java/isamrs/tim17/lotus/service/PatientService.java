@@ -12,7 +12,7 @@ public class PatientService {
 	@Autowired
 	private PatientRepository patients;
 	
-	public Patient findOne(int id) {
+	public Patient findOne(long id) {
 		return patients.findById(id).orElseGet(null);
 	}
 
@@ -24,7 +24,7 @@ public class PatientService {
 		return patients.save(doctor);
 	}
 
-	public void remove(int id) {
+	public void remove(long id) {
 		patients.deleteById(id);
 	}
 

@@ -27,9 +27,9 @@
           <td>Gender</td>
           <td>
             <select name="gender">
-              <option value="1">Male</option>
-              <option value="0">Female</option>
-              <option value="2">Other</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
             </select>
           </td>
         </tr>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import {util} from '../../util.js'
 
 const apiURL = "http://localhost:9001/api/";
 
@@ -84,8 +85,9 @@ export default {
         form.password.value = user.password;
         form.name.value = user.name;
         form.surname.value = user.surname;
-        //alert(Vue.dateToString(user.birthDate));
+        //alert(dateMixin.dateToString(user.birthDate));
         //form.birthDate.value = Vue.dateToString(user.birthDate);
+        form.birthDate.value = util.dateToString(user.birthDate);
         form.gender.value = user.gender;
         form.address.value = user.address;
         form.city.value = user.city;
@@ -120,7 +122,7 @@ export default {
           else
             this.$router.push({ name: this.role })
         })
-    },
+    }
   }
 }
 </script>

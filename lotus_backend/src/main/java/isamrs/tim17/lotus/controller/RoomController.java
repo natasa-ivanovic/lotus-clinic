@@ -1,6 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import isamrs.tim17.lotus.dto.UserDTO;
-import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.RoomService;
 
@@ -36,11 +34,13 @@ public class RoomController {
 	@PostMapping("/rooms")
 	public ResponseEntity<Room> addDoctor(@RequestBody Room room) {
 		System.out.println("Adding a room...");
+		System.out.println(room);
+		
 		/*
 		 * if (isEmptyOrNull(room)) { System.out.println("Something's wrong...");
 		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 		 */
-		System.out.println(room);
+		
 		service.save(room);
 		System.out.println("Database is ok...");
 		return new ResponseEntity<>(room, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class RoomController {
 	 * @return Room This returns the requested room.
 	 */
 	@GetMapping("/rooms/{id}")
-	public ResponseEntity<Room> getDoctor(@PathVariable("id") int id) {
+	public ResponseEntity<Room> getDoctor(@PathVariable("id") Long id) {
 		Room room = service.findOne(id);
 
 		// room must exist
@@ -105,7 +105,7 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/rooms/{id}")
-	public ResponseEntity<Object> deleteRoom(@PathVariable("id") int id) {
+	public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long id) {
 
 		Room room = service.findOne(id);
 

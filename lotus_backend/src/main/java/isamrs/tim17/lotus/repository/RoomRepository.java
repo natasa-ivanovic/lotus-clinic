@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import isamrs.tim17.lotus.model.Room;
 
-public interface RoomRepository extends JpaRepository<Room, Integer> {
+public interface RoomRepository extends JpaRepository<Room, Long> {
 	
 	Room findOneById(String id);
 	List<Room> findByNameAllIgnoringCase(String name);

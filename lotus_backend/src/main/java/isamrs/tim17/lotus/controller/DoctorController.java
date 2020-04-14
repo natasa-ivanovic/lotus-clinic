@@ -39,7 +39,8 @@ public class DoctorController {
 		 * if (isEmptyOrNull(doctor)) { System.out.println("Something's wrong...");
 		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 		 */
-		System.out.println("Doctor is ok...");
+		
+		System.out.println(doctor);
 		service.save(doctor);
 		System.out.println("Database is ok...");
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
@@ -59,6 +60,7 @@ public class DoctorController {
 		// convert doctors to DTOs
 		List<UserDTO> doctorsDTO = new ArrayList<>();
 		for (Doctor d : doctors) {
+			System.out.println(d);
 			doctorsDTO.add(new UserDTO(d));
 		}
 
@@ -74,7 +76,7 @@ public class DoctorController {
 	@GetMapping("/doctors/{id}")
 	public ResponseEntity<Doctor> getDoctor(@PathVariable("id") int id) {
 		Doctor doctor = service.findOne(id);
-
+		System.out.println(doctor);
 		// doctor must exist
 		if (doctor == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -90,8 +92,11 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/{id}")
-	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor) {
-
+	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, Long id) {
+		
+		if (id != newDoctor.getId())
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
 		// a doctor must exist
 		Doctor doctor = service.findOne(newDoctor.getId());
 
@@ -132,31 +137,6 @@ public class DoctorController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	
-	private boolean isEmptyOrNull(Doctor doctor) {
-		if (doctor.getName() == null || "".equals(doctor.getName()))
-			return true;
-		if (doctor.getSurname() == null || "".equals(doctor.getSurname()))
-			return true;
-		if (doctor.getEmail() == null || "".equals(doctor.getEmail()))
-			return true;
-		if (doctor.getPassword() == null || "".equals(doctor.getPassword()))
-			return true;
-		if (doctor.getAddress() == null || "".equals(doctor.getAddress()))
-			return true;
-		if (doctor.getCity() == null || "".equals(doctor.getCity()))
-			return true;
-		if (doctor.getCountry() == null || "".equals(doctor.getCountry()))
-			return true;
-		if (doctor.getPhoneNumber() == null || "".equals(doctor.getPhoneNumber()))
-			return true;
-		if (doctor.getGender() == null || "".equals(doctor.getGender().toString()))
-			return true;
-		if (doctor.getBirthDate() == null || "".equals(doctor.getBirthDate().toString()))
-			return true;
-		return false;
-
-	}
 	 
 
 }

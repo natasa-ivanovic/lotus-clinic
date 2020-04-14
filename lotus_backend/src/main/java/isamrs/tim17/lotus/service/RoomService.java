@@ -3,16 +3,18 @@ package isamrs.tim17.lotus.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.repository.RoomRepository;
 
+@Service
 public class RoomService {
 	
 	@Autowired
 	private RoomRepository rooms;
 	
-	public Room findOne(int id) {
+	public Room findOne(Long id) {
 		return rooms.findById(id).orElseGet(null);
 	}
 
@@ -24,7 +26,7 @@ public class RoomService {
 		return rooms.save(room);
 	}
 
-	public void remove(int id) {
+	public void remove(Long id) {
 		rooms.deleteById(id);
 	}
 

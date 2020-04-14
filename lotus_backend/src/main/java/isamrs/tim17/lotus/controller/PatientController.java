@@ -24,7 +24,7 @@ import isamrs.tim17.lotus.model.UserType;
 @RequestMapping("/api")
 public class PatientController {
 	
-	public static HashMap<Integer, Patient> patients;
+	public static HashMap<Long, Patient> patients;
 	
 	/**
 	 * This method is used for getting the list of patients.
@@ -43,7 +43,7 @@ public class PatientController {
 	 * @return Patient This returns the requested patient.
 	 * */
 	@GetMapping("/patients/{id}")
-	public Patient getPatient(@PathVariable("id") int id) {
+	public Patient getPatient(@PathVariable("id") long id) {
 		loadPatients();
 		return patients.get(id);
 	}
@@ -71,7 +71,7 @@ public class PatientController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 * */
 	@PutMapping("/patients/{id}")
-	public ResponseEntity<Object> editPatient(@RequestBody Patient patient, @PathVariable("id") int id) {
+	public ResponseEntity<Object> editPatient(@RequestBody Patient patient, @PathVariable("id") long id) {
 		loadPatients();
 		patients.remove(id);
 		patients.put(patient.getId(), patient);
@@ -84,7 +84,7 @@ public class PatientController {
 	 * @return ResponseEntity This returns the HTTP status code along with the current patients.
 	 * */
 	@DeleteMapping("/patients/{id}")
-	public ResponseEntity<Object> deletePatient(@PathVariable("id") int id) {
+	public ResponseEntity<Object> deletePatient(@PathVariable("id") long id) {
 		loadPatients();
 		patients.remove(id);
 		return new ResponseEntity<>(patients.values(), HttpStatus.OK);	
@@ -99,7 +99,7 @@ public class PatientController {
 	private void loadPatients() {
 		if (patients == null) {
 			Clinic c = new Clinic("Lotus", "Bulevar Oslobodjenja", "Covid19 klinika");
-			patients = new HashMap<Integer, Patient>();
+			patients = new HashMap<Long, Patient>();
 			Patient p1 = new Patient("mario@gmail.com", "mario", "Mario", "Kujundzic", "Jovana Jovanovic Zmaja 4", "Subotica", "Srbija", "066 126 215", 1, UserType.patient, new Date(), Gender.male, c);
 			Patient p2 = new Patient("natasa@gmail.com", "nat", "Natasa", "Ivanovic", "Bulevara Oslobodjenja", "Novi Sad", "Srbija", "066 555 225", 2, UserType.patient, new Date(), Gender.female, c);
 			Patient p3 = new Patient("crna@gmail.com", "beva", "Bela", "Vajda", "Neka adresa", "Novi Sad", "Srbija", "066 546 487", 3, UserType.patient, new Date(), Gender.male, c);

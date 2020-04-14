@@ -20,7 +20,7 @@ import javax.persistence.InheritanceType;
 		)
 public abstract class User {
 	@Id
-	private int id;
+	private long id;
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 	@Column(name = "password", unique = false, nullable = false)
@@ -45,7 +45,7 @@ public abstract class User {
 	public User() {}
 	
 	public User(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, int id, UserType type, Date birthDate, Gender gender) {
+			String phoneNumber, long id, UserType type, Date birthDate, Gender gender) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -58,6 +58,15 @@ public abstract class User {
 		this.id = id;
 		this.birthDate = birthDate;
 		this.gender = gender;
+	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", address=" + address + ", city=" + city + ", country=" + country + ", phoneNumber="
+				+ phoneNumber + ", birthDate=" + birthDate + ", gender=" + gender + "]";
 	}
 
 	public String getEmail() {
@@ -124,11 +133,11 @@ public abstract class User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
