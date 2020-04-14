@@ -120,7 +120,7 @@ public class PatientController {
 		if (p == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		service.remove(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(p, HttpStatus.OK);
 	}
 
 	private boolean isEmptyOrNull(Patient patient) {

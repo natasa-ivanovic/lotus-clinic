@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Edit patient</h1>
+    <h1>Edit {{this.userType}}</h1>
     <form id="editUser" v-on:submit.prevent="editUser()">
         <table>
         <tr>
@@ -65,17 +65,17 @@
 <script>
 import {util} from '../../util.js'
 
-const apiURL = "http://localhost:9001/api/";
+const apiURL = "http://localhost:9001/api";
 
 export default {
   name: "EditUser",
-  props: ['id', 'role'],
+  props: ['id', 'userType'],
   data() {
     return {
     }
   },
   mounted() {
-    fetch(apiURL + "/" + this.role + "/" + this.id)
+    fetch(apiURL + "/" + this.userType + "/" + this.id)
       .then(response => {
         return response.json();
       })
@@ -85,8 +85,6 @@ export default {
         form.password.value = user.password;
         form.name.value = user.name;
         form.surname.value = user.surname;
-        //alert(dateMixin.dateToString(user.birthDate));
-        //form.birthDate.value = Vue.dateToString(user.birthDate);
         form.birthDate.value = util.dateToString(user.birthDate);
         form.gender.value = user.gender;
         form.address.value = user.address;
@@ -113,14 +111,14 @@ export default {
           phoneNumber : form.phoneNumber.value,
           id : form.id.value
       };
-      fetch(apiURL + "/" + this.role + "/" + this.id, {method: 'PUT', 
+      fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
                       headers: {'Content-Type': 'application/json'}, 
                       body: JSON.stringify(user)})
         .then(response => {
           if (response.status != 200)
             alert("Couldn't update profile!");
           else
-            this.$router.push({ name: this.role })
+            this.$router.push({ name: this.userType })
         })
     }
   }

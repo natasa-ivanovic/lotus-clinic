@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <button v-on:click="patients()">Patients</button>
+    <button v-on:click="doctors()">Doctors</button>
     <router-view></router-view>
   </div>
 </template>
@@ -13,6 +15,14 @@ export default {
   },
   data() {
     return {
+    }
+  },
+  methods: {
+    patients: function() {
+      this.$router.push({ name: "patients"})
+    },
+    doctors: function() {
+     this.$router.push({ name: "doctors"})
     }
   }
 }

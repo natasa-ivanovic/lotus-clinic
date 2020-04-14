@@ -73,7 +73,7 @@ public class DoctorController {
 	 * @return Doctor This returns the requested doctor.
 	 */
 	@GetMapping("/doctors/{id}")
-	public ResponseEntity<Doctor> getDoctor(@PathVariable("id") int id) {
+	public ResponseEntity<Doctor> getDoctor(@PathVariable("id") long id) {
 		Doctor doctor = service.findOne(id);
 		System.out.println(doctor);
 		// doctor must exist
@@ -91,7 +91,7 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/{id}")
-	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, Long id) {
+	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
 		
 		if (id != newDoctor.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -125,7 +125,7 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/doctors/{id}")
-	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") int id) {
+	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") long id) {
 
 		Doctor doctor = service.findOne(id);
 
@@ -133,6 +133,6 @@ public class DoctorController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		service.remove(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
 }

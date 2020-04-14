@@ -5,22 +5,29 @@ Vue.use(VueRouter);
 
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
-import Edit from "../components/Users/Edit"
+import EditUser from "../components/Users/Edit"
+import AddUser from "../components/Users/Add"
 const routes = [
     {   
         component: Patients,
         name: "patients",
-        path: "/patients/"
+        path: "/users/patients/"
     },
     {
         component: Doctors,
         name: "doctors",
-        path: "/doctors/"
+        path: "/users/doctors/"
     },
     {   
-        component: Edit,
-        name: "edit",
-        path: "/:role/:id",
+        component: EditUser,
+        name: "editUser",
+        path: "/users/:userType/edit/:id",
+        props: true
+    },
+    {
+        component: AddUser,
+        name: "addUser",
+        path: "/users/:userType/add",
         props: true
     }
     
