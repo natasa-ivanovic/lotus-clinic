@@ -7,6 +7,9 @@ import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
 import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
+import Rooms from "../components/Rooms/Rooms"
+import EditRooms from "../components/Rooms/Edit"
+
 const routes = [
     {   
         component: Patients,
@@ -18,7 +21,18 @@ const routes = [
         name: "doctors",
         path: "/users/doctors/"
     },
-    {   
+    {
+        component: Rooms,
+        name: "rooms",
+        path: "/rooms/"
+    },
+    {
+        component: EditRooms,
+        name: "editRoom",
+        path: "/rooms/edit/:id",
+        props: true
+    },
+    {    
         component: EditUser,
         name: "editUser",
         path: "/users/:userType/edit/:id",

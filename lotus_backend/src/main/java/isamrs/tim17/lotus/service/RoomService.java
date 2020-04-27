@@ -14,7 +14,7 @@ public class RoomService {
 	@Autowired
 	private RoomRepository rooms;
 	
-	public Room findOne(Long id) {
+	public Room findOne(long id) {
 		return rooms.findById(id).orElseGet(null);
 	}
 
@@ -26,7 +26,7 @@ public class RoomService {
 		return rooms.save(room);
 	}
 
-	public void remove(Long id) {
+	public void remove(long id) {
 		rooms.deleteById(id);
 	}
 

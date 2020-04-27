@@ -91,6 +91,7 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/{id}")
+
 	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
 		
 		if (id != newDoctor.getId())
@@ -125,7 +126,7 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/doctors/{id}")
-	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") long id) {
+	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") long	 id) {
 
 		Doctor doctor = service.findOne(id);
 
