@@ -9,6 +9,7 @@ import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
+import AddRoom from "../components/Rooms/Add"
 
 const routes = [
     {   
@@ -31,6 +32,11 @@ const routes = [
         name: "editRoom",
         path: "/rooms/edit/:id",
         props: true
+    },
+    {
+        component: AddRoom,
+        name: "addRoom",
+        path: "/rooms/add"
     },
     {    
         component: EditUser,
