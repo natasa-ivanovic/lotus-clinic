@@ -13,7 +13,7 @@
                 v-model="name" />
             </v-form>
             <v-card-actions>
-              <v-btn block v-on:click="addRoom()" color="success">Add</v-btn>
+              <v-btn block v-on:click="addRoom()" color="primary">Add</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-card>
@@ -30,14 +30,14 @@ export default {
   name: "addRoom",
   data() {
     return {
-      name: ""
+      name : ''
     }
   },
   methods: {
     addRoom: function() {
       fetch(apiURL, {method: 'POST', 
                         headers: {'Content-Type': 'application/json'}, 
-                        body: JSON.stringify(this.name)})
+                        body: this.name})
           .then(response => {
               if (response.status != 200)
                 alert("Couldn't add " + this.name + "!");
