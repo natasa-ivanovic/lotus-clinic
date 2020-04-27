@@ -1,130 +1,103 @@
 <template>
   <div>
-    <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="6"
-          >
+    <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="6">
             <v-card class="elevation-3">
+              <v-toolbar flat color="secondary" dark>
+                <v-toolbar-title>Edit {{this.userType.substring(0, this.userType.length -1)}} </v-toolbar-title>
+              </v-toolbar>
               <v-card-text>
-                <v-toolbar>
-                  <v-toolbar-title>Edit {{this.userType}} </v-toolbar-title>
-                </v-toolbar>
                 <v-form>
-                  <v-text-field
-                    label="Email"
-                    v-model="user.email"
-                    outlined />
-                  <v-text-field
-                    label="Password"
-                    v-model="user.password"
-                    outlined />
-                  <v-text-field
-                    label="Name"
-                    v-model="user.name"
-                    outlined />
-                  <v-text-field
-                    label="Surname"
-                    v-model="user.surname"
-                    outlined />
-                    <p>BirthDate</p>
-
-                    
-                    <p>Gender</p>
-                  <v-text-field
-                    label="Address"
-                    v-model="user.address"
-                    outlined />
-                  <v-text-field
-                    label="City"
-                    v-model="user.city"
-                    outlined />
-                  <v-text-field
-                    label="Country"
-                    v-model="user.country"
-                    outlined />
-                  <v-text-field
-                    label="Phone number"
-                    v-model="user.phoneNumber"
-                    outlined />
-                  <v-text-field
-                    label="Insurance id"
-                    v-model="user.id"
-                    outlined />
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Email"
+                        v-model="user.email" />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Password"
+                        v-model="user.password" />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Name"
+                        v-model="user.name" />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Surname"
+                        v-model="user.surname" />                      
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-select
+                        v-model="selectedGender"
+                        :items="genders"
+                        label="Gender" />        
+                    </v-col>
+                    <v-col>
+                      <v-menu
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        :nudge-right="40"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="290px">
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            v-model="dateString"
+                            label="Birth date"
+                            readonly
+                            v-on="on"
+                             />                      
+                        </template>
+                        <v-date-picker v-model="dateString" @input="menu = false"></v-date-picker>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Address"
+                        v-model="user.address" />
+                    </v-col>
+                    <v-col>     
+                      <v-text-field
+                        label="City"
+                        v-model="user.city" />           
+                    </v-col>
+                    <v-col>     
+                      <v-text-field
+                        label="Country"
+                        v-model="user.country" />         
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Phone number"
+                        v-model="user.phoneNumber" />
+                    </v-col>
+                    <v-col>     
+                      <v-text-field
+                        label="Insurance id"
+                        v-model="user.id" />
+                    </v-col>
+                  </v-row>
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn v-on:click="editUser()" color="primary">Edit user</v-btn>
+                <v-btn block v-on:click="editUser()" color="success" height=60>Edit</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
     </v-container>
-    <!--h1>Edit {{this.userType}}</h1>
-    <form id="editUser" v-on:submit.prevent="editUser()">
-        <table>
-        <tr>
-            <td>Email:</td>
-            <td><input type="text" name="email" /></td>
-        </tr>            
-        <tr>
-            <td>Password:</td>
-            <td><input type="password" name="password" /></td>
-        </tr>
-        <tr>
-            <td>Name:</td>
-            <td><input type="text" name="name" /></td>
-        </tr>
-        <tr>
-            <td>Surname:</td>
-            <td><input type="text" name="surname" /></td>
-        </tr>
-        <tr>
-          <td>Birth date:</td>
-          <td><input type="date" name="birthDate" /></td>
-        </tr>
-        <tr>
-          <td>Gender</td>
-          <td>
-            <select name="gender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-            <td>Address:</td>
-            <td><input type="text" name="address" /></td>
-        </tr>
-        <tr>
-            <td>City:</td>
-            <td><input type="text" name="city" /></td>
-        </tr>
-        <tr>
-            <td>Country:</td>
-            <td><input type="text" name="country" /></td>
-        </tr>
-        <tr>
-          <td>Phone:</td>
-          <td><input type="text" name="phoneNumber" /></td>
-        </tr>
-        <tr>
-            <td>Id:</td>
-            <td><input type="number" name="id" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" /></td>
-        </tr>		
-        </table>
-    </form-->
   </div>
 </template>
 
@@ -138,7 +111,11 @@ export default {
   props: ['id', 'userType'],
   data() {
     return {
-      user: {}
+      user: {},
+      menu: false,
+      dateString: String,
+      genders: ['Male', 'Female', 'Other'],
+      selectedGender: 'Other'
     }
   },
   mounted() {
@@ -148,46 +125,24 @@ export default {
       })
       .then(user => {
         this.user= user;
-        var form = document.forms['editUser'];
-        form.email.value = user.email;
-        form.password.value = user.password;
-        form.name.value = user.name;
-        form.surname.value = user.surname;
-        form.birthDate.value = util.dateToString(user.birthDate);
-        form.gender.value = user.gender;
-        form.address.value = user.address;
-        form.city.value = user.city;
-        form.country.value = user.country;
-        form.phoneNumber.value = user.phoneNumber;
-        form.id.value = user.id;
+        this.dateString = util.dateToString(user.birthDate);
+        this.selectedGender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
       })
   },
   methods: {
       editUser: function() {
-      var form = document.forms['editUser'];
-      
-      var user = {
-          email : form.email.value,
-          password : form.password.value,
-          name : form.name.value,
-          surname : form.surname.value,
-          birthDate : form.birthDate.value,
-          gender : form.gender.value,
-          address : form.address.value,
-          city : form.city.value,
-          country : form.country.value,
-          phoneNumber : form.phoneNumber.value,
-          id : form.id.value
-      };
-      fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
-                      headers: {'Content-Type': 'application/json'}, 
-                      body: JSON.stringify(user)})
-        .then(response => {
-          if (response.status != 200)
-            alert("Couldn't update profile!");
-          else
-            this.$router.push({ name: this.userType })
-        })
+        var oldDate = this.user.birthDate.split('T')[1]; 
+        this.user.birthDate = this.dateString + 'T' + oldDate;
+        this.user.gender = this.selectedGender.charAt(0).toLowerCase() + this.selectedGender.slice(1);
+        fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
+                        headers: {'Content-Type': 'application/json'}, 
+                        body: JSON.stringify(this.user)})
+          .then(response => {
+            if (response.status != 200)
+              alert("Couldn't update profile!");
+            else
+              this.$router.push({ name: this.userType })
+          })
     }
   }
 }
