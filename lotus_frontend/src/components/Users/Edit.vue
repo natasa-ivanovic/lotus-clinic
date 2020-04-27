@@ -8,28 +8,49 @@
                 <v-toolbar-title>Edit {{this.userType.substring(0, this.userType.length -1)}} </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form>
+                <v-form v-model="valid" ref="form">
                   <v-row>
                     <v-col>
                       <v-text-field
                         label="Email"
-                        v-model="user.email" />
+                        :rules="[rules.email, rules.required]"
+                        v-model="user.email" 
+                        required/>
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col>
                       <v-text-field
                         label="Password"
-                        v-model="user.password" />
+                        :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.required, rules.counter]"
+                        :type="showPass ? 'text' : 'password'"
+                        v-model="user.password" 
+                        minlength="5"
+                        @click:append="showPass = !showPass" />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Confirm password"
+                        :append-icon="showConfirmPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showConfirmPass ? 'text' : 'password'"
+                        :rules="[rules.required, rules.counter, rules.passwordMatch]"
+                        minlength="5"
+                        v-model="confirmPass" 
+                        @click:append="showConfirmPass = !showConfirmPass" />
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col>
                       <v-text-field
                         label="Name"
+                        :rules="[rules.required]"
                         v-model="user.name" />
                     </v-col>
                     <v-col>
                       <v-text-field
                         label="Surname"
+                        :rules="[rules.required]"
                         v-model="user.surname" />                      
                     </v-col>
                   </v-row>
@@ -37,6 +58,7 @@
                     <v-col>
                       <v-select
                         v-model="selectedGender"
+                        :rules="[rules.required]"
                         :items="genders"
                         label="Gender" />        
                     </v-col>
@@ -52,9 +74,10 @@
                           <v-text-field
                             v-model="dateString"
                             label="Birth date"
+                            :rules="[rules.required]"
                             readonly
                             v-on="on"
-                             />                      
+                              />                      
                         </template>
                         <v-date-picker v-model="dateString" @input="menu = false"></v-date-picker>
                       </v-menu>
@@ -64,16 +87,19 @@
                     <v-col>
                       <v-text-field
                         label="Address"
+                        :rules="[rules.required]"
                         v-model="user.address" />
                     </v-col>
                     <v-col>     
                       <v-text-field
                         label="City"
+                        :rules="[rules.required]"
                         v-model="user.city" />           
                     </v-col>
                     <v-col>     
                       <v-text-field
                         label="Country"
+                        :rules="[rules.required]"
                         v-model="user.country" />         
                     </v-col>
                   </v-row>
@@ -81,11 +107,13 @@
                     <v-col>
                       <v-text-field
                         label="Phone number"
+                        :rules="[rules.required]"
                         v-model="user.phoneNumber" />
                     </v-col>
                     <v-col>     
                       <v-text-field
                         label="Insurance id"
+                        :rules="[rules.required, rules.isNumber]"
                         v-model="user.id" />
                     </v-col>
                   </v-row>
@@ -115,7 +143,37 @@ export default {
       menu: false,
       dateString: String,
       genders: ['Male', 'Female', 'Other'],
-      selectedGender: 'Other'
+      selectedGender: 'Other',
+      confirmPass: "",
+      rules: {
+          required: value => !!value || 'Field is required.',
+          counter: value => value.length > 4 || 'Password must have a minimum of 5 characters',
+          email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          },
+          passwordMatch: () => this.user.password == this.confirmPass || 'Passwords must match.',
+          isNumber: value => !isNaN(value) || 'Id must be a number.'
+      },
+      valid: true
+    }
+  },
+  computed: {
+    formIsValid () {
+      return (
+        this.user.email &&
+        this.user.password &&
+        this.confirmPass &&
+        this.user.name &&
+        this.user.surname &&
+        this.user.gender &&
+        this.user.dateString &&
+        this.user.address &&
+        this.user.city &&
+        this.user.country &&
+        this.user.phoneNumber &&
+        this.user.id
+      )
     }
   },
   mounted() {
@@ -131,6 +189,11 @@ export default {
   },
   methods: {
       editUser: function() {
+        this.$refs.form.validate();
+        if (!this.valid) {
+          alert("Ha")
+          return;
+        }
         var oldDate = this.user.birthDate.split('T')[1]; 
         this.user.birthDate = this.dateString + 'T' + oldDate;
         this.user.gender = this.selectedGender.charAt(0).toLowerCase() + this.selectedGender.slice(1);
