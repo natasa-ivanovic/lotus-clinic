@@ -1,16 +1,8 @@
 <template>
   <div>
-    <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="6"
-          >
+    <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="6">
             <v-card class="elevation-3">
               <v-toolbar flat color="secondary" dark>
                 <v-toolbar-title>Edit {{this.userType.substring(0, this.userType.length -1)}} </v-toolbar-title>
@@ -50,10 +42,9 @@
                     </v-col>
                     <v-col>
                       <v-menu
-                        ref="menu"
                         v-model="menu"
                         :close-on-content-click="false"
-                        :return-value.sync="dateString"
+                        :nudge-right="40"
                         transition="scale-transition"
                         offset-y
                         min-width="290px">
@@ -65,11 +56,7 @@
                             v-on="on"
                              />                      
                         </template>
-                        <v-date-picker v-model="dateString" no-title scrollable >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                          <v-btn text color="primary" @click="$refs.menu.save(dateString)">OK</v-btn>
-                        </v-date-picker>
+                        <v-date-picker v-model="dateString" @input="menu = false"></v-date-picker>
                       </v-menu>
                     </v-col>
                   </v-row>
@@ -101,11 +88,7 @@
                         label="Insurance id"
                         v-model="user.id" />
                     </v-col>
-                    
                   </v-row>
-                  
-                  
-                  
                 </v-form>
               </v-card-text>
               <v-card-actions>
