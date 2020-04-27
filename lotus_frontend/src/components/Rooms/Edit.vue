@@ -1,24 +1,44 @@
 <template>
-    <div>
-        <h1>Edit room</h1>
-        <form id="editRoom" v-on:submit.prevent="editRoom()">
-            <table>
-                <tr>
-                    <td>Id:</td>
-                    <td><input type="number" name="id"/></td>
-                </tr>
-                <tr>
-                    <td>Name:</td>
-                    <td><input type="text" name="name"/></td>
-                </tr>
-                <tr>
-                <tr>
-                    <td></td>
-                    <td><input type="submit"/></td>
-                </tr>
-            </table>
-        </form>
-    </div>
+  <div>
+  <v-container
+      class="fill-height"
+      fluid
+    >
+      <v-row
+        align="center"
+        justify="center"
+      >
+          <v-col
+              cols="6"
+          >
+            <v-card class="elevation-3">
+              <v-card-text>
+                <v-toolbar elevation="0">
+                  <v-toolbar-title >Edit room</v-toolbar-title>
+                </v-toolbar>
+              
+                <v-form>
+                  <v-text-field
+                    label="ID"
+                    v-model="room.id"
+                    readonly
+                    filled
+                    outlined />
+                  <v-text-field
+                    label="Name"
+                    v-model="room.name"
+                    outlined />
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn v-on:click="editRoom()" color="primary" block>Edit
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+      </v-row>
+  </v-container>
+  </div>
 </template>
 
 <script>
@@ -30,7 +50,7 @@ export default {
     props: ['id'],
     data() {
         return {
-
+          room: {}
         }
     },
     mounted() {
@@ -39,22 +59,14 @@ export default {
             return response.json();
         })
         .then(room => {
-            var form = document.forms['editRoom'];
-            form.id.value = room.id;
-            form.name.value = room.name;
+            this.room = room;
         })
     },
     methods: {
         editRoom: function() {
-            var form = document.forms['editRoom'];
-
-            var room = {
-                id : form.id.value,
-                name : form.name.value
-            };
             fetch(apiURL + "/" + this.id, {method: 'PUT',
                   headers: {'Content-Type': 'application/json'},
-                  body: JSON.stringify(room)})
+                  body: JSON.stringify(this.room)})
             .then(response => {
                 if (response.status != 200)
                     alert("Couldn't update room!");

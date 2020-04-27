@@ -1,36 +1,40 @@
 <template>
     <div>
-        <h1>List of rooms</h1>
-      <table v-if="rooms.length" border="2" id="rooms">
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-        </tr>
-        <tr v-for="(r, k) in rooms" :key="k">
-          <td>{{r.id}}</td>
-          <td>{{r.name}}</td>
-          <td><button v-on:click="editRoom(r.id)">Edit</button></td>
-          <td><button v-on:click="deleteRoom(r.id)">Delete</button></td>
-        </tr>
-      </table>
-      <h3 v-else>No rooms in the database!</h3>
-      <h1>Add room</h1>
-        <form id="addRoom" v-on:submit.prevent="addRoom()">
-          <table>
-            <tr>
-              <td>Id:</td>
-              <td><input type="number" name="id" /></td>
-            </tr>            
-            <tr>
-              <td>Name:</td>
-              <td><input type="text" name="name" /></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td><input type="submit" /></td>
-            </tr>		
-          </table>
-        </form>
+        <v-data-table
+          :headers="headers"
+          :items="rooms"
+          item-key="id"
+          class="elevation-1"
+        >
+          <template v-slot:top>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>List of rooms</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn :to="{ name: 'addRoom' }">Add new room</v-btn>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.edit="{ item }">
+                <v-icon
+                    @click="editRoom(item.id)"
+                >
+                    mdi-pencil
+                </v-icon>
+            </template>
+            <template v-slot:item.delete="{ item }">
+                <v-icon
+                    @click="deleteRoom(item.id)"
+                >
+                    mdi-delete
+                </v-icon>
+            </template>
+            <template v-slot:item.details="{ item }">
+                <v-icon
+                    @click="getDetails(item.id)"
+                >
+                    mdi-calendar
+                </v-icon>
+            </template>
+        </v-data-table>
     </div>
 </template>
 
@@ -40,7 +44,14 @@ export default {
     name: "rooms",
   data() {
     return {
-      rooms: []
+      rooms: [],
+      headers: [
+          {text: 'ID', value: 'id'},
+          {text: 'Name', value: 'name'},
+          {text: 'Details', value: 'details'},
+          {text: 'Edit', value: 'edit', sortable: false},
+          {text: 'Delete', value: 'delete', sortable: false}
+      ]
     }
   },
   mounted() {
@@ -88,6 +99,9 @@ export default {
     editRoom: function(editId) {
       alert(editId);
       this.$router.push({name: "editRoom", params: {id : editId}});
+    },
+    getDetails: function(id) {
+        return id;
     }
   }
     
