@@ -24,10 +24,12 @@
                     readonly
                     filled
                     outlined />
+                  <!--ValidationProvider v-slot="{errors}" name="Name" rules="required"-->
                   <v-text-field
                     label="Name"
                     v-model="room.name"
                     outlined />
+                  <!--/ValidationProvider-->
                 </v-form>
               </v-card-text>
               <v-card-actions>
