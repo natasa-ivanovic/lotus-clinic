@@ -1,28 +1,22 @@
 <template>
   <div id="app">
-    <button v-on:click="patients()">Patients</button>
-    <button v-on:click="doctors()">Doctors</button>
+    <Menu />
+    <v-content>
     <router-view></router-view>
+    </v-content>
   </div>
 </template>
 
 <script>
+import Menu from "./components/Menu"
 
 export default {
   name: 'App',
   components: {
-
+    Menu
   },
   data() {
     return {
-    }
-  },
-  methods: {
-    patients: function() {
-      this.$router.push({ name: "patients"})
-    },
-    doctors: function() {
-     this.$router.push({ name: "doctors"})
     }
   }
 }
