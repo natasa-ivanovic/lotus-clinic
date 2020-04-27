@@ -1,35 +1,33 @@
 <template>
     <div>
-    <h1>List of {{this.userType}}</h1>
-      <table v-if="users.length" border="2" id="users">
-        <tr>
-          <th>Email</th>
-          <th>Password</th>
-          <th>Name</th>
-          <th>Surname</th>
-          <th>Address</th>
-          <th>City</th>
-          <th>Country</th>
-          <th>Phone</th>
-          <th>Id</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
-        <tr v-for="(u, k) in users" :key="k">
-          <td>{{u.email}}</td>
-          <td>{{u.password}}</td>
-          <td>{{u.name}}</td>
-          <td>{{u.surname}}</td>
-          <td>{{u.address}}</td>
-          <td>{{u.city}}</td>
-          <td>{{u.country}}</td>
-          <td>{{u.phoneNumber}}</td>
-          <td>{{u.id}}</td>
-          <td><button v-on:click="editUser(u.id)">Edit</button></td>
-          <td><button v-on:click="deleteUser(u.id)">Delete</button></td>
-        </tr>
-      </table>
-      <h3 v-else>No {{this.userType}} in the database!</h3>
+        <v-data-table
+            :headers="headers"
+            :items="users"
+            item-key="email"
+            class="elevation-1"
+        >
+            <template v-slot:top>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>List of {{userType}}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn :to="{ name: 'addUser', params: {userType: userType} }">Add new {{userType}}</v-btn>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.edit="{ item }">
+                <v-icon
+                    @click="editUser(item.id)"
+                >
+                    mdi-pencil
+                </v-icon>
+            </template>
+            <template v-slot:item.delete="{ item }">
+                <v-icon
+                    @click="deleteUser(item.id)"
+                >
+                    mdi-delete
+                </v-icon>
+            </template>
+        </v-data-table>
     </div>
 </template>
 
@@ -40,7 +38,20 @@ export default {
     name: "ViewTable",
     data() {
         return {
-            users: []
+            users: [],
+            headers: [
+                {text: 'Email', value: 'email'},
+                {text: 'Password', value: 'password'},
+                {text: 'Name', value: 'name'},
+                {text: 'Surname', value: 'surname'},
+                {text: 'Address', value: 'address'},
+                {text: 'City', value: 'city'},
+                {text: 'Country', value: 'country'},
+                {text: 'Phone number', value: 'phoneNumber'},
+                {text: 'Insurance ID', value: 'id'},
+                {text: 'Edit', value: 'edit', sortable: false },
+                {text: 'Delete', value: 'delete', sortable: false },
+            ]
         }
     },
     props: {
@@ -70,11 +81,14 @@ export default {
                     this.users.pop(user);
                 })
         },
-        editUser: function(editId) {
-            this.$router.push({ name: "editUser", params: {id: editId, userType: this.userType}})
-            }
+        editUser: function(id) {
+            this.$router.push({ name: "editUser", params: {id: id, userType: this.userType}})
+            },
+        addUser: function() {
+          this.$router.push({ name: "addUser", params: {userType: this.userType} })
         }
     }
+}
 </script>
 
 <style scoped>

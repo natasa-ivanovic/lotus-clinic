@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Add {{this.userType}}</h1>
+        <h1>Add {{this.userType.substring(0, this.userType.length -1)}}</h1>
           <form id="addUser" v-on:submit.prevent="addUser()">
             <table>
               <tr>
@@ -88,17 +88,17 @@ export default {
                 id : form.id.value
             };
             
-            fetch(apiURL + this.userType + "s", {method: 'POST', 
+            fetch(apiURL + this.userTypes, {method: 'POST', 
                             headers: {'Content-Type': 'application/json'}, 
                             body: JSON.stringify(user)})
                 .then(response => {
                     if (response.status != 200)
-                    alert("Couldn't add " + this.userType + "!");
+                    alert("Couldn't add " + this.userType.substring(0, this.userType.length -1) + "!");
                     else
                     return response.json();
                 })
                 .then(() => {
-                    this.$router.push({ name: this.userType + "s" })
+                    this.$router.push({ name: this.userType })
             })
       }
     }

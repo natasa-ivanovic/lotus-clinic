@@ -1,6 +1,72 @@
 <template>
   <div>
-    <h1>Edit {{this.userType}}</h1>
+    <v-container
+        class="fill-height"
+        fluid
+      >
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col
+            cols="6"
+          >
+            <v-card class="elevation-3">
+              <v-card-text>
+                <v-toolbar>
+                  <v-toolbar-title>Edit {{this.userType}} </v-toolbar-title>
+                </v-toolbar>
+                <v-form>
+                  <v-text-field
+                    label="Email"
+                    v-model="user.email"
+                    outlined />
+                  <v-text-field
+                    label="Password"
+                    v-model="user.password"
+                    outlined />
+                  <v-text-field
+                    label="Name"
+                    v-model="user.name"
+                    outlined />
+                  <v-text-field
+                    label="Surname"
+                    v-model="user.surname"
+                    outlined />
+                    <p>BirthDate</p>
+
+                    
+                    <p>Gender</p>
+                  <v-text-field
+                    label="Address"
+                    v-model="user.address"
+                    outlined />
+                  <v-text-field
+                    label="City"
+                    v-model="user.city"
+                    outlined />
+                  <v-text-field
+                    label="Country"
+                    v-model="user.country"
+                    outlined />
+                  <v-text-field
+                    label="Phone number"
+                    v-model="user.phoneNumber"
+                    outlined />
+                  <v-text-field
+                    label="Insurance id"
+                    v-model="user.id"
+                    outlined />
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn v-on:click="editUser()" color="primary">Edit user</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+    </v-container>
+    <!--h1>Edit {{this.userType}}</h1>
     <form id="editUser" v-on:submit.prevent="editUser()">
         <table>
         <tr>
@@ -58,7 +124,7 @@
             <td><input type="submit" /></td>
         </tr>		
         </table>
-    </form>
+    </form-->
   </div>
 </template>
 
@@ -72,6 +138,7 @@ export default {
   props: ['id', 'userType'],
   data() {
     return {
+      user: {}
     }
   },
   mounted() {
@@ -80,6 +147,7 @@ export default {
         return response.json();
       })
       .then(user => {
+        this.user= user;
         var form = document.forms['editUser'];
         form.email.value = user.email;
         form.password.value = user.password;

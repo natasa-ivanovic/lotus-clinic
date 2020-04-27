@@ -9,14 +9,13 @@ new Vue({
   router,
 
   data: {
-    Util
   },
 
   vuetify,
   render: h => h(App)
 }).$mount('#app')
 
-const Util = {
+/*const Util = {
   dateToString(date) {
     var month = date.getMonth() + 1;
     if (month < 10)
@@ -26,4 +25,4 @@ const Util = {
       day = "0" + day;
     return date.getFullYear() + "-" + month + "-" + day;
   }
-}
+}*/

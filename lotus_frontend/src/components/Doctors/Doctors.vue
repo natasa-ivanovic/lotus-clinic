@@ -1,7 +1,6 @@
 <template>
   <div>
     <ViewTable userType="doctors" />
-    <button v-on:click="addDoctor()">Add doctor</button>
   </div>
 </template>
 
@@ -16,9 +15,6 @@ export default {
     },
 
     methods: {
-        addDoctor: function() {
-          this.$router.push({ name: "addUser", params: {userType: "doctor"} })
-        }
     }
 }
     
