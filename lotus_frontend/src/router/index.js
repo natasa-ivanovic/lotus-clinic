@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
+import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
 import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
@@ -26,6 +27,11 @@ const routes = [
         component: Rooms,
         name: "rooms",
         path: "/rooms/"
+    },
+    {
+        component: AppointmentTypes,
+        name: "appointmentTypes",
+        path: "/appointmentTypes/"
     },
     {
         component: EditRooms,
