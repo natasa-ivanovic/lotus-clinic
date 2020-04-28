@@ -10,6 +10,8 @@ import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
+import Clinics from "../components/Clinics/Clinics"
+import AddClinic from "../components/Clinics/Add"
 import AddRoom from "../components/Rooms/Add"
 
 const routes = [
@@ -55,6 +57,16 @@ const routes = [
         name: "addUser",
         path: "/users/:userType/add",
         props: true
+    },
+    {
+        component: Clinics,
+        name: "clinics",
+        path: "/clinics/"
+    },
+    {
+        component: AddClinic,
+        name: "addClinic",
+        path: "/clinics/add"
     }
     
 ];
