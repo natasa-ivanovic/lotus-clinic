@@ -34,15 +34,15 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PostMapping("/rooms")
-	public ResponseEntity<Room> addRoom(@RequestBody Room room) {
+	public ResponseEntity<Room> addRoom(@RequestBody String name) {
 		System.out.println("Adding a room...");
-		System.out.println(room);
+		System.out.println(name);
 		
 		/*
 		 * if (isEmptyOrNull(room)) { System.out.println("Something's wrong...");
 		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 		 */
-		
+		Room room = new Room(name); 
 		service.save(room);
 		System.out.println("Database is ok...");
 		return new ResponseEntity<>(room, HttpStatus.OK);

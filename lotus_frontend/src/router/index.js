@@ -5,10 +5,14 @@ Vue.use(VueRouter);
 
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
+import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
 import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
+import Clinics from "../components/Clinics/Clinics"
+import AddClinic from "../components/Clinics/Add"
+import AddRoom from "../components/Rooms/Add"
 
 const routes = [
     {   
@@ -27,10 +31,20 @@ const routes = [
         path: "/rooms/"
     },
     {
+        component: AppointmentTypes,
+        name: "appointmentTypes",
+        path: "/appointmentTypes/"
+    },
+    {
         component: EditRooms,
         name: "editRoom",
         path: "/rooms/edit/:id",
         props: true
+    },
+    {
+        component: AddRoom,
+        name: "addRoom",
+        path: "/rooms/add"
     },
     {    
         component: EditUser,
@@ -43,6 +57,16 @@ const routes = [
         name: "addUser",
         path: "/users/:userType/add",
         props: true
+    },
+    {
+        component: Clinics,
+        name: "clinics",
+        path: "/clinics/"
+    },
+    {
+        component: AddClinic,
+        name: "addClinic",
+        path: "/clinics/add"
     }
     
 ];
