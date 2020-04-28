@@ -11,3 +11,6 @@ insert into doctors (id, address, birth_date, city, country, email, gender, name
 
 insert into nurses (id, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', 'nurse1', '0699114909', 'Sestric', 0);
 insert into nurses (id, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id) values (54326162342, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'nurse2@gmail.com', 0, 'Medinko', 'nurse2', '0699114909', 'Bratic', 1);
+
+insert into medicines (id, name) values (1, 'Acetaminophen');
+insert into medicines (id, name) values (2, 'ibuprofen');

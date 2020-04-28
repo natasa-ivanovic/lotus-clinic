@@ -10,6 +10,7 @@
                     <v-btn text :to="{ name: 'rooms'}">Rooms</v-btn>
                     <v-btn text :to="{ name: 'appointmentTypes'}">Appointment types</v-btn>
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
+                    <v-btn text :to="{ name: 'medicines'}">Medicines</v-btn>
                 </v-toolbar-items>
             </template>
         </v-toolbar>
@@ -33,6 +34,9 @@ export default {
     },
     clnics: function() {
       this.$router.push({ name: "clinics"})
+    },
+    medicines: function() {
+      this.$router.push({ name: "medicines"})
     }
   }
     
