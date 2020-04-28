@@ -10,6 +10,7 @@
             <v-form>
               <v-text-field
                 label="Name"
+                :rules="[rules.name, rules.required]"
                 v-model="name" />
             </v-form>
             <v-card-actions>
@@ -30,7 +31,10 @@ export default {
   name: "addRoom",
   data() {
     return {
-      name : ''
+      name : '',
+      rules: {
+          required: value => !!value || 'Field is required.'
+        }
     }
   },
   methods: {

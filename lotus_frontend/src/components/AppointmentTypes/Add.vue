@@ -10,7 +10,9 @@
             <v-form>
               <v-text-field
                 label="Name"
-                v-model="name" />
+                :rules="[rules.name, rules.required]"
+                v-model="name"
+                required />
             </v-form>
             <v-card-actions>
               <v-btn block v-on:click="addAppType()" color="primary">Add</v-btn>
@@ -28,7 +30,10 @@ export default {
     name: "addAppointmentType",
     data() {
       return {
-        name: ''
+        name: '',
+        rules: {
+          required: value => !!value || 'Field is required.'
+        }
       }
     },
     methods: {

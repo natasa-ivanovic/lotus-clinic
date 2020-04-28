@@ -7,6 +7,7 @@ import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
 import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
 import AddAppointmentType from "../components/AppointmentTypes/Add"
+import EditAppointmentType from "../components/AppointmentTypes/Edit"
 import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
@@ -73,6 +74,12 @@ const routes = [
         component: AddAppointmentType,
         name: "addAppointmentType",
         path: "/appointmentTypes/add"
+    },
+    {
+        component: EditAppointmentType,
+        name: "editAppointmentType",
+        path: "/appointmentTypes/edit/:id",
+        props: true
     }
     
 ];
