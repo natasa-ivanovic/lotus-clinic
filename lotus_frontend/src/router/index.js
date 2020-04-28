@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
 import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
+import AddAppointmentType from "../components/AppointmentTypes/Add"
 import EditUser from "../components/Users/Edit"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
@@ -29,11 +30,6 @@ const routes = [
         component: Rooms,
         name: "rooms",
         path: "/rooms/"
-    },
-    {
-        component: AppointmentTypes,
-        name: "appointmentTypes",
-        path: "/appointmentTypes/"
     },
     {
         component: EditRooms,
@@ -67,6 +63,16 @@ const routes = [
         component: AddClinic,
         name: "addClinic",
         path: "/clinics/add"
+    },
+    {
+        component: AppointmentTypes,
+        name: "appointmentTypes",
+        path: "/appointmentTypes/"
+    },
+    {
+        component: AddAppointmentType,
+        name: "addAppointmentType",
+        path: "/appointmentTypes/add"
     }
     
 ];
