@@ -10,7 +10,7 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>List of rooms</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn :to="{ name: 'addRoom' }">Add new room</v-btn>
+                    <v-btn @click="addRoom()">Add new room</v-btn>
                 </v-toolbar>
             </template>
             <template v-slot:item.edit="{ item }">
@@ -64,26 +64,6 @@ export default {
       })
   },
   methods: {
-    addRoom: function() {
-      var form = document.forms['addRoom'];
-      
-      var room = {
-          name : form.name.value,
-          id : form.id.value
-      };
-      fetch(apiURL, {method: 'POST', 
-                      headers: {'Content-Type': 'application/json'}, 
-                      body: JSON.stringify(room)})
-        .then(response => {
-          if (response.status != 200)
-            alert("Couldn't add room!");
-          else
-            return response.json();
-        })
-        .then(r => {
-          this.rooms.push(r);
-        })
-    },
     deleteRoom: function(id) {
       fetch(apiURL + id, {method: 'DELETE'})
         .then(response => {
@@ -101,7 +81,10 @@ export default {
       this.$router.push({name: "editRoom", params: {id : editId}});
     },
     getDetails: function(id) {
-        return id;
+        return id; //TODO
+    },
+    addRoom: function() {
+      this.$router.push({name: "addRoom"})
     }
   }
     

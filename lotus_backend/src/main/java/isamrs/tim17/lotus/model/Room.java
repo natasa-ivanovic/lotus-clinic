@@ -1,9 +1,5 @@
 package isamrs.tim17.lotus.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 
 /***********************************************************************
@@ -14,15 +10,17 @@ import javax.persistence.Column;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "rooms")
 public class Room {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name= "name", unique = false, nullable = false)
 	private String name;
@@ -38,6 +36,11 @@ public class Room {
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	 */
 	public Room() {
+	}
+	
+	public Room(String name) {
+		this.name = name;
+		this.id = this.getId();
 	}
 
 	public Room(String name, Long id) {

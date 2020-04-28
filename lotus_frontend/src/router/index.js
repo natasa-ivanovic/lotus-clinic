@@ -11,6 +11,7 @@ import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
 import Clinics from "../components/Clinics/Clinics"
 import AddClinic from "../components/Clinics/Add"
+import AddRoom from "../components/Rooms/Add"
 
 const routes = [
     {   
@@ -33,6 +34,11 @@ const routes = [
         name: "editRoom",
         path: "/rooms/edit/:id",
         props: true
+    },
+    {
+        component: AddRoom,
+        name: "addRoom",
+        path: "/rooms/add"
     },
     {    
         component: EditUser,
