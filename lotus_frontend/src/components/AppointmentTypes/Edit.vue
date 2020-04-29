@@ -17,7 +17,7 @@
                   <v-toolbar-title >Edit appointment type</v-toolbar-title>
                 </v-toolbar>
               
-                <v-form>
+                <v-form v-model="valid" ref="form">
                   <v-text-field
                     label="ID"
                     v-model="appType.id"
@@ -26,7 +26,7 @@
                     outlined />
                   <v-text-field
                     label="Name"
-                    :rules="[rules.name, rules.required]"
+                    :rules="[rules.required]"
                     v-model="appType.name"
                     outlined />
                 </v-form>
@@ -53,10 +53,16 @@ export default {
             appType: {},
             rules: {
                 required: value => !!value || 'Field is required.'
-            }
+            },
+            valid: true
         }
     },
     mounted() {
+        this.$refs.form.validate();
+        if (!this.valid) {
+          alert("Error")
+          return;
+        }
         fetch(apiURL + "/" + this.id)
         .then(response => {
             return response.json();

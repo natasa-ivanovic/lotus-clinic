@@ -7,12 +7,13 @@
               <v-toolbar-title>Add Clinic </v-toolbar-title>
             </v-toolbar>
             <v-card-text>
-              <v-form>
+              <v-form v-model="valid" ref="form">
                   <v-row>
                       <v-col>
                           <v-text-field
                             label="Name"
-                            v-model="clinic.name" />
+                            v-model="clinic.name"
+                            :rules="[rules.required]" />
                       </v-col>
                   </v-row>
                   <v-row>
@@ -26,7 +27,8 @@
                       <v-col>
                           <v-text-field
                             label="Description"
-                            v-model="clinic.description" />
+                            v-model="clinic.description"
+                            :rules="[rules.required]" />
                       </v-col>
                   </v-row>
                   <v-row>
@@ -48,7 +50,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/clinics";
+const apiURL = "http://localhost:9001/api/clinics/";
 export default {
     name: "AddClinic",
     data() {
@@ -58,11 +60,20 @@ export default {
                 id: "",
                 address: "",
                 description: ""
-            }
+            },
+            rules: {
+                required: value => !!value || 'Field is required.'
+            },
+            valid: true
         }
     },
     methods: {
         addClinic: function() {
+            this.$refs.form.validate();
+            if (!this.valid) {
+                alert("Error")
+            return;
+            }
             fetch(apiURL, {method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(this.clinic)})

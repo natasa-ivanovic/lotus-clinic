@@ -7,10 +7,10 @@
             <v-toolbar-title>Add room</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-form>
+            <v-form v-model="valid" ref="form">
               <v-text-field
                 label="Name"
-                :rules="[rules.name, rules.required]"
+                :rules="[rules.required]"
                 v-model="name" />
             </v-form>
             <v-card-actions>
@@ -34,11 +34,17 @@ export default {
       name : '',
       rules: {
           required: value => !!value || 'Field is required.'
-        }
+        },
+      valid: true
     }
   },
   methods: {
     addRoom: function() {
+      this.$refs.form.validate();
+        if (!this.valid) {
+          alert("Error")
+          return;
+      }
       fetch(apiURL, {method: 'POST', 
                         headers: {'Content-Type': 'application/json'}, 
                         body: this.name})
