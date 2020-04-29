@@ -7,10 +7,10 @@
             <v-toolbar-title>Add appointment type</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-form>
+            <v-form v-model="valid" ref="form">
               <v-text-field
                 label="Name"
-                :rules="[rules.name, rules.required]"
+                :rules="[rules.required]"
                 v-model="name"
                 required />
             </v-form>
@@ -33,11 +33,17 @@ export default {
         name: '',
         rules: {
           required: value => !!value || 'Field is required.'
-        }
+        },
+        valid: true
       }
     },
     methods: {
       addAppType: function() {
+            this.$refs.form.validate();
+            if (!this.valid) {
+            alert("Error")
+            return;
+          }
             fetch(apiURL, {method: 'POST', 
                   headers: {'Content-Type': 'application/json'}, 
                   body: this.name})

@@ -17,20 +17,18 @@
                   <v-toolbar-title >Edit room</v-toolbar-title>
                 </v-toolbar>
               
-                <v-form>
+                <v-form v-model="valid" ref="form">
                   <v-text-field
                     label="ID"
                     v-model="room.id"
                     readonly
                     filled
                     outlined />
-                  <!--ValidationProvider v-slot="{errors}" name="Name" rules="required"-->
                   <v-text-field
                     label="Name"
-                    :rules="[rules.name, rules.required]"
+                    :rules="[rules.required]"
                     v-model="room.name"
                     outlined />
-                  <!--/ValidationProvider-->
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -55,8 +53,9 @@ export default {
         return {
           room: {},
           rules: {
-          required: value => !!value || 'Field is required.'
-          }
+            required: value => !!value || 'Field is required.'
+          },
+          valid: true
         }
     },
     mounted() {
@@ -70,6 +69,11 @@ export default {
     },
     methods: {
         editRoom: function() {
+            this.$refs.form.validate();
+            if (!this.valid) {
+              alert("Error")
+              return;
+            }
             fetch(apiURL + "/" + this.id, {method: 'PUT',
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify(this.room)})
