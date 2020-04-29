@@ -73,6 +73,7 @@ public class AppointmentTypeController {
 		if (at == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		System.out.println("Deleting " + at);
+		service.remove(id);
 		return new ResponseEntity<>(at, HttpStatus.OK);
 	}
 

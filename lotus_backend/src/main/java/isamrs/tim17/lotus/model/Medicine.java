@@ -7,10 +7,36 @@ package isamrs.tim17.lotus.model;
 
 import java.util.*;
 
-public class Medicine {
-   private int id;
-   private int name;
-   
-   public ClinicalCentre clinicCentre;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "medicines")
+public class Medicine {
+	@Id
+   private long id;
+	@Column(name = "name", nullable = false, unique = false)
+   private String name;
+   
+   //public ClinicalCentre clinicCentre;
+
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+   
 }
