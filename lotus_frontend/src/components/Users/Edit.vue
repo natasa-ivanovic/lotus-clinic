@@ -3,7 +3,7 @@
     <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="6">
-            <v-card class="elevation-3">
+            <v-card class="elevation-3" v-if="user != undefined">
               <v-toolbar flat color="secondary" dark>
                 <v-toolbar-title v-if="userType">Edit {{userType.substring(0, userType.length -1)}} </v-toolbar-title>
               </v-toolbar>
@@ -137,9 +137,9 @@ export default {
   props: ['id', 'userType'],
   data() {
     return {
-      user: {},
+      user: undefined,
       menu: false,
-      dateString: new Date().toString().toISOString(),
+      dateString: "",
       genders: ['Male', 'Female', 'Other'],
       selectedGender: 'Other',
       confirmPass: "",

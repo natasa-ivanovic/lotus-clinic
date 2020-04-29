@@ -8,6 +8,7 @@ import isamrs.tim17.lotus.model.User;
 public class UserDTO {
 	
 	private Long id;
+	private Long ssid;
 	private String email;
 	private String password;
 	private String name;
@@ -33,15 +34,9 @@ public class UserDTO {
 		this.phoneNumber = user.getPhoneNumber();
 		this.birthDate = user.getBirthDate();
 		this.gender = user.getGender();
+		this.ssid = user.getSsid();
 	}
 	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getEmail() {
 		return email;
@@ -121,6 +116,22 @@ public class UserDTO {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public Long getSsid() {
+		return ssid;
+	}
+
+	public void setSsid(Long ssid) {
+		this.ssid = ssid;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	

@@ -114,7 +114,7 @@
                     <v-text-field
                       label="Insurance id"
                       :rules="[rules.required, rules.isNumber]"
-                      v-model="user.id" />
+                      v-model="user.ssid" />
                   </v-col>
                 </v-row>
               </v-form>
@@ -146,7 +146,7 @@ export default {
           city: "",
           country: "",
           phoneNumber: "",
-          id: ""
+          ssid: ""
         },
         genders: ['Male', 'Female', 'Other'],
         selectedGender: "",
@@ -180,7 +180,7 @@ export default {
           return;
         }
         this.user.birthDate = this.dateString + "T00:00:00.000+0000";
-        this.user.gender = this.selectedGender.charAt(0).toLowerCase() + this.selectedGender.slice(1);          
+        this.user.gender = this.selectedGender.toUpperCase();          
         fetch(apiURL + this.userType, {method: 'POST', 
                         headers: {'Content-Type': 'application/json'}, 
                         body: JSON.stringify(this.user)})

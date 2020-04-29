@@ -86,7 +86,7 @@ public class PatientController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/patients/{id}")
-	public ResponseEntity<Object> updatePatient(@RequestBody UserDTO patient, @PathVariable("id") long id) {
+	public ResponseEntity<Object> updatePatient(@RequestBody UserDTO patient, @PathVariable("id") Long id) {
 		if (id != patient.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Patient p = service.findOne(id);
