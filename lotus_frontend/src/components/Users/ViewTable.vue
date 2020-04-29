@@ -48,7 +48,7 @@ export default {
                 {text: 'City', value: 'city'},
                 {text: 'Country', value: 'country'},
                 {text: 'Phone number', value: 'phoneNumber'},
-                {text: 'Insurance ID', value: 'id'},
+                {text: 'Insurance ID', value: 'ssid'},
                 {text: 'Edit', value: 'edit', sortable: false },
                 {text: 'Delete', value: 'delete', sortable: false },
             ]

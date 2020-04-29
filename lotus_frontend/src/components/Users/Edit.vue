@@ -5,7 +5,7 @@
           <v-col cols="6">
             <v-card class="elevation-3">
               <v-toolbar flat color="secondary" dark>
-                <v-toolbar-title>Edit {{this.userType.substring(0, this.userType.length -1)}} </v-toolbar-title>
+                <v-toolbar-title v-if="userType">Edit {{userType.substring(0, userType.length -1)}} </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <v-form v-model="valid" ref="form">
@@ -26,7 +26,6 @@
                         :rules="[rules.required, rules.counter]"
                         :type="showPass ? 'text' : 'password'"
                         v-model="user.password" 
-                        minlength="5"
                         @click:append="showPass = !showPass" />
                     </v-col>
                     <v-col>
@@ -35,7 +34,6 @@
                         :append-icon="showConfirmPass ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="showConfirmPass ? 'text' : 'password'"
                         :rules="[rules.required, rules.counter, rules.passwordMatch]"
-                        minlength="5"
                         v-model="confirmPass" 
                         @click:append="showConfirmPass = !showConfirmPass" />
                     </v-col>
@@ -114,7 +112,7 @@
                       <v-text-field
                         label="Insurance id"
                         :rules="[rules.required, rules.isNumber]"
-                        v-model="user.id" />
+                        v-model="user.ssid" />
                     </v-col>
                   </v-row>
                 </v-form>
@@ -141,7 +139,7 @@ export default {
     return {
       user: {},
       menu: false,
-      dateString: String,
+      dateString: new Date().toString().toISOString(),
       genders: ['Male', 'Female', 'Other'],
       selectedGender: 'Other',
       confirmPass: "",
@@ -155,7 +153,9 @@ export default {
           passwordMatch: () => this.user.password == this.confirmPass || 'Passwords must match.',
           isNumber: value => !isNaN(value) || 'Id must be a number.'
       },
-      valid: true
+      valid: true,
+      showPass: false,
+      showConfirmPass: false
     }
   },
   computed: {
@@ -172,7 +172,7 @@ export default {
         this.user.city &&
         this.user.country &&
         this.user.phoneNumber &&
-        this.user.id
+        this.user.ssid
       )
     }
   },
@@ -184,19 +184,18 @@ export default {
       .then(user => {
         this.user= user;
         this.dateString = util.dateToString(user.birthDate);
-        this.selectedGender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
+        this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
       })
   },
   methods: {
       editUser: function() {
         this.$refs.form.validate();
         if (!this.valid) {
-          alert("Ha")
           return;
         }
         var oldDate = this.user.birthDate.split('T')[1]; 
         this.user.birthDate = this.dateString + 'T' + oldDate;
-        this.user.gender = this.selectedGender.charAt(0).toLowerCase() + this.selectedGender.slice(1);
+        this.user.gender = this.selectedGender.toUpperCase();
         fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
                         headers: {'Content-Type': 'application/json'}, 
                         body: JSON.stringify(this.user)})

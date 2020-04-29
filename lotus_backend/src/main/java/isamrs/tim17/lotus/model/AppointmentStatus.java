@@ -8,10 +8,10 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum AppointmentStatus {
-   premade,
-   scheduled,
-   canceled,
-   ongoing,
-   finished;
+   PREMADE,
+   SCHEDULED,
+   CANCELED,
+   ONGOING,
+   FINISHED;
 
 }

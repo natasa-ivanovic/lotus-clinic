@@ -8,8 +8,8 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum Gender {
-   female,
-   male,
-   other;
+   FEMALE,
+   MALE,
+   OTHER;
 
 }

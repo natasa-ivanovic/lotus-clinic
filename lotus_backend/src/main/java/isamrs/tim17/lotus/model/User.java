@@ -8,19 +8,24 @@ package isamrs.tim17.lotus.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 @Entity
-@Inheritance(
-		strategy = InheritanceType.TABLE_PER_CLASS
-		)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="role", discriminatorType=DiscriminatorType.STRING, length = 20)
+@Table(name = "users")
 public abstract class User {
 	@Id
-	private long id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 	@Column(name = "password", unique = false, nullable = false)
@@ -41,11 +46,13 @@ public abstract class User {
 	private Date birthDate;
 	@Column(name = "gender", unique = false, nullable = false)
 	private Gender gender;
+	@Column(name = "ssid", unique = true, nullable = false)
+	private Long ssid;
 	
 	public User() {}
 	
 	public User(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, long id, UserType type, Date birthDate, Gender gender) {
+			String phoneNumber, long ssid, Date birthDate, Gender gender) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -55,7 +62,7 @@ public abstract class User {
 		this.city = city;
 		this.country = country;
 		this.phoneNumber = phoneNumber;
-		this.id = id;
+		this.ssid = ssid;
 		this.birthDate = birthDate;
 		this.gender = gender;
 	}
@@ -133,14 +140,6 @@ public abstract class User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public Date getBirthDate() {
 		return birthDate;
 	}
@@ -155,6 +154,22 @@ public abstract class User {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public Long getSsid() {
+		return ssid;
+	}
+
+	public void setSsid(Long ssid) {
+		this.ssid = ssid;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }

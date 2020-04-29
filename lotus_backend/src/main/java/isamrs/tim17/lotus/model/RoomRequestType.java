@@ -8,8 +8,8 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum RoomRequestType {
-   patientApp,
-   doctorApp,
-   doctorOper;
+   PATIENT_APP,
+   DOCTOR_APP,
+   DOCTOR_OPER;
 
 }

@@ -8,8 +8,8 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum RequestStatus {
-   pending,
-   approved,
-   rejected;
+   PENDING,
+   APPROVED,
+   REJECTED;
 
 }

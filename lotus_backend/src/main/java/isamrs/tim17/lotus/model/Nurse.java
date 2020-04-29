@@ -7,11 +7,15 @@ package isamrs.tim17.lotus.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "nurses")
-public class Nurse extends MedicalStaff {
+@DiscriminatorValue("NURSE")
+public class Nurse extends User {
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Clinic clinic;
 	
 	public Nurse() {}
 }

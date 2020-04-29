@@ -8,9 +8,9 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum OperationStatus {
-   scheduled,
-   canceled,
-   ongoing,
-   finished;
+   SCHEDULED,
+   CANCELED,
+   ONGOING,
+   FINISHED;
 
 }

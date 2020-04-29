@@ -22,7 +22,6 @@ import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Gender;
 import isamrs.tim17.lotus.model.Patient;
-import isamrs.tim17.lotus.model.UserType;
 import isamrs.tim17.lotus.service.PatientService;
 
 @RestController

@@ -177,7 +177,6 @@ export default {
       addUser: function() {
         this.$refs.form.validate();
         if (!this.valid) {
-          alert("Ha")
           return;
         }
         this.user.birthDate = this.dateString + "T00:00:00.000+0000";

@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,7 +22,8 @@ import javax.persistence.Table;
 @Table(name = "clinics")
 public class Clinic {
 	@Id
-	private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
 	@Column(name = "name", nullable = false, unique = false)
 	private String name;
 	@Column(name = "address", nullable = false, unique = false)
@@ -30,7 +33,9 @@ public class Clinic {
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Patient> patients = new HashSet<Patient>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<MedicalStaff> staff = new HashSet<MedicalStaff>();
+	private Set<Doctor> doctors = new HashSet<Doctor>();
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Nurse> nurses = new HashSet<Nurse>();
 
 
 	//TODO
@@ -44,11 +49,11 @@ public class Clinic {
 		this.description = description;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

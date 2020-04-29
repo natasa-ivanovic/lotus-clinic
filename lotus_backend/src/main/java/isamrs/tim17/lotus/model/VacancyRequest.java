@@ -11,6 +11,6 @@ public class VacancyRequest extends Request {
    private Date startDate;
    private Date endDate;
    
-   public MedicalStaff staff;
+   public User staff;
 
 }

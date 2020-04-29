@@ -38,8 +38,6 @@ public class DoctorController {
 		 * if (isEmptyOrNull(doctor)) { System.out.println("Something's wrong...");
 		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 		 */
-		
-		System.out.println(doctor);
 		service.save(doctor);
 		System.out.println("Database is ok...");
 		return new ResponseEntity<>(doctor, HttpStatus.OK);

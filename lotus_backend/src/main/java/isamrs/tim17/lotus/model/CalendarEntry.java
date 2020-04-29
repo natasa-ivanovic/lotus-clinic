@@ -8,9 +8,8 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public enum CalendarEntry {
-   operation,
-   appointment,
-   vacation,
-   sickLeave;
-
+	OPERATION,
+	APPOINTMENT,
+	VACATION,
+	SICKLEAVE;
 }
