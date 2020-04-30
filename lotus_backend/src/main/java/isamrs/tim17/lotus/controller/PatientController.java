@@ -1,13 +1,12 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
-import isamrs.tim17.lotus.model.Clinic;
-import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Gender;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.PatientService;
 
@@ -38,6 +34,7 @@ public class PatientController {
 	 *         code.
 	 */
 	@GetMapping("/patients")
+	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<List<UserDTO>> getPatients() {
 		List<Patient> patients = service.findAll();
 		List<UserDTO> patientsDTO = new ArrayList<>();
@@ -54,6 +51,7 @@ public class PatientController {
 	 * @return Patient This returns the requested patient.
 	 */
 	@GetMapping("/patients/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Patient> getPatient(@PathVariable("id") long id) {
 		Patient patient = service.findOne(id);
 		if (patient == null)
@@ -94,7 +92,7 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		p.setName(patient.getName());
 		p.setSurname(patient.getSurname());
-		p.setEmail(patient.getEmail());
+		p.setUsername(patient.getEmail());
 		p.setPassword(patient.getPassword());
 		p.setBirthDate(patient.getBirthDate());
 		p.setGender(patient.getGender());
@@ -129,7 +127,7 @@ public class PatientController {
 			return true;
 		if (patient.getSurname() == null || "".equals(patient.getSurname()))
 			return true;
-		if (patient.getEmail() == null || "".equals(patient.getEmail()))
+		if (patient.getUsername() == null || "".equals(patient.getUsername()))
 			return true;
 		if (patient.getPassword() == null || "".equals(patient.getPassword()))
 			return true;

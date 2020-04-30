@@ -8,6 +8,10 @@ package isamrs.tim17.lotus.model;
 import java.util.*;
 
 public class ClinicAdministrator extends User {
-   public Clinic clinic;
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+public Clinic clinic;
 
 }

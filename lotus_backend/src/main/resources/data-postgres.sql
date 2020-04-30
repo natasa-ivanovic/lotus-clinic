@@ -10,17 +10,44 @@ insert into appointment_type (name, clinic_id) values ('Examination', 1);
 insert into appointment_type (name, clinic_id) values ('Check-up', 1);
 insert into appointment_type (name, clinic_id) values ('Specialist appointment', 2);
 insert into appointment_type (name, clinic_id) values ('Post-operation check-up', 2);
-
+/* passwordi su isti kao imena mejla bez @...) */
 /* patients */
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (12345678912, 'Novosadski put 27', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'mario@gmail.com', 1, 'Mario', 'mario', '0699114909', 'Kujundzic', 1, 'PATIENT');
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (23456789012, 'Bulevar oslobodjenja 182', '1998-05-01 02:00:00', 'Novi Sad', 'Srbija', 'natasa@gmail.com', 0, 'Natasa', 'natasa', '066124909', 'Ivanovic', 1, 'PATIENT');
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (34567890123, 'Adice 12', '1998-06-12 02:00:00', 'Novi Sad', 'Srbija', 'bela@gmail.com', 1, 'Bela', 'bela', '069324909', 'Vajda', 2, 'PATIENT');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (12345678912, 'Novosadski put 27', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'mario@gmail.com', 1, 'Mario', '$2a$10$iSqwA0VZw38fAlB71WXy5u1o3R6Am71wywNJGj/Osp8pysDEzX.di', '0699114909', 'Kujundzic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (23456789012, 'Bulevar oslobodjenja 182', '1998-05-01 02:00:00', 'Novi Sad', 'Srbija', 'natasa@gmail.com', 0, 'Natasa', '$2a$10$ASuVxFefDQgZ4ZT8omEHVOLWMFyoFmZc8MfS7AaDuEsu1.udx6rx6', '066124909', 'Ivanovic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (34567890123, 'Adice 12', '1998-06-12 02:00:00', 'Novi Sad', 'Srbija', 'bela@gmail.com', 1, 'Bela', '$2a$10$CzGDJmo3usF20bksAKCZKODOFK.uZOhJSa15g./8wZ7Un7svUf/WK', '069324909', 'Vajda', 2, 'PATIENT', true, '2020-04-30 16:00:00.508-07');
 /* doctors */
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (42367854326, 'Novosadski put 17', '1995-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doc1@gmail.com', 1, 'Doktorko', 'doc1', '0699114909', 'Dokic', 1, 'DOCTOR');
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (53451231231, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doc2@gmail.com', 0, 'Doktorka', 'doc2', '0699114909', 'Dakic', 2, 'DOCTOR');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (42367854326, 'Novosadski put 17', '1995-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doc1@gmail.com', 1, 'Doktorko', '$2a$10$KuR.tCLIEjTE4Y5z5vEHLOM.vIpqUJh.MqyrNJOQ14rNRHViOsxpe', '0699114909', 'Dokic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (53451231231, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doc2@gmail.com', 0, 'Doktorka', '$2a$10$RPkOyWnFHsLzNrIZb9CQj.hwuZgZY4KBPoZ4sU0zw.6JB19JOfyzS', '0699114909', 'Dakic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07');
 /* nurses */
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', 'nurse1', '0699114909', 'Sestric', 1, 'NURSE');
-insert into users (ssid, address, birth_date, city, country, email, gender, name, password, phone_number, surname, clinic_id, role) values (54326162342, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'nurse2@gmail.com', 0, 'Medinko', 'nurse2', '0699114909', 'Bratic', 2, 'NURSE');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', '$2a$10$t7KnHQ52xqsAdt7m.WXYs.1GdxOOMbPcbLJBBmFzhVaiCKkp9OKGu', '0699114909', 'Sestric', 1, 'NURSE', true, '2020-04-30 16:00:00.508-07');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (54326162342, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'nurse2@gmail.com', 0, 'Medinko', '$2a$10$lIe3MF.s.bJ801yZMnyMn.xvi2KJEOT9Z3b.V0Kx2piI2zaiaEWqO', '0699114909', 'Bratic', 2, 'NURSE', true, '2020-04-30 16:00:00.508-07');
 
 insert into medicines (id, name) values (1, 'Acetaminophen');
 insert into medicines (id, name) values (2, 'ibuprofen');
+
+insert into authority (name) values ('ROLE_PATIENT');
+insert into authority (name) values ('ROLE_DOCTOR');
+insert into authority (name) values ('ROLE_NURSE');
+insert into authority (name) values ('ROLE_ADMIN');
+insert into authority (name) values ('ROLE_CENTRE_ADMIN');
+insert into authority (name) values ('ROLE_USER');
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 1);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (3, 1);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (4, 2);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 2);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 3);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 3);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 6);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 6);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (3, 6);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (4, 6);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 6);
+
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 6);
+INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 6);

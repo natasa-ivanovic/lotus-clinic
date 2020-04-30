@@ -14,6 +14,10 @@ import javax.persistence.Table;
 @Entity
 @DiscriminatorValue("NURSE")
 public class Nurse extends User {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;
 	

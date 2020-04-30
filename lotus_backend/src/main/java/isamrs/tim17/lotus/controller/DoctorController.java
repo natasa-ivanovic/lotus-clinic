@@ -103,7 +103,7 @@ public class DoctorController {
 
 		doctor.setName(newDoctor.getName());
 		doctor.setSurname(newDoctor.getSurname());
-		doctor.setEmail(newDoctor.getEmail());
+		doctor.setUsername(newDoctor.getEmail());
 		doctor.setPassword(newDoctor.getPassword());
 		doctor.setBirthDate(newDoctor.getBirthDate());
 		doctor.setGender(newDoctor.getGender());

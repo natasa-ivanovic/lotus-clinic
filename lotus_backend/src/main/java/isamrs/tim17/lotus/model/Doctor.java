@@ -14,6 +14,10 @@ public class Doctor extends User {
 	//@Column(name = "operation", unique = false, nullable = true)
 	//public Operation operation;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;
 	
