@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @DiscriminatorValue("PATIENT")
 public class Patient extends User {
 	@ManyToOne(fetch = FetchType.EAGER)
-	public Clinic clinic;
+	private Clinic clinic;
 
 	public Patient() {}
 	
@@ -27,5 +27,15 @@ public class Patient extends User {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);
 		this.clinic = clinic;
 	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+	
+	
 	
 }
