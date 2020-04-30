@@ -22,7 +22,7 @@ public class Patient extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
-	public Clinic clinic;
+	private Clinic clinic;
 
 	public Patient() {}
 	
@@ -31,5 +31,15 @@ public class Patient extends User {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);
 		this.clinic = clinic;
 	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+	
+	
 	
 }

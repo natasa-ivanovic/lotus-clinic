@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -36,10 +37,10 @@ public class Clinic {
 	private Set<Doctor> doctors = new HashSet<Doctor>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Nurse> nurses = new HashSet<Nurse>();
-
-
-	//TODO
-	//public ClinicalCentre clinicCentreId;
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<ClinicAdministrator>();
+	@ManyToOne(fetch = FetchType.EAGER)
+	private ClinicalCentre clinicalCentre;
 	
 	public Clinic() {}
 	
@@ -79,6 +80,38 @@ public class Clinic {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Set<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(Set<Patient> patients) {
+		this.patients = patients;
+	}
+
+	public Set<Doctor> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(Set<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+
+	public Set<Nurse> getNurses() {
+		return nurses;
+	}
+
+	public void setNurses(Set<Nurse> nurses) {
+		this.nurses = nurses;
+	}
+
+	public ClinicalCentre getClinicalCentre() {
+		return clinicalCentre;
+	}
+
+	public void setClinicalCentre(ClinicalCentre clinicalCentre) {
+		this.clinicalCentre = clinicalCentre;
 	}
 	
 	

@@ -5,6 +5,10 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class AppointmentType
  ***********************************************************************/
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +16,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="appointmentTypes")
 public class AppointmentType {
 	
 	@Id
@@ -23,7 +30,10 @@ public class AppointmentType {
 	private String name;
     
 	@ManyToOne(fetch = FetchType.EAGER)
-	public Clinic clinic;
+	private Clinic clinic;
+	
+	@OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
 	public AppointmentType() {}
 	
