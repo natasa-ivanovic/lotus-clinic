@@ -68,11 +68,12 @@ export default {
             return response.json();
         })
         .then(data => {
-          alert(data.accessToken);
           this.$authKey = "Bearer " + data.accessToken;
           this.$role = data.userRole;
-          this.$forceUpdate();
-          this.$router.push({ name: "mainPage" })
+          localStorage.setItem('authKey', "Bearer " + data.accessToken);
+          localStorage.setItem('role', data.userRole);
+          //this.$forceUpdate();
+          this.$router.push({ name: "home" })
         })
     }
   }

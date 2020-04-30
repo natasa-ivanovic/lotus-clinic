@@ -1,6 +1,11 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+};
+
 Vue.use(VueRouter);
 
 import Login from "../components/Login"
@@ -18,7 +23,7 @@ import AddClinic from "../components/Clinics/Add"
 import AddRoom from "../components/Rooms/Add"
 import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
-import MainPage from "../components/MainPage"
+import HomePage from "../components/HomePage"
 
 const routes = [
     {
@@ -101,13 +106,13 @@ const routes = [
         path: "/medicines/add"
     },
     {
-        component: MainPage,
-        name: "mainPage",
-        path: "/"
+        component: HomePage,
+        name: "home",
+        path: "/home"
     },
     {
-        path: "*",
-        redirect: "/"
+        path: "/*",
+        redirect: "/home"
     }
 ];
 

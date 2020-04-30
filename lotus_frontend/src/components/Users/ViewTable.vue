@@ -60,7 +60,7 @@ export default {
         }
     },    
     mounted() {
-        fetch(apiURL + this.userType, {headers: { 'Authorization': localStorage.getItem("authKey") }})
+        fetch(apiURL + this.userType, {headers: { 'Authorization': this.$authKey }})
         .then(response => {
             return response.json();
         })

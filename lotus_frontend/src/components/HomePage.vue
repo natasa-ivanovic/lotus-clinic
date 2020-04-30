@@ -1,23 +1,26 @@
 <template>
     <div>
-        <Login v-if="checkRole('')" />
-        <div v-else>Neko je ulogovan!</div>
+        <div>Neko je ulogovan!</div>
 
     </div>
 </template>
 
 
 <script>
-import Login from "../components/Login"
 export default {
     components: {
-        Login
     },
     methods: {
         checkRole: function(role) {
             if (this.$role == role)
                 return true;
     }
+    },
+    created() {
+        console.log("User is: " + this.$role)
+        if (this.$role == null)
+            this.$router.push({ name: "login" })
+
     }
 }
 </script>

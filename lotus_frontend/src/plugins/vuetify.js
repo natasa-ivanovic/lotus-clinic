@@ -4,7 +4,7 @@ import Vuetify from 'vuetify/lib';
 Vue.use(Vuetify);
 
 // global variables
-const authKey = Vue.observable({ authKey: "" })
+const authKey = Vue.observable({ authKey: localStorage.getItem('authKey') })
 
 Object.defineProperty(Vue.prototype, '$authKey', {
   get () {
@@ -15,7 +15,7 @@ Object.defineProperty(Vue.prototype, '$authKey', {
   }
 })
 
-const role = Vue.observable({ role: "" })
+const role = Vue.observable({ role: localStorage.getItem('role') })
 
 Object.defineProperty(Vue.prototype, '$role', {
   get () {
