@@ -66,7 +66,7 @@ public class LoginController {
 		int expiresIn = tokenUtils.getExpiredIn();
 
 		// Vrati token kao odgovor na uspesnu autentifikaciju
-		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getRole()));
 	}
 	
 	@GetMapping("/logout")
@@ -86,7 +86,7 @@ public class LoginController {
 			String refreshedToken = tokenUtils.refreshToken(token);
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn, user.getRole()));
 		} else {
 			UserTokenState userTokenState = new UserTokenState();
 			return ResponseEntity.badRequest().body(userTokenState);

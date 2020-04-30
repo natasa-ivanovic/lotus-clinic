@@ -18,6 +18,7 @@ import AddClinic from "../components/Clinics/Add"
 import AddRoom from "../components/Rooms/Add"
 import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
+import MainPage from "../components/MainPage"
 
 const routes = [
     {
@@ -99,7 +100,15 @@ const routes = [
         name: "addMedicine",
         path: "/medicines/add"
     },
-    
+    {
+        component: MainPage,
+        name: "mainPage",
+        path: "/"
+    },
+    {
+        path: "*",
+        redirect: "/"
+    }
 ];
 
 export default new VueRouter({

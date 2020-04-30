@@ -11,7 +11,7 @@
             <v-card-text >
               <v-form v-model="valid" ref="form">
                 <v-text-field
-                  v-model="user.email"
+                  v-model="user.username"
                   :rules="[rules.email, rules.required]"
                   label="Username"
                   prepend-icon="mdi-account"
@@ -36,12 +36,14 @@
 </template>
 
 <script>
+const apiURL = "http://localhost:9001/auth/login";
+
 export default {
   name: "login",
   data() {
     return {
       user: {
-        email: "",
+        username: "",
         password: ""
       },
       rules: {
@@ -57,10 +59,21 @@ export default {
   methods: {
     login: function() {
       this.$refs.form.validate();
-        if (!this.valid) {
-          alert("Error")
-          return;
-        }
+      if (!this.valid)
+        return;
+      fetch(apiURL, {method: 'POST', 
+                      headers: {'Content-Type': 'application/json'}, 
+                      body: JSON.stringify(this.user)})
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+          alert(data.accessToken);
+          this.$authKey = "Bearer " + data.accessToken;
+          this.$role = data.userRole;
+          this.$forceUpdate();
+          this.$router.push({ name: "mainPage" })
+        })
     }
   }
     

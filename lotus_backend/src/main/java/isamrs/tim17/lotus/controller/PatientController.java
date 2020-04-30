@@ -34,7 +34,7 @@ public class PatientController {
 	 *         code.
 	 */
 	@GetMapping("/patients")
-	@PreAuthorize("hasRole('PATIENT')")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<List<UserDTO>> getPatients() {
 		List<Patient> patients = service.findAll();
 		List<UserDTO> patientsDTO = new ArrayList<>();

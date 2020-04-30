@@ -78,6 +78,9 @@ public abstract class User implements UserDetails {
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
     
+    @Column(name="role", insertable = false, updatable = false)
+    protected String role;
+    
 	public User() {}
 	
 	public User(String email, String password, String name, String surname, String address, String city, String country,
@@ -248,4 +251,9 @@ public abstract class User implements UserDetails {
     public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
+    
+    public String getRole() {
+        return this.role;
+    }
+    
 }
