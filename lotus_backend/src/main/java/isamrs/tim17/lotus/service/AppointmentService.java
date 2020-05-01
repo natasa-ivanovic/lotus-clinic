@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -16,6 +17,11 @@ public class AppointmentService {
 	
 	public Appointment findOne(long id) {
 		return appointments.findById(id).orElseGet(null);
+	}
+	
+	public List<Appointment> findByStatus(AppointmentStatus status) {
+		
+		return appointments.findByStatus(status.toString());
 	}
 
 	public List<Appointment> findAll() {

@@ -4,13 +4,14 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 @Entity
 @DiscriminatorValue("DOCTOR")
 public class Doctor extends User {
-	//@Column(name = "speciality", unique = false, nullable = false)
-	//public AppointmentType speciality;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private AppointmentType specialty;
 	//@Column(name = "operation", unique = false, nullable = true)
 	//public Operation operation;
 
@@ -23,6 +24,22 @@ public class Doctor extends User {
 	
 	public Doctor() {}
 
+	public AppointmentType getSpecialty() {
+		return specialty;
+	}
+
+	public void setSpecialty(AppointmentType specialty) {
+		this.specialty = specialty;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+
 	/*public Doctor(String email, String password, String name, String surname, String address, String city,
 			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
 			AppointmentType speciality, Operation operation, Clinic clinic) {
@@ -30,5 +47,7 @@ public class Doctor extends User {
 		this.speciality = speciality;
 		this.operation = operation;
 	}*/
+	
+	
 
 }

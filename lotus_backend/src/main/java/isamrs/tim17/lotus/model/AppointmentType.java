@@ -35,6 +35,9 @@ public class AppointmentType {
 	@OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
+	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Doctor> doctors = new HashSet<Doctor>();
+	
 	public AppointmentType() {}
 	
 	public AppointmentType(String name) {
@@ -51,10 +54,10 @@ public class AppointmentType {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -70,5 +73,25 @@ public class AppointmentType {
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
+
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public Set<Doctor> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(Set<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+
+	
+	
+	
 
 }

@@ -25,10 +25,14 @@ import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
 import EditMedicine from "../components/Medicines/Edit"
 import HomePage from "../components/HomePage"
+<<<<<<< HEAD
 // mozda pomeriti u svoj folder /Appointments
 import AppointmentView from "../components/Patients/AppointmentView"
 import PredefinedApps from "../components/Patients/PredefinedApps"
 
+=======
+import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
+>>>>>>> b7b9ae94ec2186436b5ad2ae893f3b97217eae4b
 
 const routes = [
     {
@@ -130,6 +134,11 @@ const routes = [
         component: PredefinedApps,
         name: "predefinedApps",
         path: "/new_appointment/predefined"
+    },
+    {
+        component: AddPredefinedApps,
+        name: "appointments",
+        path: "/appointments/add"
     },
 
 

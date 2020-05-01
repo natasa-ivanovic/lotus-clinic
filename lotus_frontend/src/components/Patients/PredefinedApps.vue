@@ -12,7 +12,7 @@
                 <v-container fluid>
                     <v-row dense>
                     <v-col
-                        v-for="app in cards"
+                        v-for="app in apps"
                         :key="app.title"
                         cols=6
                     >
@@ -45,22 +45,29 @@
 // datum kraja
 // doktora
 // tip pregleda
-// klinika
-// 
+// klinika - moze ime + id
+// room
+// status = premade
+// ^- ovo kasnije promenis u scheduled
+const apiURL = "http://localhost:9001/api";
 
 
 export default {
     data() {
         return {
-            cards: [
-                { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg' },
-                { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg' },
-                { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg' },
-            ],
+            apps: [],
+            overlay: false
         }
     },
     mounted() {
         // fetch zahtev za sve appointmente koji su trenutno predefined
+        fetch(apiURL + "/appointments/premade", {headers: { 'Authorization': this.$authKey }})
+            .then(response => {
+                return response.json();
+            })
+            .then(appointments => {
+                this.apps = appointments;
+            })
     }
     
 }
