@@ -17,17 +17,16 @@
                         cols=6
                     >
                         <v-card>
-                        <v-img
-                            :src="app.src"
-                            class="white--text align-end"
-                            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                            height="200px"
-                        >
-                            <v-card-title v-text="app.title"></v-card-title>
-                        </v-img>
+                            <v-card-title>{{app.time}} {{app.type}} </v-card-title>
+                            <v-card-text>
+                                Doctor {{app.doctorName}}
+                                {{app.doctorSurname}}
+                                in room
+                                {{app.roomName}}
+                            </v-card-text>
 
-                            <v-btn block text v-on:click="details(app)" color=black >More details
-                            </v-btn>
+                        <v-btn block text v-on:click="details(app)" color=black >More details
+                        </v-btn>
 
                         </v-card>
                     </v-col>
@@ -40,15 +39,6 @@
 </template>
 
 <script>
-// info koji ima predefinisani pregled:
-// datum pocetka
-// datum kraja
-// doktora
-// tip pregleda
-// klinika - moze ime + id
-// room
-// status = premade
-// ^- ovo kasnije promenis u scheduled
 const apiURL = "http://localhost:9001/api";
 
 
@@ -67,7 +57,27 @@ export default {
             })
             .then(appointments => {
                 this.apps = appointments;
+                this.apps.forEach(app => {
+                    app.time = app.startDate.split("T")[0].split().reverse().join() + " " + app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
+                })
             })
+    },
+    methods: {
+        details: function(app) {
+            // TODO: napravi ovo da mozda bude overlay sa vise podataka
+            // za sada samo zakazuje
+            console.log(app);
+            fetch(apiURL + "/appointments/schedule/" + app.id, {
+                    method: "POST",
+                    headers: {'Authorization': this.$authKey }})
+                .then(response => {
+                    if (response.status == 200) {
+                        alert("Uspesno zakazan pregled!");
+                        this.apps.splice(this.apps.indexOf(app), 1);
+                    } else
+                        alert("Nesto ne valja");
+                });
+        }
     }
     
 }

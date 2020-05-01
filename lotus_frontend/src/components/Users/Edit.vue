@@ -177,7 +177,7 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL + "/" + this.userType + "/" + this.id)
+    fetch(apiURL + "/" + this.userType + "/" + this.id, {headers: { 'Authorization': this.$authKey }})
       .then(response => {
         return response.json();
       })
@@ -197,7 +197,8 @@ export default {
         this.user.birthDate = this.dateString + 'T' + oldDate;
         this.user.gender = this.selectedGender.toUpperCase();
         fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
-                        headers: {'Content-Type': 'application/json'}, 
+                        headers: {'Content-Type': 'application/json',
+                                'Authorization': this.$authKey}, 
                         body: JSON.stringify(this.user)})
           .then(response => {
             if (response.status != 200)

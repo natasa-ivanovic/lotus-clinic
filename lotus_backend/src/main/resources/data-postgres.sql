@@ -57,4 +57,12 @@ insert into medical_records (allergies, blood_type, height, weight, patient_id) 
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('polen', 'A', '170', '57', 2);
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('polen', 'A', '175', '65', 3);
 
-/*insert into appointments (start_date, end_date, room_id, medical_record_id, doctor_id, diagnosis_id,*/ 
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 16:00:00.508-07', '2020-05-05 16:30:00.508-07', 0, 1, 1, 4);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 16:30:00.508-07', '2020-05-05 17:00:00.508-07', 0, 1, 1, 4);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 17:00:00.508-07', '2020-05-05 17:30:00.508-07', 0, 1, 1, 4);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 17:30:00.508-07', '2020-05-05 18:00:00.508-07', 0, 1, 1, 4);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 16:00:00.508-07', '2020-05-05 16:30:00.508-07', 0, 2, 2, 5);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 16:30:00.508-07', '2020-05-05 17:00:00.508-07', 0, 2, 2, 5);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 17:00:00.508-07', '2020-05-05 17:30:00.508-07', 0, 2, 2, 5);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id) values ('2020-05-05 17:30:00.508-07', '2020-05-05 18:00:00.508-07', 0, 2, 2, 5);
+

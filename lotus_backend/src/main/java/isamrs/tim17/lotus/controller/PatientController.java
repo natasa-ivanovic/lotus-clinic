@@ -53,7 +53,7 @@ public class PatientController {
 	 * @return Patient This returns the requested patient.
 	 */
 	@GetMapping("/patients/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
 	public ResponseEntity<Patient> getPatient(@PathVariable("id") long id) {
 		Patient patient = service.findOne(id);
 		if (patient == null)

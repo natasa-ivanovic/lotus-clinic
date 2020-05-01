@@ -21,7 +21,7 @@ public class AppointmentService {
 	
 	public List<Appointment> findByStatus(AppointmentStatus status) {
 		
-		return appointments.findByStatus(status.toString());
+		return appointments.findByStatus(status);
 	}
 
 	public List<Appointment> findAll() {

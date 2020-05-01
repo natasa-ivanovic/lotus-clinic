@@ -36,7 +36,7 @@ public class MedicalRecord {
 	@Column(name="bloodType", unique=false, nullable=false)
 	private String bloodType;
    
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	public Patient patient;
 	
 	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
