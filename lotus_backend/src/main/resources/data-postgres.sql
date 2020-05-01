@@ -57,8 +57,8 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 6);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 6);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 6);
 
-insert into medicines (id, name) values (1, 'Acetaminophen');
-insert into medicines (id, name) values (2, 'Ibuprofen');
+insert into medicines (name) values ('Acetaminophen');
+insert into medicines (name) values ('Ibuprofen');
 
 insert into diagnosis (id, name) values (1, 'Tuberculosis');
 insert into diagnosis (id, name) values (2, 'Cold');
