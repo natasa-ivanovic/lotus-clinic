@@ -23,6 +23,7 @@ import AddClinic from "../components/Clinics/Add"
 import AddRoom from "../components/Rooms/Add"
 import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
+import EditMedicine from "../components/Medicines/Edit"
 import HomePage from "../components/HomePage"
 // mozda pomeriti u svoj folder /Appointments
 import AppointmentView from "../components/Patients/AppointmentView"
@@ -108,6 +109,12 @@ const routes = [
         component: AddMedicine,
         name: "addMedicine",
         path: "/medicines/add"
+    },
+    {
+        component: EditMedicine,
+        name: "editMedicine",
+        path: "/medicine/edit/:id",
+        props: true
     },
     {
         component: HomePage,

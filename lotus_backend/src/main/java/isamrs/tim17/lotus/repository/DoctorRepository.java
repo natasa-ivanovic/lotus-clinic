@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Patient;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 	Doctor findOneById(String id);

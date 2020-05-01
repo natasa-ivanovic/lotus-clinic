@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
 @Table(name = "medicines")
 public class Medicine {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@Column(name = "name", nullable = false, unique = false)
 	private String name;
@@ -29,6 +32,14 @@ public class Medicine {
 	@OneToMany(mappedBy="medicine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
 
+	public Medicine() {
+	}
+	
+	public Medicine(String name) {
+		this.name = name;
+		this.id = this.getId();
+	}
+	
 	public long getId() {
 		return id;
 	}

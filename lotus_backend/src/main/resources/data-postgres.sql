@@ -46,12 +46,12 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 2);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 3);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 3);
 
-insert into medicines (id, name) values (1, 'Acetaminophen');
-insert into medicines (id, name) values (2, 'Ibuprofen');
+insert into medicines (name) values ('Acetaminophen');
+insert into medicines (name) values ('Ibuprofen');
 
-insert into diagnosis (id, name) values (1, 'Tuberculosis');
-insert into diagnosis (id, name) values (2, 'Cold');
-insert into diagnosis (id, name) values (3, 'COVID-19');
+insert into diagnosis (name) values ('Tuberculosis');
+insert into diagnosis (name) values ('Cold');
+insert into diagnosis (name) values ('COVID-19');
 
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('polen', 'A', '196', '95', 1);
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('polen', 'A', '170', '57', 2);
