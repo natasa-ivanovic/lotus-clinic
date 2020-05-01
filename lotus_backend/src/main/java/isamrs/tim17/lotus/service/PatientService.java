@@ -17,6 +17,10 @@ public class PatientService {
 	public Patient findOne(long id) {
 		return patients.findById(id).orElseGet(null);
 	}
+	
+	public Patient findOneByUsername(String email) {
+		return patients.findOneByUsername(email);
+	}
 
 	public List<Patient> findAll() {
 		return patients.findAll();

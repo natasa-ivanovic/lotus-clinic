@@ -35,7 +35,6 @@ insert into authority (name) values ('ROLE_DOCTOR');
 insert into authority (name) values ('ROLE_NURSE');
 insert into authority (name) values ('ROLE_ADMIN');
 insert into authority (name) values ('ROLE_CENTRE_ADMIN');
-insert into authority (name) values ('ROLE_USER');
 
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 1);
@@ -46,16 +45,6 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 2);
 
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 3);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 3);
-
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 6);
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (2, 6);
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (3, 6);
-
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (4, 6);
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (5, 6);
-
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (6, 6);
-INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (7, 6);
 
 insert into medicines (id, name) values (1, 'Acetaminophen');
 insert into medicines (id, name) values (2, 'Ibuprofen');

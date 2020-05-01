@@ -6,7 +6,7 @@
             <template v-slot:extension>
                 <v-toolbar-items v-if="checkRole('PATIENT')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
-                    <v-btn text :to="{ name: 'doctors'}">Doctors</v-btn>
+                    <v-btn text :to="{ name: 'appointmentView'}">New appointment</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('DOCTOR')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
@@ -56,7 +56,6 @@ export default {
       this.$router.push({ name: "login" })
     }
   }
-    
 }
 </script>
 

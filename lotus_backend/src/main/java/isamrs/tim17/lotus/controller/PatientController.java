@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +60,27 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(patient, HttpStatus.OK);
 	}
+	
+	/**
+	 * This method is used so patients can get themselves.
+	 * 
+	 * @param id This is current logged in patient's id.
+	 * @return Patient This returns the requested patient.
+	 */
+	@GetMapping("/patients/self")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<UserDTO> getYourself() {
+		try {
+			Authentication a = SecurityContextHolder.getContext().getAuthentication();
+			UserDTO patient = new UserDTO((Patient) a.getPrincipal());
+			return new ResponseEntity<>(patient, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 
 	/**
 	 * This method is used for adding a patient.
@@ -93,7 +116,6 @@ public class PatientController {
 		p.setName(patient.getName());
 		p.setSurname(patient.getSurname());
 		p.setUsername(patient.getEmail());
-		p.setPassword(patient.getPassword());
 		p.setBirthDate(patient.getBirthDate());
 		p.setGender(patient.getGender());
 		p.setAddress(patient.getAddress());

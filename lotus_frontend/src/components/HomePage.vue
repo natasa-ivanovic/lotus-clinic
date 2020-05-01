@@ -1,14 +1,16 @@
 <template>
     <div>
-        <div>Neko je ulogovan!</div>
+        <PatientPage v-if="this.$role == 'PATIENT'" />
 
     </div>
 </template>
 
 
 <script>
+import PatientPage from "../components/Patients/HomePage"
 export default {
     components: {
+        PatientPage
     },
     methods: {
         checkRole: function(role) {
