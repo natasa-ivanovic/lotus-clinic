@@ -26,6 +26,7 @@
                     <v-btn text :to="{ name: 'appointmentTypes'}">Appointment types</v-btn>
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
                     <v-btn text :to="{ name: 'medicines'}">Medicines</v-btn>
+                    <v-btn text :to="{ name: 'appointments'}">Add appointment</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('CENTRE_ADMIN')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>

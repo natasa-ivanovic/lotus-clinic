@@ -25,6 +25,7 @@ import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
 import EditMedicine from "../components/Medicines/Edit"
 import HomePage from "../components/HomePage"
+import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 
 const routes = [
     {
@@ -116,6 +117,11 @@ const routes = [
         component: HomePage,
         name: "home",
         path: "/home"
+    },
+    {
+        component: AddPredefinedApps,
+        name: "appointments",
+        path: "/appointments/add"
     },
     {
         path: "/*",

@@ -19,6 +19,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 	Page<Doctor> findAll(Pageable pageable);
 	List<Doctor> findAllBySurname(String surname);
 	List<Doctor> findByNameAndSurnameAllIgnoringCase(String name, String surname);
+	List<Doctor> findBySpecialty(String specialty);
 
 
 }
