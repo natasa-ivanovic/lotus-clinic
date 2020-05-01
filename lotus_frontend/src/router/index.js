@@ -23,6 +23,7 @@ import AddClinic from "../components/Clinics/Add"
 import AddRoom from "../components/Rooms/Add"
 import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
+import EditMedicine from "../components/Medicines/Edit"
 import HomePage from "../components/HomePage"
 
 const routes = [
@@ -104,6 +105,12 @@ const routes = [
         component: AddMedicine,
         name: "addMedicine",
         path: "/medicines/add"
+    },
+    {
+        component: EditMedicine,
+        name: "editMedicine",
+        path: "/medicine/edit/:id",
+        props: true
     },
     {
         component: HomePage,

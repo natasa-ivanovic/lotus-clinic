@@ -14,7 +14,7 @@ public class MedicineService {
 	@Autowired
 	private MedicineRepository medicines;
 	
-	public Medicine finOne(long id) {
+	public Medicine findOne(long id) {
 		return medicines.findById(id).orElse(null);
 	}
 	

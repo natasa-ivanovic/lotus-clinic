@@ -15,17 +15,10 @@
                             v-model="medicine.name" />
                       </v-col>
                   </v-row>
-                  <v-row>
-                      <v-col>
-                          <v-text-field
-                            label="Id"
-                            v-model="medicine.id" />
-                      </v-col>
-                  </v-row>
               </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn block v-on:click="addMedicine()" color="success" height=60>Add</v-btn>
+                <v-btn block v-on:click="addMedicine()" color="primary" height=60>Add</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -41,18 +34,17 @@ export default {
         return {
             medicine: {
                 name: "",
-                id: "",
             }
         }
     },
     methods: {
         addMedicine: function() {
             fetch(apiURL, {method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(this.medicine)})
+                    headers: {'Content-Type': 'application/json','Authorization': this.$authKey},
+                    body: this.medicine.name})
                 .then(response => {
                     if(response.status != 200)
-                        alert("ajoj")
+                        alert("Couldn't add " + this.medicine.name + "!" + response.status)
                     else
                         this.$router.push({name: "medicines"})
                 })
