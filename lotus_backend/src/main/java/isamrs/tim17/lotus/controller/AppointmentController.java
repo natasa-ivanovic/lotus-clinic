@@ -76,6 +76,22 @@ public class AppointmentController {
 		
 	}
 	
+	@GetMapping("/appointments/patient")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<PremadeAppDTO>> getMyAppointments() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = (Patient) a.getPrincipal();
+		
+		List<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord());
+		if (apps == null)
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+		for (Appointment app : apps) {
+			if (app.getStatus().equals(AppointmentStatus.SCHEDULED))
+				dto.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
 	
 	@PostMapping("/appointments")
 	public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment app) {

@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -36,7 +37,8 @@ public class MedicalRecord {
 	@Column(name="bloodType", unique=false, nullable=false)
 	private String bloodType;
    
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
+	@MapsId
 	public Patient patient;
 	
 	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

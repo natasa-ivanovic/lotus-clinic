@@ -83,10 +83,10 @@
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="editPatient()" color="success" height=60>Change information</v-btn>
+                            <v-btn block @click="editPatient()" color="indigo" dark height=60>Change information</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn block @click="changePassword()" color="success" height=60>Change password</v-btn>
+                            <v-btn block @click="changePassword()" color="indigo" dark height=60>Change password</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>

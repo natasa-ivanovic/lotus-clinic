@@ -7,9 +7,11 @@ package isamrs.tim17.lotus.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -23,7 +25,7 @@ public class Patient extends User {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(targetEntity=MedicalRecord.class, cascade = CascadeType.ALL, mappedBy = "patient")
 	private MedicalRecord medicalRecord;
 
 	public Patient() {}

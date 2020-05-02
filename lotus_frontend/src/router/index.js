@@ -29,6 +29,7 @@ import HomePage from "../components/HomePage"
 import AppointmentView from "../components/Patients/AppointmentView"
 import PredefinedApps from "../components/Patients/PredefinedApps"
 import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
+import ProfilePage from "../components/Users/ProfilePage"
 
 const routes = [
     {
@@ -142,7 +143,11 @@ const routes = [
         name: "appointments",
         path: "/appointments/add"
     },
-
+    {
+        component: ProfilePage,
+        name: "profile",
+        path: "/profile"
+    },
 
     {
         path: "/*",
