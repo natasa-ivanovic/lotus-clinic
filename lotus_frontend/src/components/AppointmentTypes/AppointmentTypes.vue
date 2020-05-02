@@ -49,7 +49,7 @@ export default {
   mounted() {
     fetch(apiURL)
     .then(response => {
-      return response.json();
+      return response.json(); //name, doctors
     })
     .then(r => {
       this.appTypes = r;

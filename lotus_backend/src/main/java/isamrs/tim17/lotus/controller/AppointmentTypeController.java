@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.AppointmentTypeDTO;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 
@@ -35,9 +37,15 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes")
-	public ResponseEntity<List<AppointmentType>> getAllAppointmentTypes() {
+	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
 		List<AppointmentType> atypes = service.findAll();
-		return new ResponseEntity<>(atypes, HttpStatus.OK);
+		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
+		
+		for (AppointmentType at : atypes) {
+			typesDTO.add(new AppointmentTypeDTO(at));
+		}
+		
+		return new ResponseEntity<>(typesDTO, HttpStatus.OK);
 	}
 	
 	@GetMapping("/appointmentTypes/{id}")

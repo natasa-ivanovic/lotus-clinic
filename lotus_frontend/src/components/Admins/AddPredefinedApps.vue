@@ -62,9 +62,9 @@
                       </v-col>
                     </v-row>
                   </v-container>
+                  <v-btn color="primary" @click="e1 = 2" class="ml-10" width="100">Continue</v-btn>
+                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
                 </v-card>
-              <v-btn color="primary" @click="e1 = 2">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
             </v-stepper-content>
 
             <v-stepper-step :editable="true" :complete="e1 > 2" step="2">Appointment type</v-stepper-step>
@@ -74,18 +74,22 @@
                 color="white"
                 elevation="0">
                   <v-container>
+                    <v-row>
                     <v-autocomplete
+                    class="mt-0"
                     v-model="appointment.appointmentType"
-                    :items="appTypes"
+                    :items="this.getAppTypes()"
                     dense
                     chips
                     deletable-chips
+                    prepend-icon="mdi-pill"
                     label="Appointment type"
                     ></v-autocomplete>
+                    </v-row>
                   </v-container>
+                  <v-btn color="primary" @click="e1 = 3" class="ml-8" width="100">Continue</v-btn>
+                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
-              <v-btn color="primary" @click="e1 = 3">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
             </v-stepper-content>
 
             <v-stepper-step :editable="true" :complete="e1 > 3" step="3">Doctor</v-stepper-step>
@@ -94,9 +98,24 @@
                 class="mb-12"
                 color="white"
                 elevation="0"
-              ></v-card>
-              <v-btn color="primary" @click="e1 = 4">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
+              >
+                <v-container>
+                  <v-row>
+                  <v-autocomplete
+                  class="mt-0"
+                  v-model="appointment.doctor"
+                  :items="this.getDoctors()"
+                  dense
+                  chips
+                  deletable-chips
+                  prepend-icon="mdi-doctor"
+                  label="Doctor"
+                  ></v-autocomplete>
+                  </v-row>
+                </v-container>
+                <v-btn color="primary" @click="e1 = 4" class="ml-8" width="100">Continue</v-btn>
+                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+              </v-card>
             </v-stepper-content>
 
             <v-stepper-step :editable="true" :complete="e1 > 4" step="4">Room</v-stepper-step>
@@ -105,9 +124,24 @@
                 class="mb-12"
                 color="white"
                 elevation="0"
-              ></v-card>
-              <v-btn color="primary" @click="e1 = 5">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
+              >
+                <v-container>
+                  <v-row>
+                  <v-autocomplete
+                  class="mt-0"
+                  v-model="appointment.room"
+                  :items="[1, 2, 3]"
+                  dense
+                  chips
+                  deletable-chips
+                  prepend-icon="mdi-hospital-building"
+                  label="Room"
+                  ></v-autocomplete>
+                  </v-row>
+                </v-container>
+                <v-btn color="primary" @click="e1 = 5" class="ml-8" width="100">Continue</v-btn>
+                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+              </v-card>
             </v-stepper-content>
 
             <v-stepper-step step="5">Review</v-stepper-step>
@@ -117,8 +151,8 @@
                 color="white"
                 elevation="0"
               ></v-card>
-              <v-btn color="primary">Finish</v-btn>
-              <v-btn text>Cancel</v-btn>
+              <v-btn color="primary" class="ml-10" width="100">Finish</v-btn>
+              <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
             </v-stepper-content>
             </v-stepper>
           </v-col>
@@ -127,6 +161,8 @@
 </template>
 
 <script>
+  const apiTypes = "http://localhost:9001/api/appointmentTypes";
+
   export default {
     data () {
       return {
@@ -136,12 +172,46 @@
         appointment : {
           startDate: "",
           startTime: "",
-          appointmentType: ""
+          appointmentType: "",
+          doctor: "",
+          room: ""
         },
-        appTypes: ['1', '2', '3']
+        appTypes: [], //name, doctors
+        doctor: "",
+        
         
       }
     },
+    mounted() {
+      fetch(apiTypes, {headers: { 'Authorization': this.$authKey }})
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            this.appTypes = response;
+        })
+
+    },
+    methods: {
+      getAppTypes: function() {
+        var data = [];
+        this.appTypes.forEach(el => {
+          data.push(el.name);
+        });
+        return data;
+      },
+      getDoctors: function() {
+        var data = [];
+        this.appTypes.forEach(el => {
+          if (this.appointment.appointmentType == el.name) {
+            el.doctors.forEach(doc => {
+              data.push(doc.name + " " + doc.surname);
+            });
+          }
+        });
+        return data;
+      }
+    }
 
   }
 </script>
