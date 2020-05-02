@@ -20,6 +20,7 @@ import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
 import Clinics from "../components/Clinics/Clinics"
 import AddClinic from "../components/Clinics/Add"
+import EditClinic from "../components/Clinics/Edit"
 import AddRoom from "../components/Rooms/Add"
 import Medicines from "../components/Medicines/Medicines"
 import AddMedicine from "../components/Medicines/Add"
@@ -84,6 +85,12 @@ const routes = [
         path: "/clinics/add"
     },
     {
+        component: EditClinic,
+        name: "editClinic",
+        path: "/clinics/edit/:id",
+        props: true
+    },
+    {
         component: AppointmentTypes,
         name: "appointmentTypes",
         path: "/appointmentTypes/"
@@ -112,7 +119,7 @@ const routes = [
     {
         component: EditMedicine,
         name: "editMedicine",
-        path: "/medicine/edit/:id",
+        path: "/medicines/edit/:id",
         props: true
     },
     {

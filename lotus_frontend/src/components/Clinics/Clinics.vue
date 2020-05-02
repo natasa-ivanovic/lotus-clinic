@@ -15,23 +15,16 @@
             </template>
             <template v-slot:item.edit="{ item }">
                 <v-icon
-                    @click="editRoom(item.id)"
+                    @click="editClinic(item.id)"
                 >
                     mdi-pencil
                 </v-icon>
             </template>
             <template v-slot:item.delete="{ item }">
                 <v-icon
-                    @click="deleteRoom(item.id)"
+                    @click="deleteClinic(item.id)"
                 >
                     mdi-delete
-                </v-icon>
-            </template>
-            <template v-slot:item.details="{ item }">
-                <v-icon
-                    @click="getDetails(item.id)"
-                >
-                    mdi-calendar
                 </v-icon>
             </template>
         </v-data-table>
@@ -48,7 +41,6 @@ export default {
             headers: [
                 {text: 'ID', value: 'id'},
                 {text: 'Name', value: 'name'},
-                {text: 'Details', value: 'details'},
                 {text: 'Edit', value: 'edit', sortable: false},
                 {text: 'Delete', value: 'delete', sortable: false}
             ]
@@ -64,6 +56,30 @@ export default {
             })
     },
     methods: {
+        editClinic: function(editId) {
+            this.$router.push({name: "editClinic", params: {id: editId}});
+        },
+        deleteClinic: function(id) {
+            alert(apiURL + "/" + id)
+            fetch(apiURL + "/" + id, {method: 'DELETE',
+            headers: {'Authorization': this.$authKey}})
+            .then(response => {
+                if (response.status != 200)
+                    alert("Couldn't delete clinic!")
+                else
+                    return response.json();
+            })
+            .then(r => {
+                for(var i = 0; i < this.clinics.length; i++)
+                {
+                    if(this.clinics[i].id === r.id)
+                    {
+                        this.clinics.splice(i,1);
+                    }
+                }
+            })
+        }
+        
     }
 }
 </script>
