@@ -25,7 +25,7 @@
                                 {{app.roomName}}
                             </v-card-text>
 
-                        <v-btn block text v-on:click="details(app)" color=black >More details
+                        <v-btn block v-on:click="details(app)" color=indigo dark >Schedule
                         </v-btn>
 
                         </v-card>
