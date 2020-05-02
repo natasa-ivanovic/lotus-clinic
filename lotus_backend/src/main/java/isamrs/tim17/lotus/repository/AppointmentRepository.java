@@ -9,10 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.MedicalRecord;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 	
 	Appointment findOneById(String id);
 	Page<Appointment> findAll(Pageable pageable);
 	List<Appointment> findByStatus(AppointmentStatus status);
+	List<Appointment> findByMedicalRecord(MedicalRecord id);
 }

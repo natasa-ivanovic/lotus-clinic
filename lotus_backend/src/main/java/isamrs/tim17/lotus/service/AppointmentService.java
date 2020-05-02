@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -34,6 +35,10 @@ public class AppointmentService {
 
 	public void remove(long id) {
 		appointments.deleteById(id);
+	}
+	
+	public List<Appointment> findByMedicalRecord(MedicalRecord record) {
+		return appointments.findByMedicalRecord(record);
 	}
 	
 

@@ -7,7 +7,7 @@
 
 
 <script>
-import PatientPage from "../components/Patients/HomePage"
+import PatientPage from "../components/Patients/PatientHomePage"
 export default {
     components: {
         PatientPage

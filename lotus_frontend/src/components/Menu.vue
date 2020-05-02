@@ -33,8 +33,9 @@
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
                 </v-toolbar-items>
                 <v-spacer />
-                <v-toolbar-items>
-                    <v-btn v-if="!checkRole(null)" text v-on:click="logout()">Logout</v-btn>
+                <v-toolbar-items v-if="!checkRole(null)">
+                    <v-btn text :to="{ name: 'profile'}">Profile</v-btn>
+                    <v-btn text v-on:click="logout()">Logout</v-btn>
                 </v-toolbar-items>
                 
             </template>
