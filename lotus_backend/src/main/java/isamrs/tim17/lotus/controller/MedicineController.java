@@ -88,6 +88,5 @@ public class MedicineController {
 		medicine.setName(newMedicine.getName());
 		medicine = service.save(medicine);
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
-
 	}
 }

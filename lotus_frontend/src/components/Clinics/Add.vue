@@ -25,17 +25,10 @@
                   </v-row>
                   <v-row>
                       <v-col>
-                          <v-text-field
+                          <v-textarea
                             label="Description"
                             v-model="clinic.description"
                             :rules="[rules.required]" />
-                      </v-col>
-                  </v-row>
-                  <v-row>
-                      <v-col>
-                          <v-text-field
-                            label="Id"
-                            v-model="clinic.id" />
                       </v-col>
                   </v-row>
               </v-form>
@@ -57,7 +50,6 @@ export default {
         return {
             clinic: {
                 name: "",
-                id: "",
                 address: "",
                 description: ""
             },
@@ -75,11 +67,12 @@ export default {
             return;
             }
             fetch(apiURL, {method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {'Content-Type': 'application/json',
+                    'Authorization': this.$authKey},
                     body: JSON.stringify(this.clinic)})
                 .then(response => {
                     if(response.status != 200)
-                        alert("ajoj")
+                        alert("Couldn't add " + this.clinic.name + "!")
                     else
                         this.$router.push({name: "clinics"})
                 })
