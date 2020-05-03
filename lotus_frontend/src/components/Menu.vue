@@ -55,11 +55,11 @@ export default {
         return true;
     },
     logout: function() {
-      this.$role = null;
-      this.$authKey = null;
-      localStorage.removeItem('authKey');
-      localStorage.removeItem('role');
-      this.$router.push({ name: "login" })
+        this.$role = null;
+        this.$authKey = null;
+        localStorage.removeItem('authKey');
+        localStorage.removeItem('role');
+        this.$router.push({ name: "login" })
     }
   }
 }

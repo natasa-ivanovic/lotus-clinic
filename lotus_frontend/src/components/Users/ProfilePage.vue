@@ -1,5 +1,5 @@
 <template>
-    <v-container class="fill-height" fluid>
+    <v-container fluid>
         <v-row align="center" justify="center">
           <v-col cols="6">
             <v-card class="elevation-3" v-if="user != {}">
@@ -86,7 +86,7 @@
                             <v-btn block @click="editPatient()" color="indigo" dark height=60>Change information</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn block @click="changePassword()" color="indigo" dark height=60>Change password</v-btn>
+                            <v-btn block @click="changePassword()" color="indigo" height=60 disabled>Change password</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
@@ -110,7 +110,19 @@ export default {
         };
     },
     mounted() {
-        fetch(apiURL + "/patients/self", {headers: { 'Authorization': this.$authKey }})
+        var user = ""
+        if (this.$role == "PATIENT")
+            user = "patients"
+        if (this.$role == "DOCTOR")
+            user = "doctors"
+        /* todo
+        if (this.$role == "NURSE")
+            user = "nurses"
+        if (this.$role == "ADMIN")
+            user = "admins"
+        if (this.$role == "CLINIC_ADMIN")
+            user = "cadmins" */
+        fetch(apiURL + "/" + user +"/self", {headers: { 'Authorization': this.$authKey }})
         .then(response => {
             return response.json();
         })
@@ -122,7 +134,19 @@ export default {
     },
     methods: {
         editPatient: function() {
-            this.$router.push({ name: "editUser", params: {id: this.user.id, userType: "patients"}})
+            var user = ""
+            if (this.$role == "PATIENT")
+                user = "patients"
+            if (this.$role == "DOCTOR")
+                user = "doctors"
+            /* todo
+            if (this.$role == "NURSE")
+                user = "nurses"
+            if (this.$role == "ADMIN")
+                user = "admins"
+            if (this.$role == "CLINIC_ADMIN")
+                user = "cadmins" */
+            this.$router.push({ name: "editUser", params: {id: "self", userType: user}})
         },
         changePassword: function() {
             return;

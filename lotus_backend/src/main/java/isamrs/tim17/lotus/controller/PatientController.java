@@ -83,7 +83,7 @@ public class PatientController {
 	/**
 	 * This method is used so patients can get themselves.
 	 * 
-	 * @param id This is current logged in patient's id.
+	 * @param None
 	 * @return Patient This returns the requested patient.
 	 */
 	@GetMapping("/patients/self")
@@ -100,6 +100,30 @@ public class PatientController {
 		}
 	}
 	
+	/**
+	 * This method is used for editing your profile.
+	 * 
+	 * @param patient This is a patient object from the HTTP request.
+	 * @param id      This is the id of the edited patient.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 */
+	@PutMapping("/patients/self")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Object> updateYourself(@RequestBody UserDTO patient) {
+		Patient p = service.findOne(patient.getId());
+		if (p == null)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		p.setName(patient.getName());
+		p.setSurname(patient.getSurname());
+		p.setBirthDate(patient.getBirthDate());
+		p.setGender(patient.getGender());
+		p.setAddress(patient.getAddress());
+		p.setCity(patient.getCity());
+		p.setCountry(patient.getCountry());
+		p.setPhoneNumber(patient.getPhoneNumber());
+		p = service.save(p);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 
 

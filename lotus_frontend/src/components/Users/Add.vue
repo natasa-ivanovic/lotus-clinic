@@ -191,7 +191,8 @@ export default {
         else
           url = apiURL + "api/" + this.userType; 
         fetch(url, {method: 'POST', 
-                        headers: {'Content-Type': 'application/json'}, 
+                        headers: {'Content-Type': 'application/json',
+                                  'Authorization': this.$authKey }, 
                         body: JSON.stringify(this.user)})
           .then(response => {
               if (response.status != 200)

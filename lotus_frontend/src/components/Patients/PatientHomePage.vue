@@ -48,7 +48,6 @@
 
 <script>
 const apiURL = "http://localhost:9001/api";
-
 export default {
     data() {
         return {
@@ -59,14 +58,21 @@ export default {
     mounted() {
         fetch(apiURL + "/appointments/patient", {headers: { 'Authorization': this.$authKey }})
         .then(response => {
-            return response.json();
+            if (response.status != 200)
+                return false;
+            else
+                return response.json();
         })
         .then(apps => {
-            this.appointments = apps;
-            this.appointments.forEach(app => {
-                app.date = app.startDate.split("T")[0]
-                app.time = app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
-            })
+            if (apps == false ) {
+                console.log("TODO: Log me out!");
+            } else {
+                this.appointments = apps;
+                this.appointments.forEach(app => {
+                    app.date = app.startDate.split("T")[0]
+                    app.time = app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
+                })
+            }
         })
     },
     methods: {

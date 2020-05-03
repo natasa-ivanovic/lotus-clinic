@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.DoctorService;
 
 @RestController
@@ -82,6 +85,52 @@ public class DoctorController {
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 
 	}
+	
+	/**
+	 * This method is used so doctors can get themselves.
+	 * 
+	 * @param None
+	 * @return Doctor This returns the requested doctor.
+	 */
+	@GetMapping("/doctors/self")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<UserDTO> getYourself() {
+		try {
+			Authentication a = SecurityContextHolder.getContext().getAuthentication();
+			UserDTO patient = new UserDTO((Doctor) a.getPrincipal());
+			return new ResponseEntity<>(patient, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	/**
+	 * This method is used for editing your profile.
+	 * 
+	 * @param doc	  This is a doctor object from the HTTP request.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 */
+	@PutMapping("/doctors/self")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> updateYourself(@RequestBody UserDTO doc) {
+		Doctor d = service.findOne(doc.getId());
+		if (d == null)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		d.setName(doc.getName());
+		d.setSurname(doc.getSurname());
+		d.setBirthDate(doc.getBirthDate());
+		d.setGender(doc.getGender());
+		d.setAddress(doc.getAddress());
+		d.setCity(doc.getCity());
+		d.setCountry(doc.getCountry());
+		d.setPhoneNumber(doc.getPhoneNumber());
+		service.save(d);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
 
 	/**
 	 * This method is used for editing a doctor.
