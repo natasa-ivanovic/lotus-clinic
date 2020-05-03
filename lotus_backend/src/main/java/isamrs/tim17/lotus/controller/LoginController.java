@@ -31,6 +31,7 @@ import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.security.TokenUtils;
 import isamrs.tim17.lotus.security.auth.JwtAuthenticationRequest;
+import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.UserService;
 
 @RestController
@@ -51,6 +52,9 @@ public class LoginController {
 	
 	@Autowired
     private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthorityService authorityService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
@@ -98,7 +102,7 @@ public class LoginController {
 		patient.setEnabled(false);
 		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 		ArrayList<Authority> auth = new ArrayList<Authority>();
-		//auth.add()
+		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
 		userService.save(patient);
 		return new ResponseEntity<>(HttpStatus.OK);
