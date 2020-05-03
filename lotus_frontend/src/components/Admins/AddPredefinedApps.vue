@@ -130,7 +130,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.room"
-                  :items="this.rooms"
+                  :items="this.getRoomsData()"
                   dense
                   chips
                   deletable-chips
@@ -162,6 +162,7 @@
 
 <script>
   const apiTypes = "http://localhost:9001/api/appointmentTypes";
+  const apiRooms = "http://localhost:9001/api/rooms/free";
 
   export default {
     data () {
@@ -177,9 +178,7 @@
           room: ""
         },
         appTypes: [], //name, doctors
-        room: "",
-        doctor: "",
-        
+        rooms: [],
         
         
       }
@@ -214,8 +213,31 @@
         return data;
       },
       getRooms: function() {
-        //poslati datum i vreme
-        //var data = [];
+        var date = this.appointment.startDate + " " + this.appointment.startTime;
+        console.log(date);
+        this.e1 = 4;
+        fetch(apiRooms, {method: 'POST', headers: {'Content-Type': 'application/json', 
+              'Authorization': this.$authKey},
+              body: date})
+        .then(response => {
+          if (response.status != 200)
+            return false;
+          else
+            return response.json();
+        })
+        .then(rooms => {
+          if (rooms == false)
+            return; //NAPRAVI TROUGAO
+          else
+            this.rooms = rooms;
+        })
+      },
+      getRoomsData: function() {
+        var data = [];
+        this.rooms.forEach(el => {
+          data.push(el.name);
+        });
+        return data;
       }
     }
 
