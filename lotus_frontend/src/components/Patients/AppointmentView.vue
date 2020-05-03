@@ -12,21 +12,21 @@
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="predefined()" color="success" height=60>Pre-defined appointments</v-btn>
+                            <v-btn block @click="predefined()" color="indigo" dark height=60>Pre-defined appointments</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="doctors()" color="success" height=60 disabled>Browse doctors</v-btn>
+                            <v-btn block @click="doctors()" color="indigo" height=60 disabled>Browse doctors</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="clinics()" color="success" height=60 disabled>Browse clinics</v-btn>
+                            <v-btn block @click="clinics()" color="indigo"  height=60 disabled>Browse clinics</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>

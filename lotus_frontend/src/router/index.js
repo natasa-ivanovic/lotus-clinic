@@ -30,7 +30,7 @@ import AppointmentView from "../components/Patients/AppointmentView"
 import PredefinedApps from "../components/Patients/PredefinedApps"
 import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 import ProfilePage from "../components/Users/ProfilePage"
-
+import Register from "../components/Patients/Register"
 const routes = [
     {
         component: Login,
@@ -148,6 +148,12 @@ const routes = [
         name: "profile",
         path: "/profile"
     },
+    {
+        component: Register,
+        name: "register",
+        path: "/register"
+    },
+
 
     {
         path: "/*",

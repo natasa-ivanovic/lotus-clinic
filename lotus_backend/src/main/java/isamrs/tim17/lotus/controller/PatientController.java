@@ -45,6 +45,25 @@ public class PatientController {
 		}
 		return new ResponseEntity<>(patientsDTO, HttpStatus.OK);
 	}
+	
+	/**
+	 * This method is used for getting all unauthorized patients.
+	 * 
+	 * @param Nothing.
+	 * @return ResponseEntity This returns the list of patients and the HTTP status
+	 *         code.
+	 */
+	
+	@GetMapping("/patients/requests")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<UserDTO>> getUnauthorizedPatients() {
+		List<Patient> patients = service.findByStatus(false);
+		List<UserDTO> patientsDTO = new ArrayList<>();
+		for (Patient p : patients) {
+			patientsDTO.add(new UserDTO(p));
+		}
+		return new ResponseEntity<>(patientsDTO, HttpStatus.OK);
+	}
 
 	/**
 	 * This method is used for getting a patient.
@@ -82,22 +101,7 @@ public class PatientController {
 	}
 	
 
-	/**
-	 * This method is used for adding a patient.
-	 * 
-	 * @param patient This is a patient object from the HTTP request.
-	 * @return ResponseEntity This returns the HTTP status code along with the
-	 *         current patients.
-	 */
-	@PostMapping("/patients")
-	public ResponseEntity<Patient> addPatient(@RequestBody Patient patient) {
-		if (isEmptyOrNull(patient)) {
-			System.out.println("Error in patient!");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		service.save(patient);
-		return new ResponseEntity<>(patient, HttpStatus.OK);
-	}
+
 
 	/**
 	 * This method is used for editing a patient.
@@ -142,30 +146,6 @@ public class PatientController {
 		return new ResponseEntity<>(p, HttpStatus.OK);
 	}
 
-	private boolean isEmptyOrNull(Patient patient) {
-		if (patient == null)
-			return true;
-		if (patient.getName() == null || "".equals(patient.getName()))
-			return true;
-		if (patient.getSurname() == null || "".equals(patient.getSurname()))
-			return true;
-		if (patient.getUsername() == null || "".equals(patient.getUsername()))
-			return true;
-		if (patient.getPassword() == null || "".equals(patient.getPassword()))
-			return true;
-		if (patient.getAddress() == null || "".equals(patient.getAddress()))
-			return true;
-		if (patient.getCity() == null || "".equals(patient.getCity()))
-			return true;
-		if (patient.getCountry() == null || "".equals(patient.getCountry()))
-			return true;
-		if (patient.getPhoneNumber() == null || "".equals(patient.getPhoneNumber()))
-			return true;
-		if (patient.getGender() == null || "".equals(patient.getGender().toString()))
-			return true;
-		if (patient.getBirthDate() == null || "".equals(patient.getBirthDate().toString()))
-			return true;
-		return false;
-	}
+
 
 }
