@@ -53,9 +53,16 @@ export default {
         // fetch zahtev za sve appointmente koji su trenutno predefined
         fetch(apiURL + "/appointments/premade", {headers: { 'Authorization': this.$authKey }})
             .then(response => {
-                return response.json();
-            })
+                if (response.status == 200)
+                    return response.json();
+                else 
+                    return false
+                })
             .then(appointments => {
+                if (!appointments) {
+                    alert("Nesto ne valja");
+                    return;
+                }
                 this.apps = appointments;
                 this.apps.forEach(app => {
                     app.time = app.startDate.split("T")[0].split().reverse().join() + " " + app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
