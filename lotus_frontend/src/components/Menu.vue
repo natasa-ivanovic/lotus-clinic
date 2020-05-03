@@ -37,6 +37,10 @@
                     <v-btn text :to="{ name: 'profile'}">Profile</v-btn>
                     <v-btn text v-on:click="logout()">Logout</v-btn>
                 </v-toolbar-items>
+                <v-toolbar-items v-if="checkRole(null)">
+                    <v-btn text :to="{ name: 'register'}">Register</v-btn>
+                    <v-btn text :to="{ name: 'login'}">Login</v-btn>
+                </v-toolbar-items>
                 
             </template>
         </v-toolbar>

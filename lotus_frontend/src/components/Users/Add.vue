@@ -5,7 +5,7 @@
         <v-col cols="6">
           <v-card class="elevation-3">
             <v-toolbar flat color="secondary" dark>
-              <v-toolbar-title>Add {{this.userType.substring(0, this.userType.length -1)}} </v-toolbar-title>
+              <v-toolbar-title>{{this.header}} </v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-form v-model="valid" ref="form">
@@ -14,7 +14,7 @@
                     <v-text-field
                       label="Email"
                       :rules="[rules.email, rules.required]"
-                      v-model="user.email" 
+                      v-model="user.username" 
                       required/>
                   </v-col>
                 </v-row>
@@ -120,7 +120,8 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn block v-on:click="addUser()" color="success" height=60>Add</v-btn>
+              <v-btn v-if="this.userType != 'patients'" block v-on:click="addUser()" color="success" height=60>Add</v-btn>
+              <v-btn v-else block v-on:click="addUser()" color="success" height=60>Register</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -130,13 +131,13 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/";
+const apiURL = "http://localhost:9001/";
 export default {
     name: "AddUser",
     data() {
       return {
         user: {
-          email: "",
+          username: "",
           password: "",
           name: "",
           surname: "",
@@ -171,6 +172,9 @@ export default {
     props: {
         userType: {
             type: String
+        },
+        header: {
+          type: String
         }
     },
     methods: {
@@ -180,15 +184,27 @@ export default {
           return;
         }
         this.user.birthDate = this.dateString + "T00:00:00.000+0000";
-        this.user.gender = this.selectedGender.toUpperCase();          
-        fetch(apiURL + this.userType, {method: 'POST', 
+        this.user.gender = this.selectedGender.toUpperCase();     
+        var url = "";
+        if (this.userType == "patients")
+          url = apiURL + "auth/register";
+        else
+          url = apiURL + "api/" + this.userType; 
+        fetch(url, {method: 'POST', 
                         headers: {'Content-Type': 'application/json'}, 
                         body: JSON.stringify(this.user)})
           .then(response => {
               if (response.status != 200)
                 alert("Couldn't add " + this.userType.substring(0, this.userType.length -1) + "!");
               else
-                this.$router.push({ name: this.userType });
+                if (this.userType == "patients") {
+                  alert("uspesno poslat zahtev za pacijenta");
+                  this.$router.push({ name: "login" });
+                }
+                else{
+                  alert("uspesno dodat " + this.userType);
+                  this.$router.push({ name: this.userType });
+                }
           })
       }
     }

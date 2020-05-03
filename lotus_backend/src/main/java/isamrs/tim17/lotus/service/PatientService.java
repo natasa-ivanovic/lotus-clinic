@@ -26,6 +26,10 @@ public class PatientService {
 		return patients.findAll();
 	}
 	
+	public List<Patient> findByStatus(boolean status) {
+		return patients.findAllByEnabled(status);
+	}
+	
 	public Patient save(Patient doctor) {
 		return patients.save(doctor);
 	}
@@ -33,6 +37,5 @@ public class PatientService {
 	public void remove(long id) {
 		patients.deleteById(id);
 	}
-
 
 }
