@@ -30,6 +30,7 @@ import AppointmentView from "../components/Patients/AppointmentView"
 import PredefinedApps from "../components/Patients/PredefinedApps"
 import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 import ProfilePage from "../components/Users/ProfilePage"
+import Calendar from "../components/Doctors/Calendar"
 
 const routes = [
     {
@@ -147,6 +148,11 @@ const routes = [
         component: ProfilePage,
         name: "profile",
         path: "/profile"
+    },
+    {
+        component: Calendar,
+        name: "calendar",
+        path: "/users/doctors/calendar"
     },
 
     {

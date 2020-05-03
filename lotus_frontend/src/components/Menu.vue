@@ -12,6 +12,7 @@
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
                     <v-btn text :to="{ name: 'patients'}">Patients</v-btn>
                     <v-btn text :to="{ name: 'medicines'}">Medicines</v-btn>
+                    <v-btn text :to="{ name: 'calendar'}">Calendar</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('NURSE')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>

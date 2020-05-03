@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
@@ -41,5 +42,8 @@ public class AppointmentService {
 		return appointments.findByMedicalRecord(record);
 	}
 	
+	public List<Appointment> findByDoctor(Doctor record) {
+		return appointments.findByDoctor(record);
+	}
 
 }

@@ -1,9 +1,14 @@
 package isamrs.tim17.lotus.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -14,7 +19,9 @@ public class Doctor extends User {
 	private AppointmentType specialty;
 	//@Column(name = "operation", unique = false, nullable = true)
 	//public Operation operation;
-
+	
+	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public Set<Appointment> appointments = new HashSet<Appointment>();
 	/**
 	 * 
 	 */

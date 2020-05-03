@@ -20,6 +20,7 @@ import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.AppointmentService;
 
@@ -89,6 +90,22 @@ public class AppointmentController {
 		for (Appointment app : apps) {
 			if (app.getStatus().equals(AppointmentStatus.SCHEDULED))
 				dto.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/appointments/doctor")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<PremadeAppDTO>> getDoctorAppointments() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		List<Appointment> apps = service.findByDoctor(doctor);
+		if (apps == null)
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+		for (Appointment app : apps) {
+			dto.add(new PremadeAppDTO(app));
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
