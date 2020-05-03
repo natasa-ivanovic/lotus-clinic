@@ -5,7 +5,7 @@
           <v-col cols="6">
             <v-card class="elevation-3" v-if="user != undefined">
               <v-toolbar flat color="secondary" dark>
-                <v-toolbar-title v-if="userType">Edit {{userType.substring(0, userType.length -1)}} </v-toolbar-title>
+                <v-toolbar-title v-if="userType">Edit profile </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <v-form v-model="valid" ref="form">
@@ -15,8 +15,27 @@
                         label="Email"
                         :rules="[rules.email, rules.required]"
                         v-model="user.email" 
-                        required
-                        readonly/>
+                        required/>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Password"
+                        :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.required, rules.counter]"
+                        :type="showPass ? 'text' : 'password'"
+                        v-model="user.password" 
+                        @click:append="showPass = !showPass" />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Confirm password"
+                        :append-icon="showConfirmPass ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showConfirmPass ? 'text' : 'password'"
+                        :rules="[rules.required, rules.counter, rules.passwordMatch]"
+                        v-model="confirmPass" 
+                        @click:append="showConfirmPass = !showConfirmPass" />
                     </v-col>
                   </v-row>
                   <v-row>
@@ -93,8 +112,7 @@
                       <v-text-field
                         label="Insurance id"
                         :rules="[rules.required, rules.isNumber]"
-                        v-model="user.ssid" 
-                        readonly/>
+                        v-model="user.ssid" />
                     </v-col>
                   </v-row>
                 </v-form>
@@ -132,6 +150,7 @@ export default {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || 'Invalid e-mail.'
           },
+          passwordMatch: () => this.user.password == this.confirmPass || 'Passwords must match.',
           isNumber: value => !isNaN(value) || 'Id must be a number.'
       },
       valid: true,
@@ -143,6 +162,8 @@ export default {
     formIsValid () {
       return (
         this.user.email &&
+        this.user.password &&
+        this.confirmPass &&
         this.user.name &&
         this.user.surname &&
         this.user.gender &&
@@ -156,7 +177,8 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL + "/" + this.userType + "/" + this.id, {headers: { 'Authorization': this.$authKey }})
+
+    fetch(apiURL + "/" + user + "/self", {headers: { 'Authorization': this.$authKey }})
       .then(response => {
         return response.json();
       })
@@ -182,12 +204,8 @@ export default {
           .then(response => {
             if (response.status != 200)
               alert("Couldn't update profile!");
-            else {
-              if (this.id == "self")
-                this.$router.push({ name: "profile" })
-              else
-                this.$router.push({ name: this.userType })
-            }
+            else
+              this.$router.push({ name: this.userType })
           })
     }
   }

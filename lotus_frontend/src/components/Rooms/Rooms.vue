@@ -55,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL)
+    fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
       .then(response => {
         return response.json();
       })
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     deleteRoom: function(id) {
-      fetch(apiURL + id, {method: 'DELETE'})
+      fetch(apiURL + id, {method: 'DELETE', headers: { 'Authorization': this.$authKey}})
         .then(response => {
           if (response.status != 200)
             alert("Couldn't delete room!");

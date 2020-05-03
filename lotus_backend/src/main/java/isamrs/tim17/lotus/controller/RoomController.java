@@ -1,12 +1,17 @@
 package isamrs.tim17.lotus.controller;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RoomDTO;
+import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.RoomService;
 
@@ -34,6 +40,7 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PostMapping("/rooms")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> addRoom(@RequestBody String name) {
 		System.out.println("Adding a room...");
 		System.out.println(name);
@@ -56,6 +63,7 @@ public class RoomController {
 	 *         code.
 	 */
 	@GetMapping("/rooms")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<RoomDTO>> getAllRooms() {
 		List<Room> rooms = service.findAll();
 		
@@ -74,14 +82,15 @@ public class RoomController {
 	 * @return Room This returns the requested room.
 	 */
 	@GetMapping("/rooms/{id}")
-	public ResponseEntity<Room> getRoom(@PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<RoomDTO> getRoom(@PathVariable("id") long id) {
 		
 		Room room = service.findOne(id);
-
+		RoomDTO dto = new RoomDTO(room);
 		// room must exist
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(room, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
 	
@@ -93,6 +102,7 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/rooms/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> updateRoom(@RequestBody Room newRoom, @PathVariable long id) {
 		
 		//TODO VALIDATION!
@@ -119,15 +129,70 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/rooms/{id}")
-	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<RoomDTO> deleteRoom(@PathVariable("id") long id) {
 		System.out.println(id);
 		Room room = service.findOne(id);
 
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		RoomDTO dto = new RoomDTO(room);
 		System.out.println("Deleting " + room);
 		service.remove(id);
-		return new ResponseEntity<>(room, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@PostMapping("/rooms/free")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<RoomDTO>> getFreeRooms(@RequestBody String date) {
+		System.out.println(date);
+		Date startDate = null;
+		try {
+			startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Date endDate = addMinutes(startDate, 30);
+		System.out.println(startDate);
+		System.out.println("End date: " + endDate);
+		
+		List<Room> rooms = service.findAll();
+		List<RoomDTO> dto = new ArrayList<>();
+		
+		for (Room r : rooms) {
+			System.out.println("-------------------");
+			System.out.println(r.getName());
+			boolean free = true;
+			for (Appointment a : r.getAppointments()) {
+				System.out.println("Zahtev => START: " + startDate + " KRAJ: " + endDate);
+				System.out.println("Staroo => START: " + a.getStartDate() + " KRAJ: " + a.getEndDate());
+				if(overlap(startDate, endDate, a.getStartDate(), a.getEndDate()) == true) {
+					free = false;
+				}
+			}
+			if (free == true) {
+				dto.add(new RoomDTO(r));
+			}
+			System.out.println("Slobodno: " + free);
+			System.out.println("***");
+		}
+		
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+		
+	}
+	
+	private boolean overlap(Date start1, Date end1, Date start2, Date end2){
+	    return start1.getTime() <= end2.getTime() && start2.getTime() <= end1.getTime(); 
+	}
+	
+	private Date addMinutes(Date startDate, int minutes) {
+		long one_minute_in_millis = 60000;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		long start = cal.getTimeInMillis();
+		Date endDate = new Date(start + (minutes * one_minute_in_millis));
+		return endDate;
+		
 	}
 
 

@@ -18,6 +18,19 @@ export default {
   data() {
     return {
     }
+  },
+  methods: {
+    logout: function() {
+      console.log(this.$role);
+      console.log(this.$authKey);
+      this.$role = null;
+      this.$authKey = null;
+      console.log(this.$role);
+      console.log(this.$authKey);
+      localStorage.removeItem('authKey');
+      localStorage.removeItem('role');
+      this.$router.push({ name: "login" })
+    }
   }
 }
 </script>
