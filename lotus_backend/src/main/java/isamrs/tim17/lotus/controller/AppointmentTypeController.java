@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class AppointmentTypeController {
 	private AppointmentTypeService service;
 	
 	@PostMapping("/appointmentTypes")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<AppointmentType> addAppointmentType(@RequestBody String name) {
 		System.out.println("Adding an appointment type...");
 		System.out.println(name);
@@ -37,7 +39,9 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
+		System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOO");
 		List<AppointmentType> atypes = service.findAll();
 		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
 		
@@ -49,16 +53,18 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes/{id}")
-	public ResponseEntity<AppointmentType> getAppointmentType(@PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<AppointmentTypeDTO> getAppointmentType(@PathVariable("id") long id) {
 		AppointmentType at = service.findOne(id);
-		
+		AppointmentTypeDTO dto = new AppointmentTypeDTO(at);
 		if (at == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(at, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
 	@PutMapping("/appointmentTypes/{id}")
-	public ResponseEntity<AppointmentType> updateAppointmentType(@RequestBody AppointmentType newAppointmentType, @PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> updateAppointmentType(@RequestBody AppointmentTypeDTO newAppointmentType, @PathVariable("id") long id) {
 		
 		if(id != newAppointmentType.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -70,10 +76,11 @@ public class AppointmentTypeController {
 		
 		at.setName(newAppointmentType.getName());
 		at = service.save(at);
-		return new ResponseEntity<>(at, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("appointmentTypes/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
 		System.out.println(id);
 		AppointmentType at = service.findOne(id);

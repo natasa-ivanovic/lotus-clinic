@@ -59,7 +59,7 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/" + this.id)
+        fetch(apiURL + "/" + this.id, {headers: { 'Authorization': this.$authKey}})
         .then(response => {
             return response.json();
         })
@@ -75,7 +75,7 @@ export default {
               return;
             }
             fetch(apiURL + "/" + this.id, {method: 'PUT',
-                  headers: {'Content-Type': 'application/json'},
+                  headers: {'Content-Type': 'application/json', 'Authorization': this.$authKey},
                   body: JSON.stringify(this.room)})
             .then(response => {
                 if (response.status != 200)

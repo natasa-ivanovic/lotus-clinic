@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PostMapping("/rooms")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> addRoom(@RequestBody String name) {
 		System.out.println("Adding a room...");
 		System.out.println(name);
@@ -56,6 +58,7 @@ public class RoomController {
 	 *         code.
 	 */
 	@GetMapping("/rooms")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<RoomDTO>> getAllRooms() {
 		List<Room> rooms = service.findAll();
 		
@@ -74,14 +77,15 @@ public class RoomController {
 	 * @return Room This returns the requested room.
 	 */
 	@GetMapping("/rooms/{id}")
-	public ResponseEntity<Room> getRoom(@PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<RoomDTO> getRoom(@PathVariable("id") long id) {
 		
 		Room room = service.findOne(id);
-
+		RoomDTO dto = new RoomDTO(room);
 		// room must exist
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(room, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
 	
@@ -93,6 +97,7 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/rooms/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> updateRoom(@RequestBody Room newRoom, @PathVariable long id) {
 		
 		//TODO VALIDATION!
@@ -119,15 +124,17 @@ public class RoomController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/rooms/{id}")
-	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<RoomDTO> deleteRoom(@PathVariable("id") long id) {
 		System.out.println(id);
 		Room room = service.findOne(id);
 
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		RoomDTO dto = new RoomDTO(room);
 		System.out.println("Deleting " + room);
 		service.remove(id);
-		return new ResponseEntity<>(room, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 

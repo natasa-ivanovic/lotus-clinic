@@ -47,7 +47,7 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL)
+    fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
     .then(response => {
       return response.json(); //name, doctors
     })
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     deleteAppType: function(id) {
-      fetch(apiURL + id, {method: 'DELETE'})
+      fetch(apiURL + id, {headers: { 'Authorization': this.$authKey}, method: 'DELETE'})
         .then(response => {
           if (response.status != 200)
             alert("Couldn't delete appointment type!");

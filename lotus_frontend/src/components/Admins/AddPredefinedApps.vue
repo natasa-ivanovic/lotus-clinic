@@ -113,7 +113,7 @@
                   ></v-autocomplete>
                   </v-row>
                 </v-container>
-                <v-btn color="primary" @click="e1 = 4" class="ml-8" width="100">Continue</v-btn>
+                <v-btn color="primary" @click="getRooms()" class="ml-8" width="100">Continue</v-btn>
                 <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
@@ -130,7 +130,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.room"
-                  :items="[1, 2, 3]"
+                  :items="this.rooms"
                   dense
                   chips
                   deletable-chips
@@ -177,7 +177,9 @@
           room: ""
         },
         appTypes: [], //name, doctors
+        room: "",
         doctor: "",
+        
         
         
       }
@@ -210,6 +212,10 @@
           }
         });
         return data;
+      },
+      getRooms: function() {
+        //poslati datum i vreme
+        //var data = [];
       }
     }
 
