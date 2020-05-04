@@ -75,8 +75,8 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
-              <div>room: {{selectedEvent.room}}</div>
-              <div>patient: {{selectedEvent.patient}}</div>
+              <div>Room: {{selectedEvent.room}}</div>
+              <div>Patient: {{selectedEvent.patient}}</div>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -90,9 +90,9 @@
           </v-card>
         </v-menu>
       </v-sheet>
-      <v-sheet>
+      <!--v-sheet>
         <h1>{{this.appointments}}</h1>
-      </v-sheet>
+      </v-sheet-->
     </v-col>
   </v-row>
 </template>
@@ -167,7 +167,7 @@ const apiURL = "http://localhost:9001/api/appointments/doctor";
                 for(var i = 0; i < this.appointments.length; i++)
                 {
                     this.events.push({
-                        name: 'appointment',
+                        name: 'Appointment',
                         start: this.formatDate(new Date(this.appointments[i].startDate), true),
                         end: this.formatDate(new Date(this.appointments[i].endDate), true),
                         color: 'blue',
