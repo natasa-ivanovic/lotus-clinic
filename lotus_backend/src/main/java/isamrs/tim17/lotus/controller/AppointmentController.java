@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,6 @@ import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.RoomService;
-import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
 @RequestMapping("/api")
@@ -120,7 +120,6 @@ public class AppointmentController {
 			if(app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
 			PremadeAppDTO newDTO = new PremadeAppDTO(app);
-			newDTO.setPatientName(app.getMedicalRecord().getPatient().getName());
 			dto.add(newDTO);
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);

@@ -14,7 +14,8 @@ public class PremadeAppDTO {
 	private long roomId;
 	private String roomName;
 	private String type;
-	private String PatientName;
+	private String patientName;
+	private String patientSurname;
 	
 	
 	public PremadeAppDTO() {}
@@ -29,14 +30,27 @@ public class PremadeAppDTO {
 		this.roomId = app.getRoom().getId();
 		this.roomName = app.getRoom().getName();
 		this.setType(app.getAppointmentType().getName());
+		if (app.getMedicalRecord() != null) {
+		this.patientName = app.getMedicalRecord().getPatient().getName();
+		this.patientSurname = app.getMedicalRecord().getPatient().getSurname();
+		}
+		
 	}
 	
 	public String getPatientName() {
-		return PatientName;
+		return patientName;
 	}
 
 	public void setPatientName(String patientName) {
-		PatientName = patientName;
+		this.patientName = patientName;
+	}
+	
+	public String getPatientSurname() {
+		return patientSurname;
+	}
+
+	public void setPatientSurname(String patientSurname) {
+		this.patientSurname = patientSurname;
 	}
 
 	public Date getStartDate() {

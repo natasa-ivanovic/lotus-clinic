@@ -18,7 +18,7 @@
                     </v-carousel>
                     <PatientPage v-if="this.$role == 'PATIENT'" />
                     <AdminPage v-if="this.$role == 'ADMIN'" />
-
+                    <DoctorPage v-if="this.$role == 'DOCTOR'" />
                 </v-card-text>
             </v-card>
           </v-col>
@@ -31,10 +31,13 @@
 <script>
 import PatientPage from "../components/Patients/PatientHomePage"
 import AdminPage from "../components/Admins/AdminHomePage"
+import DoctorPage from "../components/Doctors/DoctorHomePage"
+
 export default {
     components: {
         PatientPage,
-        AdminPage
+        AdminPage,
+        DoctorPage
     },
     methods: {
         checkRole: function(role) {

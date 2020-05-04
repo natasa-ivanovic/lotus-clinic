@@ -30,6 +30,13 @@
                   <v-btn color="success" @click="login()" block height=55>Login</v-btn>
                 </v-col>
               </v-row>
+              </v-card-actions>
+              <v-card-actions>
+              <v-row>
+                <v-col>
+                  <v-alert v-model="error" type="error" dismissible>Authentification error</v-alert>
+                </v-col>
+              </v-row>
             </v-card-actions>
           </v-card>
        </v-col>
@@ -56,7 +63,8 @@ export default {
               return pattern.test(value) || 'Invalid e-mail.'
         }
       },
-      valid: true
+      valid: true,
+      error: false
     }
   },
   methods: {
@@ -68,15 +76,22 @@ export default {
                       headers: {'Content-Type': 'application/json'}, 
                       body: JSON.stringify(this.user)})
         .then(response => {
-            return response.json();
+            if(response.status == 200)
+              return response.json();
+            else {
+              this.error = true;
+              return false;
+            }
         })
         .then(data => {
-          this.$authKey = "Bearer " + data.accessToken;
-          this.$role = data.userRole;
-          localStorage.setItem('authKey', "Bearer " + data.accessToken);
-          localStorage.setItem('role', data.userRole);
-          //this.$forceUpdate();
-          this.$router.push({ name: "home" })
+          if (data) {
+
+            this.$authKey = "Bearer " + data.accessToken;
+            this.$role = data.userRole;
+            localStorage.setItem('authKey', "Bearer " + data.accessToken);
+            localStorage.setItem('role', data.userRole);
+            this.$router.push({ name: "home" })
+          }
         })
     }
   }
