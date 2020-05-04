@@ -30,6 +30,10 @@ public class AppointmentTypeService {
 		appointmentTypes.deleteById(id);
 	}
 	
+	public AppointmentType findOne(String name) {
+		return appointmentTypes.findOneByNameIgnoringCase(name);
+	}
+	
 	
 
 }

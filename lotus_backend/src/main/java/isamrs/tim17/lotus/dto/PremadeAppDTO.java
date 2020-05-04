@@ -14,6 +14,7 @@ public class PremadeAppDTO {
 	private long roomId;
 	private String roomName;
 	private String type;
+	private String PatientName;
 	
 	
 	public PremadeAppDTO() {}
@@ -30,6 +31,14 @@ public class PremadeAppDTO {
 		this.setType(app.getAppointmentType().getName());
 	}
 	
+	public String getPatientName() {
+		return PatientName;
+	}
+
+	public void setPatientName(String patientName) {
+		PatientName = patientName;
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}

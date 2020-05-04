@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RoomDTO;
+import isamrs.tim17.lotus.dto.RoomDateDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.RoomService;
@@ -144,7 +145,7 @@ public class RoomController {
 	
 	@PostMapping("/rooms/free")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<List<RoomDTO>> getFreeRooms(@RequestBody String date) {
+	public ResponseEntity<RoomDateDTO> getFreeRooms(@RequestBody String date) {
 		System.out.println(date);
 		Date startDate = null;
 		try {
@@ -176,8 +177,8 @@ public class RoomController {
 			System.out.println("Slobodno: " + free);
 			System.out.println("***");
 		}
-		
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		RoomDateDTO roomDto = new RoomDateDTO(dto, endDate.getTime());
+		return new ResponseEntity<>(roomDto, HttpStatus.OK);
 		
 	}
 	

@@ -12,8 +12,9 @@ public class RoomDTO {
 	public RoomDTO(Room room) {
 		this.id = room.getId();
 		this.name = room.getName();
+		
 	}
-
+	
 	public long getId() {
 		return id;
 	}
@@ -29,7 +30,5 @@ public class RoomDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
 
 }
