@@ -15,22 +15,22 @@
                         <v-dialog
                           ref="dialogDate"
                           v-model="date"
-                          :return-value.sync="appointment.startDate"
+                          :return-value.sync="startDate"
                           persistent
                           width="290px"
                         >
                         <template v-slot:activator="{on}">
                         <v-text-field
                           label="Start date"
-                          v-model="appointment.startDate"
+                          v-model="startDate"
                           readonly
                           prepend-icon="mdi-calendar"
                           v-on="on"/>
                         </template>
-                        <v-date-picker v-model="appointment.startDate" scrollable>
+                        <v-date-picker v-model="startDate" scrollable>
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="date = false">Cancel</v-btn>
-                          <v-btn text color="primary" @click="$refs.dialogDate.save(appointment.startDate)">OK</v-btn>
+                          <v-btn text color="primary" @click="$refs.dialogDate.save(startDate)">OK</v-btn>
                         </v-date-picker>
                         </v-dialog>
                       </v-col>
@@ -40,23 +40,23 @@
                         <v-dialog
                           ref="dialogTime"
                           v-model="time"
-                          :return-value.sync="appointment.startTime"
+                          :return-value.sync="startTime"
                           persistent
                           width="290px"
                         >
                         <template v-slot:activator="{on}">
                         <v-text-field
                           label="Start time"
-                          v-model="appointment.startTime"
+                          v-model="startTime"
                           readonly
                           prepend-icon="mdi-clock"
                           required
                           v-on="on"/>
                         </template>
-                        <v-time-picker v-model="appointment.startTime" scrollable>
+                        <v-time-picker v-model="startTime" scrollable>
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="time = false">Cancel</v-btn>
-                          <v-btn text color="primary" @click="$refs.dialogTime.save(appointment.startTime)">OK</v-btn>
+                          <v-btn text color="primary" @click="$refs.dialogTime.save(startTime)">OK</v-btn>
                         </v-time-picker>
                         </v-dialog>
                       </v-col>
@@ -80,8 +80,6 @@
                     v-model="appointment.appointmentType"
                     :items="this.getAppTypes()"
                     dense
-                    chips
-                    deletable-chips
                     prepend-icon="mdi-pill"
                     label="Appointment type"
                     ></v-autocomplete>
@@ -139,7 +137,7 @@
                   ></v-autocomplete>
                   </v-row>
                 </v-container>
-                <v-btn color="primary" @click="e1 = 5" class="ml-8" width="100">Continue</v-btn>
+                <v-btn color="primary" @click="convertEndDate()" class="ml-8" width="100">Continue</v-btn>
                 <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
@@ -147,12 +145,22 @@
             <v-stepper-step step="5">Review</v-stepper-step>
             <v-stepper-content step="5">
               <v-card
-                class="mb-12"
+                class="mt-n2"
                 color="white"
                 elevation="0"
               ></v-card>
-              <v-btn color="primary" class="ml-10" width="100">Finish</v-btn>
-              <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+                <v-list-item>
+                  <v-list-item-content>
+                  <div class="overline mb-4">YOU CAN CHANGE PREVIOUS STEPS</div>
+                  <v-list-item-title class="headline mb-1">Appointment</v-list-item-title>
+                  <v-list-item-subtitle>Time: {{this.appointment.startDate}} - {{this.formattedEndDate}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Appointment type: {{this.appointment.appointmentType}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Doctor: {{this.appointment.doctor}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Room: {{this.appointment.room}}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
+                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
             </v-stepper-content>
             </v-stepper>
           </v-col>
@@ -163,6 +171,7 @@
 <script>
   const apiTypes = "http://localhost:9001/api/appointmentTypes";
   const apiRooms = "http://localhost:9001/api/rooms/free";
+  const apiAddApp = "http://localhost:9001/api/appointments";
 
   export default {
     data () {
@@ -171,16 +180,18 @@
         date: false,
         time: false,
         appointment : {
-          startDate: "",
-          startTime: "",
+          startDate: "",  
+          endDate: "",
           appointmentType: "",
           doctor: "",
           room: ""
         },
         appTypes: [], //name, doctors
         rooms: [],
-        
-        
+        doctors: [],
+        startDate: "",
+        startTime: "",
+        formattedEndDate: "",
       }
     },
     mounted() {
@@ -197,28 +208,36 @@
       getAppTypes: function() {
         var data = [];
         this.appTypes.forEach(el => {
-          data.push(el.name);
+          if (el.doctors.length != 0)
+            data.push(el.name);
         });
         return data;
       },
       getDoctors: function() {
         var data = [];
+        var docs = []
         this.appTypes.forEach(el => {
           if (this.appointment.appointmentType == el.name) {
             el.doctors.forEach(doc => {
+              /*this.doctors.push({
+                name: doc.name + " " + doc.surname,
+                id: doc.id
+              });*/
+              docs.push(doc);
               data.push(doc.name + " " + doc.surname);
             });
           }
         });
+        this.doctors = docs;
         return data;
       },
       getRooms: function() {
-        var date = this.appointment.startDate + " " + this.appointment.startTime;
-        console.log(date);
+        this.appointment.startDate = this.startDate + " " + this.startTime;
+        //console.log(date);
         this.e1 = 4;
         fetch(apiRooms, {method: 'POST', headers: {'Content-Type': 'application/json', 
               'Authorization': this.$authKey},
-              body: date})
+              body: this.appointment.startDate})
         .then(response => {
           if (response.status != 200)
             return false;
@@ -228,8 +247,11 @@
         .then(rooms => {
           if (rooms == false)
             return; //NAPRAVI TROUGAO
-          else
-            this.rooms = rooms;
+          else {
+            this.rooms = rooms.rooms;
+            this.appointment.endDate = new Date(rooms.endDate);
+          }
+            
         })
       },
       getRoomsData: function() {
@@ -238,6 +260,46 @@
           data.push(el.name);
         });
         return data;
+      },
+      convertEndDate: function() {
+        var date = this.appointment.endDate.toString();
+        var elem = date.split(" ")[4];
+        this.formattedEndDate = elem.substring(0, 5);
+        this.e1 = 5;
+      },
+      finishAppointment: function() {
+        console.log(this.appointment);
+        this.doctors.forEach(doc => {
+            var info = doc.name + " " + doc.surname;
+            if (info == this.appointment.doctor) {
+              this.appointment.doctor = doc.id;
+            }
+        });
+        this.rooms.forEach(room => {
+          if(room.name == this.appointment.room) {
+            this.appointment.room = room.id;
+          }
+        });
+
+        this.appTypes.forEach(at => {
+          if (at.name == this.appointment.appointmentType) {
+            this.appointment.appointmentType = at.id;
+          }
+        })
+
+        this.appointment.endDate = this.appointment.endDate.getTime();
+        fetch(apiAddApp, {method: 'POST', 
+                  headers: {'Content-Type': 'application/json',
+                            'Authorization': this.$authKey },
+                  body: JSON.stringify(this.appointment)})
+            .then(response => {
+              if (response.status != 200)
+                alert("Couldn't add this appointment" + "!");
+              else {
+                alert("Appointment is successfully created!")
+                this.$router.push({name : "home"});
+              }
+          })
       }
     }
 

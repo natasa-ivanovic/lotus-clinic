@@ -12,5 +12,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	
 	Room findOneById(String id);
 	List<Room> findByNameAllIgnoringCase(String name);
+	Room findOneByNameIgnoringCase(String name);
 	Page<Room> findAll(Pageable pageable);
 }

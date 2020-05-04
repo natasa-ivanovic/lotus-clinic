@@ -29,5 +29,9 @@ public class RoomService {
 	public void remove(long id) {
 		rooms.deleteById(id);
 	}
+	
+	public Room findOne(String name) {
+		return rooms.findOneByNameIgnoringCase(name);
+	}
 
 }

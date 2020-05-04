@@ -34,5 +34,9 @@ public class DoctorService {
 	public void remove(long id) {
 		doctors.deleteById(id);
 	}
+	
+	public Doctor findOne(String name, String surname) {
+		return doctors.findOneByNameAndSurnameIgnoringCase(name, surname);
+	}
 
 }

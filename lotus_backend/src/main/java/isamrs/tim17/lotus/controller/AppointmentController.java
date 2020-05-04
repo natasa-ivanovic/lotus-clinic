@@ -1,6 +1,9 @@
 package isamrs.tim17.lotus.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +19,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
-import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.AppointmentService;
+import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.RoomService;
 
 @RestController
 @RequestMapping("/api")
 public class AppointmentController {
 	
-	@Autowired
-	private AppointmentService service;
+	@Autowired private AppointmentService service;
+	@Autowired private RoomService roomService;
+	@Autowired private AppointmentTypeService appointmentTypeService;
+	@Autowired private DoctorService doctorService;
+	
 	
 	@GetMapping("/appointments")
 	//@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR'")
@@ -111,13 +122,32 @@ public class AppointmentController {
 	}
 	
 	@PostMapping("/appointments")
-	public ResponseEntity<Appointment> addAppointment(@RequestBody Appointment app) {
-		//if (isEmptyOrNull(app)) {
-			//System.out.println("Error in appointment!");
-			//return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		//}
-		service.save(app);
-		return new ResponseEntity<>(app, HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Appointment> addAppointment(@RequestBody AppointmentDTO app) {
+		//VALIDACIJA
+		
+		System.out.println(app);
+		SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date start = null;
+		Date end = new Date(app.getEndDate());
+		try {
+			start = sdfStart.parse(app.getStartDate());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Room room = roomService.findOne(app.getRoom());
+		System.out.println(room);
+		
+		Doctor doc = doctorService.findOne(app.getDoctor());
+		System.out.println(doc);
+		
+		AppointmentType at = appointmentTypeService.findOne(app.getAppointmentType());
+		System.out.println(at);
+		
+		
+		Appointment newApp = new Appointment(start, end, at, doc, room);
+		service.save(newApp);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	/*private boolean isEmptyOrNull(Appointment app) {

@@ -68,6 +68,15 @@ public class Appointment {
 		this.diagnosis = diagnosis;
 	}
 	
+	public Appointment(Date startDate, Date endDate, AppointmentType type, Doctor doctor, Room room) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.appointmentType = type;
+		this.doctor = doctor;
+		this.room = room;
+		this.status = AppointmentStatus.PREMADE; //IZMENITI
+	}
+	
 	@Override
 	public String toString() {
 		return "Appointment [id=" + id + ", information=" + information + ", startDate=" + startDate + ", endDate="

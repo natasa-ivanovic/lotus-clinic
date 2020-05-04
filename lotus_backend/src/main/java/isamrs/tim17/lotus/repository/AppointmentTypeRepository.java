@@ -13,5 +13,6 @@ public interface AppointmentTypeRepository extends JpaRepository<AppointmentType
 	AppointmentType findOneById(String id);
 	List<AppointmentType> findByNameAllIgnoringCase(String name);
 	Page<AppointmentType> findAll(Pageable pageable);
+	AppointmentType findOneByNameIgnoringCase(String name);
 
 }

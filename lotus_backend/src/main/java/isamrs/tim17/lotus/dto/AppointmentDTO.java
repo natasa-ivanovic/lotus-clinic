@@ -1,67 +1,72 @@
 package isamrs.tim17.lotus.dto;
 
-import java.util.Date;
-
-import isamrs.tim17.lotus.model.Appointment;
-
 public class AppointmentDTO {
 	
-	private Date startDate;
-	private Date endDate;
-	private long doctorId;
-	private long medicalRecordId;
-	private long roomId;
+	private String startDate;
+	private long endDate;
+	private long doctor;
+	private long appointmentType;
+	private long room;
 	
 	public AppointmentDTO() {}
 	
-	public AppointmentDTO(Appointment app) {
+	public AppointmentDTO(AppointmentDTO app) {
 		this.startDate = app.getStartDate();
 		this.endDate = app.getEndDate();
-		this.doctorId = app.getDoctor().getId();
-		this.medicalRecordId = app.getMedicalRecord().getId();
-		this.roomId = app.getRoom().getId();
+		this.doctor = app.getDoctor();
+		this.appointmentType = app.getAppointmentType();
+		this.room = app.getRoom();
+	}
+	
+
+	@Override
+	public String toString() {
+		return "AppointmentDTO [startDate=" + startDate + ", endDate=" + endDate + ", doctor=" + doctor
+				+ ", appointmentType=" + appointmentType + ", room=" + room + "]";
 	}
 
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public long getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(long endDate) {
 		this.endDate = endDate;
 	}
 
-	public long getDoctorId() {
-		return doctorId;
+	public long getDoctor() {
+		return doctor;
 	}
 
-	public void setDoctorId(long doctorId) {
-		this.doctorId = doctorId;
+	public void setDoctor(long doctor) {
+		this.doctor = doctor;
 	}
 
-	public long getMedicalRecordId() {
-		return medicalRecordId;
+	public long getAppointmentType() {
+		return appointmentType;
 	}
 
-	public void setMedicalRecordId(long medicalRecordId) {
-		this.medicalRecordId = medicalRecordId;
+	public void setAppointmentType(long appointmentType) {
+		this.appointmentType = appointmentType;
 	}
 
-	public long getRoomId() {
-		return roomId;
+	public long getRoom() {
+		return room;
 	}
 
-	public void setRoomId(long roomId) {
-		this.roomId = roomId;
+	public void setRoom(long room) {
+		this.room = room;
 	}
+
 	
+		
 	
 
 }
