@@ -77,7 +77,6 @@ export default {
         })
     },
     editRoom: function(editId) {
-      alert(editId);
       this.$router.push({name: "editRoom", params: {id : editId}});
     },
     getDetails: function(id) {

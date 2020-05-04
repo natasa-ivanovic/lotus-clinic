@@ -69,7 +69,6 @@ export default {
         })
     },
     editAppType: function(editId) {
-      alert(editId);
       this.$router.push({name: "editAppointmentType", params: {id : editId}});
     },
     addAppType: function() {

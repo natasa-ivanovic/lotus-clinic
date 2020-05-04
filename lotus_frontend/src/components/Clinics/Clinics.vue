@@ -60,7 +60,6 @@ export default {
             this.$router.push({name: "editClinic", params: {id: editId}});
         },
         deleteClinic: function(id) {
-            alert(apiURL + "/" + id)
             fetch(apiURL + "/" + id, {method: 'DELETE',
             headers: {'Authorization': this.$authKey}})
             .then(response => {
