@@ -10,10 +10,10 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>List of {{userType}}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn :to="{ name: 'addUser', params: {userType: userType} }">Add new {{userType}}</v-btn>
+                    <v-btn :to="{ name: 'addUser', params: {userType: userType} }" v-if="userType != 'patients'">Add new {{userType}}</v-btn>
                 </v-toolbar>
             </template>
-            <template v-slot:item.edit="{ item }">
+            <!--template v-slot:item.edit="{ item }">
                 <v-icon
                     @click="editUser(item.id)"
                 >
@@ -26,7 +26,7 @@
                 >
                     mdi-delete
                 </v-icon>
-            </template>
+            </template-->
         </v-data-table>
     </div>
 </template>
@@ -41,16 +41,13 @@ export default {
             users: [],
             headers: [
                 {text: 'Email', value: 'email'},
-                {text: 'Password', value: 'password'},
+                {text: 'Insurance ID', value: 'ssid'},
                 {text: 'Name', value: 'name'},
                 {text: 'Surname', value: 'surname'},
                 {text: 'Address', value: 'address'},
                 {text: 'City', value: 'city'},
                 {text: 'Country', value: 'country'},
                 {text: 'Phone number', value: 'phoneNumber'},
-                {text: 'Insurance ID', value: 'ssid'},
-                {text: 'Edit', value: 'edit', sortable: false },
-                {text: 'Delete', value: 'delete', sortable: false },
             ]
         }
     },
@@ -69,7 +66,7 @@ export default {
         })
     },
     methods: {
-        deleteUser: function(id) {
+        /*deleteUser: function(id) {
             fetch(apiURL + this.userType + '/' + id, {method: 'DELETE'})
                 .then(response => {
                     if (response.status != 200)
@@ -83,7 +80,7 @@ export default {
         },
         editUser: function(id) {
             this.$router.push({ name: "editUser", params: {id: id, userType: this.userType}})
-            },
+            },*/
         addUser: function() {
           this.$router.push({ name: "addUser", params: {userType: this.userType} })
         }

@@ -14,7 +14,7 @@ import Doctors from "../components/Doctors/Doctors"
 import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
 import AddAppointmentType from "../components/AppointmentTypes/Add"
 import EditAppointmentType from "../components/AppointmentTypes/Edit"
-import EditUser from "../components/Users/Edit"
+import EditUser from "../components/Users/EditUser"
 import AddUser from "../components/Users/Add"
 import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
@@ -32,6 +32,7 @@ import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
 import Register from "../components/Patients/Register"
+import MyClinic from "../components/Clinics/MyClinic"
 
 const routes = [
     {
@@ -159,6 +160,11 @@ const routes = [
         component: Register,
         name: "register",
         path: "/register"
+    },
+    {
+        component: MyClinic,
+        name: "my_clinic",
+        path: "/my_clinic"
     },
 
     {
