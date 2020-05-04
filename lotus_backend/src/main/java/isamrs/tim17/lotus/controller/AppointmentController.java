@@ -105,6 +105,8 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
 		for (Appointment app : apps) {
+			if(app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
+				continue;
 			dto.add(new PremadeAppDTO(app));
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
