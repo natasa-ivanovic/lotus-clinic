@@ -153,7 +153,7 @@
                   <v-list-item-content>
                   <div class="overline mb-4">YOU CAN CHANGE PREVIOUS STEPS</div>
                   <v-list-item-title class="headline mb-1">Appointment</v-list-item-title>
-                  <v-list-item-subtitle>Time: {{this.appointment.startDate}} - {{this.formattedEndDate}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Time: {{this.appointment.startDateString}} - {{this.formattedEndDateLong}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Appointment type: {{this.appointment.appointmentType}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Doctor: {{this.appointment.doctor}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Room: {{this.appointment.room}}</v-list-item-subtitle>
@@ -180,8 +180,8 @@
         date: false,
         time: false,
         appointment : {
-          startDate: "",  
-          endDate: "",
+          startDateString: "",  
+          endDateLong: "",
           appointmentType: "",
           doctor: "",
           room: ""
@@ -232,12 +232,12 @@
         return data;
       },
       getRooms: function() {
-        this.appointment.startDate = this.startDate + " " + this.startTime;
+        this.appointment.startDateString = this.startDate + " " + this.startTime;
         //console.log(date);
         this.e1 = 4;
         fetch(apiRooms, {method: 'POST', headers: {'Content-Type': 'application/json', 
               'Authorization': this.$authKey},
-              body: this.appointment.startDate})
+              body: this.appointment.startDateString})
         .then(response => {
           if (response.status != 200)
             return false;
@@ -249,7 +249,7 @@
             return; //NAPRAVI TROUGAO
           else {
             this.rooms = rooms.rooms;
-            this.appointment.endDate = new Date(rooms.endDate);
+            this.appointment.endDateLong = new Date(rooms.endDate);
           }
             
         })
@@ -262,7 +262,7 @@
         return data;
       },
       convertEndDate: function() {
-        var date = this.appointment.endDate.toString();
+        var date = this.appointment.endDateLong.toString();
         var elem = date.split(" ")[4];
         this.formattedEndDate = elem.substring(0, 5);
         this.e1 = 5;
@@ -287,7 +287,7 @@
           }
         })
 
-        this.appointment.endDate = this.appointment.endDate.getTime();
+        this.appointment.endDateLong = this.appointment.endDateLong.getTime();
         fetch(apiAddApp, {method: 'POST', 
                   headers: {'Content-Type': 'application/json',
                             'Authorization': this.$authKey },

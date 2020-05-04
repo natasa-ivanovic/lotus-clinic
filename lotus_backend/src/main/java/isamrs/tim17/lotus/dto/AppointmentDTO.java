@@ -1,13 +1,18 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.Date;
+
 public class AppointmentDTO {
 	
-	private String startDate;
-	private long endDate;
+	private String startDateString;
+	private long endDateLong;
 	private long doctor;
 	private long appointmentType;
 	private long room;
 	
+	private Date endDate;
+	private Date startDate;
+
 	public AppointmentDTO() {}
 	
 	public AppointmentDTO(AppointmentDTO app) {
@@ -17,28 +22,21 @@ public class AppointmentDTO {
 		this.appointmentType = app.getAppointmentType();
 		this.room = app.getRoom();
 	}
-	
 
-	@Override
-	public String toString() {
-		return "AppointmentDTO [startDate=" + startDate + ", endDate=" + endDate + ", doctor=" + doctor
-				+ ", appointmentType=" + appointmentType + ", room=" + room + "]";
+	public String getStartDateString() {
+		return startDateString;
 	}
 
-	public String getStartDate() {
-		return startDate;
+	public void setStartDateString(String startDateString) {
+		this.startDateString = startDateString;
 	}
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+	public long getEndDateLong() {
+		return endDateLong;
 	}
 
-	public long getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(long endDate) {
-		this.endDate = endDate;
+	public void setEndDateLong(long endDateLong) {
+		this.endDateLong = endDateLong;
 	}
 
 	public long getDoctor() {
@@ -64,6 +62,23 @@ public class AppointmentDTO {
 	public void setRoom(long room) {
 		this.room = room;
 	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
 
 	
 		

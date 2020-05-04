@@ -161,9 +161,16 @@ export default {
         return response.json();
       })
       .then(user => {
-        this.user= user;
-        this.dateString = util.dateToString(user.birthDate);
-        this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
+        if (this.$role == "PATIENT") {
+                this.user = user.patient;
+                this.record = user.record;
+                this.dateString = util.dateToString(user.patient.birthDate);
+                this.selectedGender = user.patient.gender.charAt(0) + user.patient.gender.slice(1).toLowerCase();
+        } else {
+            this.user= user;
+            this.dateString = util.dateToString(user.birthDate);
+            this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
+        }
       })
   },
   methods: {

@@ -31,6 +31,7 @@ import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.RoomService;
+import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
 @RequestMapping("/api")
@@ -116,7 +117,11 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
 		for (Appointment app : apps) {
-			dto.add(new PremadeAppDTO(app));
+			if(app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
+				continue;
+			PremadeAppDTO newDTO = new PremadeAppDTO(app);
+			newDTO.setPatientName(app.getMedicalRecord().getPatient().getName());
+			dto.add(newDTO);
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
@@ -129,9 +134,9 @@ public class AppointmentController {
 		System.out.println(app);
 		SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date start = null;
-		Date end = new Date(app.getEndDate());
+		Date end = new Date(app.getEndDateLong());
 		try {
-			start = sdfStart.parse(app.getStartDate());
+			start = sdfStart.parse(app.getStartDateString());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

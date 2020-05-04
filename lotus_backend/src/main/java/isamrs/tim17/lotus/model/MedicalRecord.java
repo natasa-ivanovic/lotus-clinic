@@ -39,10 +39,10 @@ public class MedicalRecord {
    
 	@OneToOne
 	@MapsId
-	public Patient patient;
+	private Patient patient;
 	
-	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	public Set<Appointment> appointments = new HashSet<Appointment>();
+	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
 	public MedicalRecord() {}
 
@@ -109,6 +109,14 @@ public class MedicalRecord {
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
 	}
 	
 	
