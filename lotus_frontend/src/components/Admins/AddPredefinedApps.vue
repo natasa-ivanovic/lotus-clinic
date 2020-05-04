@@ -104,8 +104,6 @@
                   v-model="appointment.doctor"
                   :items="this.getDoctors()"
                   dense
-                  chips
-                  deletable-chips
                   prepend-icon="mdi-doctor"
                   label="Doctor"
                   ></v-autocomplete>
@@ -130,8 +128,6 @@
                   v-model="appointment.room"
                   :items="this.getRoomsData()"
                   dense
-                  chips
-                  deletable-chips
                   prepend-icon="mdi-hospital-building"
                   label="Room"
                   ></v-autocomplete>
@@ -153,10 +149,10 @@
                   <v-list-item-content>
                   <div class="overline mb-4">YOU CAN CHANGE PREVIOUS STEPS</div>
                   <v-list-item-title class="headline mb-1">Appointment</v-list-item-title>
-                  <v-list-item-subtitle>Time: {{this.appointment.startDateString}} - {{this.formattedEndDateLong}}</v-list-item-subtitle>
-                  <v-list-item-subtitle>Appointment type: {{this.appointment.appointmentType}}</v-list-item-subtitle>
-                  <v-list-item-subtitle>Doctor: {{this.appointment.doctor}}</v-list-item-subtitle>
-                  <v-list-item-subtitle>Room: {{this.appointment.room}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Time: {{this.appointment.startDateString}} - {{this.formattedEndDate}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Appointment type: {{this.aType}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Doctor: {{this.doc}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Room: {{this.room}}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
@@ -192,6 +188,9 @@
         startDate: "",
         startTime: "",
         formattedEndDate: "",
+        aType: "",
+        doc: "",
+        room: "",
       }
     },
     mounted() {
@@ -219,10 +218,6 @@
         this.appTypes.forEach(el => {
           if (this.appointment.appointmentType == el.name) {
             el.doctors.forEach(doc => {
-              /*this.doctors.push({
-                name: doc.name + " " + doc.surname,
-                id: doc.id
-              });*/
               docs.push(doc);
               data.push(doc.name + " " + doc.surname);
             });
@@ -265,6 +260,9 @@
         var date = this.appointment.endDateLong.toString();
         var elem = date.split(" ")[4];
         this.formattedEndDate = elem.substring(0, 5);
+        this.aType = this.appointment.appointmentType;
+        this.room = this.appointment.room;
+        this.doc = this.appointment.doctor;
         this.e1 = 5;
       },
       finishAppointment: function() {
