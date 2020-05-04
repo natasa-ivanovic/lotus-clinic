@@ -70,13 +70,17 @@ export default {
                 this.appointments = apps;
                 this.appointments.forEach(app => {
                     app.date = app.startDate.split("T")[0]
-                    app.time = app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
+                    app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
                 })
             }
         })
     },
     methods: {
-
+        dateFormat: function(date1, date2) {
+            var time1 = date1.toTimeString().split(" ")[0];
+            var time2 = date2.toTimeString().split(" ")[0];
+            return time1 + "-" + time2;
+        }
     }
 }
 </script>

@@ -29,4 +29,22 @@ public class Nurse extends User {
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
 	
 	public Nurse() {}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+
+	public Set<Prescription> getPrescriptions() {
+		return prescriptions;
+	}
+
+	public void setPrescriptions(Set<Prescription> prescriptions) {
+		this.prescriptions = prescriptions;
+	}
+	
+	
 }

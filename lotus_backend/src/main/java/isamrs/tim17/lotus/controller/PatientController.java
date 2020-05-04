@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
+import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.Nurse;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
@@ -36,12 +39,22 @@ public class PatientController {
 	 *         code.
 	 */
 	@GetMapping("/patients")
-	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+	@PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
 	public ResponseEntity<List<UserDTO>> getPatients() {
+		/*Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		long clinicId;
+		try {
+			Doctor loggedIn = (Doctor) a.getPrincipal();			
+			clinicId = loggedIn.getClinic().getId();
+		} catch(Exception e) {
+			Nurse loggedIn = (Nurse) a.getPrincipal();		
+			clinicId = loggedIn.getClinic().getId();			
+		}*/
 		List<Patient> patients = service.findAll();
 		List<UserDTO> patientsDTO = new ArrayList<>();
 		for (Patient p : patients) {
-			patientsDTO.add(new UserDTO(p));
+			//if (p.getClinic().getId().equals(clinicId))
+				patientsDTO.add(new UserDTO(p));
 		}
 		return new ResponseEntity<>(patientsDTO, HttpStatus.OK);
 	}

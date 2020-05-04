@@ -17,12 +17,11 @@
                         cols=6
                     >
                         <v-card>
-                            <v-card-title>{{app.time}} {{app.type}} </v-card-title>
+                            <v-card-title>{{app.type}} <br/> {{app.time}}  </v-card-title>
                             <v-card-text>
-                                Doctor {{app.doctorName}}
-                                {{app.doctorSurname}}
-                                in room
-                                {{app.roomName}}
+                                Doctor: {{app.doctorName}}
+                                {{app.doctorSurname}} <br/>
+                                Room: {{app.roomName}}
                             </v-card-text>
 
                         <v-btn block v-on:click="details(app)" color=success dark >Schedule
@@ -65,7 +64,10 @@ export default {
                 }
                 this.apps = appointments;
                 this.apps.forEach(app => {
-                    app.time = app.startDate.split("T")[0].split().reverse().join() + " " + app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
+                    var start = new Date(app.startDate);
+                    var end = new Date(app.endDate);
+                    app.time = this.dateFormat(start,end);
+                    //app.time = app.startDate.split("T")[0].split().reverse().join() + " " + app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
                 })
             })
     },
@@ -84,6 +86,12 @@ export default {
                     } else
                         alert("Nesto ne valja");
                 });
+        },
+        dateFormat: function(date1, date2) {
+            var date = date1.toISOString().split("T")[0];
+            var time1 = date1.toTimeString().split(" ")[0];
+            var time2 = date2.toTimeString().split(" ")[0];
+            return date + " " + time1 + "-" + time2;
         }
     }
     

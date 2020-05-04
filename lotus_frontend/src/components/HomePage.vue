@@ -52,10 +52,10 @@ export default {
         return {
             items: [
                 {
-                    src: 'https://img.huffingtonpost.com/asset/5bb8159a1f000000022533d1.jpeg?ops=scalefit_720_noupscale',
+                    src: 'https://www.omstuff.com/content/2018/07/beautiful-bright-pink-lotus-flower-wallpaper.jpg',
                 },
                 {
-                    src: 'https://images.pond5.com/group-smiling-doctors-footage-024000198_prevstill.jpeg',
+                    src: 'https://www.omstuff.com/content/2018/07/dark-pink-lotus-flower-and-lillypads-wallpaper.jpg',
                 },
                 {
                     src: 'http://sussexlaserlipo.co.uk/wp-content/uploads/2013/11/Smiling-doctors-Sussex-Laser-Lipo.jpeg',
