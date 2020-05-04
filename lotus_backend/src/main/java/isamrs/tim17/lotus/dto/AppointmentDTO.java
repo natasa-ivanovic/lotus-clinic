@@ -11,6 +11,7 @@ public class AppointmentDTO {
 	private long doctorId;
 	private long medicalRecordId;
 	private long roomId;
+
 	
 	public AppointmentDTO() {}
 	

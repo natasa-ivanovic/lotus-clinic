@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
@@ -23,6 +24,7 @@ import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.AppointmentService;
+import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
 @RequestMapping("/api")
@@ -107,7 +109,9 @@ public class AppointmentController {
 		for (Appointment app : apps) {
 			if(app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
-			dto.add(new PremadeAppDTO(app));
+			PremadeAppDTO newDTO = new PremadeAppDTO(app);
+			newDTO.setPatientName(app.getMedicalRecord().getPatient().getName());
+			dto.add(newDTO);
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}

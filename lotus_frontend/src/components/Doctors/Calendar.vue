@@ -71,20 +71,12 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
             </v-toolbar>
             <v-card-text>
-              <span v-html="selectedEvent.details"></span>
+              <div>room: {{selectedEvent.room}}</div>
+              <div>patient: {{selectedEvent.patient}}</div>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -97,6 +89,9 @@
             </v-card-actions>
           </v-card>
         </v-menu>
+      </v-sheet>
+      <v-sheet>
+        <h1>{{this.appointments}}</h1>
       </v-sheet>
     </v-col>
   </v-row>
@@ -176,6 +171,8 @@ const apiURL = "http://localhost:9001/api/appointments/doctor";
                         start: this.formatDate(new Date(this.appointments[i].startDate), true),
                         end: this.formatDate(new Date(this.appointments[i].endDate), true),
                         color: 'blue',
+                        room: this.appointments[i].roomName,
+                        patient: this.appointments[i].patientName,
                 })
                 }
 
