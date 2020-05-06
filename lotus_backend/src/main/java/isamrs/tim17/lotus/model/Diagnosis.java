@@ -35,6 +35,11 @@ public class Diagnosis {
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
 	public Diagnosis() {}
+	
+	public Diagnosis(String name) {
+		this.id = this.getId();
+		this.name = name;
+	}
 
 	public Diagnosis(String name, ClinicalCentre clinicCentre) {
 		this.id = this.getId();
