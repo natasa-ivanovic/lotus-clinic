@@ -32,11 +32,11 @@ public class Clinic {
 	@Column(name = "description", nullable = false, unique = false)
 	private String description;
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Patient> patients = new HashSet<Patient>();
-	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Doctor> doctors = new HashSet<Doctor>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Nurse> nurses = new HashSet<Nurse>();
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Appointment> appointments = new HashSet<Appointment>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<ClinicAdministrator>();
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -80,14 +80,6 @@ public class Clinic {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<Patient> getPatients() {
-		return patients;
-	}
-
-	public void setPatients(Set<Patient> patients) {
-		this.patients = patients;
 	}
 
 	public Set<Doctor> getDoctors() {

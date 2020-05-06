@@ -76,7 +76,7 @@
             </v-toolbar>
             <v-card-text>
               <div>Room: {{selectedEvent.room}}</div>
-              <div>Patient: {{selectedEvent.patient}}</div>
+              <div>Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -172,7 +172,8 @@ const apiURL = "http://localhost:9001/api/appointments/doctor";
                         end: this.formatDate(new Date(this.appointments[i].endDate), true),
                         color: 'blue',
                         room: this.appointments[i].roomName,
-                        patient: this.appointments[i].patientName,
+                        patientName: this.appointments[i].patientName,
+                        patientSurname: this.appointments[i].patientSurname
                 })
                 }
 

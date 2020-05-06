@@ -45,6 +45,8 @@ public class Appointment {
 	private Doctor doctor;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Room room;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Clinic clinic;
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentType appointmentType;
 	@OneToOne(fetch = FetchType.EAGER)
@@ -162,6 +164,22 @@ public class Appointment {
 
 	public void setDiagnosis(Diagnosis diagnosis) {
 		this.diagnosis = diagnosis;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+
+	public Set<Prescription> getPrescriptions() {
+		return prescriptions;
+	}
+
+	public void setPrescriptions(Set<Prescription> prescriptions) {
+		this.prescriptions = prescriptions;
 	}
 	
 	

@@ -35,6 +35,8 @@ public class ClinicalCentre {
 	private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Medicine> medicines = new HashSet<Medicine>();
+	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Patient> patients = new HashSet<Patient>();
 	
 	public ClinicalCentre() {}
 	
@@ -91,6 +93,14 @@ public class ClinicalCentre {
 
 	public void setMedicines(Set<Medicine> medicines) {
 		this.medicines = medicines;
+	}
+
+	public Set<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(Set<Patient> patients) {
+		this.patients = patients;
 	}
 	
 	
