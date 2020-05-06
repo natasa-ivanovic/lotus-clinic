@@ -70,13 +70,14 @@ public class Appointment {
 		this.diagnosis = diagnosis;
 	}
 	
-	public Appointment(Date startDate, Date endDate, AppointmentType type, Doctor doctor, Room room) {
+	public Appointment(Date startDate, Date endDate, AppointmentType type, Doctor doctor, Room room, Clinic clinic) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.appointmentType = type;
 		this.doctor = doctor;
 		this.room = room;
 		this.status = AppointmentStatus.PREMADE; //IZMENITI
+		this.clinic = clinic;
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +24,14 @@ import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.RoomService;
 
@@ -41,6 +43,7 @@ public class AppointmentController {
 	@Autowired private RoomService roomService;
 	@Autowired private AppointmentTypeService appointmentTypeService;
 	@Autowired private DoctorService doctorService;
+	@Autowired private ClinicService clinicService;
 	
 	
 	@GetMapping("/appointments")
@@ -128,7 +131,8 @@ public class AppointmentController {
 	@PostMapping("/appointments")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Appointment> addAppointment(@RequestBody AppointmentDTO app) {
-		//VALIDACIJA
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		
 		System.out.println(app);
 		SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -148,8 +152,10 @@ public class AppointmentController {
 		AppointmentType at = appointmentTypeService.findOne(app.getAppointmentType());
 		System.out.println(at);
 		
+		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
+		System.out.println(clinic);
 		
-		Appointment newApp = new Appointment(start, end, at, doc, room);
+		Appointment newApp = new Appointment(start, end, at, doc, room, clinic);
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

@@ -27,7 +27,7 @@
                           prepend-icon="mdi-calendar"
                           v-on="on"/>
                         </template>
-                        <v-date-picker v-model="startDate" scrollable>
+                        <v-date-picker v-model="startDate" :min="getToday()" scrollable>
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="date = false">Cancel</v-btn>
                           <v-btn text color="primary" @click="$refs.dialogDate.save(startDate)">OK</v-btn>
@@ -62,7 +62,7 @@
                       </v-col>
                     </v-row>
                   </v-container>
-                  <v-btn color="primary" @click="e1 = 2" class="ml-10" width="100">Continue</v-btn>
+                  <v-btn color="primary" @click="getAppTypes()" class="ml-10" width="100">Continue</v-btn>
                   <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
                 </v-card>
             </v-stepper-content>
@@ -78,14 +78,14 @@
                     <v-autocomplete
                     class="mt-0"
                     v-model="appointment.appointmentType"
-                    :items="this.getAppTypes()"
+                    :items="this.types"
                     dense
                     prepend-icon="mdi-pill"
                     label="Appointment type"
                     ></v-autocomplete>
                     </v-row>
                   </v-container>
-                  <v-btn color="primary" @click="e1 = 3" class="ml-8" width="100">Continue</v-btn>
+                  <v-btn color="primary" @click="getDoctors()" class="ml-8" width="100">Continue</v-btn>
                   <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
@@ -102,7 +102,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.doctor"
-                  :items="this.getDoctors()"
+                  :items="this.doctors"
                   dense
                   prepend-icon="mdi-doctor"
                   label="Doctor"
@@ -126,7 +126,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.room"
-                  :items="this.getRoomsData()"
+                  :items="this.rooms"
                   dense
                   prepend-icon="mdi-hospital-building"
                   label="Room"
@@ -182,7 +182,9 @@
           doctor: "",
           room: ""
         },
-        appTypes: [], //name, doctors
+        appTypes: [],
+        types: [],
+        freeRooms: [],
         rooms: [],
         doctors: [],
         startDate: "",
@@ -190,7 +192,7 @@
         formattedEndDate: "",
         aType: "",
         doc: "",
-        room: "",
+        room: ""
       }
     },
     mounted() {
@@ -204,27 +206,43 @@
 
     },
     methods: {
+      getToday: function() {
+        var today = new Date();
+        return today.toISOString();
+      },
       getAppTypes: function() {
         var data = [];
         this.appTypes.forEach(el => {
-          if (el.doctors.length != 0)
-            data.push(el.name);
+          var type = {}
+          if (el.doctors.length != 0) {
+            type = {
+              text: el.name,
+              value: el.id
+            }
+            data.push(type);
+          }
         });
-        return data;
+        this.getRooms(); //get all free rooms
+        this.types = data;
+        this.e1 = 2;
       },
       getDoctors: function() {
-        var data = [];
-        var docs = []
+        var docs = [];
+        console.log(this.appointment.appointmentType);
         this.appTypes.forEach(el => {
-          if (this.appointment.appointmentType == el.name) {
+          console.log(el.id);
+          if (this.appointment.appointmentType == el.id) {
             el.doctors.forEach(doc => {
-              docs.push(doc);
-              data.push(doc.name + " " + doc.surname);
+              var doctor = {
+                text: doc.name + " " + doc.surname,
+                value: doc.id
+              }
+              docs.push(doctor);
             });
           }
         });
         this.doctors = docs;
-        return data;
+        this.e1 = 3;
       },
       getRooms: function() {
         this.appointment.startDateString = this.startDate + " " + this.startTime;
@@ -243,48 +261,48 @@
           if (rooms == false)
             return; //NAPRAVI TROUGAO
           else {
-            this.rooms = rooms.rooms;
+            var r = [];
+            rooms.rooms.forEach(el => {
+              var room = {
+                text: el.name,
+                value: el.id
+              };
+              r.push(room);
+            })
+            this.freeRooms = rooms.rooms;
+            this.rooms = r;
             this.appointment.endDateLong = new Date(rooms.endDate);
           }
             
         })
       },
-      getRoomsData: function() {
-        var data = [];
-        this.rooms.forEach(el => {
-          data.push(el.name);
-        });
-        return data;
-      },
       convertEndDate: function() {
         var date = this.appointment.endDateLong.toString();
         var elem = date.split(" ")[4];
         this.formattedEndDate = elem.substring(0, 5);
-        this.aType = this.appointment.appointmentType;
-        this.room = this.appointment.room;
-        this.doc = this.appointment.doctor;
+        this.getAppInfo();
         this.e1 = 5;
+      },
+      getAppInfo: function() {
+        this.appTypes.forEach(el => {
+          if (el.id == this.appointment.appointmentType) {
+            this.aType = el.name;
+            el.doctors.forEach(doc => {
+              if (doc.id == this.appointment.doctor) {
+                this.doc = doc.name + " " + doc.surname;
+              }
+            });
+          } 
+        });
+
+        this.freeRooms.forEach(el => {
+          if (el.id == this.appointment.room) {
+            this.room = el.name;
+          }
+        });
       },
       finishAppointment: function() {
         console.log(this.appointment);
-        this.doctors.forEach(doc => {
-            var info = doc.name + " " + doc.surname;
-            if (info == this.appointment.doctor) {
-              this.appointment.doctor = doc.id;
-            }
-        });
-        this.rooms.forEach(room => {
-          if(room.name == this.appointment.room) {
-            this.appointment.room = room.id;
-          }
-        });
-
-        this.appTypes.forEach(at => {
-          if (at.name == this.appointment.appointmentType) {
-            this.appointment.appointmentType = at.id;
-          }
-        })
-
         this.appointment.endDateLong = this.appointment.endDateLong.getTime();
         fetch(apiAddApp, {method: 'POST', 
                   headers: {'Content-Type': 'application/json',
