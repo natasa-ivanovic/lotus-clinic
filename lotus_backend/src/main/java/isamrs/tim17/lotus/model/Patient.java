@@ -11,7 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -23,7 +22,7 @@ public class Patient extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
-	private Clinic clinic;
+	private ClinicalCentre clinicalCentre;
 	
 	@OneToOne(targetEntity=MedicalRecord.class, cascade = CascadeType.ALL, mappedBy = "patient")
 	private MedicalRecord medicalRecord;
@@ -31,17 +30,18 @@ public class Patient extends User {
 	public Patient() {}
 	
 	public Patient(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, long id, Date birthDate, Gender gender, Clinic clinic) {
+			String phoneNumber, long id, Date birthDate, Gender gender, ClinicalCentre clinicalCentre) {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);
-		this.clinic = clinic;
+		this.clinicalCentre = clinicalCentre;
 	}
 
-	public Clinic getClinic() {
-		return clinic;
+
+	public ClinicalCentre getClinicalCentre() {
+		return clinicalCentre;
 	}
 
-	public void setClinic(Clinic clinic) {
-		this.clinic = clinic;
+	public void setClinicalCentre(ClinicalCentre clinicalCentre) {
+		this.clinicalCentre = clinicalCentre;
 	}
 
 	public MedicalRecord getMedicalRecord() {
