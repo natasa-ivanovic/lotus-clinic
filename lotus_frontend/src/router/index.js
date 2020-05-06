@@ -33,6 +33,9 @@ import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
 import Register from "../components/Patients/Register"
 import MyClinic from "../components/Clinics/MyClinic"
+import Diagnosis from "../components/Diagnosis/Diagnosis"
+import AddDiagnosis from "../components/Diagnosis/Add"
+import EditDiagnosis from "../components/Diagnosis/Edit"
 
 const routes = [
     {
@@ -166,7 +169,22 @@ const routes = [
         name: "my_clinic",
         path: "/my_clinic"
     },
-
+    {
+        component: Diagnosis,
+        name: "diagnoses",
+        path: "/diagnoses/"
+    },
+    {
+        component: AddDiagnosis,
+        name: "addDiagnosis",
+        path: "/diagnoses/add"
+    },
+    {
+        component: EditDiagnosis,
+        name: "editDiagnosis",
+        path: "/diagnoses/edit/:id",
+        props: true
+    },
     {
         path: "/*",
         redirect: "/home"
