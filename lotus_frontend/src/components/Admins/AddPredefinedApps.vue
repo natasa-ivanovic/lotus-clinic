@@ -3,7 +3,9 @@
     <v-row align="center" justify="center">
       <v-col cols="6">
         <v-stepper v-model="e1" vertical>
-          <v-stepper-step :editable="true" :complete="e1 > 1" step="1">Date and time</v-stepper-step>
+          
+          <v-stepper-step :editable="true" :rules="[() => this.step1]" :complete="e1 > 1" step="1">Date and time
+            <small v-if="!this.step1">Please enter date and time.</small></v-stepper-step>
             <v-stepper-content step="1">
               <v-card
                 class="mb-12"
@@ -63,11 +65,11 @@
                     </v-row>
                   </v-container>
                   <v-btn color="primary" @click="getAppTypes()" class="ml-10" width="100">Continue</v-btn>
-                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
                 </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 2" step="2">Appointment type</v-stepper-step>
+            <v-stepper-step :editable="true" :rules="[() => this.step2]" :complete="e1 > 2" step="2">Appointment type
+            <small v-if="!this.step2">Please select an appointment type.</small></v-stepper-step>
             <v-stepper-content step="2">
               <v-card
                 class="mb-12"
@@ -86,11 +88,11 @@
                     </v-row>
                   </v-container>
                   <v-btn color="primary" @click="getDoctors()" class="ml-8" width="100">Continue</v-btn>
-                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 3" step="3">Doctor</v-stepper-step>
+            <v-stepper-step :editable="true" :rules="[() => this.step3]" :complete="e1 > 3" step="3">Doctor
+              <small v-if="!this.step3">Please select a doctor.</small></v-stepper-step>
             <v-stepper-content step="3">
               <v-card
                 class="mb-12"
@@ -110,11 +112,11 @@
                   </v-row>
                 </v-container>
                 <v-btn color="primary" @click="getRooms()" class="ml-8" width="100">Continue</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 4" step="4">Room</v-stepper-step>
+            <v-stepper-step :editable="true"  :rules="[() => this.step4]" :complete="e1 > 4" step="4">Room
+            <small v-if="!this.step4">Please select a room.</small></v-stepper-step>
             <v-stepper-content step="4">
               <v-card
                 class="mb-12"
@@ -134,11 +136,10 @@
                   </v-row>
                 </v-container>
                 <v-btn color="primary" @click="convertEndDate()" class="ml-8" width="100">Continue</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step step="5">Review</v-stepper-step>
+            <v-stepper-step step="5" >Review</v-stepper-step>
             <v-stepper-content step="5">
               <v-card
                 class="mt-n2"
@@ -192,7 +193,17 @@
         formattedEndDate: "",
         aType: "",
         doc: "",
-        room: ""
+        room: "",
+        rules: {
+          step1: () => this.step1, //date and time
+          step2: () => this.step2, //appointment type
+          step3: () => this.step3, //doctor
+          step4: () => this.step4  //room
+        },
+        step1: true,
+        step2: true,
+        step3: true,
+        step4: true
       }
     },
     mounted() {
@@ -211,6 +222,11 @@
         return today.toISOString();
       },
       getAppTypes: function() {
+        if (this.startDate == "" || this.startTime == "") {
+          this.step1 = false;
+          return;
+        }
+        this.step1 = true;
         var data = [];
         this.appTypes.forEach(el => {
           var type = {}
@@ -222,11 +238,16 @@
             data.push(type);
           }
         });
-        this.getRooms(); //get all free rooms
+        //this.getRooms(); //get all free rooms
         this.types = data;
         this.e1 = 2;
       },
       getDoctors: function() {
+        if (this.appointment.appointmentType == "") {
+          this.step2 = false;
+          return;
+        }
+        this.step2 = true;
         var docs = [];
         console.log(this.appointment.appointmentType);
         this.appTypes.forEach(el => {
@@ -245,6 +266,11 @@
         this.e1 = 3;
       },
       getRooms: function() {
+        if (this.appointment.doctor == "") {
+          this.step3 = false;
+          return;
+        }
+        this.step3 = true;
         this.appointment.startDateString = this.startDate + " " + this.startTime;
         //console.log(date);
         this.e1 = 4;
@@ -277,6 +303,11 @@
         })
       },
       convertEndDate: function() {
+        if (this.appointment.room == "") {
+          this.step4 = false;
+          return;
+        }
+        this.step4 = true;
         var date = this.appointment.endDateLong.toString();
         var elem = date.split(" ")[4];
         this.formattedEndDate = elem.substring(0, 5);
