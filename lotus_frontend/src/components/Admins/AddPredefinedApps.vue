@@ -157,7 +157,7 @@
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+                <v-btn color="error" class="ml-5" width="100" @click="redirect()">Cancel</v-btn>
             </v-stepper-content>
             </v-stepper>
           </v-col>
@@ -341,12 +341,15 @@
                   body: JSON.stringify(this.appointment)})
             .then(response => {
               if (response.status != 200)
-                alert("Couldn't add this appointment" + "!");
+                alert("Couldn't add this appointment!");
               else {
                 alert("Appointment is successfully created!")
                 this.$router.push({name : "home"});
               }
           })
+      },
+      redirect: function() {
+        this.$router.push({name : "home"}); //TODO ASK YES OR NO
       }
     }
 

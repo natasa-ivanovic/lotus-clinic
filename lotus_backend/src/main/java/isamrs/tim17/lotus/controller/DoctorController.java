@@ -19,15 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
+import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 
 @RestController
 @RequestMapping("/api")
 public class DoctorController {
-	@Autowired
-	private DoctorService service;
+	@Autowired private DoctorService service;
+	@Autowired private ClinicService clinicService;
 
 	/**
 	 * This method is used for adding a doctor.
@@ -36,12 +38,17 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PostMapping("/doctors")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Doctor> addDoctor(@RequestBody Doctor doctor) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		System.out.println("Adding a doctor...");
 		/*
 		 * if (isEmptyOrNull(doctor)) { System.out.println("Something's wrong...");
 		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 		 */
+		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
+		doctor.setClinic(clinic);
 		service.save(doctor);
 		System.out.println("Database is ok...");
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
