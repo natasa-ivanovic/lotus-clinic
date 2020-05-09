@@ -38,5 +38,9 @@ public class DoctorService {
 	public Doctor findOne(String name, String surname) {
 		return doctors.findOneByNameAndSurnameIgnoringCase(name, surname);
 	}
+	
+	public boolean alreadyExistsUsername(String username) {
+		return doctors.existsByUsername(username);
+	}
 
 }

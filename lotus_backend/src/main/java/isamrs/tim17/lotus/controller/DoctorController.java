@@ -1,6 +1,7 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +40,27 @@ public class DoctorController {
 	 */
 	@PostMapping("/doctors")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Doctor> addDoctor(@RequestBody Doctor doctor) {
+	public ResponseEntity<Object> addDoctor(@RequestBody Doctor doctor) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		System.out.println("Adding a doctor...");
-		/*
-		 * if (isEmptyOrNull(doctor)) { System.out.println("Something's wrong...");
-		 * return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-		 */
+		
+		if (isEmptyOrNull(doctor))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		if (service.alreadyExistsUsername(doctor.getUsername())) {
+			HashMap<String, String> error = new HashMap<>();
+			error.put("text", "That username already exists!");
+
+			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+			
+		}
+		
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		doctor.setClinic(clinic);
 		service.save(doctor);
 		System.out.println("Database is ok...");
-		return new ResponseEntity<>(doctor, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
@@ -137,8 +146,6 @@ public class DoctorController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	
-
 	/**
 	 * This method is used for editing a doctor.
 	 * 
@@ -191,4 +198,32 @@ public class DoctorController {
 		service.remove(id);
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
+	
+	
+	private boolean isEmptyOrNull(Doctor doctor) {
+		if (doctor == null)
+			return true;
+		if (doctor.getName() == null || "".equals(doctor.getName()))
+			return true;
+		if (doctor.getSurname() == null || "".equals(doctor.getSurname()))
+			return true;
+		if (doctor.getUsername() == null || "".equals(doctor.getUsername()))
+			return true;
+		if (doctor.getPassword() == null || "".equals(doctor.getPassword()))
+			return true;
+		if (doctor.getAddress() == null || "".equals(doctor.getAddress()))
+			return true;
+		if (doctor.getCity() == null || "".equals(doctor.getCity()))
+			return true;
+		if (doctor.getCountry() == null || "".equals(doctor.getCountry()))
+			return true;
+		if (doctor.getPhoneNumber() == null || "".equals(doctor.getPhoneNumber()))
+			return true;
+		if (doctor.getGender() == null || "".equals(doctor.getGender().toString()))
+			return true;
+		if (doctor.getBirthDate() == null || "".equals(doctor.getBirthDate().toString()))
+			return true;
+		return false;
+	}
+
 }

@@ -57,6 +57,7 @@ export default {
         this.$role = null;
         this.$authKey = null;
         localStorage.removeItem('authKey');
+        this.axios.defaults.headers['Authorization'] = "";
         localStorage.removeItem('role');
         this.$router.push({ name: "login" })
     }
