@@ -37,6 +37,7 @@ import AppointmentQuery from "../components/Patients/AppointmentQuery"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
+import PatientClinicView from "../components/Patients/ClinicsView"
 
 const routes = [
     {
@@ -191,6 +192,11 @@ const routes = [
         name: "editDiagnosis",
         path: "/diagnoses/edit/:id",
         props: true
+    },
+    {
+        component: PatientClinicView,
+        name: "patientsClinics",
+        path: "/new_appointment/clinics"
     },
     {
         path: "/*",
