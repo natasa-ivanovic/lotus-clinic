@@ -33,7 +33,7 @@ import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
 import Register from "../components/Patients/Register"
 import MyClinic from "../components/Clinics/MyClinic"
-
+import AppointmentQuery from "../components/Patients/AppointmentQuery"
 const routes = [
     {
         component: Login,
@@ -140,6 +140,12 @@ const routes = [
         component: PredefinedApps,
         name: "predefinedApps",
         path: "/new_appointment/predefined"
+    },
+    {
+        component: AppointmentQuery,
+        name: "apppointmentQuery",
+        path: "/new_appointment/request",
+        props: true
     },
     {
         component: AddPredefinedApps,
