@@ -15,7 +15,7 @@ import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
 import AddAppointmentType from "../components/AppointmentTypes/Add"
 import EditAppointmentType from "../components/AppointmentTypes/Edit"
 import EditUser from "../components/Users/EditUser"
-import AddUser from "../components/Users/Add"
+import AddUser from "../components/Users/AddUser"
 import Rooms from "../components/Rooms/Rooms"
 import EditRooms from "../components/Rooms/Edit"
 import Clinics from "../components/Clinics/Clinics"
@@ -34,6 +34,10 @@ import Calendar from "../components/Doctors/Calendar"
 import Register from "../components/Patients/Register"
 import MyClinic from "../components/Clinics/MyClinic"
 import AppointmentQuery from "../components/Patients/AppointmentQuery"
+import Diagnosis from "../components/Diagnosis/Diagnosis"
+import AddDiagnosis from "../components/Diagnosis/Add"
+import EditDiagnosis from "../components/Diagnosis/Edit"
+
 const routes = [
     {
         component: Login,
@@ -172,7 +176,22 @@ const routes = [
         name: "my_clinic",
         path: "/my_clinic"
     },
-
+    {
+        component: Diagnosis,
+        name: "diagnoses",
+        path: "/diagnoses/"
+    },
+    {
+        component: AddDiagnosis,
+        name: "addDiagnosis",
+        path: "/diagnoses/add"
+    },
+    {
+        component: EditDiagnosis,
+        name: "editDiagnosis",
+        path: "/diagnoses/edit/:id",
+        props: true
+    },
     {
         path: "/*",
         redirect: "/home"

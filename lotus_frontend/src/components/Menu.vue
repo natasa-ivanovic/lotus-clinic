@@ -28,6 +28,7 @@
                 <v-toolbar-items v-if="checkRole('CENTRE_ADMIN')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
+                    <v-btn text :to="{ name: 'diagnoses'}">Diagnoses</v-btn>
                 </v-toolbar-items>
                 <v-spacer />
                 <v-toolbar-items v-if="!checkRole(null)">
@@ -56,6 +57,7 @@ export default {
         this.$role = null;
         this.$authKey = null;
         localStorage.removeItem('authKey');
+        this.axios.defaults.headers['Authorization'] = "";
         localStorage.removeItem('role');
         this.$router.push({ name: "login" })
     }

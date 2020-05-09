@@ -22,9 +22,7 @@ public class Doctor extends User {
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	public Set<Appointment> appointments = new HashSet<Appointment>();
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;

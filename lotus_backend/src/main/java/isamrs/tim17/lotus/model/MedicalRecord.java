@@ -44,6 +44,8 @@ public class MedicalRecord {
 	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
+	//TODO OPERATIONS
+	
 	public MedicalRecord() {}
 
 	public MedicalRecord(float height, float weight, String allergies, String bloodType, Patient patient) {

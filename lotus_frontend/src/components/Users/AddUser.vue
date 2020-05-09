@@ -166,7 +166,9 @@ export default {
         },
         valid: true,
         showPass: false,
-        showConfirmPass: false
+        showConfirmPass: false,
+        errorUserName: false,
+        errorSSID: false
       }
     },
     props: {
@@ -190,23 +192,28 @@ export default {
           url = apiURL + "auth/register";
         else
           url = apiURL + "api/" + this.userType; 
-        fetch(url, {method: 'POST', 
-                        headers: {'Content-Type': 'application/json',
-                                  'Authorization': this.$authKey }, 
-                        body: JSON.stringify(this.user)})
-          .then(response => {
-              if (response.status != 200)
-                alert("Couldn't add " + this.userType.substring(0, this.userType.length -1) + "!");
-              else
-                if (this.userType == "patients") {
-                  alert("uspesno poslat zahtev za pacijenta");
-                  this.$router.push({ name: "login" });
-                }
-                else{
-                  alert("uspesno dodat " + this.userType);
-                  this.$router.push({ name: this.userType });
-                }
-          })
+        
+        //this.axios.defaults.headers['Authorization'] = this.$authKey;
+        console.log('userType:' + this.userType);
+        this.axios({url : url, 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            data: JSON.stringify(this.user)
+          }).then(response =>   {
+            console.log(response);
+            console.log('userType:' + this.userType);
+            if (this.userType == "patients") {
+              alert("Successfully sent request!");
+            }
+            else {
+              alert("Successfully added " + this.userType);
+              this.$router.push({name: this.userType});
+            }
+          }).catch(error => {
+            console.log(error);
+            alert(error.response.data.text);
+            //TODO SREDITI ERORE ZA SSID I USERNAME
+          });
       }
     }
     

@@ -3,7 +3,9 @@
     <v-row align="center" justify="center">
       <v-col cols="6">
         <v-stepper v-model="e1" vertical>
-          <v-stepper-step :editable="true" :complete="e1 > 1" step="1">Date and time</v-stepper-step>
+          
+          <v-stepper-step :editable="true" :rules="[() => this.step1]" :complete="e1 > 1" step="1">Date and time
+            <small v-if="!this.step1">Please enter date and time.</small></v-stepper-step>
             <v-stepper-content step="1">
               <v-card
                 class="mb-12"
@@ -27,7 +29,7 @@
                           prepend-icon="mdi-calendar"
                           v-on="on"/>
                         </template>
-                        <v-date-picker v-model="startDate" scrollable>
+                        <v-date-picker v-model="startDate" :min="getToday()" scrollable>
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="date = false">Cancel</v-btn>
                           <v-btn text color="primary" @click="$refs.dialogDate.save(startDate)">OK</v-btn>
@@ -62,12 +64,12 @@
                       </v-col>
                     </v-row>
                   </v-container>
-                  <v-btn color="primary" @click="e1 = 2" class="ml-10" width="100">Continue</v-btn>
-                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+                  <v-btn color="primary" @click="getAppTypes()" class="ml-10" width="100">Continue</v-btn>
                 </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 2" step="2">Appointment type</v-stepper-step>
+            <v-stepper-step :editable="true" :rules="[() => this.step2]" :complete="e1 > 2" step="2">Appointment type
+            <small v-if="!this.step2">Please select an appointment type.</small></v-stepper-step>
             <v-stepper-content step="2">
               <v-card
                 class="mb-12"
@@ -78,19 +80,19 @@
                     <v-autocomplete
                     class="mt-0"
                     v-model="appointment.appointmentType"
-                    :items="this.getAppTypes()"
+                    :items="this.types"
                     dense
                     prepend-icon="mdi-pill"
                     label="Appointment type"
                     ></v-autocomplete>
                     </v-row>
                   </v-container>
-                  <v-btn color="primary" @click="e1 = 3" class="ml-8" width="100">Continue</v-btn>
-                  <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+                  <v-btn color="primary" @click="getDoctors()" class="ml-8" width="100">Continue</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 3" step="3">Doctor</v-stepper-step>
+            <v-stepper-step :editable="true" :rules="[() => this.step3]" :complete="e1 > 3" step="3">Doctor
+              <small v-if="!this.step3">Please select a doctor.</small></v-stepper-step>
             <v-stepper-content step="3">
               <v-card
                 class="mb-12"
@@ -102,7 +104,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.doctor"
-                  :items="this.getDoctors()"
+                  :items="this.doctors"
                   dense
                   prepend-icon="mdi-doctor"
                   label="Doctor"
@@ -110,11 +112,11 @@
                   </v-row>
                 </v-container>
                 <v-btn color="primary" @click="getRooms()" class="ml-8" width="100">Continue</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true" :complete="e1 > 4" step="4">Room</v-stepper-step>
+            <v-stepper-step :editable="true"  :rules="[() => this.step4]" :complete="e1 > 4" step="4">Room
+            <small v-if="!this.step4">Please select a room.</small></v-stepper-step>
             <v-stepper-content step="4">
               <v-card
                 class="mb-12"
@@ -126,7 +128,7 @@
                   <v-autocomplete
                   class="mt-0"
                   v-model="appointment.room"
-                  :items="this.getRoomsData()"
+                  :items="this.rooms"
                   dense
                   prepend-icon="mdi-hospital-building"
                   label="Room"
@@ -134,11 +136,10 @@
                   </v-row>
                 </v-container>
                 <v-btn color="primary" @click="convertEndDate()" class="ml-8" width="100">Continue</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step step="5">Review</v-stepper-step>
+            <v-stepper-step step="5" >Review</v-stepper-step>
             <v-stepper-content step="5">
               <v-card
                 class="mt-n2"
@@ -156,7 +157,7 @@
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
-                <v-btn color="error" class="ml-5" width="100">Cancel</v-btn>
+                <v-btn color="error" class="ml-5" width="100" @click="redirect()">Cancel</v-btn>
             </v-stepper-content>
             </v-stepper>
           </v-col>
@@ -182,7 +183,9 @@
           doctor: "",
           room: ""
         },
-        appTypes: [], //name, doctors
+        appTypes: [],
+        types: [],
+        freeRooms: [],
         rooms: [],
         doctors: [],
         startDate: "",
@@ -191,6 +194,16 @@
         aType: "",
         doc: "",
         room: "",
+        rules: {
+          step1: () => this.step1, //date and time
+          step2: () => this.step2, //appointment type
+          step3: () => this.step3, //doctor
+          step4: () => this.step4  //room
+        },
+        step1: true,
+        step2: true,
+        step3: true,
+        step4: true
       }
     },
     mounted() {
@@ -204,29 +217,60 @@
 
     },
     methods: {
+      getToday: function() {
+        var today = new Date();
+        return today.toISOString();
+      },
       getAppTypes: function() {
+        if (this.startDate == "" || this.startTime == "") {
+          this.step1 = false;
+          return;
+        }
+        this.step1 = true;
         var data = [];
         this.appTypes.forEach(el => {
-          if (el.doctors.length != 0)
-            data.push(el.name);
+          var type = {}
+          if (el.doctors.length != 0) {
+            type = {
+              text: el.name,
+              value: el.id
+            }
+            data.push(type);
+          }
         });
-        return data;
+        //this.getRooms(); //get all free rooms
+        this.types = data;
+        this.e1 = 2;
       },
       getDoctors: function() {
-        var data = [];
-        var docs = []
+        if (this.appointment.appointmentType == "") {
+          this.step2 = false;
+          return;
+        }
+        this.step2 = true;
+        var docs = [];
+        console.log(this.appointment.appointmentType);
         this.appTypes.forEach(el => {
-          if (this.appointment.appointmentType == el.name) {
+          console.log(el.id);
+          if (this.appointment.appointmentType == el.id) {
             el.doctors.forEach(doc => {
-              docs.push(doc);
-              data.push(doc.name + " " + doc.surname);
+              var doctor = {
+                text: doc.name + " " + doc.surname,
+                value: doc.id
+              }
+              docs.push(doctor);
             });
           }
         });
         this.doctors = docs;
-        return data;
+        this.e1 = 3;
       },
       getRooms: function() {
+        if (this.appointment.doctor == "") {
+          this.step3 = false;
+          return;
+        }
+        this.step3 = true;
         this.appointment.startDateString = this.startDate + " " + this.startTime;
         //console.log(date);
         this.e1 = 4;
@@ -243,48 +287,53 @@
           if (rooms == false)
             return; //NAPRAVI TROUGAO
           else {
-            this.rooms = rooms.rooms;
+            var r = [];
+            rooms.rooms.forEach(el => {
+              var room = {
+                text: el.name,
+                value: el.id
+              };
+              r.push(room);
+            })
+            this.freeRooms = rooms.rooms;
+            this.rooms = r;
             this.appointment.endDateLong = new Date(rooms.endDate);
           }
             
         })
       },
-      getRoomsData: function() {
-        var data = [];
-        this.rooms.forEach(el => {
-          data.push(el.name);
-        });
-        return data;
-      },
       convertEndDate: function() {
+        if (this.appointment.room == "") {
+          this.step4 = false;
+          return;
+        }
+        this.step4 = true;
         var date = this.appointment.endDateLong.toString();
         var elem = date.split(" ")[4];
         this.formattedEndDate = elem.substring(0, 5);
-        this.aType = this.appointment.appointmentType;
-        this.room = this.appointment.room;
-        this.doc = this.appointment.doctor;
+        this.getAppInfo();
         this.e1 = 5;
+      },
+      getAppInfo: function() {
+        this.appTypes.forEach(el => {
+          if (el.id == this.appointment.appointmentType) {
+            this.aType = el.name;
+            el.doctors.forEach(doc => {
+              if (doc.id == this.appointment.doctor) {
+                this.doc = doc.name + " " + doc.surname;
+              }
+            });
+          } 
+        });
+
+        this.freeRooms.forEach(el => {
+          if (el.id == this.appointment.room) {
+            this.room = el.name;
+          }
+        });
       },
       finishAppointment: function() {
         console.log(this.appointment);
-        this.doctors.forEach(doc => {
-            var info = doc.name + " " + doc.surname;
-            if (info == this.appointment.doctor) {
-              this.appointment.doctor = doc.id;
-            }
-        });
-        this.rooms.forEach(room => {
-          if(room.name == this.appointment.room) {
-            this.appointment.room = room.id;
-          }
-        });
-
-        this.appTypes.forEach(at => {
-          if (at.name == this.appointment.appointmentType) {
-            this.appointment.appointmentType = at.id;
-          }
-        })
-
         this.appointment.endDateLong = this.appointment.endDateLong.getTime();
         fetch(apiAddApp, {method: 'POST', 
                   headers: {'Content-Type': 'application/json',
@@ -292,12 +341,15 @@
                   body: JSON.stringify(this.appointment)})
             .then(response => {
               if (response.status != 200)
-                alert("Couldn't add this appointment" + "!");
+                alert("Couldn't add this appointment!");
               else {
                 alert("Appointment is successfully created!")
                 this.$router.push({name : "home"});
               }
           })
+      },
+      redirect: function() {
+        this.$router.push({name : "home"}); //TODO ASK YES OR NO
       }
     }
 

@@ -90,7 +90,9 @@ export default {
             this.$role = data.userRole;
             localStorage.setItem('authKey', "Bearer " + data.accessToken);
             localStorage.setItem('role', data.userRole);
+            this.axios.defaults.headers['Authorization'] = "Bearer " + data.accessToken;
             this.$router.push({ name: "home" })
+            
           }
         })
     }

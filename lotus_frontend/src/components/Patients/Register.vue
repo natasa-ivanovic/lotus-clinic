@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AddUser from "../Users/Add"
+import AddUser from "../Users/AddUser"
 export default {
     components: {
         AddUser

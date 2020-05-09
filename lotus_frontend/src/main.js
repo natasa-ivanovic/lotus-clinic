@@ -1,12 +1,16 @@
 import Vue from 'vue'
+import Axios from 'axios'
+import VueAxios from 'vue-axios'
 import App from './App.vue'
 
 import router from "./router/index"
 import vuetify from './plugins/vuetify';
 
+Vue.use(VueAxios, Axios);
 
 // global variables
 const authKey = Vue.observable({ authKey: localStorage.getItem('authKey') })
+
 
 Object.defineProperty(Vue.prototype, '$authKey', {
   get () {
@@ -36,10 +40,10 @@ Object.defineProperty(Vue.prototype, '$apiURL', {
   }
 })
 
+Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
 
 new Vue({
   router,
-
   data: {
   },
 
