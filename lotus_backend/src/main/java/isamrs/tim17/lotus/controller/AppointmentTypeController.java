@@ -39,7 +39,7 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN, PATIENT')")
 	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
 		System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOO");
 		List<AppointmentType> atypes = service.findAll();

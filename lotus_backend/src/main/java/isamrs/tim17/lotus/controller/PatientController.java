@@ -1,6 +1,7 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +13,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.PatientDTO;
+import isamrs.tim17.lotus.dto.PatientRequest;
 import isamrs.tim17.lotus.dto.UserDTO;
-import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Nurse;
+import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Patient;
-import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.ClinicService;
+import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
@@ -30,6 +34,15 @@ import isamrs.tim17.lotus.service.PatientService;
 public class PatientController {
 	@Autowired
 	private PatientService service;
+	
+	@Autowired 
+	private DoctorService doctorService;
+	
+	@Autowired 
+	private ClinicService clinicService;
+	
+	@Autowired
+	private AppointmentTypeService typeService;
 
 	/**
 	 * This method is used for getting the list of patients.
@@ -183,6 +196,17 @@ public class PatientController {
 		return new ResponseEntity<>(p, HttpStatus.OK);
 	}
 
+	@PostMapping("/patients/request")
+	public ResponseEntity<Object> requestList(@RequestBody PatientRequest pr) {
+		Date date = new Date(pr.getRequestDate());
+		AppointmentType type = typeService.findOne(pr.getAppointmentType());
+		if (pr.isClinics()) {
+			// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
+		} else {
+			// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
+		}
+		return new ResponseEntity<>("uspelo", HttpStatus.OK);
+	}
 
 
 }
