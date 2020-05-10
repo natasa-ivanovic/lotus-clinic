@@ -10,6 +10,8 @@ public class DoctorDTO {
 	private String surname;
 	private double grade;	
 	private List<Date> availableTimes;
+	private ClinicDTO clinic;
+	private String type;
 	
 	public DoctorDTO() {}
 
@@ -19,6 +21,8 @@ public class DoctorDTO {
 		this.surname = d.getSurname();
 		this.grade = grade;
 		this.availableTimes = times;
+		this.setClinic(new ClinicDTO(d.getClinic()));
+		this.setType(d.getSpecialty().getName());
 	}
 
 	public String getName() {
@@ -51,6 +55,22 @@ public class DoctorDTO {
 
 	public void setAvailableTimes(List<Date> availableTimes) {
 		this.availableTimes = availableTimes;
+	}
+
+	public ClinicDTO getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(ClinicDTO clinic) {
+		this.clinic = clinic;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

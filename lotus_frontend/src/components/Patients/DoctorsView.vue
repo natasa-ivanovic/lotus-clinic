@@ -4,13 +4,13 @@
           <v-col cols="6">
             <v-card class="elevation-3">
                 <v-toolbar flat color="secondary" dark>
-                <v-toolbar-title>Browse by clinics</v-toolbar-title>
+                <v-toolbar-title>Browse by doctors</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
                     <template>
                         <v-card>
                             <v-card-title>
-                            Clinics
+                            Doctors
                             <v-spacer></v-spacer>
                             <v-text-field
                                 v-model="search"
@@ -24,8 +24,8 @@
                             :headers="headers"
                             :items="items"
                             :search="search">
-                                <template v-slot:item.viewDoctors="{ item }">
-                                    <v-icon medium @click="viewDoctors(item)">mdi-doctor</v-icon>
+                                <template v-slot:item.schedule="{ item }">
+                                    <v-icon medium @click="scheduleApp(item)">mdi-calendar-arrow-right</v-icon>
                                 </template>
                             </v-data-table>
                         </v-card>
@@ -41,40 +41,59 @@
 export default {
     data() {
         return {
-            items: this.clinicList,
+            items: this.doctorList,
             search: "",
             headers: [
                 {
-                    text: 'Clinic name',
+                    text: "Name",
                     sortable: true,
                     value: 'name'
                 },
                 {
-                    text: 'Clinic address',
+                    text: "Surname",
                     sortable: true,
-                    value: 'address'
+                    value: 'surname'
                 },
                 {
-                    text: 'View doctors',
+                    text: "Rating",
+                    sortable: true,
+                    value: 'grade'
+                },
+                {
+                    text: "Appointment type",
+                    sortable: true,
+                    value: 'type'
+                },
+                {
+                    text: 'Clinic name',
+                    sortable: true,
+                    value: 'clinic.name'
+                },
+                {
+                    text: 'Clinic address',
+                    sortable: true,
+                    value: 'clinic.address'
+                },
+                {
+                    text: 'Schedule',
                     sortable: false,
-                    value: 'viewDoctors',
+                    value: 'schedule',
                     align: "center"
                 }
             ],
         }
     },
     props: {
-        clinicList: {
+        doctorList: {
             type: Array,
             default: () => []
         }
     },
     methods: {
-        viewDoctors: function(clinic) {
-            this.$router.push({name: "patientsDoctors", params: {doctorList: clinic.doctors}});
+        scheduleApp: function(doctor) {
+            alert(doctor.name);
         }
     }
-    
 }
 </script>
 

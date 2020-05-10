@@ -38,7 +38,7 @@ import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
 import PatientClinicView from "../components/Patients/ClinicsView"
-
+import PatientDoctorView from "../components/Patients/DoctorsView"
 const routes = [
     {
         component: Login,
@@ -196,7 +196,14 @@ const routes = [
     {
         component: PatientClinicView,
         name: "patientsClinics",
-        path: "/new_appointment/clinics"
+        path: "/new_appointment/clinics",
+        props: true
+    },
+    {
+        component: PatientDoctorView,
+        name: "patientsDoctors",
+        path: "/new_appointment/doctors",
+        props: true
     },
     {
         path: "/*",

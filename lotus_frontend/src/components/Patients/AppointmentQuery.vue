@@ -118,8 +118,11 @@ export default {
                     data: queryData
                 }).then(response =>   {
                     console.log(response);
-                    
-                    //this.$router.push({name: this.userType});
+                    if (this.clinic) {
+                        this.$router.push({name: "patientsClinics", params: {clinicList: response.data}});
+                    } else {
+                        this.$router.push({name: "patientsDoctors", params: {doctorList: response.data}});
+                    }
                 }).catch(error => {
                     console.log(error);
                     alert(error.response.data);

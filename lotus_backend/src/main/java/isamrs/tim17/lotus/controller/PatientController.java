@@ -206,47 +206,73 @@ public class PatientController {
 	public ResponseEntity<Object> requestList(@RequestBody PatientRequest pr) {
 		Date date = new Date(pr.getRequestDate());
 		AppointmentType type = typeService.findOne(pr.getAppointmentType());
-		if (pr.isClinics()) {
-			// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
-			// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
-			List<Clinic> clinics = clinicService.findAll();
-			ListIterator<Clinic> it = clinics.listIterator();
-			while (it.hasNext()) {
-				Clinic c = it.next();
-				if (c.getDoctors().isEmpty())
-					it.remove();
-				Iterator<Doctor> docIt = c.getDoctors().iterator();
-				while (docIt.hasNext()){
-					// TODO: logika koja proverava da li su doktori za taj dan slobodni					
-					Doctor d = docIt.next();
-					boolean izbaci = false;
-					if (d.getSpecialty().getId() == type.getId())
-						izbaci = true;
-					// ako nije, izbaci doktora sa liste doktora
-					if (izbaci)
-						docIt.remove();						
+		try {
+			if (pr.isClinics()) {
+				// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
+				// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
+				List<Clinic> clinics = clinicService.findAll();
+				ListIterator<Clinic> it = clinics.listIterator();
+				while (it.hasNext()) {
+					Clinic c = it.next();
+					if (c.getDoctors().isEmpty())
+						it.remove();
+					Iterator<Doctor> docIt = c.getDoctors().iterator();
+					while (docIt.hasNext()){
+						Doctor d = docIt.next();
+						if (d.getSpecialty().getId() != type.getId()) {
+							docIt.remove();						
+							continue;
+						}						
+						// TODO: logika koja proverava da li su doktori za taj dan slobodni					
+						// ako nije, izbaci doktora sa liste doktora
+						boolean izbaci = false;
+						if (izbaci)
+							docIt.remove();						
+					}
+					if (c.getDoctors().isEmpty())
+						it.remove();
+					// ako je lista prazna, izbaci kliniku sa liste kao 214. linija
 				}
-				if (c.getDoctors().isEmpty())
-					it.remove();
-				// ako je lista prazna, izbaci kliniku sa liste kao 214. linija
-			}
-			if (clinics.isEmpty())
-				return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
-			List<ClinicDTO> clinicList = new ArrayList<ClinicDTO>();
-			for (Clinic c : clinics) {
-				ClinicDTO dto = new ClinicDTO(c);
-				for (Doctor d : c.getDoctors()) {
+				if (clinics.isEmpty())
+					return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
+				List<ClinicDTO> clinicList = new ArrayList<ClinicDTO>();
+				for (Clinic c : clinics) {
+					ClinicDTO dto = new ClinicDTO(c);
+					for (Doctor d : c.getDoctors()) {
+						// get grades...
+						// get available times
+						List<Date> availableTimes = new ArrayList<Date>();
+						availableTimes.add(new Date(date.getTime()));
+						dto.getDoctors().add(new DoctorDTO(d, 4.5, availableTimes));
+					}
+					clinicList.add(dto);
+				}
+				return new ResponseEntity<>(clinicList, HttpStatus.OK);
+			} else {
+				// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
+				List<Doctor> doctors = doctorService.findAll();
+				List<DoctorDTO> results = new ArrayList<DoctorDTO>();
+				ListIterator<Doctor> it = doctors.listIterator();
+				while (it.hasNext()) {
+					Doctor d = it.next();
+					if (d.getSpecialty().getId() != type.getId()) {
+						it.remove();
+						continue;
+					}
+					// TODO logika za proveru jel je free taj dan 
+					// . . . 
+					// get grade...
+					// get all free dates...
 					List<Date> availableTimes = new ArrayList<Date>();
 					availableTimes.add(new Date(date.getTime()));
-					dto.getDoctors().add(new DoctorDTO(d, 4.5, availableTimes));
+					results.add(new DoctorDTO(d, 4.5, availableTimes));
 				}
-				clinicList.add(dto);
+				// potencijalno u jos jedan loop ali sumnjam da treba, ovo gore mozda u jedan loop isto
+				return new ResponseEntity<>(results, HttpStatus.OK);
 			}
-			return new ResponseEntity<>(clinicList, HttpStatus.OK);
-		} else {
-			// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
+		} catch (Exception e) {
+			return new ResponseEntity<>("Something bad happened!", HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
-		return new ResponseEntity<>("uspelo", HttpStatus.OK);
 	}
 
 
