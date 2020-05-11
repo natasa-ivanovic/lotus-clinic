@@ -6,6 +6,7 @@ import java.util.List;
 import isamrs.tim17.lotus.model.Doctor;
 
 public class DoctorDTO {
+	private Long id;
 	private String name;
 	private String surname;
 	private double grade;	
@@ -17,6 +18,7 @@ public class DoctorDTO {
 
 	public DoctorDTO(Doctor d, double grade, List<Date> times) {
 		super();
+		this.setId(d.getId());
 		this.name = d.getName();
 		this.surname = d.getSurname();
 		this.grade = grade;
@@ -71,6 +73,14 @@ public class DoctorDTO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

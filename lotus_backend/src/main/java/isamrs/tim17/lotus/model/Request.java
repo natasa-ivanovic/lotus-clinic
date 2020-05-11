@@ -25,7 +25,7 @@ import org.hibernate.annotations.DiscriminatorOptions;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "requestType", discriminatorType = DiscriminatorType.STRING, length = 10)
+@DiscriminatorColumn(name = "requestType	", discriminatorType = DiscriminatorType.STRING, length = 10)
 @DiscriminatorOptions(force = true)
 @Table(name = "requests")
 public abstract class Request {

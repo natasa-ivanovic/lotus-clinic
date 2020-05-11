@@ -30,10 +30,14 @@ import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.RequestStatus;
+import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
+import isamrs.tim17.lotus.service.RequestService;
 
 @RestController
 @RequestMapping("/api")
@@ -50,6 +54,8 @@ public class PatientController {
 	@Autowired
 	private AppointmentTypeService typeService;
 
+	@Autowired
+	private RequestService requestService;
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -203,6 +209,7 @@ public class PatientController {
 	}
 
 	@PostMapping("/patients/request")
+	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestList(@RequestBody PatientRequest pr) {
 		Date date = new Date(pr.getRequestDate());
 		AppointmentType type = typeService.findOne(pr.getAppointmentType());
@@ -273,6 +280,20 @@ public class PatientController {
 		} catch (Exception e) {
 			return new ResponseEntity<>("Something bad happened!", HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
+	}
+	
+	@PostMapping("/patients/request/finish")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequest request) {
+		if (request.getDate().equals(new Date()) || request.getDate().equals(null) || request.getDoctor() == 0)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = (Patient) a.getPrincipal();
+		request.setPatient(patient.getId());
+		request.setStatus(RequestStatus.PENDING);
+		request.setType(RoomRequestType.PATIENT_APP);
+		requestService.save(request);
+		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 
 
