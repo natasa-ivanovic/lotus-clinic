@@ -3,7 +3,9 @@ package isamrs.tim17.lotus.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
@@ -33,6 +36,7 @@ import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RoomService;
 
 @RestController
@@ -43,6 +47,7 @@ public class AppointmentController {
 	@Autowired private RoomService roomService;
 	@Autowired private AppointmentTypeService appointmentTypeService;
 	@Autowired private DoctorService doctorService;
+	@Autowired private PatientService patientService;
 	@Autowired private ClinicService clinicService;
 	
 	
@@ -128,6 +133,54 @@ public class AppointmentController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
+	@PostMapping("/appointments/doctor/today")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<AppointmentDTO>> getTodaysAppointment(@RequestBody String startDate) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		HashMap<String, Date> period = getPeriod(startDate);
+		Date start = period.get("start");
+		Date end = period.get("end");
+		
+		List<Appointment> apps = service.findByDate(doctor, start, end);
+		List <AppointmentDTO> info = new ArrayList<>();
+		for (Appointment app: apps) {
+			if (app.getStatus() == AppointmentStatus.SCHEDULED) {
+				Patient patient = patientService.findOne(app.getMedicalRecord().getId());
+				UserDTO patDTO = new UserDTO(patient);
+				AppointmentDTO dto = new AppointmentDTO(app, patDTO);
+				info.add(dto);
+				
+			}
+		}
+		return new ResponseEntity<>(info, HttpStatus.OK);
+	}
+	
+	private HashMap<String, Date> getPeriod(@RequestBody String startDate) {
+		Date start = null;
+		Date end = null;
+		try {
+			start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startDate);
+			//end = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+			//end = new Date(start.getTime());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(start);
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			end = cal.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		HashMap<String, Date> period = new HashMap<String, Date>();
+		period.put("start", start);
+		period.put("end", end);
+		
+		return period;
+	}
+	
 	@PostMapping("/appointments")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Appointment> addAppointment(@RequestBody AppointmentDTO app) {
@@ -159,6 +212,7 @@ public class AppointmentController {
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
 	
 	/*private boolean isEmptyOrNull(Appointment app) {
 		if (app == null)
