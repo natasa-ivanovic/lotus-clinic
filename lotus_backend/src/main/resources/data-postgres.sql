@@ -63,12 +63,12 @@ insert into medical_records (allergies, blood_type, height, weight, patient_id) 
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('pork, ibuprofen', 'B', '170', '57', 2);
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('tomato', 'A', '175', '65', 3);
 
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 19:00:00.508-07', '2020-05-09 19:30:00.508-07', 1, 1, 1, 4, 1);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 20:30:00.508-07', '2020-05-09 21:00:00.508-07', 1, 1, 1, 4, 1);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 22:00:00.508-07', '2020-05-09 22:30:00.508-07', 1, 1, 1, 4, 1);
-/*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 23:00:00.508-07', '2020-05-09 23:30:00.508-07', 1, 1, 1, 4, 1);*/
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 16:00:00.508-07', '2020-05-07 16:30:00.508-07', 0, 2, 2, 5, 2);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 16:30:00.508-07', '2020-05-07 17:00:00.508-07', 0, 2, 2, 5, 2);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 17:00:00.508-07', '2020-05-08 17:30:00.508-07', 0, 2, 2, 5, 2);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id) values ('2020-05-09 17:30:00.508-07', '2020-05-08 18:00:00.508-07', 0, 2, 2, 5, 2);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 17:25:00.508-07', '2020-05-11 17:55:00.508-07', 1, 1, 1, 4, 1, 1);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 20:30:00.508-07', '2020-05-11 21:00:00.508-07', 1, 1, 1, 4, 1, 2);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 22:00:00.508-07', '2020-05-11 22:30:00.508-07', 1, 1, 1, 4, 1, 3);
+/*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1);*/
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 16:00:00.508-07', '2020-05-11 16:30:00.508-07', 0, 2, 2, 5, 2, 2);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 16:30:00.508-07', '2020-05-11 17:00:00.508-07', 0, 2, 2, 5, 2, 3);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 17:00:00.508-07', '2020-05-11 17:30:00.508-07', 0, 2, 2, 5, 2, 1);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 17:30:00.508-07', '2020-05-11 18:00:00.508-07', 0, 2, 2, 5, 2, 2);
 

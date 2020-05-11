@@ -21,7 +21,8 @@
                                     Patient: {{app.patientName}} {{app.patientSurname}} <br />
                                     Room: {{app.roomName}} <br />
                                     Time: {{app.time}}
-                                    </v-list-item-content>
+                                </v-list-item-content>
+                            <v-btn v-if="checkTime(app)" v-on:click="start(app)" block color="success">Start appointment</v-btn>
                             </v-list-item-content>
                         </v-list-item>
                         </v-list-item-group>
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api";
+const apiURL = "http://localhost:9001/api/appointments/doctor/today";
 export default {
     data() {
         return {
@@ -56,7 +57,7 @@ export default {
         };
     },
     mounted() {
-        fetch(apiURL + "/appointments/doctor", {headers: { 'Authorization': this.$authKey }})
+        /*fetch(apiURL + "/appointments/doctor/today", {headers: { 'Authorization': this.$authKey }})
         .then(response => {
             if (response.status != 200)
                 return false;
@@ -73,6 +74,22 @@ export default {
                     app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
                 })
             }
+        })*/
+        var date = this.getToday();
+        console.log(date);
+        this.axios({url: apiURL,
+            headers: {'Content-Type' : 'text/plain'},
+            method: 'POST',
+            data: date
+        }).then(response => {
+            console.log(response);
+            this.appointments = response.data;
+            this.appointments.forEach(app => {
+                    app.date = app.startDate.split("T")[0]
+                    app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
+            })
+        }).catch(error => {
+            console.log(error);
         })
     },
     methods: {
@@ -80,7 +97,28 @@ export default {
             var time1 = date1.toTimeString().split(" ")[0];
             var time2 = date2.toTimeString().split(" ")[0];
             return time1 + "-" + time2;
+        },
+        getToday: function() {
+            var date = new Date();
+            var dateLong = date.getTime();
+            return dateLong;
+        },
+        checkTime: function(app) {
+            var current = new Date();
+            var start = new Date(app.startDate);
+            console.log(current);
+            console.log(start);
+            var difference = start.getTime() - current.getTime();
+            var resultInMinutes = Math.round(difference / 60000);
+            console.log('Difference: ' + resultInMinutes);
+            if (resultInMinutes <= 10)
+                return true;
+            return false;
+        },
+        start: function(app) {
+            console.log(app);
         }
+
     }
 }
 </script>

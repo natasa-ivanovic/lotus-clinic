@@ -135,21 +135,21 @@ public class AppointmentController {
 	
 	@PostMapping("/appointments/doctor/today")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<AppointmentDTO>> getTodaysAppointment(@RequestBody String startDate) {
+	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
+		System.out.println(startDate);
 		
-		HashMap<String, Date> period = getPeriod(startDate);
+		long sd = Long.parseLong(startDate);
+		HashMap<String, Date> period = getPeriod(sd);
 		Date start = period.get("start");
 		Date end = period.get("end");
 		
 		List<Appointment> apps = service.findByDate(doctor, start, end);
-		List <AppointmentDTO> info = new ArrayList<>();
+		List <PremadeAppDTO> info = new ArrayList<>();
 		for (Appointment app: apps) {
 			if (app.getStatus() == AppointmentStatus.SCHEDULED) {
-				Patient patient = patientService.findOne(app.getMedicalRecord().getId());
-				UserDTO patDTO = new UserDTO(patient);
-				AppointmentDTO dto = new AppointmentDTO(app, patDTO);
+				PremadeAppDTO dto = new PremadeAppDTO(app);
 				info.add(dto);
 				
 			}
@@ -157,22 +157,16 @@ public class AppointmentController {
 		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
 	
-	private HashMap<String, Date> getPeriod(@RequestBody String startDate) {
-		Date start = null;
-		Date end = null;
-		try {
-			start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startDate);
-			//end = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-			//end = new Date(start.getTime());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(start);
-			cal.set(Calendar.HOUR_OF_DAY, 23);
-			cal.set(Calendar.MINUTE, 59);
-			cal.set(Calendar.SECOND, 59);
-			end = cal.getTime();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	private HashMap<String, Date> getPeriod(long startDate) {
+		Date start = new Date(startDate);
+	
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(start);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		Date end = cal.getTime();
+		
 		
 		HashMap<String, Date> period = new HashMap<String, Date>();
 		period.put("start", start);
