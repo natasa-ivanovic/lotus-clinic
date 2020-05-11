@@ -26,6 +26,7 @@ import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
 import isamrs.tim17.lotus.dto.UserDTO;
+import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
@@ -33,11 +34,13 @@ import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
+import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
+import isamrs.tim17.lotus.util.DateUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -56,6 +59,10 @@ public class PatientController {
 
 	@Autowired
 	private RequestService requestService;
+	
+	@Autowired
+	private AppointmentService appointmentService;
+	
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -219,41 +226,35 @@ public class PatientController {
 				// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
 				List<Clinic> clinics = clinicService.findAll();
 				ListIterator<Clinic> it = clinics.listIterator();
+				List<ClinicDTO> clinicList = new ArrayList<ClinicDTO>();
 				while (it.hasNext()) {
 					Clinic c = it.next();
 					if (c.getDoctors().isEmpty())
 						it.remove();
+					ClinicDTO dto = new ClinicDTO(c);
 					Iterator<Doctor> docIt = c.getDoctors().iterator();
 					while (docIt.hasNext()){
 						Doctor d = docIt.next();
 						if (d.getSpecialty().getId() != type.getId()) {
 							docIt.remove();						
 							continue;
-						}						
-						// TODO: logika koja proverava da li su doktori za taj dan slobodni					
-						// ako nije, izbaci doktora sa liste doktora
-						boolean izbaci = false;
-						if (izbaci)
+						}									
+						List<Date> availableDates = DateUtil.getAllTerms(date);
+						Date endDate = DateUtil.endOfDay(date);
+						List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
+						availableDates = DateUtil.removeOverlap(availableDates, appointments);
+						if (availableDates.isEmpty()) 
 							docIt.remove();						
+						 else 
+							dto.getDoctors().add(new DoctorDTO(d, 4.5, availableDates));
 					}
-					if (c.getDoctors().isEmpty())
+					if (c.getDoctors().isEmpty()) 
 						it.remove();
-					// ako je lista prazna, izbaci kliniku sa liste kao 214. linija
+					else
+						clinicList.add(dto);
 				}
 				if (clinics.isEmpty())
 					return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
-				List<ClinicDTO> clinicList = new ArrayList<ClinicDTO>();
-				for (Clinic c : clinics) {
-					ClinicDTO dto = new ClinicDTO(c);
-					for (Doctor d : c.getDoctors()) {
-						// get grades...
-						// get available times
-						List<Date> availableTimes = new ArrayList<Date>();
-						availableTimes.add(new Date(date.getTime()));
-						dto.getDoctors().add(new DoctorDTO(d, 4.5, availableTimes));
-					}
-					clinicList.add(dto);
-				}
 				return new ResponseEntity<>(clinicList, HttpStatus.OK);
 			} else {
 				// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
