@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
-import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
@@ -36,7 +35,6 @@ import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
-import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RoomService;
 
 @RestController
@@ -47,12 +45,11 @@ public class AppointmentController {
 	@Autowired private RoomService roomService;
 	@Autowired private AppointmentTypeService appointmentTypeService;
 	@Autowired private DoctorService doctorService;
-	@Autowired private PatientService patientService;
 	@Autowired private ClinicService clinicService;
 	
 	
 	@GetMapping("/appointments")
-	//@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR'")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<List<Appointment>> getAppointments() {
 		
 		List<Appointment> appointments = service.findAll();
@@ -61,7 +58,7 @@ public class AppointmentController {
 	}
 	
 	@GetMapping("/appointments/{id}")
-	//@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR'")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Appointment> getAppointment(@PathVariable("id") long id) {
 		Appointment app = service.findOne(id);
 		if (app == null)

@@ -57,24 +57,6 @@ export default {
         };
     },
     mounted() {
-        /*fetch(apiURL + "/appointments/doctor/today", {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            if (response.status != 200)
-                return false;
-            else
-                return response.json();
-        })
-        .then(apps => {
-            if (apps == false ) {
-                console.log("TODO: Log me out!");
-            } else {
-                this.appointments = apps;
-                this.appointments.forEach(app => {
-                    app.date = app.startDate.split("T")[0]
-                    app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
-                })
-            }
-        })*/
         var date = this.getToday();
         console.log(date);
         this.axios({url: apiURL,
@@ -113,10 +95,11 @@ export default {
             console.log('Difference: ' + resultInMinutes);
             if (resultInMinutes <= 10)
                 return true;
-            return false;
+            return true; //NE ZABORAVI DA VRATIS NA FALSE!!!!
         },
         start: function(app) {
             console.log(app);
+            this.$router.push({name: "startAppointment", params: {appointment: app}})
         }
 
     }

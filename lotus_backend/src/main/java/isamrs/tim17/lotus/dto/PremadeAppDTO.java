@@ -5,7 +5,7 @@ import java.util.Date;
 import isamrs.tim17.lotus.model.Appointment;
 
 public class PremadeAppDTO {
-	private Long id;
+	private long id;
 	private Date startDate;
 	private Date endDate;
 	private long doctorId;
@@ -14,6 +14,7 @@ public class PremadeAppDTO {
 	private long roomId;
 	private String roomName;
 	private String type;
+	private long patientId;
 	private String patientName;
 	private String patientSurname;
 	
@@ -33,6 +34,7 @@ public class PremadeAppDTO {
 		if (app.getMedicalRecord() != null) {
 		this.patientName = app.getMedicalRecord().getPatient().getName();
 		this.patientSurname = app.getMedicalRecord().getPatient().getSurname();
+		this.patientId = app.getMedicalRecord().getId();
 		}
 		
 	}
@@ -123,6 +125,14 @@ public class PremadeAppDTO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
 	}
 	
 	

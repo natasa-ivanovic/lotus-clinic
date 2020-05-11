@@ -36,6 +36,7 @@ import MyClinic from "../components/Clinics/MyClinic"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
+import Appointment from "../components/Doctors/Appointment"
 
 const routes = [
     {
@@ -183,6 +184,12 @@ const routes = [
         component: EditDiagnosis,
         name: "editDiagnosis",
         path: "/diagnoses/edit/:id",
+        props: true
+    },
+    {
+        component: Appointment,
+        name: "startAppointment",
+        path: "/doctors/start_appointment",
         props: true
     },
     {

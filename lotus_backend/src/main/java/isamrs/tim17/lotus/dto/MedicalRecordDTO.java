@@ -12,6 +12,8 @@ public class MedicalRecordDTO {
 	private float weight;
 	private String allergies;
 	private String bloodType;
+	private String patientName;
+	private String patientSurname;
 	
 	private Set<PremadeAppDTO> apps = new HashSet<PremadeAppDTO>();
 
@@ -22,6 +24,8 @@ public class MedicalRecordDTO {
 		this.weight = m.getWeight();
 		this.allergies = m.getAllergies();
 		this.bloodType = m.getBloodType();
+		this.patientName = m.getPatient().getName();
+		this.patientSurname = m.getPatient().getSurname();
 		for (Appointment a : m.getAppointments()) {
 			apps.add(new PremadeAppDTO(a));
 		}
@@ -73,6 +77,22 @@ public class MedicalRecordDTO {
 
 	public void setApps(Set<PremadeAppDTO> apps) {
 		this.apps = apps;
+	}
+
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getPatientSurname() {
+		return patientSurname;
+	}
+
+	public void setPatientSurname(String patientSurname) {
+		this.patientSurname = patientSurname;
 	}
 	
 	
