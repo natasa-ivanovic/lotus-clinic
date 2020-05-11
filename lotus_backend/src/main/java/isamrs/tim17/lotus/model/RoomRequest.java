@@ -7,10 +7,15 @@ package isamrs.tim17.lotus.model;
 
 import java.util.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("ROOM")
 public class RoomRequest extends Request {
-   private Date date;
-   private int patientId;
-   private int doctorId;
-   private RoomRequestType type;
+//   private Date date;
+//   private int patientId;
+//   private int doctorId;
+//   private RoomRequestType type;
 
 }

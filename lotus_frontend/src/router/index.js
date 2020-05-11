@@ -36,6 +36,7 @@ import MyClinic from "../components/Clinics/MyClinic"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
+import RegistrationRequestView from "../components/RegistrationRequests/RegistrationRequests"
 
 const routes = [
     {
@@ -184,6 +185,11 @@ const routes = [
         name: "editDiagnosis",
         path: "/diagnoses/edit/:id",
         props: true
+    },
+    {
+        component: RegistrationRequestView,
+        name: "registrationRequestView",
+        path: "/registrationRequests"
     },
     {
         path: "/*",

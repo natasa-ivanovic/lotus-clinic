@@ -27,11 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.UserTokenState;
 import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.security.TokenUtils;
 import isamrs.tim17.lotus.security.auth.JwtAuthenticationRequest;
 import isamrs.tim17.lotus.service.AuthorityService;
+import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.service.UserService;
 
 @RestController
@@ -55,6 +57,9 @@ public class LoginController {
 	
 	@Autowired
 	private AuthorityService authorityService;
+	
+	@Autowired
+	private RequestService requestService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
@@ -105,6 +110,8 @@ public class LoginController {
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
 		userService.save(patient);
+		RegistrationRequest req = new RegistrationRequest(patient);
+		requestService.save(req);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
