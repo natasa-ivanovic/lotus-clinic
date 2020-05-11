@@ -12,8 +12,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
@@ -34,8 +34,10 @@ public class Appointment {
 	@Column(name="information", unique=false, nullable=true)
 	private String information;
 	@Column(name="startDate", unique=false, nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 	@Column(name="endDate", unique=false, nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 	@Column(name="status", unique=false, nullable=false)
 	private AppointmentStatus status;
