@@ -4,7 +4,6 @@ package isamrs.tim17.lotus.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import isamrs.tim17.lotus.dto.RoomDateDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.RoomService;
+import isamrs.tim17.lotus.util.DateUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -153,7 +153,7 @@ public class RoomController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Date endDate = addMinutes(startDate, 30);
+		Date endDate = DateUtil.addMinutes(startDate, 30);
 		System.out.println(startDate);
 		System.out.println("End date: " + endDate);
 		
@@ -167,7 +167,7 @@ public class RoomController {
 			for (Appointment a : r.getAppointments()) {
 				System.out.println("Zahtev => START: " + startDate + " KRAJ: " + endDate);
 				System.out.println("Staroo => START: " + a.getStartDate() + " KRAJ: " + a.getEndDate());
-				if(overlap(startDate, endDate, a.getStartDate(), a.getEndDate()) == true) {
+				if(DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate()) == true) {
 					free = false;
 				}
 			}
@@ -179,22 +179,6 @@ public class RoomController {
 		}
 		RoomDateDTO roomDto = new RoomDateDTO(dto, endDate.getTime());
 		return new ResponseEntity<>(roomDto, HttpStatus.OK);
-		
 	}
 	
-	private boolean overlap(Date start1, Date end1, Date start2, Date end2){
-	    return start1.getTime() <= end2.getTime() && start2.getTime() <= end1.getTime(); 
-	}
-	
-	private Date addMinutes(Date startDate, int minutes) {
-		long one_minute_in_millis = 60000;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		long start = cal.getTimeInMillis();
-		Date endDate = new Date(start + (minutes * one_minute_in_millis));
-		return endDate;
-		
-	}
-
-
 }

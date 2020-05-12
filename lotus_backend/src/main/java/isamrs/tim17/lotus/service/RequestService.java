@@ -29,4 +29,13 @@ public class RequestService {
 	public Request findOneByKey(String key) {
 		return requests.findByKey(key).get(0);
 	}
+
+	public List<Request> findAll() {
+		return requests.findAll();
+	}
+	
+	public void remove(long id) {
+		requests.deleteById(id);
+	}
+
 }

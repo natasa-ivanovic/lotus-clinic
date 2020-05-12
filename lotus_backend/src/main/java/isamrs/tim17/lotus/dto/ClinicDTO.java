@@ -1,6 +1,10 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.Doctor;
 
 public class ClinicDTO {
 
@@ -8,6 +12,7 @@ public class ClinicDTO {
 	private String name;
 	private String address;
 	private String description;
+	private List<DoctorDTO> doctors = new ArrayList<DoctorDTO>();
 	
 	public ClinicDTO() {
 		super();
@@ -51,5 +56,14 @@ public class ClinicDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public List<DoctorDTO> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(List<DoctorDTO> doctors) {
+		this.doctors = doctors;
+	}
+	
 	
 }

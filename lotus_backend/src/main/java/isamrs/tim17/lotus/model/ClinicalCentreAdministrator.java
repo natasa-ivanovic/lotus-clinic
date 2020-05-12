@@ -1,11 +1,15 @@
 package isamrs.tim17.lotus.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 @DiscriminatorValue("CENTRE_ADMIN")
@@ -17,6 +21,9 @@ public class ClinicalCentreAdministrator extends User {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentre clinicalCentre;
+	
+	@OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Request.class)
+	private Set<Request> requests = new HashSet<Request>();
 	
 	public ClinicalCentreAdministrator() {}
 	

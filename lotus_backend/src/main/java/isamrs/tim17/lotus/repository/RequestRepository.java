@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -15,4 +16,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	List<RegistrationRequest> getAllRegistrations();
 	@Query("SELECT a FROM RegistrationRequest a where a.key = :key")
 	List<RegistrationRequest> findByKey(@Param("key")String key);
+	Request findOneById(String id);
+	Page<Request> findAll(Pageable pageable);
 }
