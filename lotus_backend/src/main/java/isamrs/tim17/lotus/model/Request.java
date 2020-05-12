@@ -29,7 +29,7 @@ public abstract class Request {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	private RequestStatus status;
-	private String key;
+
 	
 
 	public long getId() {
@@ -46,13 +46,5 @@ public abstract class Request {
 
 	public void setStatus(RequestStatus status) {
 		this.status = status;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 }

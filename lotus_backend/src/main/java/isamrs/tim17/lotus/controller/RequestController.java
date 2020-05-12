@@ -61,10 +61,19 @@ public class RequestController {
 	      .toString();
 		
 	    String content = "Hello\nWe at lotus clinic have reviewed your registration request and decided its valid.\nPlease follow this link to activate you account:\n"
-	    		+ "http://localhost:9001/api/requests/registrations/" + generatedString;
+	    		+ "http://localhost:8080/registrations/" + generatedString;
 		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
-		req.setKey(generatedString);
+		rgReq.setKey(generatedString);
 		service.save(req);
-		return null;
+		return new ResponseEntity<RegistrationRequestDTO>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
+	}
+	
+	@GetMapping("/registrations/{key}")
+	public ResponseEntity<RegistrationRequestDTO> registerUser(@PathVariable("key") String key) {
+		Request req = service.findOneByKey(key);
+		RegistrationRequest rgReq = (RegistrationRequest) req;
+		rgReq.getPatient().setEnabled(true);
+		service.save(req);
+		return new ResponseEntity<RegistrationRequestDTO>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
 	}
 }

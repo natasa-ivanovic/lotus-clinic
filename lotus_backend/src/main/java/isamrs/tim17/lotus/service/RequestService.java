@@ -25,4 +25,8 @@ public class RequestService {
 	public Request findOne(long id) {
 		return requests.findById(id).orElseGet(null);
 	}
+	
+	public Request findOneByKey(String key) {
+		return requests.findByKey(key).get(0);
+	}
 }

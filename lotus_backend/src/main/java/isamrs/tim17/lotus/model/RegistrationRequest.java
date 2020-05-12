@@ -20,6 +20,7 @@ public class RegistrationRequest extends Request {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	private Patient patient;
+	private String key;
 
 	public RegistrationRequest() {
 		super();
@@ -39,6 +40,11 @@ public class RegistrationRequest extends Request {
 		this.patient = patient;
 	}
 	
-	
+	public String getKey() {
+		return key;
+	}
 
+	public void setKey(String key) {
+		this.key = key;
+	}
 }

@@ -37,6 +37,7 @@ import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
 import RegistrationRequestView from "../components/RegistrationRequests/RegistrationRequests"
+import SuccesfulRegistration from "../components/Patients/SuccesfulRegistration"
 
 const routes = [
     {
@@ -190,6 +191,12 @@ const routes = [
         component: RegistrationRequestView,
         name: "registrationRequestView",
         path: "/registrationRequests"
+    },
+    {
+        component: SuccesfulRegistration,
+        name: "succesfulRegistration",
+        path: "/registrations/:key",
+        props: true
     },
     {
         path: "/*",
