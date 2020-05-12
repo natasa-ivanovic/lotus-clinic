@@ -50,18 +50,18 @@ public class MedicalRecordController {
 		mr.setBloodType(medicalRecord.getBloodType());
 		
 		mr = service.save(mr);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Successfully updated medical record!", HttpStatus.OK);
 				
 	}
 	
 	private boolean isEmptyOrNull(MedicalRecordDTO mr) {
 		if (mr == null)
-			return false;
+			return true;
 		if (mr.getAllergies() == null || "".equals(mr.getAllergies()))
-			return false;
+			return true;
 		if (mr.getBloodType() == null || "".equals(mr.getBloodType()))
-			return false;
-		return true;
+			return true;
+		return false;
 	}
 	
 

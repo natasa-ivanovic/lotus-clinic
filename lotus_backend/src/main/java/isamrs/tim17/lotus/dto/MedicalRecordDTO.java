@@ -16,6 +16,8 @@ public class MedicalRecordDTO {
 	private String patientSurname;
 	
 	private Set<PremadeAppDTO> apps = new HashSet<PremadeAppDTO>();
+	
+	public MedicalRecordDTO() {}
 
 	public MedicalRecordDTO(MedicalRecord m) {
 		super();

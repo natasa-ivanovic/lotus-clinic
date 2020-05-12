@@ -1,8 +1,6 @@
 <template>
     <div>
-    <h1>Appointment</h1>
-    <h2>{{this.appointment}}</h2>
-    <MedicalRecord :id="this.appointment.patientId"/>
+    <MedicalRecord :id="this.appointment.patientId" :edit="true"/>
     </div>
 </template>
 
