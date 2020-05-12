@@ -3,6 +3,7 @@ package isamrs.tim17.lotus.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.RegistrationRequest;
@@ -27,7 +28,8 @@ public class RequestService {
 	}
 	
 	public Request findOneByKey(String key) {
-		return requests.findByKey(key).get(0);
+		List<RegistrationRequest> li = requests.findByKey(key);
+		return li.get(0);
 	}
 
 	public List<Request> findAll() {

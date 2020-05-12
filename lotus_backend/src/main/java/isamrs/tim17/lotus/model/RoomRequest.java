@@ -15,13 +15,13 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("ROOM")
 public class RoomRequest extends Request {
-	@Column(name = "date", nullable = false, unique = false)
+	@Column(name = "date", nullable = true, unique = false)
 	private Date date;
-	@Column(name = "patient", nullable = false, unique = false)
+	@Column(name = "patient", nullable = true, unique = false)
 	private Long patient;
-	@Column(name = "doctor", nullable = false, unique = false)
+	@Column(name = "doctor", nullable = true, unique = false)
 	private Long doctor;
-	@Column(name = "type", nullable = false, unique = false)
+	@Column(name = "type", nullable = true, unique = false)
 	private RoomRequestType type;
 	
 	public RoomRequest() {}

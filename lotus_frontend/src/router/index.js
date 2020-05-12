@@ -203,7 +203,8 @@ const routes = [
     {
         component: SuccesfulRegistration,
         name: "succesfulRegistration",
-        path: "/registrations/:key",
+        path: "/registrations/:logkey",
+        props: true
     },
     {
         component: PatientClinicView,
