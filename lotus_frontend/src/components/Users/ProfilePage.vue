@@ -177,11 +177,11 @@ export default {
             user = "doctors"
         /* todo
         if (this.$role == "NURSE")
-            user = "nurses"
+            user = "nurses" */
         if (this.$role == "ADMIN")
             user = "admins"
         if (this.$role == "CLINIC_ADMIN")
-            user = "cadmins" */
+            user = "cadmins"
         fetch(apiURL + "/" + user +"/self", {headers: { 'Authorization': this.$authKey }})
         .then(response => {
             return response.json();
@@ -208,10 +208,10 @@ export default {
                 user = "doctors"
             /* todo
             if (this.$role == "NURSE")
-                user = "nurses"
+                user = "nurses"*/
             if (this.$role == "ADMIN")
                 user = "admins"
-            if (this.$role == "CLINIC_ADMIN")
+            /*if (this.$role == "CLINIC_ADMIN")
                 user = "cadmins" */
             this.$router.push({ name: "editUser", params: {id: "self", userType: user}})
         },
