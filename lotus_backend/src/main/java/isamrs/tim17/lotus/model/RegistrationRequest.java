@@ -7,15 +7,44 @@ package isamrs.tim17.lotus.model;
 
 import java.util.*;
 
-public class RegistrationRequest extends Request {
-   private String email;
-   private String password;
-   private String name;
-   private String surname;
-   private String address;
-   private String city;
-   private String country;
-   private String phoneNumber;
-   private int id;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
+@Entity
+@DiscriminatorValue("REGISTRATION")
+public class RegistrationRequest extends Request {
+
+	@OneToOne(fetch = FetchType.LAZY)
+	private Patient patient;
+	private String key;
+
+	public RegistrationRequest() {
+		super();
+	}
+
+	public RegistrationRequest(Patient patient) {
+		super();
+		this.patient = patient;
+		this.setStatus(RequestStatus.PENDING);
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 }

@@ -14,7 +14,7 @@ public class ClinicAdministrator extends User {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
 	

@@ -19,14 +19,14 @@
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="doctors()" color="indigo" height=60 disabled>Browse doctors</v-btn>
+                            <v-btn block @click="doctors()" color="indigo" height=60 dark>Browse doctors</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
                 <v-card-actions>
                     <v-row>
                         <v-col>
-                            <v-btn block @click="clinics()" color="indigo"  height=60 disabled>Browse clinics</v-btn>
+                            <v-btn block @click="clinics()" color="indigo"  height=60 dark>Browse clinics</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
@@ -43,10 +43,10 @@ export default {
             this.$router.push({ name: "predefinedApps" })
         },
         doctors: function() {
-            alert("not implemented yet");
+            this.$router.push({ name: "apppointmentQuery", params: {clinic: false, title: "Search by doctors"}})
         },
         clinics: function() {
-            alert("not implemented yet");
+            this.$router.push({ name: "apppointmentQuery", params: {clinic: true, title: "Search by clinics"} })
         }
     }
 }

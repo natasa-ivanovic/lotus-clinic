@@ -33,11 +33,15 @@ import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
 import Register from "../components/Patients/Register"
 import MyClinic from "../components/Clinics/MyClinic"
+import AppointmentQuery from "../components/Patients/AppointmentQuery"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
 import Appointment from "../components/Doctors/Appointment"
-
+import RegistrationRequestView from "../components/RegistrationRequests/RegistrationRequests"
+import SuccesfulRegistration from "../components/Patients/SuccesfulRegistration"
+import PatientClinicView from "../components/Patients/ClinicsView"
+import PatientDoctorView from "../components/Patients/DoctorsView"
 const routes = [
     {
         component: Login,
@@ -146,6 +150,12 @@ const routes = [
         path: "/new_appointment/predefined"
     },
     {
+        component: AppointmentQuery,
+        name: "apppointmentQuery",
+        path: "/new_appointment/request",
+        props: true
+    },
+    {
         component: AddPredefinedApps,
         name: "appointments",
         path: "/appointments/add"
@@ -191,6 +201,28 @@ const routes = [
         name: "startAppointment",
         path: "/doctors/start_appointment",
         props: true
+    },
+    {
+        component: RegistrationRequestView,
+        name: "registrationRequestView",
+        path: "/registrationRequests"
+    },
+    {
+        component: SuccesfulRegistration,
+        name: "succesfulRegistration",
+        path: "/registrations/:logkey",
+        props: true
+    },
+    {
+        component: PatientClinicView,
+        name: "patientsClinics",
+        path: "/new_appointment/clinics",
+        props: true
+    },
+    {
+        component: PatientDoctorView,
+        name: "patientsDoctors",
+        path: "/new_appointment/doctors",
     },
     {
         path: "/*",
