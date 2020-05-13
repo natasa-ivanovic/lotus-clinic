@@ -30,6 +30,7 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
@@ -37,10 +38,12 @@ import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
+import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.util.DateUtil;
+import isamrs.tim17.lotus.util.RatingUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -62,6 +65,9 @@ public class PatientController {
 	
 	@Autowired
 	private AppointmentService appointmentService;
+	
+	@Autowired
+	private DoctorReviewService docReviewService;
 	
 	/**
 	 * This method is used for getting the list of patients.
@@ -247,8 +253,9 @@ public class PatientController {
 						if (availableDates.isEmpty()) 
 							docIt.remove();						
 						 else {
-							 // get doctor grade
-							 dto.getDoctors().add(new DoctorDTO(d, 4.5, availableDates));
+							 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
+							 double rating = RatingUtil.getAverageDoctorRating(ratingList);
+							 dto.getDoctors().add(new DoctorDTO(d, rating, availableDates));
 						 }
 					}
 					if (c.getDoctors().isEmpty()) 
@@ -276,7 +283,8 @@ public class PatientController {
 					// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
 					availableDates = DateUtil.removeOverlap(availableDates, appointments);
 					if (!availableDates.isEmpty()) {
-						 // get doctor grade
+						 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
+						 double rating = RatingUtil.getAverageDoctorRating(ratingList);
 						 results.add(new DoctorDTO(d, 4.5, availableDates));
 					}
 				}

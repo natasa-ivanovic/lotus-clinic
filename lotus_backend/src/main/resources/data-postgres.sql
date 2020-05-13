@@ -80,15 +80,32 @@ insert into medical_records (allergies, blood_type, height, weight, patient_id) 
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('pork, ibuprofen', 'B', '170', '57', 2);
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('tomato', 'A', '175', '65', 3);
 
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 17:25:00.508-07', '2020-05-12 17:55:00.508-07', 1, 1, 1, 4, 1, 1);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 20:30:00.508-07', '2020-05-12 21:00:00.508-07', 1, 1, 1, 4, 1, 2);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 22:00:00.508-07', '2020-05-12 22:30:00.508-07', 1, 1, 1, 4, 1, 3);
-/*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1);*/
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 16:00:00.508-07', '2020-05-12 16:30:00.508-07', 0, 2, 2, 5, 2, 2);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 16:30:00.508-07', '2020-05-12 17:00:00.508-07', 0, 2, 2, 5, 2, 3);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 17:00:00.508-07', '2020-05-12 17:30:00.508-07', 0, 2, 2, 5, 2, 1);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id) values ('2020-05-12 17:30:00.508-07', '2020-05-12 18:00:00.508-07', 0, 2, 2, 5, 2, 2);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 17:25:00.508-07', '2020-05-12 17:55:00.508-07', 1, 1, 1, 4, 1, 1, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 20:30:00.508-07', '2020-05-12 21:00:00.508-07', 1, 1, 1, 4, 1, 2, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 22:00:00.508-07', '2020-05-12 22:30:00.508-07', 1, 1, 1, 4, 1, 3, false);
+/*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1, false);*/
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 16:00:00.508-07', '2020-05-12 16:30:00.508-07', 0, 2, 2, 5, 2, 2, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 16:30:00.508-07', '2020-05-12 17:00:00.508-07', 0, 2, 2, 5, 2, 3, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 17:00:00.508-07', '2020-05-12 17:30:00.508-07', 0, 2, 2, 5, 2, 1, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 17:30:00.508-07', '2020-05-12 18:00:00.508-07', 0, 2, 2, 5, 2, 2, false);
 
 /* requests */
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 12);
+
+
+/* doctor reviews */
+
+insert into doc_review (grade, doctor_id) values (5, 4);
+insert into doc_review (grade, doctor_id) values (4.5, 5);
+insert into doc_review (grade, doctor_id) values (3.5, 12);
+insert into doc_review (grade, doctor_id) values (4, 13);
+insert into doc_review (grade, doctor_id) values (5, 14);
+insert into doc_review (grade, doctor_id) values (2, 15);
+
+insert into doc_review (grade, doctor_id) values (4.5, 4);
+insert into doc_review (grade, doctor_id) values (4, 5);
+insert into doc_review (grade, doctor_id) values (4, 12);
+insert into doc_review (grade, doctor_id) values (3.5, 13);
+insert into doc_review (grade, doctor_id) values (3, 14);
+insert into doc_review (grade, doctor_id) values (3, 15);
 
