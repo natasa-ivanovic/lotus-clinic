@@ -242,11 +242,14 @@ public class PatientController {
 						List<Date> availableDates = DateUtil.getAllTerms(date);
 						Date endDate = DateUtil.endOfDay(date);
 						List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
+						// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
 						availableDates = DateUtil.removeOverlap(availableDates, appointments);
 						if (availableDates.isEmpty()) 
 							docIt.remove();						
-						 else 
-							dto.getDoctors().add(new DoctorDTO(d, 4.5, availableDates));
+						 else {
+							 // get doctor grade
+							 dto.getDoctors().add(new DoctorDTO(d, 4.5, availableDates));
+						 }
 					}
 					if (c.getDoctors().isEmpty()) 
 						it.remove();
@@ -267,13 +270,15 @@ public class PatientController {
 						it.remove();
 						continue;
 					}
-					// TODO logika za proveru jel je free taj dan 
-					// . . . 
-					// get grade...
-					// get all free dates...
-					List<Date> availableTimes = new ArrayList<Date>();
-					availableTimes.add(new Date(date.getTime()));
-					results.add(new DoctorDTO(d, 4.5, availableTimes));
+					List<Date> availableDates = DateUtil.getAllTerms(date);
+					Date endDate = DateUtil.endOfDay(date);
+					List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
+					// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
+					availableDates = DateUtil.removeOverlap(availableDates, appointments);
+					if (!availableDates.isEmpty()) {
+						 // get doctor grade
+						 results.add(new DoctorDTO(d, 4.5, availableDates));
+					}
 				}
 				// potencijalno u jos jedan loop ali sumnjam da treba, ovo gore mozda u jedan loop isto
 				return new ResponseEntity<>(results, HttpStatus.OK);

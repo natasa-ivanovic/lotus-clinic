@@ -223,6 +223,7 @@ const routes = [
         component: PatientDoctorView,
         name: "patientsDoctors",
         path: "/new_appointment/doctors",
+        props: true
     },
     {
         path: "/*",
