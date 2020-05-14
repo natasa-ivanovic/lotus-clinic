@@ -7,6 +7,7 @@
                 <v-toolbar-items v-if="checkRole('PATIENT')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
                     <v-btn text :to="{ name: 'appointmentView'}">New appointment</v-btn>
+                    <v-btn text :to="{ name: 'pastAppointmentsView'}">Previous appointments</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('DOCTOR')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>

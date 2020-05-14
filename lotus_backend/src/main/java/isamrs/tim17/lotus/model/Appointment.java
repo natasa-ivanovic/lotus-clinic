@@ -53,7 +53,7 @@ public class Appointment {
 	private AppointmentType appointmentType;
 	@OneToOne(fetch = FetchType.EAGER)
 	private Diagnosis diagnosis;
-	@OneToMany(mappedBy="appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
 	
 	@Column(name="reviewed", unique = false, nullable=false)

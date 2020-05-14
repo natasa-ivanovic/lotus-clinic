@@ -42,6 +42,9 @@ import RegistrationRequestView from "../components/RegistrationRequests/Registra
 import SuccesfulRegistration from "../components/Patients/SuccesfulRegistration"
 import PatientClinicView from "../components/Patients/ClinicsView"
 import PatientDoctorView from "../components/Patients/DoctorsView"
+import PreviousAppointments from "../components/Patients/PreviousAppointments"
+
+
 const routes = [
     {
         component: Login,
@@ -225,6 +228,13 @@ const routes = [
         path: "/new_appointment/doctors",
         props: true
     },
+    {
+        component: PreviousAppointments,
+        name: "pastAppointmentsView",
+        path: "/my_appointments",
+        props: true
+    },   
+
     {
         path: "/*",
         redirect: "/home"

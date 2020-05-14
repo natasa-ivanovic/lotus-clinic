@@ -37,12 +37,10 @@ public class Diagnosis {
 	public Diagnosis() {}
 	
 	public Diagnosis(String name) {
-		this.id = this.getId();
 		this.name = name;
 	}
 
 	public Diagnosis(String name, ClinicalCentre clinicCentre) {
-		this.id = this.getId();
 		this.name = name;
 		this.clinicalCentre = clinicCentre;
 	}
