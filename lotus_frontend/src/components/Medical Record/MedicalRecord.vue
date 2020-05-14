@@ -3,21 +3,29 @@
         <v-container>
             <v-row align="center" justify="center">
                 <v-col>
+                    <v-form>
                     <v-card class="elevation-3">
                         <v-toolbar flat color="secondary" dark>
-                            <v-toolbar-title>Medical record - {{this.record.patientName}} {{this.record.patientSurname}}</v-toolbar-title>
+                            <v-toolbar-title>Medical record - {{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn
                                 v-if="edit==true"
                                 fab
                                 small
-                                @click="setEditing()"
                             >
-                            <v-icon v-if="isEditing" v-on:click="disabled=false">mdi-close</v-icon>
-                            <v-icon v-else>mdi-pencil</v-icon>  
+                            <v-icon v-if="isEditing==true" v-on:click="cancel()">mdi-close</v-icon>
+                            <v-icon v-else v-on:click="setEditing()">mdi-pencil</v-icon>  
                             </v-btn>
                         </v-toolbar>
                         <v-card-text>
+                            <v-row>
+                                <v-col>
+                                    <h3>Birth date: {{getBirthDate()}}</h3>
+                                </v-col>
+                                <v-col>
+                                    <h3>Gender: {{this.patient.gender}}</h3>
+                                </v-col>
+                            </v-row>
                             <v-row>
                                 <v-col>
                                     <v-text-field
@@ -40,25 +48,39 @@
                                     :readonly="!isEditing"/>
                                 </v-col>
                                 <v-col>
-                                    <v-text-field
+                                    <v-autocomplete
+                                    :items="bloodTypes"
                                     label="Blood type"
                                     v-model="record.bloodType" 
                                     :readonly="!isEditing"/>
                                 </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col><v-btn block color="primary" @click="showAppointments()">Appointments</v-btn></v-col>
+                                <v-col><v-btn block color="primary" @click="showOperations()">Operations</v-btn></v-col>
+                                <v-col><v-btn block color="primary" @click="showIlnesses()">Ilnesses</v-btn></v-col>
                             </v-row>
                         </v-card-text>
                         <v-card-actions>
                             <v-btn v-if="isEditing==true" @click="saveChanges()" block color="success" height="50">Save changes</v-btn>
                         </v-card-actions>
                     </v-card>
+                </v-form>
             </v-col>
         </v-row>
+        <Overlay v-bind:overlay.sync="overlay" :id="this.id"/>
     </v-container>
 </div>    
 </template>
 
 <script>
+import Overlay from "./MROverlay"
+
+
 const apiURL = "http://localhost:9001/api/medicalRecord/"
+const apiFinished = "http://localhost:9001/appointments/finished"
+
+
 export default {
     name: "MedicalRecord",
      props: {
@@ -70,10 +92,18 @@ export default {
         }
 
     },
+    components: {
+        Overlay
+    },
     data() {
         return {
             record: {},
+            patient: {},
             isEditing: false,
+            bloodTypes: ['A', 'B', 'AB', 'O'],
+            cachedRecord: {},
+            allergies: [],
+            overlay: false
         }
     },
     mounted() {
@@ -81,7 +111,9 @@ export default {
             url: apiURL + this.id,
             method: 'GET'
         }).then(response => {
-            this.record = response.data;
+            this.record = response.data.record;
+            this.cachedRecord = Object.assign({}, response.data.record);
+            this.patient = response.data.patient;
         }).catch(error => {
             alert(error);
         })
@@ -97,7 +129,8 @@ export default {
                 data: this.record
             }).then(response => {
                 alert(response.data);
-                this.isEditing = !this.isEditing;
+                this.cachedRecord = Object.assign({}, response.data.record);
+                this.isEditing = false;
                 //alert("Successfully updated medical record!");
                 //TODO redirekcija ili iskljuci overlay
             }).catch(error => {
@@ -105,8 +138,18 @@ export default {
                 alert(error.response.data.text);
                 //TODO SREDITI
             })
-
+        },
+        cancel() {
+            this.record = Object.assign({}, this.cachedRecord);
+            this.isEditing = false;
+        },
+        getBirthDate() {
+            return this.patient.birthDate.split("T")[0];
+        },
+        showAppointments() {
+            this.overlay = true;
         }
+        
     }
 }
 </script>

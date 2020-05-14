@@ -95,7 +95,7 @@ export default {
             console.log('Difference: ' + resultInMinutes);
             if (resultInMinutes <= 10)
                 return true;
-            return false; //NE ZABORAVI DA VRATIS NA FALSE!!!!
+            return true; //NE ZABORAVI DA VRATIS NA FALSE!!!!
         },
         start: function(app) {
             console.log(app);

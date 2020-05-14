@@ -14,6 +14,7 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
+import isamrs.tim17.lotus.model.Patient;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 	
@@ -25,5 +26,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	
 	@Query("SELECT a FROM Appointment a where a.doctor = :id AND (a.startDate BETWEEN :startDate AND :endDate) order by a.startDate")
 	List<Appointment> getAllBetweenDates(@Param("id") Doctor id, @Param("startDate") Date startDate, @Param("endDate") Date endDate); //Date start, Date end);
-
+	
+	@Query("SELECT a FROM Appointment a where a.medicalRecord = :id AND a.status = 4 order by a.startDate")
+	List<Appointment> getFinishedApps(@Param("id") Patient id);
 }

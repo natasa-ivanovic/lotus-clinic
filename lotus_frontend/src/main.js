@@ -11,7 +11,6 @@ Vue.use(VueAxios, Axios);
 // global variables
 const authKey = Vue.observable({ authKey: localStorage.getItem('authKey') })
 
-
 Object.defineProperty(Vue.prototype, '$authKey', {
   get () {
     return authKey.authKey;
@@ -39,6 +38,18 @@ Object.defineProperty(Vue.prototype, '$apiURL', {
     return apiURL.apiURL;
   }
 })
+
+const overlay = Vue.observable({overlay: false})
+
+Object.defineProperty(Vue.prototype, '$overlay', {
+  get () {
+    return overlay.overlay;
+  },
+  set (value) {
+    overlay.overlay = value;
+  }
+})
+
 
 Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
 

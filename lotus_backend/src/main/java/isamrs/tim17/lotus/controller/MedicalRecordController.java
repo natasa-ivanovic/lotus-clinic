@@ -12,25 +12,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.MedicalRecordDTO;
+import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.model.MedicalRecord;
+import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.MedicalRecordService;
+import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
 @RequestMapping("/api")
 public class MedicalRecordController {
 	
 	@Autowired private MedicalRecordService service;
+	@Autowired private PatientService patientService;
 
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
-	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("id") long id) {
+	public ResponseEntity<PatientDTO> getMedicalRecord(@PathVariable("id") long id) {
 		
-		MedicalRecord mr = service.findOne(id);
-		if (mr == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		MedicalRecordDTO mrDTO = new MedicalRecordDTO(mr);
-		
-		return new ResponseEntity<>(mrDTO, HttpStatus.OK);
+		Patient patient = patientService.findOne(id);
+		PatientDTO dto = new PatientDTO(patient);
+		return new ResponseEntity<>(dto, HttpStatus.OK); //record, patient
 		
 	}
 	

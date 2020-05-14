@@ -24,7 +24,6 @@ public class PatientDTO {
 	}
 	public void setRecord(MedicalRecordDTO record) {
 		this.record = record;
-	}
-	
+	}	
 	
 }

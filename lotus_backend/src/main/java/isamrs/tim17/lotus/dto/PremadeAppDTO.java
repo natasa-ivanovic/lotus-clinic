@@ -17,6 +17,7 @@ public class PremadeAppDTO {
 	private long patientId;
 	private String patientName;
 	private String patientSurname;
+	private String appType;
 	
 	
 	public PremadeAppDTO() {}
@@ -24,6 +25,7 @@ public class PremadeAppDTO {
 	public PremadeAppDTO(Appointment app) {
 		this.setId(app.getId());
 		this.startDate = app.getStartDate();
+		this.appType = app.getAppointmentType().getName();
 		this.endDate = app.getEndDate();
 		this.doctorId = app.getDoctor().getId();
 		this.doctorName = app.getDoctor().getName();
@@ -133,6 +135,14 @@ public class PremadeAppDTO {
 
 	public void setPatientId(long patientId) {
 		this.patientId = patientId;
+	}
+
+	public String getAppType() {
+		return appType;
+	}
+
+	public void setAppType(String appType) {
+		this.appType = appType;
 	}
 	
 	

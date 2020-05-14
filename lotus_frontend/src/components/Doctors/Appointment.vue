@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import MedicalRecord from "../Patients/MedicalRecord"
+import MedicalRecord from "../Medical Record/MedicalRecord"
 
 export default {
     name: "startAppointment",
@@ -54,19 +54,22 @@ export default {
         }
     },
     components: {
-      MedicalRecord
+      MedicalRecord,
     },
     data() {
         return {
             diagnosis: "",
             medicine: "",
-            info: ""
+            info: "",
 
         }
     },
     mounted() {
         if (this.appointment == {})
             this.$router.push({name: "home"});
+    },
+    methods: {
+        
     }
     
 }

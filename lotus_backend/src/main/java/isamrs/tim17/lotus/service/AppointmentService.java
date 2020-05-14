@@ -10,6 +10,7 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
+import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -47,16 +48,17 @@ public class AppointmentService {
 		return appointments.findByDoctor(record);
 	}
 
-	
-	 public List<Appointment> findByDate(Doctor doctor, Date start, Date end) {
-	 System.out.println(start); System.out.println(end); 
-	 return appointments.getAllBetweenDates(doctor, start, end); 
-	 }
-	 
+	public List<Appointment> findByDate(Doctor doctor, Date start, Date end) {
+		return appointments.getAllBetweenDates(doctor, start, end);
+	}
 
-		/*
-		 * public List<Appointment> findByDate(Doctor doctor) { return
-		 * appointments.findAllByDoctor(doctor); }
-		 */
+	public List<Appointment> findFinished(Patient id) {
+		return appointments.getFinishedApps(id);
+	}
+
+	/*
+	 * public List<Appointment> findByDate(Doctor doctor) { return
+	 * appointments.findAllByDoctor(doctor); }
+	 */
 
 }
