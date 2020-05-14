@@ -111,7 +111,7 @@ export default {
     },
     methods: {
         showDiagnosis: function(app) {
-            alert(app);
+            alert("Todo x " + app.id);
         },
         showRating: function(app) {
             if (app.rated == false) {

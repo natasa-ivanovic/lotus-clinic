@@ -65,6 +65,7 @@
 </template>
 
 <script>
+const apiURL = "http://localhost:9001/api/patients/rate";
 export default {
     data() {
         return {
@@ -87,9 +88,32 @@ export default {
             this.$emit('update:dialog', false);
         },
         sendRating: function() {
-            console.log(this.app);
-            this.$emit('rate-app', this.app);
-            this.$emit('update:dialog', false);
+            if (this.app == 0) {
+                alert("Nesto srsly ne valja");
+                return;
+            }
+            if (this.docRating == 0 | this.clinicRating == 0 ) {
+                alert("Niste popunili sve!");
+                return;
+            }
+            var queryData = {
+                doctorRating: this.docRating,
+                clinicRating: this.clinicRating,
+                appointmentId: this.app
+            };
+            this.axios({url : apiURL, 
+                    method: 'POST',
+                    data: queryData
+                }).then(response =>   {
+                    console.log(response);
+                    alert("uspelo");
+                    
+                    this.$emit('rate-app', this.app);
+                    this.$emit('update:dialog', false);
+                }).catch(error => {
+                    console.log(error);
+                    alert(error.response);
+                });
         },
         handleClick: function(event) {
             alert(event);

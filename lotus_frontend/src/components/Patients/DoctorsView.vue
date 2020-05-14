@@ -24,6 +24,9 @@
                             :headers="headers"
                             :items="items"
                             :search="search">
+                                <template v-slot:item.grade="{ item} ">
+                                    {{ (+item.grade).toFixed(2) }}
+                                </template>
                                 <template v-slot:item.schedule="{ item }">
                                     <v-icon medium @click="scheduleApp(item)">mdi-calendar-arrow-right</v-icon>
                                 </template>

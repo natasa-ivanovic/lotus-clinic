@@ -31,9 +31,7 @@ public class DoctorReview {
 
 	public DoctorReview() {}
 
-	public DoctorReview(long id, float grade, Doctor doctor) {
-		super();
-		this.id = id;
+	public DoctorReview(float grade, Doctor doctor) {
 		this.grade = grade;
 		this.doctor = doctor;
 	}
