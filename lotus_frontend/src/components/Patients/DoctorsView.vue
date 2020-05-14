@@ -24,8 +24,8 @@
                             :headers="headers"
                             :items="items"
                             :search="search">
-                                <template v-slot:item.grade="{ item} ">
-                                    {{ (+item.grade).toFixed(2) }}
+                                <template v-slot:item.rating="{ item} ">
+                                    {{ (+item.rating).toFixed(2) }}
                                 </template>
                                 <template v-slot:item.schedule="{ item }">
                                     <v-icon medium @click="scheduleApp(item)">mdi-calendar-arrow-right</v-icon>
@@ -68,7 +68,7 @@ export default {
                 {
                     text: "Rating",
                     sortable: true,
-                    value: 'grade'
+                    value: 'rating'
                 },
                 {
                     text: "Appointment type",

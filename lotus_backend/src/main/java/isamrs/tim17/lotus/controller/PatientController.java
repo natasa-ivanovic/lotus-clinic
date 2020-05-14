@@ -30,6 +30,7 @@ import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
@@ -38,6 +39,7 @@ import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.ClinicReviewService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
@@ -69,7 +71,9 @@ public class PatientController {
 	
 	@Autowired
 	private DoctorReviewService docReviewService;
-	
+
+	@Autowired
+	private ClinicReviewService clinicReviewService;
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -261,8 +265,12 @@ public class PatientController {
 					}
 					if (c.getDoctors().isEmpty()) 
 						it.remove();
-					else
+					else {
+						List<ClinicReview> reviews = clinicReviewService.findAllByClinic(c);
+						double rating = RatingUtil.getAverageClinicRating(reviews);
+						dto.setRating(rating);
 						clinicList.add(dto);
+					}
 				}
 				if (clinics.isEmpty())
 					return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
@@ -323,8 +331,9 @@ public class PatientController {
 		DoctorReview docReview = new DoctorReview(rating.getDoctorRating(), d);
 		docReviewService.save(docReview);
 		// todo add za clinics
-		
-		
+		Clinic c = d.getClinic();
+		ClinicReview clinicReview = new ClinicReview(rating.getClinicRating(), c);
+		clinicReviewService.save(clinicReview);
 		// save new appointment data (rated = true)
 		a.setReviewed(true);
 		appointmentService.save(a);

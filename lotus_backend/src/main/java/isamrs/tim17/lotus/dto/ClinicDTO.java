@@ -13,6 +13,7 @@ public class ClinicDTO {
 	private String address;
 	private String description;
 	private List<DoctorDTO> doctors = new ArrayList<DoctorDTO>();
+	private double rating;
 	
 	public ClinicDTO() {
 		super();
@@ -63,6 +64,14 @@ public class ClinicDTO {
 
 	public void setDoctors(List<DoctorDTO> doctors) {
 		this.doctors = doctors;
+	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double grade) {
+		this.rating = grade;
 	}
 	
 	

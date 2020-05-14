@@ -95,17 +95,17 @@ insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 12)
 
 /* doctor reviews */
 
-insert into doc_review (grade, doctor_id) values (5, 4);
-insert into doc_review (grade, doctor_id) values (4.5, 5);
-insert into doc_review (grade, doctor_id) values (3.5, 12);
-insert into doc_review (grade, doctor_id) values (4, 13);
-insert into doc_review (grade, doctor_id) values (5, 14);
-insert into doc_review (grade, doctor_id) values (2, 15);
+insert into doctor_review (grade, doctor_id) values (5, 4);
+insert into doctor_review (grade, doctor_id) values (4.5, 5);
+insert into doctor_review (grade, doctor_id) values (3.5, 12);
+insert into doctor_review (grade, doctor_id) values (4, 13);
+insert into doctor_review (grade, doctor_id) values (5, 14);
+insert into doctor_review (grade, doctor_id) values (2, 15);
 
-insert into doc_review (grade, doctor_id) values (4.5, 4);
-insert into doc_review (grade, doctor_id) values (4, 5);
-insert into doc_review (grade, doctor_id) values (4, 12);
-insert into doc_review (grade, doctor_id) values (3.5, 13);
-insert into doc_review (grade, doctor_id) values (3, 14);
-insert into doc_review (grade, doctor_id) values (3, 15);
+insert into doctor_review (grade, doctor_id) values (4.5, 4);
+insert into doctor_review (grade, doctor_id) values (4, 5);
+insert into doctor_review (grade, doctor_id) values (4, 12);
+insert into doctor_review (grade, doctor_id) values (3.5, 13);
+insert into doctor_review (grade, doctor_id) values (3, 14);
+insert into doctor_review (grade, doctor_id) values (3, 15);
 
