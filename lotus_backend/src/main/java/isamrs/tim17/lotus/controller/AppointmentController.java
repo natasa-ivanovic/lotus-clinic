@@ -113,6 +113,23 @@ public class AppointmentController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
+	@GetMapping("/appointments/patient/past")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<PremadeAppDTO>> getMyPastAppointments() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = (Patient) a.getPrincipal();
+		
+		List<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord());
+		if (apps == null)
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+		for (Appointment app : apps) {
+			if (app.getStatus().equals(AppointmentStatus.FINISHED))
+				dto.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
 	@GetMapping("/appointments/doctor")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<PremadeAppDTO>> getDoctorAppointments() {

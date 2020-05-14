@@ -21,7 +21,10 @@ public class Doctor extends User {
 	//public Operation operation;
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	public Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<Appointment>();
+	
+	@OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+	private Set<DoctorReview> reviews = new HashSet<DoctorReview>();
 	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -45,6 +48,22 @@ public class Doctor extends User {
 		this.clinic = clinic;
 	}
 
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public Set<DoctorReview> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<DoctorReview> reviews) {
+		this.reviews = reviews;
+	}
+
 	/*public Doctor(String email, String password, String name, String surname, String address, String city,
 			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
 			AppointmentType speciality, Operation operation, Clinic clinic) {
@@ -53,6 +72,6 @@ public class Doctor extends User {
 		this.operation = operation;
 	}*/
 	
-	
+	 
 
 }

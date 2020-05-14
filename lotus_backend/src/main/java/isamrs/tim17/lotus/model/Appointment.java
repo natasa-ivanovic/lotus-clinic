@@ -53,8 +53,11 @@ public class Appointment {
 	private AppointmentType appointmentType;
 	@OneToOne(fetch = FetchType.EAGER)
 	private Diagnosis diagnosis;
-	@OneToMany(mappedBy="appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
+	
+	@Column(name="reviewed", unique = false, nullable=false)
+	private boolean reviewed;
 	
 	public Appointment() {}
 
@@ -70,6 +73,7 @@ public class Appointment {
 		this.room = room;
 		this.appointmentType = appointmentType;
 		this.diagnosis = diagnosis;
+		this.reviewed = false;
 	}
 	
 	public Appointment(Date startDate, Date endDate, AppointmentType type, Doctor doctor, Room room, Clinic clinic) {
@@ -80,6 +84,7 @@ public class Appointment {
 		this.room = room;
 		this.status = AppointmentStatus.PREMADE; //IZMENITI
 		this.clinic = clinic;
+		this.reviewed = false;
 	}
 	
 	@Override
@@ -183,6 +188,14 @@ public class Appointment {
 
 	public void setPrescriptions(Set<Prescription> prescriptions) {
 		this.prescriptions = prescriptions;
+	}
+
+	public boolean isReviewed() {
+		return reviewed;
+	}
+
+	public void setReviewed(boolean reviewed) {
+		this.reviewed = reviewed;
 	}
 	
 	

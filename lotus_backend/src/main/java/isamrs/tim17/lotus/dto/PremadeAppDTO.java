@@ -1,8 +1,12 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.Prescription;
 
 public class PremadeAppDTO {
 	private long id;
@@ -17,15 +21,18 @@ public class PremadeAppDTO {
 	private long patientId;
 	private String patientName;
 	private String patientSurname;
-	private String appType;
+	private String clinic;
+	private String diagnosis;
+	private List<String> recipes;
+	private boolean rated;
+	private String description;
 	
-	
-	public PremadeAppDTO() {}
+	public PremadeAppDTO() {
+	}
 
 	public PremadeAppDTO(Appointment app) {
 		this.setId(app.getId());
 		this.startDate = app.getStartDate();
-		this.appType = app.getAppointmentType().getName();
 		this.endDate = app.getEndDate();
 		this.doctorId = app.getDoctor().getId();
 		this.doctorName = app.getDoctor().getName();
@@ -34,13 +41,26 @@ public class PremadeAppDTO {
 		this.roomName = app.getRoom().getName();
 		this.setType(app.getAppointmentType().getName());
 		if (app.getMedicalRecord() != null) {
-		this.patientName = app.getMedicalRecord().getPatient().getName();
-		this.patientSurname = app.getMedicalRecord().getPatient().getSurname();
-		this.patientId = app.getMedicalRecord().getId();
+			this.patientName = app.getMedicalRecord().getPatient().getName();
+			this.patientSurname = app.getMedicalRecord().getPatient().getSurname();
+			this.patientId = app.getMedicalRecord().getId();
 		}
 		
+		if (!app.getPrescriptions().isEmpty()) {
+			this.recipes = new ArrayList<String>();
+			Iterator<Prescription> it = app.getPrescriptions().iterator();
+			while (it.hasNext()) {
+				Prescription p = it.next();
+				recipes.add(p.getMedicine().getName());
+			}
+		}
+		this.rated = app.isReviewed();
+		if (app.getDiagnosis() != null)
+			this.diagnosis = app.getDiagnosis().getName();
+		this.setDescription(app.getInformation());
+		this.clinic = app.getClinic().getName();
 	}
-	
+
 	public String getPatientName() {
 		return patientName;
 	}
@@ -48,7 +68,7 @@ public class PremadeAppDTO {
 	public void setPatientName(String patientName) {
 		this.patientName = patientName;
 	}
-	
+
 	public String getPatientSurname() {
 		return patientSurname;
 	}
@@ -137,13 +157,49 @@ public class PremadeAppDTO {
 		this.patientId = patientId;
 	}
 
-	public String getAppType() {
-		return appType;
+	public String getClinic() {
+		return clinic;
 	}
 
-	public void setAppType(String appType) {
-		this.appType = appType;
+	public void setClinic(String clinic) {
+		this.clinic = clinic;
+	}
+
+	public String getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(String diagnosis) {
+		this.diagnosis = diagnosis;
+	}
+
+	public List<String> getRecipes() {
+		return recipes;
+	}
+
+	public void setRecipes(List<String> recipes) {
+		this.recipes = recipes;
+	}
+
+	public boolean isRated() {
+		return rated;
+	}
+
+	public void setRated(boolean rated) {
+		this.rated = rated;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
-	
+
 }

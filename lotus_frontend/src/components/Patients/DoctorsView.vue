@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-row align="center" justify="center">
-          <v-col cols="6">
+          <v-col cols="9">
             <v-card class="elevation-3">
                 <v-toolbar flat color="secondary" dark>
                 <v-toolbar-title>Browse by doctors</v-toolbar-title>
