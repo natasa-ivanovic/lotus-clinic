@@ -52,7 +52,7 @@ public class AppointmentService {
 		return appointments.getAllBetweenDates(doctor, start, end);
 	}
 
-	public List<Appointment> findFinished(Patient id) {
+	public List<Appointment> findFinished(MedicalRecord id) {
 		return appointments.getFinishedApps(id);
 	}
 

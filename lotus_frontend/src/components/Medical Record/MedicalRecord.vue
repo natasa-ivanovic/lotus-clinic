@@ -20,22 +20,34 @@
                         <v-card-text>
                             <v-row>
                                 <v-col>
-                                    <h3>Birth date: {{getBirthDate()}}</h3>
+                                    <v-text-field
+                                        label="Birth date"
+                                        readonly="true"
+                                        :value="getDate(this.patient.birthDate).date"
+                                        filled>
+                                    </v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <h3>Gender: {{this.patient.gender}}</h3>
+                                    <v-text-field
+                                        label="Gender"
+                                        readonly="true"
+                                        :value="formatGender()"
+                                        filled>
+                                    </v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
                                     <v-text-field
-                                    label="Weight (kg)"
+                                    label="Weight"
+                                    suffix="kg"
                                     v-model="record.weight" 
                                     :readonly="!isEditing"/>
                                 </v-col>
                                 <v-col>
                                     <v-text-field
-                                    label="Height (m)"
+                                    label="Height"
+                                    suffix="cm"
                                     v-model="record.height" 
                                     :readonly="!isEditing"/>
                                 </v-col>
@@ -56,9 +68,9 @@
                                 </v-col>
                             </v-row>
                             <v-row>
+                                <v-col><v-btn block color="primary" @click="showIllnesses()">Illnesses</v-btn></v-col>
                                 <v-col><v-btn block color="primary" @click="showAppointments()">Appointments</v-btn></v-col>
-                                <v-col><v-btn block color="primary" @click="showOperations()">Operations</v-btn></v-col>
-                                <v-col><v-btn block color="primary" @click="showIlnesses()">Ilnesses</v-btn></v-col>
+                                <v-col><v-btn block color="primary" @click="showOperations()" disabled>Operations</v-btn></v-col>
                             </v-row>
                         </v-card-text>
                         <v-card-actions>
@@ -68,7 +80,7 @@
                 </v-form>
             </v-col>
         </v-row>
-        <Overlay v-bind:overlay.sync="overlay" :id="this.id"/>
+        <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :items="this.itemsOverlay"/>
     </v-container>
 </div>    
 </template>
@@ -78,7 +90,7 @@ import Overlay from "./MROverlay"
 
 
 const apiURL = "http://localhost:9001/api/medicalRecord/"
-const apiFinished = "http://localhost:9001/appointments/finished"
+//const apiFinished = "http://localhost:9001/appointments/finished"
 
 
 export default {
@@ -99,11 +111,15 @@ export default {
         return {
             record: {},
             patient: {},
+            appointments: [],
             isEditing: false,
             bloodTypes: ['A', 'B', 'AB', 'O'],
             cachedRecord: {},
             allergies: [],
-            overlay: false
+            overlay: false,
+            headerOverlay: [],
+            itemsOverlay: [],
+            title: ''
         }
     },
     mounted() {
@@ -111,9 +127,10 @@ export default {
             url: apiURL + this.id,
             method: 'GET'
         }).then(response => {
-            this.record = response.data.record;
-            this.cachedRecord = Object.assign({}, response.data.record);
-            this.patient = response.data.patient;
+            this.record = response.data.patient.record;
+            this.appointments = response.data.appointments;
+            this.cachedRecord = Object.assign({}, response.data.patient.record);
+            this.patient = response.data.patient.patient;
         }).catch(error => {
             alert(error);
         })
@@ -129,7 +146,7 @@ export default {
                 data: this.record
             }).then(response => {
                 alert(response.data);
-                this.cachedRecord = Object.assign({}, response.data.record);
+                this.cachedRecord = Object.assign({}, response.data.patient.record);
                 this.isEditing = false;
                 //alert("Successfully updated medical record!");
                 //TODO redirekcija ili iskljuci overlay
@@ -143,12 +160,65 @@ export default {
             this.record = Object.assign({}, this.cachedRecord);
             this.isEditing = false;
         },
-        getBirthDate() {
-            return this.patient.birthDate.split("T")[0];
-        },
         showAppointments() {
+            this.title = "Appointments";
+            console.log(this.appointments);
+            var apps = [];
+            this.headerOverlay = [
+                { text: 'Date', value: 'date' },
+                { text: 'Appointment type', value: 'type' },
+                { text: 'Doctor', value: 'doctor' },
+                { text: 'Room', value: 'room' },
+                { text: 'Clinic', value: 'clinic'}
+            ];
+            this.appointments.forEach(app => {
+                var el = {
+                    date: this.getDate(app.startDate).time,
+                    type: app.type,
+                    doctor: app.doctorName + " " + app.doctorSurname,
+                    room: app.roomName,
+                    clinic: app.clinic
+                }
+                apps.push(el);
+            });
+            this.itemsOverlay = apps;
             this.overlay = true;
-        }
+        },
+        showIllnesses() {
+            this.title = "Illnesses";
+            this.headerOverlay = [
+                { text: 'Date', value: 'date' },
+                { text: 'Diagnosis', value: 'diagnosis' },
+                { text: 'Description', value: 'description' },
+                { text: 'Prescription', value: 'prescription' } //list of medicines
+            ];
+            var illnesses = [];
+            this.appointments.forEach(app => {
+                var el = {
+                    date: this.getDate(app.startDate).date,
+                    diagnosis: app.diagnosis,
+                    description: app.description,
+                    prescription: app.prescription
+                }
+                illnesses.push(el);
+            })
+            this.itemsOverlay = illnesses;
+            this.overlay = true;
+        },
+        formatGender() {
+            var g = this.patient.gender;
+            return g.charAt(0).toUpperCase() + g.slice(1).toLowerCase();
+        },
+        getDate(date) {
+            var el = date.split("T");
+            var d = el[0];
+            var t = el[1].substring(0, 5);
+            var dateTime = {
+                date: d,
+                time: d + " " + t
+            }
+            return dateTime;
+        },
         
     }
 }

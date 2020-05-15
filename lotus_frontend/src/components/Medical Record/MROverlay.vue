@@ -1,12 +1,29 @@
 <template>
   <div class="text-center">
-    <v-overlay :value="overlay">
-        <v-btn
-        icon
-        @click="turnOff()"
-        ><v-icon>mdi-close</v-icon></v-btn>
-        <h1> APPOINTMENTS </h1>
-    </v-overlay>
+    <v-dialog v-model="overlay" @click:outside="turnOff()">
+        <v-container>
+        <v-row align="center" justify="center">
+        <v-card>
+        <v-card-title>
+        {{this.title}}
+        <v-spacer></v-spacer>
+        <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+        ></v-text-field>
+        </v-card-title>
+        <v-data-table
+        :headers="this.headers"
+        :items="this.items"
+        :search="search"
+        ></v-data-table>
+    </v-card>
+    </v-row>
+    </v-container>
+    </v-dialog>
   </div>
 </template>
 
@@ -14,16 +31,22 @@
 export default {
     name: "MROverlay",
     props: {
-        id: {
-            type: String,
-        },
         overlay: {
             type: Boolean
+        },
+        headers: {
+            type: Array
+        },
+        items: {
+            type: Array
+        },
+        title: {
+            type: String
         }
     },
     data() {
         return {
-            appointments: [],
+            search: ''
         }
     },
     methods: {

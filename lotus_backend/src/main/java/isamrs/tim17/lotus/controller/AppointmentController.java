@@ -183,7 +183,7 @@ public class AppointmentController {
 		long id = Long.parseLong(patientId);
 		Patient patient = patientService.findOne(id);
 		
-		List<Appointment> apps = service.findFinished(patient);
+		List<Appointment> apps = service.findFinished(patient.getMedicalRecord());
 		List<PremadeAppDTO> finished = new ArrayList<>();
 		for (Appointment app: apps) {
 			PremadeAppDTO dto = new PremadeAppDTO(app);
