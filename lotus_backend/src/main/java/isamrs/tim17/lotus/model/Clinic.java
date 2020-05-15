@@ -43,6 +43,11 @@ public class Clinic {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClinicalCentre clinicalCentre;
 	
+
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
+	private Set<ClinicReview> reviews = new HashSet<ClinicReview>();
+	
+	
 	public Clinic() {}
 	
 	public Clinic(String name, String address, String description) {

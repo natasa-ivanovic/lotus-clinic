@@ -23,17 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.dto.RatingDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
+import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RoomService;
@@ -129,6 +132,7 @@ public class AppointmentController {
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
+	
 	
 	@GetMapping("/appointments/doctor")
 	@PreAuthorize("hasRole('DOCTOR')")

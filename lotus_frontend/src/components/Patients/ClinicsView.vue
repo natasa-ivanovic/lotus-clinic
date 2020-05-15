@@ -24,6 +24,9 @@
                             :headers="headers"
                             :items="items"
                             :search="search">
+                                <template v-slot:item.rating="{ item} ">
+                                    {{ (+item.rating).toFixed(2) }}
+                                </template>
                                 <template v-slot:item.viewDoctors="{ item }">
                                     <v-icon medium @click="viewDoctors(item)">mdi-doctor</v-icon>
                                 </template>
@@ -48,6 +51,11 @@ export default {
                     text: 'Clinic name',
                     sortable: true,
                     value: 'name'
+                },
+                {
+                    text: 'Rating',
+                    sortable: true,
+                    value: 'rating'
                 },
                 {
                     text: 'Clinic address',

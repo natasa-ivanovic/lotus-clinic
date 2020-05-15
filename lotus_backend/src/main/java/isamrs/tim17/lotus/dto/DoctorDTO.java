@@ -9,19 +9,19 @@ public class DoctorDTO {
 	private Long id;
 	private String name;
 	private String surname;
-	private double grade;	
+	private double rating;	
 	private List<Date> availableTimes;
 	private ClinicDTO clinic;
 	private String type;
 	
 	public DoctorDTO() {}
 
-	public DoctorDTO(Doctor d, double grade, List<Date> times) {
+	public DoctorDTO(Doctor d, double rating, List<Date> times) {
 		super();
 		this.setId(d.getId());
 		this.name = d.getName();
 		this.surname = d.getSurname();
-		this.grade = grade;
+		this.rating = rating;
 		this.availableTimes = times;
 		this.setClinic(new ClinicDTO(d.getClinic()));
 		this.setType(d.getSpecialty().getName());
@@ -43,12 +43,12 @@ public class DoctorDTO {
 		this.surname = surname;
 	}
 
-	public double getGrade() {
-		return grade;
+	public double getRating() {
+		return rating;
 	}
 
-	public void setGrade(double grade) {
-		this.grade = grade;
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
 	public List<Date> getAvailableTimes() {

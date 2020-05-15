@@ -25,10 +25,12 @@ import isamrs.tim17.lotus.dto.ClinicDTO;
 import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
+import isamrs.tim17.lotus.dto.RatingDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
@@ -37,6 +39,7 @@ import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.ClinicReviewService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
@@ -68,7 +71,9 @@ public class PatientController {
 	
 	@Autowired
 	private DoctorReviewService docReviewService;
-	
+
+	@Autowired
+	private ClinicReviewService clinicReviewService;
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -260,8 +265,12 @@ public class PatientController {
 					}
 					if (c.getDoctors().isEmpty()) 
 						it.remove();
-					else
+					else {
+						List<ClinicReview> reviews = clinicReviewService.findAllByClinic(c);
+						double rating = RatingUtil.getAverageClinicRating(reviews);
+						dto.setRating(rating);
 						clinicList.add(dto);
+					}
 				}
 				if (clinics.isEmpty())
 					return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
@@ -285,7 +294,7 @@ public class PatientController {
 					if (!availableDates.isEmpty()) {
 						 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
 						 double rating = RatingUtil.getAverageDoctorRating(ratingList);
-						 results.add(new DoctorDTO(d, 4.5, availableDates));
+						 results.add(new DoctorDTO(d, rating, availableDates));
 					}
 				}
 				// potencijalno u jos jedan loop ali sumnjam da treba, ovo gore mozda u jedan loop isto
@@ -308,6 +317,27 @@ public class PatientController {
 		request.setType(RoomRequestType.PATIENT_APP);
 		requestService.save(request);
 		return new ResponseEntity<>(HttpStatus.OK);	
+	}
+	
+
+	@PostMapping("/patients/rate")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Object> sendRating(@RequestBody RatingDTO rating) {
+		Appointment a = appointmentService.findOne(rating.getAppointmentId());
+		if (a == null || rating.getClinicRating() == 0 || rating.getDoctorRating() == 0 || a.isReviewed()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);			
+		}
+		Doctor d = a.getDoctor();
+		DoctorReview docReview = new DoctorReview(rating.getDoctorRating(), d);
+		docReviewService.save(docReview);
+		// todo add za clinics
+		Clinic c = d.getClinic();
+		ClinicReview clinicReview = new ClinicReview(rating.getClinicRating(), c);
+		clinicReviewService.save(clinicReview);
+		// save new appointment data (rated = true)
+		a.setReviewed(true);
+		appointmentService.save(a);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 
