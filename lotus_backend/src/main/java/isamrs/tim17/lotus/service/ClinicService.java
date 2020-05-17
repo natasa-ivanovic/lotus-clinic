@@ -29,4 +29,8 @@ public class ClinicService {
 	public void remove(long id) {
 		clinics.deleteById(id);
 	}
+	
+	public Clinic findOneByName(String name) {
+		return clinics.findByNameAllIgnoringCase(name).get(0);
+	}
 }

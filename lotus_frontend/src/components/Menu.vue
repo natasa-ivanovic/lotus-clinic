@@ -31,6 +31,7 @@
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
                     <v-btn text :to="{ name: 'diagnoses'}">Diagnoses</v-btn>
                     <v-btn text :to="{ name: 'registrationRequestView'}">Registration Requests</v-btn>
+                    <v-btn text :to="{ name: 'register'}">Add centre admin</v-btn>
                 </v-toolbar-items>
                 <v-spacer />
                 <v-toolbar-items v-if="!checkRole(null)">
