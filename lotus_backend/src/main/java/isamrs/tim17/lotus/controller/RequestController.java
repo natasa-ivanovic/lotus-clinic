@@ -95,14 +95,19 @@ public class RequestController {
 		return new ResponseEntity<RegistrationRequestDTO>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
 	}
 	
-	
+
 	@GetMapping("/registrations/{key}")
-	@PreAuthorize("permitAll()")
 	public ResponseEntity<RegistrationRequestDTO> registerUser(@PathVariable("key") String key) {
-		Request req = service.findOneByKey(key);
+		Request req = null;
+		try {
+			req = service.findOneByKey(key);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		RegistrationRequest rgReq = (RegistrationRequest) req;
 		rgReq.getPatient().setEnabled(true);
 		service.save(req);
-		return new ResponseEntity<RegistrationRequestDTO>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
+		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
 	}
 }

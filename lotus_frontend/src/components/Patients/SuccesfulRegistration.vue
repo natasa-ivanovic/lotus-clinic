@@ -9,7 +9,7 @@ const apiURL = "http://localhost:9001/api/requests/registrations";
 export default {
     props: ['logkey'],
     mounted() {
-        fetch(apiURL + "/" + this.logkey,{headers: { 'Authorization': this.$authKey}})
+        fetch(apiURL + "/" + this.logkey)
         .then(response => {
             if (response.status != 200){
                 alert(response.status)

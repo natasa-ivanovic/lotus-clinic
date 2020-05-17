@@ -134,9 +134,8 @@ export default {
             user = "patients"
         if (this.$role == "DOCTOR")
             user = "doctors"
-        /* todo
         if (this.$role == "NURSE")
-            user = "nurses" */
+            user = "nurses" 
         if (this.$role == "ADMIN")
             user = "admins"
         if (this.$role == "CLINIC_ADMIN")
@@ -166,9 +165,8 @@ export default {
                 user = "patients"
             if (this.$role == "DOCTOR")
                 user = "doctors"
-            /* todo
             if (this.$role == "NURSE")
-                user = "nurses"*/
+                user = "nurses"
             if (this.$role == "ADMIN")
                 user = "admins"
             /*if (this.$role == "CLINIC_ADMIN")
