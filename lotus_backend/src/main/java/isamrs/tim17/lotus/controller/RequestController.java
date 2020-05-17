@@ -1,14 +1,13 @@
 package isamrs.tim17.lotus.controller;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,21 +16,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
+import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
+import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
+import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
 
 @RestController
 @RequestMapping("/api/requests")
 public class RequestController {
 	
-	@Autowired
-	private RequestService service;
-	
-	@Autowired
-	public MailSenderModel mailSender;
+	@Autowired private RequestService service;
+	@Autowired public MailSenderModel mailSender;
+	@Autowired public PatientService patientService;
+	@Autowired public DoctorService doctorService;
+	@Autowired public AppointmentTypeService appTypeService;
 	
 	@GetMapping("/registrations")
 	public ResponseEntity<List<RegistrationRequestDTO>> getRegistrations() {
@@ -42,6 +48,26 @@ public class RequestController {
 		}
 		return new ResponseEntity<List<RegistrationRequestDTO>>(liDTO, HttpStatus.OK);
 	}
+	
+	@GetMapping("/rooms")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> getRoomRequests() {
+		List<RoomRequest> rr = service.getRoomRequests();
+		List<Object> requests = new ArrayList<>();
+		
+		for (RoomRequest r : rr) {
+			Patient patient = patientService.findOne(r.getPatient());
+			Doctor doctor = doctorService.findOne(r.getDoctor());
+			Date startDate = r.getDate();
+			RoomRequestDTO dto = new RoomRequestDTO(startDate, patient, doctor);
+			requests.add(dto);
+		}
+		
+		return new ResponseEntity<>(requests, HttpStatus.OK);
+	}
+	
+	
+	
 	
 	@PostMapping("/registrations/auth/{id}")
 	public ResponseEntity<RegistrationRequestDTO> authenticateRegistration(@PathVariable("id") long id) {
