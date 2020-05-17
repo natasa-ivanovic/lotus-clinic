@@ -92,6 +92,9 @@ insert into appointments (start_date, end_date, status, appointment_type_id, roo
 
 /* requests */
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 12);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-17 20:00:00.508-07', 0, 4, 1);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-17 15:00:00.508-07', 0, 4, 2);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-07-17 16:00:00.508-07', 0, 5, 3);
 
 
 /* doctor reviews */

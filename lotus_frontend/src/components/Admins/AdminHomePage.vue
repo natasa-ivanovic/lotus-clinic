@@ -3,11 +3,11 @@
         <v-col>
             <v-card>
                 <v-toolbar flat color="secondary" dark>
-                    <v-toolbar-title>Registration requests</v-toolbar-title>
+                    <v-toolbar-title>Room requests</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
                     <v-card-title v-if="requests.length == 0">
-                        No current registration requests.
+                        No current appointment requests.
                     </v-card-title>
                     <v-list v-else>
                         <v-list-item-group>
@@ -16,19 +16,15 @@
                             :key="i"
                             >
                             <v-list-item-content>
-                                <v-list-item-title>Req</v-list-item-title>
+                                <v-list-item-title>New request</v-list-item-title>
                                 <v-list-item-content>
-                                    Request info
-                                    <v-row>
-                                        <v-col>
-                                            <v-btn>Accept</v-btn>
-                                        </v-col>
-                                        <v-col>
-                                            <v-btn>Decline</v-btn>
-                                        </v-col>
-                                    </v-row>
+                                    Term: {{formatDate(req.startDate)}} <br/>                                       
+                                    Doctor: {{req.doctor.name}}  {{req.doctor.surname}} <br/>
+                                    Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
                                 </v-list-item-content>
+                                
                             </v-list-item-content>
+                            <v-btn @click="approveRequest()" color="success">Approve</v-btn>
                         </v-list-item>
                         </v-list-item-group>
                     </v-list>
@@ -48,14 +44,32 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/patients/requests", {headers: { 'Authorization': this.$authKey }})
+        /*fetch(apiURL + "/patients/requests", {headers: { 'Authorization': this.$authKey }})
         .then(response => {
             return response.json();
         })
         .then(pats => {
             this.requests = pats;
-        })
+        })*/
+        this.axios({
+            url: apiURL + "/requests/rooms",
+            method: "GET"
+        }).then(response => {
+            this.requests = response.data;
+        }).catch(error => {
+            alert(error);
+        });
     },
+    methods: {
+        approveRequest() {
+            //da se prosledi datum komponenti (lista datuma, od zatrazenog + 7 dana?)
+            this.$router.push({name: "freeRooms"})
+        },
+        formatDate(date) {
+            var el = date.split("T");
+            return el[0] + " " + el[1].substring(0,5);
+        }
+    }
 }
 </script>
 

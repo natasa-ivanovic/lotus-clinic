@@ -90,8 +90,6 @@ import Overlay from "./MROverlay"
 
 
 const apiURL = "http://localhost:9001/api/medicalRecord/"
-//const apiFinished = "http://localhost:9001/appointments/finished"
-
 
 export default {
     name: "MedicalRecord",

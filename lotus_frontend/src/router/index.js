@@ -43,6 +43,7 @@ import SuccesfulRegistration from "../components/Patients/SuccesfulRegistration"
 import PatientClinicView from "../components/Patients/ClinicsView"
 import PatientDoctorView from "../components/Patients/DoctorsView"
 import PreviousAppointments from "../components/Patients/PreviousAppointments"
+import FreeRooms from "../components/Admins/FreeRooms"
 
 
 const routes = [
@@ -233,8 +234,12 @@ const routes = [
         name: "pastAppointmentsView",
         path: "/my_appointments",
         props: true
+    },
+    {
+        component: FreeRooms,
+        name: "freeRooms",
+        path: "/free_rooms"
     },   
-
     {
         path: "/*",
         redirect: "/home"
