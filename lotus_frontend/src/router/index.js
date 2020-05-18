@@ -209,7 +209,7 @@ const routes = [
     {
         component: RegistrationRequestView,
         name: "registrationRequestView",
-        path: "/registrationRequests"
+        path: "/registration_requests"
     },
     {
         component: SuccesfulRegistration,

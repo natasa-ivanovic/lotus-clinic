@@ -215,8 +215,6 @@ export default {
           url = apiURL + "auth/register";
         else
           url = apiURL + "api/" + this.userType; 
-        
-        //this.axios.defaults.headers['Authorization'] = this.$authKey;
         console.log('userType:' + this.userType);
         this.axios({url : url, 
             method: 'POST',
@@ -226,18 +224,20 @@ export default {
             console.log(response);
             console.log('userType:' + this.userType);
             if (this.userType == "patients") {
-              alert("Successfully sent request!");
+              this.$store.commit('showSnackbar', {text: "Successfully sent registration request! Check your email for details.", color: "success", })
             }
             else {
-              alert("Successfully added " + this.userType);
+              this.$store.commit('showSnackbar', {text: "Successfully added " + this.userType + "!", color: "success", })
               if(this.$role != 'CENTRE_ADMIN')
                 this.$router.push({name: this.userType});
+              if (this.$role == undefined)
+                this.$router.push({name: 'login'})
               else
                 this.$router.push({name: 'home'});
             }
           }).catch(error => {
             console.log(error);
-            alert(error.response.data.text);
+            this.$store.commit('showSnackbar', {text: "An error has ocurred!", color: "error", })
             //TODO SREDITI ERORE ZA SSID I USERNAME
           });
       }

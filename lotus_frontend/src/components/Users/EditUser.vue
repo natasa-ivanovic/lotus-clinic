@@ -187,13 +187,17 @@ export default {
                                 'Authorization': this.$authKey}, 
                         body: JSON.stringify(this.user)})
           .then(response => {
-            if (response.status != 200)
-              alert("Couldn't update profile!");
+            if (response.status != 200) {
+              this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again.", color: "error", });
+            }
             else {
-              if (this.id == "self")
+              this.$store.commit('showSnackbar', {text: "Successfully edited user!", color: "success", });
+              if (this.id == "self") {
                 this.$router.push({ name: "profile" })
-              else
+              }
+              else {
                 this.$router.push({ name: this.userType })
+              }
             }
           })
     }

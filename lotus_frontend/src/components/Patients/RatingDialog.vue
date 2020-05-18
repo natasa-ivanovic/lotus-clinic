@@ -93,7 +93,7 @@ export default {
                 return;
             }
             if (this.docRating == 0 | this.clinicRating == 0 ) {
-                this.$store.commit('showSnackbar', {text: "Please enter a rating for both the clinic and the doctor.", color: "information", })
+                this.$store.commit('showSnackbar', {text: "Please enter a rating for both the clinic and the doctor.", color: "info", })
                 return;
             }
             var queryData = {

@@ -7,7 +7,7 @@
                 <v-toolbar-title>Browse by clinics</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
-                    <template>
+                    <template v-if="this.items.length != 0">
                         <v-card>
                             <v-card-title>
                             Clinics
@@ -33,6 +33,10 @@
                             </v-data-table>
                         </v-card>
                     </template>
+                    <v-alert type="info" v-else>
+                        No doctors are available for the requested day and appointment type!
+                        Please return to the previous page and choose another day.
+                    </v-alert>
                 </v-card-text>
             </v-card>
           </v-col>

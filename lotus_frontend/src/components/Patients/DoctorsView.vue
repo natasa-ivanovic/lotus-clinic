@@ -7,7 +7,7 @@
                 <v-toolbar-title>Browse by doctors</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
-                    <template>
+                    <template v-if="items.length != 0">
                         <v-card>
                             <v-card-title>
                             Doctors
@@ -40,6 +40,10 @@
                             </v-data-table>
                         </v-card>
                     </template>
+                <v-alert type="info" v-else>
+                    No doctors are available for the requested day and appointment type!
+                    Please return to the previous page and choose another day.
+                </v-alert>
                 </v-card-text>
             </v-card>
           </v-col>
@@ -108,6 +112,10 @@ export default {
     },
     methods: {
         scheduleApp: function(doctor) {
+            if (doctor.selectedDate == undefined) {
+                this.$store.commit('showSnackbar', {text: "Please select a term for your appointment.", color: "info", });
+                return;
+            }
             var longDate = new Date(doctor.selectedDate).getTime();
             var data = {
                 date: longDate,
@@ -117,12 +125,11 @@ export default {
                     method: 'POST',
                     data: data
                 }).then(() =>   {
-                    alert("Uspelo!");
+                    this.$store.commit('showSnackbar', {text: "Successfully requested appointment! Check your email for further information.", color: "success", })
                     this.$router.push({name: "home"});
                 }).catch(error => {
-                    alert("Error!");
+                    this.$store.commit('showSnackbar', {text: "Something went wrong! Please try again.", color: "error", })
                     console.log(error);
-                    //TODO SREDITI ERORE ZA SSID I USERNAME
                 });
         },
         getItems: function(times) {

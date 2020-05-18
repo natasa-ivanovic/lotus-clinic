@@ -62,14 +62,28 @@ public class LoginController {
 	private RequestService requestService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
+	public ResponseEntity<Object> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
 
 		// 
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-						authenticationRequest.getPassword()));
-
+		String username = authenticationRequest.getUsername();
+		User u = userService.findByUsername(username);
+		if (u == null) {
+			return new ResponseEntity<>("User with username " + username + " doesn't exist!", HttpStatus.BAD_REQUEST);
+		}
+		Authentication authentication;
+		try {
+			authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+							authenticationRequest.getPassword()));			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Invalid password!", HttpStatus.BAD_REQUEST);
+		}
+		if (!u.isEnabled()) {
+			return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
+		}
 		// Ubaci korisnika u trenutni security kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
