@@ -1,30 +1,26 @@
 <template>
-  <div class="text-center">
-    <v-dialog v-model="overlay" @click:outside="turnOff()">
-        <v-container>
-        <v-row align="center" justify="center">
+    <v-dialog max-width="1200" v-model="overlay" @click:outside="turnOff()">
         <v-card>
-        <v-card-title>
-        {{this.title}}
-        <v-spacer></v-spacer>
-        <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-        ></v-text-field>
-        </v-card-title>
-        <v-data-table
-        :headers="this.headers"
-        :items="this.items"
-        :search="search"
-        ></v-data-table>
-    </v-card>
-    </v-row>
-    </v-container>
+            <v-card-title>
+                {{this.title}}
+                <v-spacer></v-spacer>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-card-text>
+                <v-data-table
+                :headers="this.headers"
+                :items="this.items"
+                :search="search"
+                ></v-data-table>
+            </v-card-text>
+        </v-card>
     </v-dialog>
-  </div>
 </template>
 
 <script>

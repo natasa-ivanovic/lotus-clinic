@@ -1,8 +1,19 @@
 import Vue from 'vue'
+import VueAxios  from 'vue-axios'
+import Axios from 'axios'
 import App from './App.vue'
 
 import router from "./router/index"
 import vuetify from './plugins/vuetify';
+
+// axios
+
+Vue.use(VueAxios, Axios);
+
+Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
+
+// TODO later - set base URL to localhost/
+
 
 
 // global variables
