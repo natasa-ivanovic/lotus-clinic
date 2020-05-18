@@ -2,25 +2,27 @@
   <v-app id="app">
     <Menu />
     <v-content>
-      <router-view></router-view>
+      <Snackbar />
+      <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
 import Menu from "./components/Menu"
-
+import Snackbar from "./components/Snackbar"
 export default {
   name: 'App',
   components: {
-    Menu
+    Menu,
+    Snackbar
   },
   data() {
     return {
     }
   },
   methods: {
-    logout: function() {
+    /*logout: function() {
       console.log(this.$role);
       console.log(this.$authKey);
       this.$role = null;
@@ -30,7 +32,7 @@ export default {
       localStorage.removeItem('authKey');
       localStorage.removeItem('role');
       this.$router.push({ name: "login" })
-    }
+    },*/
   }
 }
 </script>
