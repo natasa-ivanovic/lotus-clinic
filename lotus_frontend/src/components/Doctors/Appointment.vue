@@ -21,8 +21,11 @@
                                     v-model="diagnosis"/>
                             </v-col>
                             <v-col>
-                                <v-text-field
+                                <v-autocomplete
                                     label="Medicine"
+                                    item-text="name"
+                                    item-value="id"
+                                    :items="allMedicines"
                                     v-model="medicine"/>
                             </v-col>
                         </v-row>
@@ -45,6 +48,7 @@
 
 <script>
 import MedicalRecord from "../Medical Record/MedicalRecord"
+const apiURL = "http://localhost:9001/api"
 
 export default {
     name: "startAppointment",
@@ -62,12 +66,23 @@ export default {
             diagnosis: "",
             medicine: "",
             info: "",
+            allMedicines : []
 
         }
     },
     mounted() {
         if (this.appointment == {})
             this.$router.push({name: "home"});
+
+        //getuj sve lekove
+        this.axios({
+            url: apiURL + "/medicines",
+            method: 'GET'
+        }).then(response => {
+            this.allMedicines = response.data;
+        }).catch(error =>{
+            console.log(error);
+        })
     },
     methods: {
         
