@@ -85,7 +85,6 @@ export default {
         })
         .then(data => {
           if (data) {
-
             this.$authKey = "Bearer " + data.accessToken;
             this.$role = data.userRole;
             localStorage.setItem('authKey', "Bearer " + data.accessToken);

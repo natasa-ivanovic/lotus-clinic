@@ -5,6 +5,7 @@ import App from './App.vue'
 
 import router from "./router/index"
 import vuetify from './plugins/vuetify';
+import { store } from "./store/store"
 
 // axios
 
@@ -49,9 +50,7 @@ Object.defineProperty(Vue.prototype, '$apiURL', {
 
 new Vue({
   router,
-  data: {
-  },
-
+  store,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
