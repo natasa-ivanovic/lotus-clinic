@@ -24,7 +24,7 @@ import isamrs.tim17.lotus.service.NurseService;
 public class NurseController {
 	
 	@Autowired
-	NurseService service;	
+	NurseService service;
 	
 	@GetMapping("/self")
 	@PreAuthorize("hasRole('NURSE')")

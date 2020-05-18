@@ -39,7 +39,7 @@ insert into users (ssid, address, birth_date, city, country, username, gender, n
 
 
 /* inactive patients */
-insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date) values (42334854326, 'Novosadski put 17', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'patient4@gmail.com', 1, 'Packijento', '$2a$10$xyNTH/znnPkKlzWbeN1SiOAfQjGK9oqK7WAxzZGHMhI2YaSpoM8Ze', '0699114909', 'Pacijentic', 1, 'PATIENT', false, '2020-04-30 16:00:00.508-07');
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date) values (42334854326, 'Novosadski put 17', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'larikviola@gmail.com', 1, 'Packijento', '$2a$10$xyNTH/znnPkKlzWbeN1SiOAfQjGK9oqK7WAxzZGHMhI2YaSpoM8Ze', '0699114909', 'Pacijentic', 1, 'PATIENT', false, '2020-04-30 16:00:00.508-07');
 
 insert into authority (name) values ('ROLE_PATIENT');
 insert into authority (name) values ('ROLE_DOCTOR');
@@ -85,6 +85,7 @@ insert into appointments (start_date, end_date, status, appointment_type_id, roo
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, diagnosis_id, information) values ('2020-05-12 20:30:00.508-07', '2020-05-12 21:00:00.508-07', 4, 1, 1, 4, 1, 2, false, 2, 'Patient reports symptoms of a common cold. To be treated with over the counter medication and stay at home.');
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, diagnosis_id, information) values ('2020-05-12 22:00:00.508-07', '2020-05-12 22:30:00.508-07', 4, 1, 1, 4, 1, 3, false, 3, 'Patient tested positive for COVID-19. Report immediately to specialist clinic');
 /*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1, false);*/
+
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-18 10:00:00.508-07', '2020-05-18 10:30:00.508-07', 1, 2, 3, 5, 2, 1, false);
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-18 14:00:00.508-07', '2020-05-18 14:30:00.508-07', 1, 2, 3, 5, 2, 1, false);
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-18 15:00:00.508-07', '2020-05-18 15:30:00.508-07', 1, 2, 4, 5, 2, 2, false);
@@ -95,6 +96,7 @@ insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 12)
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-18 10:00:00.508-07', 0, 5, 1);
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-18 16:00:00.508-07', 0, 5, 2);
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-07-18 17:00:00.508-07', 0, 5, 3);
+
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 16);
 
 

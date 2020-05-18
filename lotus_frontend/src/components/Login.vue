@@ -72,29 +72,20 @@ export default {
       this.$refs.form.validate();
       if (!this.valid)
         return;
-      fetch(apiURL, {method: 'POST', 
-                      headers: {'Content-Type': 'application/json'}, 
-                      body: JSON.stringify(this.user)})
-        .then(response => {
-            if(response.status == 200)
-              return response.json();
-            else {
-              this.error = true;
-              return false;
-            }
-        })
-        .then(data => {
-          if (data) {
-
-            this.$authKey = "Bearer " + data.accessToken;
-            this.$role = data.userRole;
-            localStorage.setItem('authKey', "Bearer " + data.accessToken);
-            localStorage.setItem('role', data.userRole);
-            this.axios.defaults.headers['Authorization'] = "Bearer " + data.accessToken;
+      this.axios({url : apiURL, 
+                    method: 'POST',
+                    data: this.user
+        }).then(response =>   {
+            this.$authKey = "Bearer " + response.data.accessToken;
+            this.$role = response.data.userRole;
+            localStorage.setItem('authKey', "Bearer " + response.data.accessToken);
+            localStorage.setItem('role', response.data.userRole);
+            this.axios.defaults.headers['Authorization'] = "Bearer " + response.data.accessToken;
             this.$router.push({ name: "home" })
-            
-          }
-        })
+        }).catch(error => {
+            console.log(error.request.responseText);
+            this.$store.commit('showSnackbar', {text: error.request.responseText, color: "error", })
+        });
     }
   }
     

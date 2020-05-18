@@ -24,5 +24,9 @@ public class ClinicAdminService  {
 	public void remove(long id ) {
 		admins.deleteById(id);
 	}
+	
+	public boolean alreadyExistsUsername(String username) {
+		return admins.existsByUsername(username);
+	}
 
 }

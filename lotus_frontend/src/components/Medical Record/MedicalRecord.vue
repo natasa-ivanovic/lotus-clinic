@@ -1,88 +1,80 @@
 <template>
-    <div>
-        <v-container>
-            <v-row align="center" justify="center">
-                <v-col>
-                    <v-form>
-                    <v-card class="elevation-3">
-                        <v-toolbar flat color="secondary" dark>
-                            <v-toolbar-title>Medical record - {{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                v-if="edit==true"
-                                fab
-                                small
-                            >
-                            <v-icon v-if="isEditing==true" v-on:click="cancel()">mdi-close</v-icon>
-                            <v-icon v-else v-on:click="setEditing()">mdi-pencil</v-icon>  
-                            </v-btn>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field
-                                        label="Birth date"
-                                        readonly="true"
-                                        :value="getDate(this.patient.birthDate).date"
-                                        filled>
-                                    </v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-text-field
-                                        label="Gender"
-                                        readonly="true"
-                                        :value="formatGender()"
-                                        filled>
-                                    </v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field
-                                    label="Weight"
-                                    suffix="kg"
-                                    v-model="record.weight" 
-                                    :readonly="!isEditing"/>
-                                </v-col>
-                                <v-col>
-                                    <v-text-field
-                                    label="Height"
-                                    suffix="cm"
-                                    v-model="record.height" 
-                                    :readonly="!isEditing"/>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field
-                                    label="Allergies"
-                                    v-model="record.allergies" 
-                                    :readonly="!isEditing"/>
-                                </v-col>
-                                <v-col>
-                                    <v-autocomplete
-                                    :items="bloodTypes"
-                                    label="Blood type"
-                                    v-model="record.bloodType" 
-                                    :readonly="!isEditing"/>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col><v-btn block color="primary" @click="showIllnesses()">Illnesses</v-btn></v-col>
-                                <v-col><v-btn block color="primary" @click="showAppointments()">Appointments</v-btn></v-col>
-                                <v-col><v-btn block color="primary" @click="showOperations()" disabled>Operations</v-btn></v-col>
-                            </v-row>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn v-if="isEditing==true" @click="saveChanges()" block color="success" height="50">Save changes</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-form>
-            </v-col>
-        </v-row>
+    <v-form>
         <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :items="this.itemsOverlay"/>
-    </v-container>
-</div>    
+        <v-card class="elevation-3">
+            <v-toolbar flat color="secondary" dark>
+                <v-toolbar-title>Medical record - {{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn
+                    v-if="edit==true"
+                    fab
+                    small
+                >
+                <v-icon v-if="this.isEditing==true" v-on:click="cancel()">mdi-close</v-icon>
+                <v-icon v-else v-on:click="setEditing()">mdi-pencil</v-icon>  
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <v-row>
+                    <v-col>
+                        <v-text-field
+                            label="Birth date"
+                            readonly
+                            :value="getDate(this.patient.birthDate).date"
+                            filled>
+                        </v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-text-field
+                            label="Gender"
+                            readonly
+                            :value="formatGender()"
+                            filled>
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-text-field
+                        label="Weight"
+                        suffix="kg"
+                        v-model="record.weight" 
+                        :readonly="!this.isEditing" />
+                    </v-col>
+                    <v-col>
+                        <v-text-field
+                        label="Height"
+                        suffix="cm"
+                        v-model="record.height" 
+                        :readonly="!this.isEditing" />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-text-field
+                        label="Allergies"
+                        v-model="record.allergies" 
+                        :readonly="!this.isEditing" />
+                    </v-col>
+                    <v-col>
+                        <v-autocomplete
+                        :items="bloodTypes"
+                        label="Blood type"
+                        v-model="record.bloodType" 
+                        :readonly="!this.isEditing" />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col><v-btn block color="primary" @click="showIllnesses()">Illnesses</v-btn></v-col>
+                    <v-col><v-btn block color="primary" @click="showAppointments()">Appointments</v-btn></v-col>
+                    <v-col><v-btn block color="primary" @click="showOperations()" disabled>Operations</v-btn></v-col>
+                </v-row>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn v-if="this.isEditing==true" @click="saveChanges()" block color="success" height="50">Save changes</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-form>
 </template>
 
 <script>
@@ -205,9 +197,13 @@ export default {
         },
         formatGender() {
             var g = this.patient.gender;
+            if (g == undefined)
+                return ""
             return g.charAt(0).toUpperCase() + g.slice(1).toLowerCase();
         },
         getDate(date) {
+            if (date == undefined)
+                return ""
             var el = date.split("T");
             var d = el[0];
             var t = el[1].substring(0, 5);

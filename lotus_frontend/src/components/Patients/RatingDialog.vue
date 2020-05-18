@@ -89,11 +89,11 @@ export default {
         },
         sendRating: function() {
             if (this.app == 0) {
-                alert("Nesto srsly ne valja");
+                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
                 return;
             }
             if (this.docRating == 0 | this.clinicRating == 0 ) {
-                alert("Niste popunili sve!");
+                this.$store.commit('showSnackbar', {text: "Please enter a rating for both the clinic and the doctor.", color: "info", })
                 return;
             }
             var queryData = {
@@ -106,13 +106,12 @@ export default {
                     data: queryData
                 }).then(response =>   {
                     console.log(response);
-                    alert("uspelo");
-                    
+                    this.$store.commit('showSnackbar', {text: "Successfully rated!", color: "success", })
                     this.$emit('rate-app', this.app);
                     this.$emit('update:dialog', false);
                 }).catch(error => {
                     console.log(error);
-                    alert(error.response);
+                    this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
                 });
         },
         handleClick: function(event) {
