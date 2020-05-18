@@ -71,6 +71,9 @@ public class LoginController {
 		if (u == null) {
 			return new ResponseEntity<>("User with username " + username + " doesn't exist!", HttpStatus.BAD_REQUEST);
 		}
+		if (!u.isEnabled()) {
+			return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
+		}
 		Authentication authentication;
 		try {
 			authentication = authenticationManager
@@ -80,9 +83,6 @@ public class LoginController {
 		catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Invalid password!", HttpStatus.BAD_REQUEST);
-		}
-		if (!u.isEnabled()) {
-			return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
 		}
 		// Ubaci korisnika u trenutni security kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -35,7 +35,7 @@
                                         <v-btn v-on:click="accept(req)" :loading="req.loading" color=success dark block>Accept</v-btn>
                                     </v-col>
                                     <v-col>
-                                        <v-btn v-on:click="declineShow(req)" color=error dark block >Decline</v-btn>
+                                        <v-btn v-on:click="declineShow(req)" :loading="req.decline" color=error dark block >Decline</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-card-actions>
@@ -198,13 +198,14 @@ export default {
                 var i;
                 for(i = 0; i < this.requests.length; ++i) {
                     this.$set(this.requests[i], 'loading', false);
+                    this.$set(this.requests[i], 'decline', false);
                 }
             })
     },
     methods: {
         accept(req) {
-            if (req.loading) {
-                alert("vec se ucitava");
+            if (req.loading || req.decline) {
+                this.$store.commit('showSnackbar', {text: "Request already being processed!", color: "error", })
                 return;
             }
             fetch(apiURL + "/registrations/auth/" + req.id, {
@@ -239,6 +240,10 @@ export default {
                 this.$store.commit('showSnackbar', {text: "Please enter a reason for declining the patient!", color: "info", })
                 return;
             }
+            if (this.req.loading || this.req.decline) {
+                this.$store.commit('showSnackbar', {text: "Request already being processed!", color: "error", })
+                return;
+            }
             fetch(apiURL + "/registrations/decline/" + this.req.id, {
                 method: "POST",
                 headers: {'Authorization': this.$authKey},
@@ -250,10 +255,11 @@ export default {
                 }
                 else {
                     this.requests.splice(this.requests.indexOf(this.req), 1);
-                    this.declineOverlay = false;
                     this.$store.commit('showSnackbar', {text: "Successfully declined patient!", color: "success", })
                 }
             })
+            this.req.decline = true;    
+            this.declineOverlay = false;
         },
         checkLoad(req) {
             return req.loading;

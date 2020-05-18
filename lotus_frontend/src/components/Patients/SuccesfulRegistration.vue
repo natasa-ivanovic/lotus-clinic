@@ -25,7 +25,6 @@ export default {
         fetch(apiURL + "/" + this.logkey)
         .then(response => {
             if (response.status != 200){
-                alert(response.status)
                 this.msg = "An error has occurred on our servers. Please try again later."
             }
             else

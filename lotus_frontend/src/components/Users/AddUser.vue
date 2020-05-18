@@ -225,13 +225,12 @@ export default {
             console.log('userType:' + this.userType);
             if (this.userType == "patients") {
               this.$store.commit('showSnackbar', {text: "Successfully sent registration request! Check your email for details.", color: "success", })
+              this.$router.push({name: 'login'})
             }
             else {
               this.$store.commit('showSnackbar', {text: "Successfully added " + this.userType + "!", color: "success", })
               if(this.$role != 'CENTRE_ADMIN')
                 this.$router.push({name: this.userType});
-              if (this.$role == undefined)
-                this.$router.push({name: 'login'})
               else
                 this.$router.push({name: 'home'});
             }
