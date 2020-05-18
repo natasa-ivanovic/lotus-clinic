@@ -8,6 +8,7 @@ import isamrs.tim17.lotus.model.Patient;
 
 public class RoomRequestDTO {
 	
+	private long id;
 	private Date startDate;
 	private UserDTO patient;
 	private UserDTO doctor;
@@ -15,7 +16,8 @@ public class RoomRequestDTO {
 	
 	public RoomRequestDTO() {}
 	
-	public RoomRequestDTO(Date date, Patient patient, Doctor doctor) {
+	public RoomRequestDTO(long id, Date date, Patient patient, Doctor doctor) {
+		this.id = id;
 		this.startDate = date;
 		this.patient = new UserDTO(patient);
 		this.doctor = new UserDTO(doctor);
@@ -53,6 +55,16 @@ public class RoomRequestDTO {
 	public void setDoctor(UserDTO doctor) {
 		this.doctor = doctor;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	
 	
 	
 	

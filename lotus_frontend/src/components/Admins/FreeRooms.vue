@@ -11,7 +11,6 @@
                             <v-card>
                                 <v-card-title>
                                 Term: {{this.formatDate(this.request.startDate)}}
-                                {{this.rooms}}
                                 <v-spacer></v-spacer>
                                 <v-text-field
                                     v-model="search"
@@ -52,8 +51,8 @@
                                     <template v-slot:item.term="{item}">
                                     {{ formatDate(item.term) }}
                                     </template>
-                                    <template v-slot:item.schedule>
-                                        <v-icon medium>mdi-calendar-arrow-right</v-icon>
+                                    <template v-slot:item.schedule="{item}">
+                                        <v-icon medium @click="sendNotification(item)">mdi-calendar-arrow-right</v-icon>
                                     </template>
                                     <template v-slot:item.calendar>
                                         <v-icon medium>mdi-calendar-today</v-icon>
@@ -69,7 +68,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/rooms/terms";
+const apiURL = "http://localhost:9001/api";
 export default {
     name: "freeRooms",
     props: ['request'],
@@ -89,7 +88,7 @@ export default {
         var milli = date.getTime();
         this.axios({
             headers: {'Content-Type' : 'text/plain'},
-            url: apiURL,
+            url: apiURL + "/rooms/terms",
             method: "POST",
             data: milli
         }).then(response => {
@@ -104,6 +103,25 @@ export default {
             var time = d.toTimeString().split(" ")[0];
             var date = d.toISOString().split("T")[0];
             return date + " " + time;
+        },
+        sendNotification(item) {
+            //posalji id sobe i id requesta na bekend, napravi app i posalji mejl
+            console.log(item);
+            var day = new Date(item.term);
+            var millis = day.getTime();
+            var el = {
+                room: item.id,
+                request: this.request.id,
+                startDate: millis
+            }
+            this.axios({
+                url: apiURL + "/appointments/notification",
+                method: 'POST',
+                data: el
+            }).catch(error => {
+                console.log(error);
+                alert(error);
+            })
         }
     }
     

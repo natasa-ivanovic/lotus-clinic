@@ -69,7 +69,7 @@ public class RequestController {
 			if (doctor.getClinic().getId() == clinicId) {
 				Patient patient = patientService.findOne(r.getPatient());
 				Date startDate = r.getDate();
-				RoomRequestDTO dto = new RoomRequestDTO(startDate, patient, doctor);
+				RoomRequestDTO dto = new RoomRequestDTO(r.getId(), startDate, patient, doctor);
 				requests.add(dto);
 			}
 		}
