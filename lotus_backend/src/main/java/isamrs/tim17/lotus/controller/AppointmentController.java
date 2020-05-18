@@ -38,6 +38,7 @@ import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RoomService;
 
 @RestController
@@ -49,6 +50,7 @@ public class AppointmentController {
 	@Autowired private AppointmentTypeService appointmentTypeService;
 	@Autowired private DoctorService doctorService;
 	@Autowired private ClinicService clinicService;
+	@Autowired private PatientService patientService;
 	
 	
 	@GetMapping("/appointments")
@@ -151,7 +153,7 @@ public class AppointmentController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
-	@PostMapping("/appointments/doctor/today")
+	@PostMapping("/appointments/doctor/today") //NAKON POSTMENA IZMENI NA GETMAPPING
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
@@ -173,6 +175,26 @@ public class AppointmentController {
 			}
 		}
 		return new ResponseEntity<>(info, HttpStatus.OK);
+	}
+	
+	@GetMapping("appointments/finished")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+	public ResponseEntity<List<PremadeAppDTO>> getFinishedAppointments(@RequestBody String patientId) {
+		
+		if (patientId == null || "".equals(patientId))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		long id = Long.parseLong(patientId);
+		Patient patient = patientService.findOne(id);
+		
+		List<Appointment> apps = service.findFinished(patient.getMedicalRecord());
+		List<PremadeAppDTO> finished = new ArrayList<>();
+		for (Appointment app: apps) {
+			PremadeAppDTO dto = new PremadeAppDTO(app);
+			finished.add(dto);
+		}
+		
+		return new ResponseEntity<>(finished, HttpStatus.OK);
 	}
 	
 	private HashMap<String, Date> getPeriod(long startDate) {

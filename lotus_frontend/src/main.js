@@ -8,7 +8,6 @@ import vuetify from './plugins/vuetify';
 // global variables
 const authKey = Vue.observable({ authKey: localStorage.getItem('authKey') })
 
-
 Object.defineProperty(Vue.prototype, '$authKey', {
   get () {
     return authKey.authKey;
@@ -36,7 +35,6 @@ Object.defineProperty(Vue.prototype, '$apiURL', {
     return apiURL.apiURL;
   }
 })
-
 
 new Vue({
   router,

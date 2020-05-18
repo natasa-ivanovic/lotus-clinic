@@ -153,6 +153,7 @@ public class RoomController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
 		Date endDate = DateUtil.addMinutes(startDate, 30);
 		System.out.println(startDate);
 		System.out.println("End date: " + endDate);

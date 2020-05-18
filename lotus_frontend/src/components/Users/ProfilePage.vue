@@ -1,55 +1,5 @@
 <template>
     <div>
-        <v-overlay :value="overlay">
-            <v-container fluid>
-                <v-row align="center" justify="center">
-                    <v-col>
-                        <v-card class="elevation-3" light>
-                                <v-toolbar flat color="secondary" dark>
-                                    <v-toolbar-title>Medical record</v-toolbar-title>
-                                </v-toolbar>
-                                <v-card-text>
-                                    <v-row>
-                                        <v-col>
-                                            <v-text-field
-                                            label="Weight"
-                                            v-model="record.weight" 
-                                            readonly/>
-                                        </v-col>
-                                        <v-col>
-                                            <v-text-field
-                                            label="Height"
-                                            v-model="record.height" 
-                                            readonly/>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col>
-                                            <v-text-field
-                                            label="Allergies"
-                                            v-model="record.allergies" 
-                                            readonly/>
-                                        </v-col>
-                                        <v-col>
-                                            <v-text-field
-                                            label="Blood type"
-                                            v-model="record.bloodType" 
-                                            readonly/>
-                                        </v-col>
-                                    </v-row>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-row>
-                                        <v-col>
-                                            <v-btn block @click="overlay=false" color="indigo" dark height=60>Close</v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-card-actions>
-                            </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-overlay>
         <v-container fluid>
             <v-row align="center" justify="center">
                 <v-col cols="6">
@@ -152,11 +102,16 @@
                 </v-col>
             </v-row>
         </v-container>
+    <v-dialog v-model="overlay" @click:outside="closeRecord()">
+        <MedicalRecord :id="this.id" :edit="false"/>
+    </v-dialog>
     </div>
 </template>
 
 <script>
 import {util} from '../../util.js'
+import MedicalRecord from '../Medical Record/MedicalRecord'
+
 const apiURL = "http://localhost:9001/api";
 export default {
     data() {
@@ -166,8 +121,12 @@ export default {
             dateString: "",
             genders: ['Male', 'Female', 'Other'],
             selectedGender: 'Other',
-            overlay: false
+            overlay: false,
+            id: ''
         };
+    },
+    components: {
+        MedicalRecord
     },
     mounted() {
         var user = ""
@@ -175,9 +134,8 @@ export default {
             user = "patients"
         if (this.$role == "DOCTOR")
             user = "doctors"
-        /* todo
         if (this.$role == "NURSE")
-            user = "nurses" */
+            user = "nurses" 
         if (this.$role == "ADMIN")
             user = "admins"
         if (this.$role == "CLINIC_ADMIN")
@@ -189,6 +147,7 @@ export default {
         .then(user => {
             if (this.$role == "PATIENT") {
                 this.user = user.patient;
+                this.id = user.patient.id;
                 this.record = user.record;
                 this.dateString = util.dateToString(user.patient.birthDate);
                 this.selectedGender = user.patient.gender.charAt(0) + user.patient.gender.slice(1).toLowerCase();
@@ -206,9 +165,8 @@ export default {
                 user = "patients"
             if (this.$role == "DOCTOR")
                 user = "doctors"
-            /* todo
             if (this.$role == "NURSE")
-                user = "nurses"*/
+                user = "nurses"
             if (this.$role == "ADMIN")
                 user = "admins"
             /*if (this.$role == "CLINIC_ADMIN")
@@ -224,6 +182,9 @@ export default {
         },
         viewRecord: function() {
             this.overlay = true;
+        },
+        closeRecord: function() {
+            this.overlay = false;
         }
     }
 }

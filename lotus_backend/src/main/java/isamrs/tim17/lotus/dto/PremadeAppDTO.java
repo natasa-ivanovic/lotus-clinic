@@ -21,7 +21,6 @@ public class PremadeAppDTO {
 	private long patientId;
 	private String patientName;
 	private String patientSurname;
-
 	private String clinic;
 	private String diagnosis;
 	private List<String> recipes;

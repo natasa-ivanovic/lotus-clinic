@@ -1,5 +1,9 @@
 package isamrs.tim17.lotus.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,25 +16,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.MedicalRecordDTO;
+import isamrs.tim17.lotus.dto.PatientDTO;
+import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.MedicalRecord;
+import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
+import isamrs.tim17.lotus.service.PatientService;
 
 @RestController
 @RequestMapping("/api")
 public class MedicalRecordController {
 	
 	@Autowired private MedicalRecordService service;
+	@Autowired private PatientService patientService;
+	@Autowired private AppointmentService appService;
 
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
-	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("id") long id) {
-		
-		MedicalRecord mr = service.findOne(id);
-		if (mr == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		MedicalRecordDTO mrDTO = new MedicalRecordDTO(mr);
-		
-		return new ResponseEntity<>(mrDTO, HttpStatus.OK);
+	public ResponseEntity<Object> getMedicalRecord(@PathVariable("id") long id) {
+		System.out.println(id);
+		Patient patient = patientService.findOne(id);
+		PatientDTO patientDto = new PatientDTO(patient); //patient, record
+		List<Appointment> finishedApps = appService.findFinished(patient.getMedicalRecord());
+		List<PremadeAppDTO> appDto = new ArrayList<>();
+		//appointmentDto
+		//operacije
+		//bolesti
+		for(Appointment app : finishedApps) {
+			PremadeAppDTO a = new PremadeAppDTO(app);
+			appDto.add(a);
+			
+		}
+		HashMap<String, Object> response = new HashMap<>();
+		response.put("patient", patientDto);
+		response.put("appointments", appDto);
+		//response.put("operations", null);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
 		
 	}
 	

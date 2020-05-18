@@ -117,6 +117,15 @@
                       v-model="user.ssid" />
                   </v-col>
                 </v-row>
+                <v-row v-if="this.userType=='admins'">
+                  <v-col>
+                    <v-select
+                      :rules="[rules.required]"
+                      :items="clinicNames"
+                      v-model="selectedClinicName"
+                      label="Clinic" />        
+                  </v-col>
+                </v-row>
               </v-form>
             </v-card-text>
             <v-card-actions>
@@ -147,12 +156,16 @@ export default {
           city: "",
           country: "",
           phoneNumber: "",
-          ssid: ""
+          ssid: "",
+          clinicId: ""
         },
         genders: ['Male', 'Female', 'Other'],
         selectedGender: "",
         dateString: "",
         confirmPass: "",
+        clinics: [],
+        clinicNames: [],
+        selectedClinicName: "",
         menu: false,
         rules: {
             required: value => !!value || 'Field is required.',
@@ -185,6 +198,14 @@ export default {
         if (!this.valid) {
           return;
         }
+        var i;
+        for(i = 0; i < this.clinics.length; i++) {
+          if(this.selectedClinicName == this.clinics[i].name){
+            break;
+          }
+        }
+        this.user.clinicId = this.clinics[i].id;
+
         this.user.birthDate = this.dateString + "T00:00:00.000+0000";
         this.user.gender = this.selectedGender.toUpperCase();     
         var url = "";
@@ -207,7 +228,10 @@ export default {
             }
             else {
               alert("Successfully added " + this.userType);
-              this.$router.push({name: this.userType});
+              if(this.$role != 'CENTRE_ADMIN')
+                this.$router.push({name: this.userType});
+              else
+                this.$router.push({name: 'home'});
             }
           }).catch(error => {
             console.log(error);
@@ -215,6 +239,20 @@ export default {
             //TODO SREDITI ERORE ZA SSID I USERNAME
           });
       }
+    },
+    mounted() {
+      if(this.userType=='admins')
+        this.axios({url : apiURL + "api/clinics", 
+            method: 'GET',
+          }).then(response => {
+            this.clinics = response.data;
+            var i;
+            for(i = 0; i < this.clinics.length; i++) {
+              this.clinicNames.push(this.clinics[i].name);
+            }
+          }).catch(error => {
+            alert(error);
+          })
     }
     
 }

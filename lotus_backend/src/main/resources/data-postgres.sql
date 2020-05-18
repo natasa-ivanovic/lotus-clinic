@@ -80,17 +80,23 @@ insert into medical_records (allergies, blood_type, height, weight, patient_id) 
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('pork, ibuprofen', 'B', '170', '57', 2);
 insert into medical_records (allergies, blood_type, height, weight, patient_id) values ('tomato', 'A', '175', '65', 3);
 
+
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, diagnosis_id, information) values ('2020-05-12 17:25:00.508-07', '2020-05-12 17:55:00.508-07', 4, 1, 1, 4, 1, 1, false, 1, 'Patient reports coughing up blood, chest pains for over a week and night sweats.');
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, diagnosis_id, information) values ('2020-05-12 20:30:00.508-07', '2020-05-12 21:00:00.508-07', 4, 1, 1, 4, 1, 2, false, 2, 'Patient reports symptoms of a common cold. To be treated with over the counter medication and stay at home.');
 insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, diagnosis_id, information) values ('2020-05-12 22:00:00.508-07', '2020-05-12 22:30:00.508-07', 4, 1, 1, 4, 1, 3, false, 3, 'Patient tested positive for COVID-19. Report immediately to specialist clinic');
 /*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1, false);*/
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 16:00:00.508-07', '2020-05-12 16:30:00.508-07', 0, 2, 2, 5, 2, null, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 16:30:00.508-07', '2020-05-12 17:00:00.508-07', 0, 2, 2, 5, 2, null, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 17:00:00.508-07', '2020-05-12 17:30:00.508-07', 0, 2, 2, 5, 2, null, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-12 17:30:00.508-07', '2020-05-12 18:00:00.508-07', 0, 2, 2, 5, 2, null, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-15 20:00:00.508-07', '2020-05-15 20:30:00.508-07', 1, 2, 2, 5, 2, 1, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-15 21:00:00.508-07', '2020-05-15 21:30:00.508-07', 1, 2, 2, 5, 2, 1, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-15 22:00:00.508-07', '2020-05-15 22:30:00.508-07', 1, 2, 2, 5, 2, 2, false);
+insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-15 23:00:00.508-07', '2020-05-15 23:30:00.508-07', 1, 2, 2, 5, 2, 2, false);
 
 /* requests */
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 12);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-17 20:00:00.508-07', 0, 4, 1);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-17 15:00:00.508-07', 0, 4, 2);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-07-17 16:00:00.508-07', 0, 5, 3);
+insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 16);
+
 
 
 /* doctor reviews */
