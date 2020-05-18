@@ -1,6 +1,9 @@
 <template>
     <div>
         <v-container fluid>
+            <v-dialog max-width="1200" v-model="recordOverlay" @click:outside="closeRecord()">
+                <MedicalRecord :id="this.id.toString()" :edit="false"/>
+            </v-dialog>
             <v-row align="center" justify="center">
                 <v-col cols="6">
                     <v-card class="elevation-3" v-if="user != {}">
@@ -13,7 +16,7 @@
                                     <v-text-field
                                     label="Email"
                                     v-model="user.email" 
-                                    readonly/>
+                                    readonly />
                                 </v-col>
                                 </v-row>
                                 <v-row>
@@ -21,13 +24,13 @@
                                     <v-text-field
                                     label="Name"
                                     v-model="user.name" 
-                                    readonly/>
+                                    readonly />
                                 </v-col>
                                 <v-col>
                                     <v-text-field
                                     label="Surname"
                                     v-model="user.surname" 
-                                    readonly/>                      
+                                    readonly />                      
                                 </v-col>
                                 </v-row>
                                 <v-row>
@@ -36,7 +39,7 @@
                                     v-model="selectedGender"
                                     :items="genders"
                                     label="Gender" 
-                                    readonly/>        
+                                    readonly />        
                                 </v-col>
                                 <v-col>
                                     <v-text-field
@@ -51,19 +54,19 @@
                                     <v-text-field
                                     label="Address"
                                     v-model="user.address" 
-                                    readonly/>
+                                    readonly />
                                 </v-col>
                                 <v-col>     
                                     <v-text-field
                                     label="City"
                                     v-model="user.city" 
-                                    readonly/>           
+                                    readonly />           
                                 </v-col>
                                 <v-col>     
                                     <v-text-field
                                     label="Country"
                                     v-model="user.country" 
-                                    readonly/>         
+                                    readonly />         
                                 </v-col>
                                 </v-row>
                                 <v-row>
@@ -71,13 +74,13 @@
                                     <v-text-field
                                     label="Phone number"
                                     v-model="user.phoneNumber" 
-                                    readonly/>
+                                    readonly />
                                 </v-col>
                                 <v-col>     
                                     <v-text-field
                                     label="Insurance id"
                                     v-model="user.ssid" 
-                                    readonly/>
+                                    readonly />
                                 </v-col>
                                 </v-row>
                             </v-card-text>
@@ -102,9 +105,7 @@
                 </v-col>
             </v-row>
         </v-container>
-    <v-dialog v-model="overlay" @click:outside="closeRecord()">
-        <MedicalRecord :id="this.id" :edit="false"/>
-    </v-dialog>
+
     </div>
 </template>
 
@@ -121,7 +122,7 @@ export default {
             dateString: "",
             genders: ['Male', 'Female', 'Other'],
             selectedGender: 'Other',
-            overlay: false,
+            recordOverlay: false,
             id: ''
         };
     },
@@ -181,10 +182,10 @@ export default {
             return;
         },
         viewRecord: function() {
-            this.overlay = true;
+            this.recordOverlay = true;
         },
         closeRecord: function() {
-            this.overlay = false;
+            this.recordOverlay = false;
         }
     }
 }
