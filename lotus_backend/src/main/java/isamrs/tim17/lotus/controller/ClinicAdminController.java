@@ -36,7 +36,6 @@ import isamrs.tim17.lotus.service.UserService;
 public class ClinicAdminController {
 	
 	@Autowired private ClinicAdminService service;
-	@Autowired private UserService userService;
 	@Autowired private PasswordEncoder passwordEncoder;
 	@Autowired private AuthorityService authorityService;
 	@Autowired private ClinicService clinicService;
@@ -114,7 +113,7 @@ public class ClinicAdminController {
 		clinicAdmin.setClinic(clinic);
 		clinicAdmin.setEnabled(true);
 		ArrayList<Authority> auth = new ArrayList<Authority>();
-		auth.add(authorityService.findByName("ROLE_CENTRE_ADMIN"));
+		auth.add(authorityService.findByName("ROLE_ADMIN"));
 		clinicAdmin.setAuthorities(auth);
 		service.save(clinicAdmin);
 		return new ResponseEntity<>(HttpStatus.OK);
