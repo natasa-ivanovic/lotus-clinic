@@ -17,12 +17,12 @@ public class MailSenderModel {
 	@Autowired
 	public JavaMailSender emailSender;
 	
-	public void sendMsg(String recipient, String subject, String conent)
+	public void sendMsg(String recipient, String subject, String content)
 	{
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(recipient);
 		message.setSubject(subject);
-		message.setText(conent);
+		message.setText(content);
 		emailSender.send(message);
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,7 +88,7 @@ public class RequestController {
 	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 	      .toString();
 		
-	    String content = "Hello\nWe at lotus clinic have reviewed your registration request and decided its valid.\nPlease follow this link to activate you account:\n"
+	    String content = "Hello\nWe at lotus clinic have reviewed your registration request and decided it is valid.\nPlease follow this link to activate your account:\n"
 	    		+ "http://localhost:8080/registrations/" + generatedString;
 		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		rgReq.setKey(generatedString);
@@ -95,6 +96,17 @@ public class RequestController {
 		return new ResponseEntity<RegistrationRequestDTO>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
 	}
 	
+	@PostMapping("/registrations/decline/{id}")
+	public ResponseEntity<Object> declineRegistration(@PathVariable("id") long id, @RequestBody String message){
+		Request req = service.findOne(id);
+		RegistrationRequest rgReq = (RegistrationRequest)req;
+		req.setStatus(RequestStatus.REJECTED);
+		
+		String content = message;
+		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
+		service.save(req);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 	@GetMapping("/registrations/{key}")
 	public ResponseEntity<RegistrationRequestDTO> registerUser(@PathVariable("key") String key) {

@@ -198,13 +198,15 @@ export default {
         if (!this.valid) {
           return;
         }
-        var i;
-        for(i = 0; i < this.clinics.length; i++) {
-          if(this.selectedClinicName == this.clinics[i].name){
-            break;
+        if(this.$role == 'CENTRE_ADMIN') {
+          var i;
+          for(i = 0; i < this.clinics.length; i++) {
+            if(this.selectedClinicName == this.clinics[i].name){
+              break;
+            }
           }
+          this.user.clinicId = this.clinics[i].id;
         }
-        this.user.clinicId = this.clinics[i].id;
 
         this.user.birthDate = this.dateString + "T00:00:00.000+0000";
         this.user.gender = this.selectedGender.toUpperCase();     
