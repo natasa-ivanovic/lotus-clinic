@@ -30,6 +30,7 @@ import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
@@ -54,6 +55,7 @@ public class AppointmentController {
 	@Autowired private ClinicService clinicService;
 	@Autowired private PatientService patientService;
 	@Autowired private RequestService requestService;
+	@Autowired public MailSenderModel mailSender;
 	
 	
 	@GetMapping("/appointments")
@@ -259,6 +261,8 @@ public class AppointmentController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> sendNotification(@RequestBody RoomAndRequestDTO dto) {
 		
+		//TODO VALIDACIJE
+		
 		long roomId = dto.getRoom();
 		long requestId = dto.getRequest();
 		Date startDate = new Date(dto.getStartDate());
@@ -281,7 +285,21 @@ public class AppointmentController {
 		app.setStatus(status);
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
+		app.setAppointmentType(doctor.getSpecialty());
 		app = service.save(app);
+		
+		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
+				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
+				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty() + ".\n"
+				+ "We look forward to seeing you.\nLotus Clinic Staff";
+		
+		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
+				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
+				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + "and the appointment type is " + doctor.getSpecialty() + ".\n"
+				+ "We look forward to seeing you.\nLotus Clinic Staff";
+		
+		mailSender.sendMsg(patient.getUsername(), "Appointment notiffication", contentPatient);
+		mailSender.sendMsg(doctor.getUsername(), "Appointment notiffication", contentDoctor);
 		
 		rr.setStatus(RequestStatus.APPROVED);
 		rr = (RoomRequest) requestService.save(rr);

@@ -114,13 +114,17 @@ export default {
                 request: this.request.id,
                 startDate: millis
             }
-            this.axios({
+             this.axios({
                 url: apiURL + "/appointments/notification",
                 method: 'POST',
                 data: el
+            }).then(response => {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully assigned a room to the appointment!", color: "success" })
+                this.$router.push({name: "home"});
             }).catch(error => {
+                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error" })
                 console.log(error);
-                alert(error);
             })
         }
     }
