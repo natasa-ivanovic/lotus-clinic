@@ -1,19 +1,13 @@
 package isamrs.tim17.lotus.util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-
-import org.springframework.web.bind.annotation.RequestBody;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
-import isamrs.tim17.lotus.model.AppointmentType;
 
 public class DateUtil {
 
@@ -119,5 +113,17 @@ public class DateUtil {
 			}
 		}
 		return dates;
+	}
+	
+	public static List<Date> getSevenDays(Date startDate) {
+		List<Date> days = new ArrayList<>();
+		for (int i = 0; i <= 6; i++) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			cal.add(Calendar.DATE, i);
+			Date newDate = cal.getTime();
+			days.add(newDate);
+		}
+		return days;
 	}
 }

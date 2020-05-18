@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
@@ -58,17 +59,24 @@ public class RequestController {
 	@GetMapping("/rooms")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getRoomRequests() {
+		
+		//getuj samo rikvestove za adminovu kliniku
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = new ClinicAdministrator((ClinicAdministrator) a.getPrincipal());
+		long clinicId = admin.getClinic().getId();
+		
 		List<RoomRequest> rr = service.getRoomRequests();
 		List<Object> requests = new ArrayList<>();
 		
 		for (RoomRequest r : rr) {
-			Patient patient = patientService.findOne(r.getPatient());
 			Doctor doctor = doctorService.findOne(r.getDoctor());
-			Date startDate = r.getDate();
-			RoomRequestDTO dto = new RoomRequestDTO(startDate, patient, doctor);
-			requests.add(dto);
+			if (doctor.getClinic().getId() == clinicId) {
+				Patient patient = patientService.findOne(r.getPatient());
+				Date startDate = r.getDate();
+				RoomRequestDTO dto = new RoomRequestDTO(r.getId(), startDate, patient, doctor);
+				requests.add(dto);
+			}
 		}
-		
 		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 	

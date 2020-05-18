@@ -23,23 +23,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
-import isamrs.tim17.lotus.dto.RatingDTO;
+import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
+import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
-import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
+import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.service.RoomService;
+import isamrs.tim17.lotus.util.DateUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -51,6 +53,7 @@ public class AppointmentController {
 	@Autowired private DoctorService doctorService;
 	@Autowired private ClinicService clinicService;
 	@Autowired private PatientService patientService;
+	@Autowired private RequestService requestService;
 	
 	
 	@GetMapping("/appointments")
@@ -155,7 +158,7 @@ public class AppointmentController {
 	
 	@PostMapping("/appointments/doctor/today") //NAKON POSTMENA IZMENI NA GETMAPPING
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
+	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		System.out.println(startDate);
@@ -198,15 +201,20 @@ public class AppointmentController {
 	}
 	
 	private HashMap<String, Date> getPeriod(long startDate) {
-		Date start = new Date(startDate);
+		Date date = new Date(startDate);
 	
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(start);
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		Date start = cal.getTime();
+		
+		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
 		Date end = cal.getTime();
-		
 		
 		HashMap<String, Date> period = new HashMap<String, Date>();
 		period.put("start", start);
@@ -245,6 +253,41 @@ public class AppointmentController {
 		Appointment newApp = new Appointment(start, end, at, doc, room, clinic);
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/appointments/notification")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> sendNotification(@RequestBody RoomAndRequestDTO dto) {
+		
+		long roomId = dto.getRoom();
+		long requestId = dto.getRequest();
+		Date startDate = new Date(dto.getStartDate());
+		Date endDate = DateUtil.addMinutes(startDate, 30);
+		
+		//nadji rikvest i sobu, napravi appointment, setuj na zakazan, sacuvaj u bazu
+		Room room = roomService.findOne(roomId);
+		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
+		Doctor doctor = doctorService.findOne(rr.getDoctor());
+		Patient patient = patientService.findOne(rr.getPatient());
+		Clinic clinic = doctor.getClinic();
+		AppointmentStatus status = AppointmentStatus.SCHEDULED;
+		
+		Appointment app = new Appointment();
+		
+		app.setRoom(room);
+		app.setClinic(clinic);
+		app.setDoctor(doctor);
+		app.setMedicalRecord(patient.getMedicalRecord());
+		app.setStatus(status);
+		app.setStartDate(startDate);
+		app.setEndDate(endDate);
+		app = service.save(app);
+		
+		rr.setStatus(RequestStatus.APPROVED);
+		rr = (RoomRequest) requestService.save(rr);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
 	}
 	
 	

@@ -238,7 +238,8 @@ const routes = [
     {
         component: FreeRooms,
         name: "freeRooms",
-        path: "/free_rooms"
+        path: "/free_rooms",
+        props: true
     },   
     {
         path: "/*",

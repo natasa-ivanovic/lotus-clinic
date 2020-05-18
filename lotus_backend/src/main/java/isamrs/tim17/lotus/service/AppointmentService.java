@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
-import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -56,9 +56,8 @@ public class AppointmentService {
 		return appointments.getFinishedApps(id);
 	}
 
-	/*
-	 * public List<Appointment> findByDate(Doctor doctor) { return
-	 * appointments.findAllByDoctor(doctor); }
-	 */
+	public List<Appointment> findByRoomAndDate(Room room, Date startDate, Date endDate) {
+		return appointments.getAppointmentsByRoomAndDate(room, startDate, endDate);
+	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.repository.RoomRepository;
 
@@ -32,6 +33,10 @@ public class RoomService {
 	
 	public Room findOne(String name) {
 		return rooms.findOneByNameIgnoringCase(name);
+	}
+	
+	public List<Room> findByClinic(Clinic id) {
+		return rooms.findAllByClinic(id);
 	}
 
 }
