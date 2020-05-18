@@ -89,11 +89,11 @@ export default {
         },
         sendRating: function() {
             if (this.app == 0) {
-                alert("Nesto srsly ne valja");
+                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
                 return;
             }
             if (this.docRating == 0 | this.clinicRating == 0 ) {
-                alert("Niste popunili sve!");
+                this.$store.commit('showSnackbar', {text: "Please enter a rating for both the clinic and the doctor.", color: "information", })
                 return;
             }
             var queryData = {

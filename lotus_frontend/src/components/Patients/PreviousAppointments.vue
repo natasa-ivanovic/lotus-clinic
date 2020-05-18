@@ -1,6 +1,7 @@
 <template>
-    <v-container fluid>
+    <v-container fluid>       
         <RatingDialog v-bind:dialog.sync="rating" v-bind:app.sync="ratedId" v-on:rate-app="onAppointmentRated"/>
+        <DiagnosisDialog v-bind:dialog.sync="diagnosis" v-bind:app="viewApp" />
         <v-row align="center" justify="center">
           <v-col cols="9">
             <v-card class="elevation-3">
@@ -44,9 +45,11 @@
 <script>
 const apiURL = "http://localhost:9001/api/appointments/patient/past";
 import RatingDialog from "./RatingDialog"
+import DiagnosisDialog from "./DiagnosisDialog"
 export default {
     components: {
-        RatingDialog
+        RatingDialog,
+        DiagnosisDialog
     },
     data() {
         return {
@@ -93,7 +96,9 @@ export default {
                 }
             ],
             rating: false,
-            ratedId: 0
+            diagnosis: false,
+            ratedId: 0,
+            viewApp: {}
         }
     },
     mounted() {
@@ -104,14 +109,18 @@ export default {
             this.items.forEach(item => {
                 item.doctor = item.doctorName + " " + item.doctorSurname;
                 item.date = this.getDateString(item.startDate, item.endDate);
+                if (item.recipes == null)
+                    item.recipes = ['No recipes prescribed.'];
             })
-          }).catch(error => {
-            alert(error.response.data.text);
+          }).catch((error) => {
+                console.log(error);
+                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
           });
     },
     methods: {
         showDiagnosis: function(app) {
-            alert("Todo x " + app.id);
+            this.viewApp = app;
+            this.diagnosis = true;
         },
         showRating: function(app) {
             if (app.rated == false) {
