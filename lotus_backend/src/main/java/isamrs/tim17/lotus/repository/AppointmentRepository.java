@@ -14,7 +14,7 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
-import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Room;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 	
@@ -29,4 +29,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	
 	@Query("SELECT a FROM Appointment a where a.medicalRecord = :id AND a.status = 4 order by a.startDate")
 	List<Appointment> getFinishedApps(@Param("id") MedicalRecord id);
+	
+	//0 - premade, 1 - scheduled, 3 - ongoing
+	@Query("SELECT a FROM Appointment a JOIN Room r on a.room=r.id where a.room=:id AND (a.status = 0 OR a.status = 1 OR a.status = 3) AND (a.startDate BETWEEN :startDate AND :endDate) order by a.startDate")
+	List<Appointment> getAppointmentsByRoomAndDate(@Param("id") Room id, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

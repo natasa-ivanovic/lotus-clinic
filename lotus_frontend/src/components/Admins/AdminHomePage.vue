@@ -18,13 +18,14 @@
                             <v-list-item-content>
                                 <v-list-item-title>New request</v-list-item-title>
                                 <v-list-item-content>
-                                    Term: {{formatDate(req.startDate)}} <br/>                                       
+                                    Term: {{formatDate(req.startDate)}} <br/>
+                                    Appointment type: {{req.type}} <br/>                                       
                                     Doctor: {{req.doctor.name}}  {{req.doctor.surname}} <br/>
                                     Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
                                 </v-list-item-content>
                                 
                             </v-list-item-content>
-                            <v-btn @click="approveRequest()" color="success">Approve</v-btn>
+                            <v-btn @click="approveRequest(req)" color="success">Approve</v-btn>
                         </v-list-item>
                         </v-list-item-group>
                     </v-list>
@@ -61,13 +62,17 @@ export default {
         });
     },
     methods: {
-        approveRequest() {
+        approveRequest(req) {
+            console.log(req);
             //da se prosledi datum komponenti (lista datuma, od zatrazenog + 7 dana?)
-            this.$router.push({name: "freeRooms"})
+            this.$router.push({name: "freeRooms", params: {request: req}}); 
+                    
         },
         formatDate(date) {
-            var el = date.split("T");
-            return el[0] + " " + el[1].substring(0,5);
+            var d = new Date(date);
+            var time = d.toTimeString().split(" ")[0];
+            var date = d.toISOString().split("T")[0];
+            return date + " " + time;
         }
     }
 }

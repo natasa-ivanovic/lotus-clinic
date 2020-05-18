@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.Patient;
@@ -52,17 +55,24 @@ public class RequestController {
 	@GetMapping("/rooms")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getRoomRequests() {
+		
+		//getuj samo rikvestove za adminovu kliniku
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = new ClinicAdministrator((ClinicAdministrator) a.getPrincipal());
+		long clinicId = admin.getClinic().getId();
+		
 		List<RoomRequest> rr = service.getRoomRequests();
 		List<Object> requests = new ArrayList<>();
 		
 		for (RoomRequest r : rr) {
-			Patient patient = patientService.findOne(r.getPatient());
 			Doctor doctor = doctorService.findOne(r.getDoctor());
-			Date startDate = r.getDate();
-			RoomRequestDTO dto = new RoomRequestDTO(startDate, patient, doctor);
-			requests.add(dto);
+			if (doctor.getClinic().getId() == clinicId) {
+				Patient patient = patientService.findOne(r.getPatient());
+				Date startDate = r.getDate();
+				RoomRequestDTO dto = new RoomRequestDTO(startDate, patient, doctor);
+				requests.add(dto);
+			}
 		}
-		
 		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 	

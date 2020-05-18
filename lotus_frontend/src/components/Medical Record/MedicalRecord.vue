@@ -144,7 +144,7 @@ export default {
                 data: this.record
             }).then(response => {
                 alert(response.data);
-                this.cachedRecord = Object.assign({}, response.data.patient.record);
+                this.cachedRecord = Object.assign({}, this.record);
                 this.isEditing = false;
                 //alert("Successfully updated medical record!");
                 //TODO redirekcija ili iskljuci overlay

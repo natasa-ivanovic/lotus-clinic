@@ -20,6 +20,12 @@ public class ClinicAdministrator extends User {
 	
 	public ClinicAdministrator() {}
 	
+	public ClinicAdministrator(ClinicAdministrator admin) {
+		super(admin.getUsername(), admin.getPassword(), admin.getName(), admin.getSurname(), admin.getAddress(), admin.getCity(),
+			  admin.getCountry(), admin.getPhoneNumber(), admin.getId(), admin.getBirthDate(), admin.getGender());
+			this.clinic = admin.getClinic();
+	}
+	
 	public ClinicAdministrator(String email, String password, String name, String surname, String address, String city, String country,
 			String phoneNumber, long id, Date birthDate, Gender gender, Clinic clinic) {
 		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);

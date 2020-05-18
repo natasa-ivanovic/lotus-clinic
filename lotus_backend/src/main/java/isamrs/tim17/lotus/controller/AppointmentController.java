@@ -155,7 +155,7 @@ public class AppointmentController {
 	
 	@PostMapping("/appointments/doctor/today") //NAKON POSTMENA IZMENI NA GETMAPPING
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
+	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		System.out.println(startDate);
@@ -198,15 +198,20 @@ public class AppointmentController {
 	}
 	
 	private HashMap<String, Date> getPeriod(long startDate) {
-		Date start = new Date(startDate);
+		Date date = new Date(startDate);
 	
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(start);
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		Date start = cal.getTime();
+		
+		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
 		Date end = cal.getTime();
-		
 		
 		HashMap<String, Date> period = new HashMap<String, Date>();
 		period.put("start", start);
