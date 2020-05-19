@@ -156,9 +156,9 @@ public class AppointmentController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
-	@PostMapping("/appointments/doctor/today") //NAKON POSTMENA IZMENI NA GETMAPPING
+	@PostMapping("/appointments/doctor/today") 
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(String startDate) {
+	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		System.out.println(startDate);
@@ -281,6 +281,7 @@ public class AppointmentController {
 		app.setStatus(status);
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
+		app.setAppointmentType(doctor.getSpecialty());
 		app = service.save(app);
 		
 		rr.setStatus(RequestStatus.APPROVED);

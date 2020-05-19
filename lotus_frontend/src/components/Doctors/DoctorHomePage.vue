@@ -61,7 +61,7 @@ export default {
         console.log(date);
         this.axios({url: apiURL,
             headers: {'Content-Type' : 'text/plain'},
-            method: 'GET',
+            method: 'POST',
             data: date
         }).then(response => {
             console.log(response);

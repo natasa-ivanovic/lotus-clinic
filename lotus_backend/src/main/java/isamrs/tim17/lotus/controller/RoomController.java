@@ -281,11 +281,11 @@ public class RoomController {
 		}
 		int workStart, workEnd, breakStart;
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			workStart = cal.get(Calendar.HOUR);
+			workStart = cal.get(Calendar.HOUR_OF_DAY);
 			workEnd = weekendWorkEnd;
 			breakStart = weekendBreakStart;
 		} else {
-			workStart = cal.get(Calendar.HOUR);
+			workStart = cal.get(Calendar.HOUR_OF_DAY);
 			workEnd = weekdayWorkEnd;
 			breakStart = weekdayBreakStart;
 		}

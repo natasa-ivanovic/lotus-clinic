@@ -71,8 +71,8 @@ export default {
         formatDate(date) {
             var d = new Date(date);
             var time = d.toTimeString().split(" ")[0];
-            var date = d.toISOString().split("T")[0];
-            return date + " " + time;
+            var dateNew = d.toISOString().split("T")[0];
+            return dateNew + " " + time;
         }
     }
 }
