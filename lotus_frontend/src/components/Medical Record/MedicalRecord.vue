@@ -135,14 +135,15 @@ export default {
                 method: 'PUT',
                 data: this.record
             }).then(response => {
-                alert(response.data);
+                this.$store.commit('showSnackbar', {text: "Successfully updated medical record!", color: "success" })
                 this.cachedRecord = Object.assign({}, this.record);
                 this.isEditing = false;
+                console.log(response);
                 //alert("Successfully updated medical record!");
                 //TODO redirekcija ili iskljuci overlay
             }).catch(error => {
                 console.log(error);
-                alert(error.response.data.text);
+                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error" })
                 //TODO SREDITI
             })
         },

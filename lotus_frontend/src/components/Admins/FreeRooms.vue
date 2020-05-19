@@ -55,7 +55,7 @@
                                         <v-icon medium @click="sendNotification(item)">mdi-calendar-arrow-right</v-icon>
                                     </template>
                                     <template v-slot:item.calendar>
-                                        <v-icon medium>mdi-calendar-today</v-icon>
+                                        <v-icon medium :loading="waiting" >mdi-calendar-today</v-icon>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -80,7 +80,8 @@ export default {
                 { text: "Calendar", value: "calendar", sortable: false},
                 { text: "Schedule", value: "schedule", sortable: false}
             ],
-            rooms: []
+            rooms: [],
+            waiting: false
         }
     },
     mounted() {
@@ -106,6 +107,10 @@ export default {
         },
         sendNotification(item) {
             //posalji id sobe i id requesta na bekend, napravi app i posalji mejl
+            if (this.waiting) {
+                this.$store.commit('showSnackbar', {text: "Request alreay sent!", color: "error" })
+                return;
+            }
             console.log(item);
             var day = new Date(item.term);
             var millis = day.getTime();
@@ -114,18 +119,20 @@ export default {
                 request: this.request.id,
                 startDate: millis
             }
-             this.axios({
+            this.axios({
                 url: apiURL + "/appointments/notification",
                 method: 'POST',
                 data: el
-            }).then(response => {
-                console.log(response);
-                this.$store.commit('showSnackbar', {text: "Successfully assigned a room to the appointment!", color: "success" })
-                this.$router.push({name: "home"}); 
-            }).catch(error => {
-                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error" })
-                console.log(error);
-            })
+                }).then(response => {
+                    console.log(response);
+                    this.$store.commit('showSnackbar', {text: "Successfully assigned a room to the appointment!", color: "success" })
+                    this.$router.push({name: "home"}); 
+                }).catch(error => {
+                    this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error" })
+                    console.log(error);
+                })
+            this.waiting = true;
+            this.$store.commit('showSnackbar', {text: "Please wait while the emails send!", color: "info" })
         }
     }
     
