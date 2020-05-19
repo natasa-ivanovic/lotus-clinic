@@ -114,7 +114,7 @@ export default {
                 request: this.request.id,
                 startDate: millis
             }
-            this.axios({
+             this.axios({
                 url: apiURL + "/appointments/notification",
                 method: 'POST',
                 data: el
