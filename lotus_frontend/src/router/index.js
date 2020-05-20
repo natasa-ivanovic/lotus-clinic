@@ -44,7 +44,7 @@ import PatientClinicView from "../components/Patients/ClinicsView"
 import PatientDoctorView from "../components/Patients/DoctorsView"
 import PreviousAppointments from "../components/Patients/PreviousAppointments"
 import FreeRooms from "../components/Admins/FreeRooms"
-
+import EditPassword from "../components/Users/EditPassword"
 
 const routes = [
     {
@@ -239,6 +239,12 @@ const routes = [
         component: FreeRooms,
         name: "freeRooms",
         path: "/free_rooms",
+        props: true
+    },   
+    {
+        component: EditPassword,
+        name: "editPassword",
+        path: "/profile/change_password",
         props: true
     },   
     {
