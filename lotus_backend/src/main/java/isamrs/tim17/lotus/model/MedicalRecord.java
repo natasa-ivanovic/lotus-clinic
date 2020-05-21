@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -32,8 +33,8 @@ public class MedicalRecord {
 	private float height;
 	@Column(name="weight", unique=false, nullable=false)
 	private float weight;
-	@Column(name="allergies", unique=false, nullable=false)
-	private String allergies;
+	@ManyToMany(mappedBy = "medicalRecords", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Allergy> allergies = new HashSet<Allergy>();
 	@Column(name="bloodType", unique=false, nullable=false)
 	private String bloodType;
    
@@ -48,7 +49,7 @@ public class MedicalRecord {
 	
 	public MedicalRecord() {}
 
-	public MedicalRecord(float height, float weight, String allergies, String bloodType, Patient patient) {
+	public MedicalRecord(float height, float weight, HashSet<Allergy> allergies, String bloodType, Patient patient) {
 		this.id = this.getId();
 		this.height = height;
 		this.weight = weight;
@@ -89,11 +90,11 @@ public class MedicalRecord {
 		this.weight = weight;
 	}
 
-	public String getAllergies() {
+	public Set<Allergy> getAllergies() {
 		return allergies;
 	}
 
-	public void setAllergies(String allergies) {
+	public void setAllergies(Set<Allergy> allergies) {
 		this.allergies = allergies;
 	}
 

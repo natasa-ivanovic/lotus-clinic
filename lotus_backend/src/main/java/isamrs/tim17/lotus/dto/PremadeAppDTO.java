@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.model.Prescription;
 
 public class PremadeAppDTO {
@@ -22,7 +23,7 @@ public class PremadeAppDTO {
 	private String patientName;
 	private String patientSurname;
 	private String clinic;
-	private String diagnosis; //promeni na listu
+	private List<String> diagnosis;
 	private List<String> recipes;
 	private boolean rated;
 	private String description;
@@ -54,9 +55,17 @@ public class PremadeAppDTO {
 				recipes.add(p.getMedicine().getName());
 			}
 		}
+		
+		if (!app.getDiagnosis().isEmpty()) {
+			this.diagnosis = new ArrayList<>();
+			Iterator<Diagnosis> it = app.getDiagnosis().iterator();
+			while (it.hasNext()) {
+				Diagnosis d = it.next();
+				diagnosis.add(d.getName());
+			}
+		}
+		
 		this.rated = app.isReviewed();
-		if (app.getDiagnosis() != null)
-			this.diagnosis = app.getDiagnosis().getName();
 		this.setDescription(app.getInformation());
 		this.clinic = app.getClinic().getName();
 	}
@@ -165,11 +174,11 @@ public class PremadeAppDTO {
 		this.clinic = clinic;
 	}
 
-	public String getDiagnosis() {
+	public List<String> getDiagnosis() {
 		return diagnosis;
 	}
 
-	public void setDiagnosis(String diagnosis) {
+	public void setDiagnosis(List<String> diagnosis) {
 		this.diagnosis = diagnosis;
 	}
 

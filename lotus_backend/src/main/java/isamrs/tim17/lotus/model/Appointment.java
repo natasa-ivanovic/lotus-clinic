@@ -16,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -51,10 +52,10 @@ public class Appointment {
 	private Clinic clinic;
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentType appointmentType;
-	@OneToOne(fetch = FetchType.EAGER)
-	private Diagnosis diagnosis;
-	//@OneToMany(mappedBy="diagnosis", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	//private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
+	//@OneToOne(fetch = FetchType.EAGER)
+	//private Diagnosis diagnosis;
+	@ManyToMany(mappedBy="appointments", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
 	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
 	
@@ -64,7 +65,7 @@ public class Appointment {
 	public Appointment() {}
 
 	public Appointment(String information, Date startDate, Date endDate, AppointmentStatus status,
-			MedicalRecord medicalRecord, Doctor doctor, Room room, AppointmentType appointmentType, Diagnosis diagnosis) {
+			MedicalRecord medicalRecord, Doctor doctor, Room room, AppointmentType appointmentType, HashSet<Diagnosis> diagnosis) {
 		this.id = this.getId();
 		this.information = information;
 		this.startDate = startDate;
@@ -168,13 +169,13 @@ public class Appointment {
 		this.appointmentType = appointmentType;
 	}
 
-	/*public Set<Diagnosis> getDiagnosis() {
+	public Set<Diagnosis> getDiagnosis() {
 		return diagnosis;
 	}
 
 	public void setDiagnosis(HashSet<Diagnosis> diagnosis) {
 		this.diagnosis = diagnosis;
-	}*/
+	}
 
 	public Clinic getClinic() {
 		return clinic;
@@ -198,18 +199,6 @@ public class Appointment {
 
 	public void setReviewed(boolean reviewed) {
 		this.reviewed = reviewed;
-	}
-
-	public Diagnosis getDiagnosis() {
-		return diagnosis;
-	}
-
-	public void setDiagnosis(Diagnosis diagnosis) {
-		this.diagnosis = diagnosis;
-	}
-	
-	
-	
-	
+	}	
 
 }
