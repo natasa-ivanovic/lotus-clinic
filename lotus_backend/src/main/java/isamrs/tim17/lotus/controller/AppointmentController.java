@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentDTO;
+import isamrs.tim17.lotus.dto.DiagnosisDTO;
+import isamrs.tim17.lotus.dto.MedicineDTO;
+import isamrs.tim17.lotus.dto.MedicineDiagnosisDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
@@ -29,8 +32,10 @@ import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
+import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
+import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
@@ -38,7 +43,9 @@ import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.ClinicService;
+import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.MedicineService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.service.RoomService;
@@ -56,6 +63,8 @@ public class AppointmentController {
 	@Autowired private PatientService patientService;
 	@Autowired private RequestService requestService;
 	@Autowired public MailSenderModel mailSender;
+	@Autowired private MedicineService medicineService;
+	@Autowired private DiagnosisService diagnosisService;
 	
 	
 	@GetMapping("/appointments")
@@ -307,6 +316,32 @@ public class AppointmentController {
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
+	
+	@GetMapping("/appointments/info")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<MedicineDiagnosisDTO> getDataForAppointment() {
+		
+		List<MedicineDTO> medicinesDTO = new ArrayList<>();
+		List<DiagnosisDTO> diagnosisDTO = new ArrayList<>();
+		
+		List<Medicine> medicines = medicineService.findAll();
+		List<Diagnosis> diagnosis = diagnosisService.findAll();
+		
+		for (Medicine m : medicines) {
+			MedicineDTO med = new MedicineDTO(m);
+			medicinesDTO.add(med);
+		}
+		
+		for (Diagnosis d : diagnosis) {
+			DiagnosisDTO illness = new DiagnosisDTO(d);
+			diagnosisDTO.add(illness);
+		}
+		
+		MedicineDiagnosisDTO dto = new MedicineDiagnosisDTO(medicinesDTO, diagnosisDTO);
+		
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
 	
 	
 	/*private boolean isEmptyOrNull(Appointment app) {
