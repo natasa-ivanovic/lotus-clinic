@@ -299,13 +299,13 @@ public class AppointmentController {
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
-				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty() + ".\n"
+				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty().getName() + ".\n"
 				+ "We look forward to seeing you.\nLotus Clinic Staff";
 		
-		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
+		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nYou have a new appointment.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
-				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + "and the appointment type is " + doctor.getSpecialty() + ".\n"
-				+ "We look forward to seeing you.\nLotus Clinic Staff";
+				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + " and the appointment type is " + doctor.getSpecialty().getName()+ ".\n"
+				+ "Lotus Clinic Staff";
 		
 		mailSender.sendMsg(patient.getUsername(), "Appointment notiffication", contentPatient);
 		mailSender.sendMsg(doctor.getUsername(), "Appointment notiffication", contentDoctor);
