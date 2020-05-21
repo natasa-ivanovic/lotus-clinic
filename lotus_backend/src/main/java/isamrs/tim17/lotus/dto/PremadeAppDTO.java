@@ -22,7 +22,7 @@ public class PremadeAppDTO {
 	private String patientName;
 	private String patientSurname;
 	private String clinic;
-	private String diagnosis;
+	private String diagnosis; //promeni na listu
 	private List<String> recipes;
 	private boolean rated;
 	private String description;

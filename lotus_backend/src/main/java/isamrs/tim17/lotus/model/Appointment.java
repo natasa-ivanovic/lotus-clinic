@@ -53,6 +53,8 @@ public class Appointment {
 	private AppointmentType appointmentType;
 	@OneToOne(fetch = FetchType.EAGER)
 	private Diagnosis diagnosis;
+	//@OneToMany(mappedBy="diagnosis", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	//private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
 	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<Prescription>();
 	
@@ -166,13 +168,13 @@ public class Appointment {
 		this.appointmentType = appointmentType;
 	}
 
-	public Diagnosis getDiagnosis() {
+	/*public Set<Diagnosis> getDiagnosis() {
 		return diagnosis;
 	}
 
-	public void setDiagnosis(Diagnosis diagnosis) {
+	public void setDiagnosis(HashSet<Diagnosis> diagnosis) {
 		this.diagnosis = diagnosis;
-	}
+	}*/
 
 	public Clinic getClinic() {
 		return clinic;
@@ -196,6 +198,14 @@ public class Appointment {
 
 	public void setReviewed(boolean reviewed) {
 		this.reviewed = reviewed;
+	}
+
+	public Diagnosis getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(Diagnosis diagnosis) {
+		this.diagnosis = diagnosis;
 	}
 	
 	

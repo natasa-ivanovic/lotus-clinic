@@ -1,9 +1,9 @@
 <template>
     <v-form>
         <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :items="this.itemsOverlay"/>
-        <v-card class="elevation-3">
+        <v-card class="elevation-4">
             <v-toolbar flat color="secondary" dark>
-                <v-toolbar-title>Medical record - {{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
+                <v-toolbar-title>{{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn
                     v-if="edit==true"
