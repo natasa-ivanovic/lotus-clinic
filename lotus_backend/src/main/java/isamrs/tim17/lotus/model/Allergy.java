@@ -14,47 +14,31 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/***********************************************************************
- * Module:  Diagnosis.java
- * Author:  Shejv
- * Purpose: Defines the Class Diagnosis
- ***********************************************************************/
-
 @Entity
-@Table(name="diagnosis")
-public class Diagnosis {
-   
+@Table(name="allergies")
+public class Allergy {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 	@Column(name="name", unique=true, nullable=false)
 	private String name;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentre clinicalCentre;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<MedicalRecord> medicalRecords = new HashSet<MedicalRecord>();
 	
-	public Diagnosis() {}
+	public Allergy() {}
 	
-	public Diagnosis(String name) {
+	public Allergy(String name) {
 		this.name = name;
 	}
 
-	public Diagnosis(String name, ClinicalCentre clinicCentre) {
-		this.name = name;
-		this.clinicalCentre = clinicCentre;
-	}
-	
-	@Override
-	public String toString() {
-		return "Diagnosis [id=" + id + ", name=" + name + ", clinicCentre=" + clinicalCentre + "]";
-	}
-
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -73,6 +57,16 @@ public class Diagnosis {
 	public void setClinicalCentre(ClinicalCentre clinicalCentre) {
 		this.clinicalCentre = clinicalCentre;
 	}
+
+	public Set<MedicalRecord> getMedicalRecords() {
+		return medicalRecords;
+	}
+
+	public void setMedicalRecords(Set<MedicalRecord> medicalRecords) {
+		this.medicalRecords = medicalRecords;
+	}
+	
+	
 	
 	
 

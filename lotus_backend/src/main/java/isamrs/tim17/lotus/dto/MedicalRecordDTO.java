@@ -1,8 +1,12 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.MedicalRecord;
 
@@ -10,7 +14,7 @@ public class MedicalRecordDTO {
 	private long id;
 	private float height;
 	private float weight;
-	private String allergies;
+	private List<AllergyDTO> allergies;
 	private String bloodType;
 	
 	private Set<PremadeAppDTO> apps = new HashSet<PremadeAppDTO>();
@@ -22,7 +26,16 @@ public class MedicalRecordDTO {
 		this.id = m.getId();
 		this.height = m.getHeight();
 		this.weight = m.getWeight();
-		this.allergies = m.getAllergies();
+		
+		if (!m.getAllergies().isEmpty()) {
+			this.allergies = new ArrayList<>();
+			Iterator<Allergy> it = m.getAllergies().iterator();
+			while (it.hasNext()) {
+				AllergyDTO a = new AllergyDTO(it.next());
+				allergies.add(a);
+			}
+		}
+		
 		this.bloodType = m.getBloodType();
 		for (Appointment a : m.getAppointments()) {
 			apps.add(new PremadeAppDTO(a));
@@ -53,11 +66,11 @@ public class MedicalRecordDTO {
 		this.weight = weight;
 	}
 
-	public String getAllergies() {
+	public List<AllergyDTO> getAllergies() {
 		return allergies;
 	}
 
-	public void setAllergies(String allergies) {
+	public void setAllergies(List<AllergyDTO> allergies) {
 		this.allergies = allergies;
 	}
 

@@ -2,6 +2,7 @@ package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
@@ -135,7 +137,7 @@ public class RequestController {
 		RegistrationRequest rgReq = (RegistrationRequest) req;
 		rgReq.getPatient().setEnabled(true);
 		service.save(req);
-		MedicalRecord mr = new MedicalRecord(170, 90, "", "", rgReq.getPatient());
+		MedicalRecord mr = new MedicalRecord(170, 90, new HashSet<Allergy>(), "", rgReq.getPatient());
 		medicalService.save(mr);
 		
 		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);

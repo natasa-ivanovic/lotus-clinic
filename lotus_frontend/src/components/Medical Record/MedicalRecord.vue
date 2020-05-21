@@ -109,7 +109,8 @@ export default {
             overlay: false,
             headerOverlay: [],
             itemsOverlay: [],
-            title: ''
+            title: '',
+            type: ''
         }
     },
     mounted() {
@@ -187,7 +188,7 @@ export default {
             this.appointments.forEach(app => {
                 var el = {
                     date: this.getDate(app.startDate).date,
-                    diagnosis: app.diagnosis,
+                    diagnosis: app.diagnosis.join(', '),
                     description: app.description,
                     prescription: app.prescription
                 }

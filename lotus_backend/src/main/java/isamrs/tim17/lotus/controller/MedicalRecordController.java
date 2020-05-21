@@ -2,6 +2,7 @@ package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.AllergyDTO;
 import isamrs.tim17.lotus.dto.MedicalRecordDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.service.AllergyService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
@@ -32,6 +36,7 @@ public class MedicalRecordController {
 	@Autowired private MedicalRecordService service;
 	@Autowired private PatientService patientService;
 	@Autowired private AppointmentService appService;
+	@Autowired private AllergyService allergyService;
 
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -70,7 +75,16 @@ public class MedicalRecordController {
 		
 		mr.setHeight(medicalRecord.getHeight());
 		mr.setWeight(medicalRecord.getWeight());
-		mr.setAllergies(medicalRecord.getAllergies());
+		
+		List<AllergyDTO> allergies = medicalRecord.getAllergies();
+		HashSet<Allergy> allergySet = new HashSet<Allergy>();
+		
+		for (AllergyDTO a : allergies) {
+			Allergy al = allergyService.findOne(a.getId());
+			allergySet.add(al);
+		}
+		
+		mr.setAllergies(allergySet);
 		mr.setBloodType(medicalRecord.getBloodType());
 		
 		mr = service.save(mr);
@@ -80,8 +94,6 @@ public class MedicalRecordController {
 	
 	private boolean isEmptyOrNull(MedicalRecordDTO mr) {
 		if (mr == null)
-			return true;
-		if (mr.getAllergies() == null || "".equals(mr.getAllergies()))
 			return true;
 		if (mr.getBloodType() == null || "".equals(mr.getBloodType()))
 			return true;
