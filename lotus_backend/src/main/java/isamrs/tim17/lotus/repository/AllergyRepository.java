@@ -14,4 +14,5 @@ public interface AllergyRepository extends JpaRepository<Allergy, Long> {
 	Page<Allergy> findAll(Pageable pageable);
 	List<Allergy> findByNameIgnoringCase(String name);
 	
+
 }

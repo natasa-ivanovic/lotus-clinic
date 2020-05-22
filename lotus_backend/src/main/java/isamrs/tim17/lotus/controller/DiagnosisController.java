@@ -75,7 +75,7 @@ public class DiagnosisController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<DiagnosisDTO> deleteRoom(@PathVariable("id") long id) {
+	public ResponseEntity<DiagnosisDTO> deleteDiagnosis(@PathVariable("id") long id) {
 		System.out.println(id);
 		Diagnosis diagnosis = service.findOne(id);
 
