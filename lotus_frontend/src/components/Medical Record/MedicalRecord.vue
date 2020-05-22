@@ -51,9 +51,14 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-text-field
+                        <v-autocomplete
                         label="Allergies"
-                        v-model="record.allergies" 
+                        item-text="name"
+                        selected
+                        multiple
+                        return-object
+                        v-model="record.allergies"
+                        :items="allAllergies"
                         :readonly="!this.isEditing" />
                     </v-col>
                     <v-col>
@@ -104,16 +109,24 @@ export default {
             appointments: [],
             isEditing: false,
             bloodTypes: ['A', 'B', 'AB', 'O'],
+            allAllergies: [],
             cachedRecord: {},
             allergies: [],
             overlay: false,
             headerOverlay: [],
             itemsOverlay: [],
-            title: '',
-            type: ''
+            title: ''
         }
     },
     mounted() {
+        this.axios({
+            url: "http://localhost:9001/api/allergies",
+            method: 'GET'
+        }).then(response => {
+            this.allAllergies = response.data;
+        }).catch(error => {
+            alert(error);
+        })
         this.axios({
             url: apiURL + this.id,
             method: 'GET'
