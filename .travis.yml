@@ -1,0 +1,34 @@
+matrix:
+  include:
+    - language: java
+      jdk: 
+        - oraclejdk8
+      before_install:
+        - cd lotus_backend
+      install:
+        - mvn -N io.takari:maven:wrapper
+        - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      script:
+        - ./mvnw clean install
+
+    - language: node_js
+      node_js: 
+        - node
+      before_install:
+        - cd lotus_frontend
+      install:
+        - npm install
+      script:
+        - npm run build
+
+dist: trusty
+
+deploy:
+  provider: heroku
+  api_key: 
+    secure: c2dfe0f2-e742-4bdb-b377-ba0768416483
+  app: lotus-clinic
+
+notifications:
+  email: 
+    - natasaivanovic98@yahoo.com
