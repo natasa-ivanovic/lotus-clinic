@@ -5,6 +5,8 @@ matrix:
         - oraclejdk8
       before_script:
         - cd lotus_backend
+      before_install:
+        - chmod +x mvnw
       script:
         - ./mvnw clean install
 
