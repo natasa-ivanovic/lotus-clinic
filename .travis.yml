@@ -1,0 +1,27 @@
+matrix:
+  include:
+    - language: java
+      jdk: 
+        - oraclejdk8
+      before_script:
+        - cd lotus_backend
+
+    - language: node_js
+      node_js: 
+        - node
+      before_script:
+        - cd lotus_frontend
+      install:
+        - npm install
+      script:
+        - npm run serve
+
+deploy:
+  provider: heroku
+  api_key: 
+    secure: c2dfe0f2-e742-4bdb-b377-ba0768416483
+  app: lotus-clinic
+
+notifications:
+  email: 
+    - natasaivanovic98@yahoo.com
