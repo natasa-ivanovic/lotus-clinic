@@ -3,7 +3,7 @@ matrix:
     - language: java
       jdk: 
         - oraclejdk8
-      before_script:
+      before_install:
         - cd lotus_backend
       install:
         - mvn -N io.takari:maven:wrapper
