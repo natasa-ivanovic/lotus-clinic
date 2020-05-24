@@ -21,6 +21,9 @@ matrix:
       script:
         - npm run build
 
+services:
+  - postgresql
+
 dist: trusty
 
 deploy:
