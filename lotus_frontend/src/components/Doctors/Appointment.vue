@@ -2,14 +2,7 @@
     <v-container fluid>
         <v-row align="center" justify="center">
             <v-col cols="6">
-                <v-expansion-panels>
-                    <v-expansion-panel>
-                        <v-expansion-panel-header style="background:#424242;color:white" class="spacerHeader">Medical record</v-expansion-panel-header>
-                        <v-expansion-panel-content eager >
-                            <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true" class="mt-4"/>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+                <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true"/>
             </v-col>
         </v-row>
         <v-row align="center" justify="center">
@@ -23,15 +16,8 @@
                     <v-card-text>
                         <v-row>
                             <v-col>
-                                <v-autocomplete
+                                <v-text-field
                                     label="Diagnosis"
-                                    item-text="name"
-                                    item-value="id"
-                                    chips
-                                    deletable-chips
-                                    selected
-                                    multiple
-                                    :items="allDiagnosis"
                                     v-model="diagnosis"/>
                             </v-col>
                             <v-col>
@@ -39,32 +25,20 @@
                                     label="Medicine"
                                     item-text="name"
                                     item-value="id"
-                                    chips
-                                    deletable-chips
-                                    selected
-                                    multiple
                                     :items="allMedicines"
                                     v-model="medicine"/>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col>
-                            <v-textarea
-                                color="teal"
-                                v-model="info"
-                                label="Description">
-                            </v-textarea>
+                            <v-text-field
+                                label="Information"
+                                v-model="info"/>
                             </v-col>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
-                        <v-row>
-                            <v-col><v-btn color="primary" block>New appointment</v-btn></v-col>
-                            <v-col><v-btn color="primary" block>New operation</v-btn></v-col>
-                        </v-row>
-                    </v-card-actions>
-                    <v-card-actions>
-                        <v-btn color="success" block @click="endAppointment()">End appointment</v-btn>
+                        <v-btn color="success" block>End appointment</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -92,41 +66,31 @@ export default {
             diagnosis: "",
             medicine: "",
             info: "",
-            allMedicines: [],
-            allDiagnosis: []
+            allMedicines : []
+
         }
     },
     mounted() {
         if (this.appointment == {})
             this.$router.push({name: "home"});
 
+        //getuj sve lekove
         this.axios({
-            url: apiURL + "/appointments/info",
+            url: apiURL + "/medicines",
             method: 'GET'
         }).then(response => {
-            this.allMedicines = response.data.medicines;
-            this.allDiagnosis = response.data.diagnosis;
+            this.allMedicines = response.data;
         }).catch(error =>{
             console.log(error);
         })
     },
     methods: {
-        endAppointment() {
-
-        }
+        
     }
     
 }
 </script>
 
 <style scoped>
-
-.spacerHeader {
-    font-size: 1.25rem;
-    line-height: 1.5;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 </style>

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/rooms"
+const apiURL = "/api/rooms"
 export default {
   name: "addRoom",
   data() {
@@ -45,15 +45,18 @@ export default {
           alert("Error")
           return;
       }
-      fetch(apiURL, {method: 'POST', 
-                        headers: {'Content-Type': 'application/json', 'Authorization': this.$authKey}, 
-                        body: this.name})
-          .then(response => {
-              if (response.status != 200)
-                alert("Couldn't add " + this.name + "!");
-              else
+      this.axios({url : apiURL, 
+                        method: 'POST',
+                        data: this.name
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully added room.", color: "success", })
                 this.$router.push({ name: "rooms" });
-          })
+            }).catch(error => {
+                console.log(error.request);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't add room!", color: "error", })
+            });
     }
   }
     

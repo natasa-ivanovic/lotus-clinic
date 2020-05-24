@@ -25,7 +25,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentTypes";
+const apiURL = "/api/appointmentTypes";
 export default {
     name: "addAppointmentType",
     data() {
@@ -41,19 +41,20 @@ export default {
       addAppType: function() {
             this.$refs.form.validate();
             if (!this.valid) {
-            alert("Error")
-            return;
-          }
-            fetch(apiURL, {method: 'POST', 
-                  headers: {'Content-Type': 'application/json',
-                            'Authorization': this.$authKey },
-                  body: this.name})
-            .then(response => {
-              if (response.status != 200)
-                alert("Couldn't add " + this.name + "!");
-              else
-                this.$router.push({ name: "appointmentTypes" });
-          })
+              alert("Error")
+              return;
+            }
+            this.axios({url : apiURL, 
+                    method: 'POST',
+                    data: this.name
+                }).then(response =>   {
+                    console.log(response);
+                    this.$store.commit('showSnackbar', {text: "Successfully added appointment type.", color: "success", })
+                    this.$router.push({ name: "appointmentTypes" });
+                }).catch(error => {
+                    console.log(error.request.responseText);
+                    this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+                });
         }
     }
 }
