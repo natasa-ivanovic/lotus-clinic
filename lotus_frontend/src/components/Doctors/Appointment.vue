@@ -59,21 +59,23 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-row>
-                            <v-col><v-btn color="primary" block>New appointment</v-btn></v-col>
-                            <v-col><v-btn color="primary" block>New operation</v-btn></v-col>
+                            <v-col><v-btn color="primary" block>Schedule appointment</v-btn></v-col>
+                            <v-col><v-btn color="primary" block>Schedule operation</v-btn></v-col>
                         </v-row>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="success" block @click="endAppointment()">End appointment</v-btn>
+                        <v-btn color="success" block @click="endAppointment()" height="50">End appointment</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
+        <ScheduleAppointment />
     </v-container>
 </template>
 
 <script>
 import MedicalRecord from "../Medical Record/MedicalRecord"
+import ScheduleAppointment from "./ScheduleAppointment"
 const apiURL = "http://localhost:9001/api"
 
 export default {
@@ -86,6 +88,7 @@ export default {
     },
     components: {
       MedicalRecord,
+      ScheduleAppointment
     },
     data() {
         return {
