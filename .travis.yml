@@ -14,7 +14,7 @@ matrix:
       install:
         - npm install
       script:
-        - npm run serve
+        - npm run build
 
 deploy:
   provider: heroku
