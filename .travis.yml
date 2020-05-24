@@ -5,6 +5,8 @@ matrix:
         - oraclejdk8
       before_script:
         - cd lotus_backend
+      script:
+        - ./mvnw clean install
 
     - language: node_js
       node_js: 
@@ -15,6 +17,8 @@ matrix:
         - npm install
       script:
         - npm run build
+
+dist: trusty
 
 deploy:
   provider: heroku
