@@ -22,7 +22,7 @@
             </template>
             <template v-slot:item.delete="{ item }">
                 <v-icon
-                    @click="deleteDiagnosis(item.id)"
+                    @click="deleteDiagnosis(item)"
                 >
                     mdi-delete
                 </v-icon>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/diagnoses";
+const apiURL = "/api/diagnoses";
 export default {
     name: "diagnoses",
     data() {
@@ -47,33 +47,29 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
-            .then(response => {
-                return response.json();
-            })
-            .then(c => {
-                this.diagnoses = c;
-            })
+        this.axios({url : apiURL, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.diagnoses = response;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
-         deleteDiagnosis: function(id){
-            fetch(apiURL + "/" + id, {method: 'DELETE',
-            headers: {'Authorization': this.$authKey}})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't delete room!")
-                else
-                    return response.json();
-            })
-            .then(r => {
-                for(var i = 0; i < this.diagnoses.length; i++)
-                {
-                    if(this.diagnoses[i].id === r.id)
-                    {
-                        this.diagnoses.splice(i,1);
-                    }
-                }
-            })
+         deleteDiagnosis: function(diag){
+            this.axios({url : apiURL + "/" + diag.id, 
+                        method: 'DELETE'
+            }).then(response =>   {
+                // test this
+                console.log(response);
+                this.diagnoses.pop(diag);
+                this.$store.commit('showSnackbar', {text: "Successfully deleted diagnosis.", color: "success", })
+            }).catch(error => {
+                console.log(error.request);
+                // navesti razlog errora
+                this.$store.commit('showSnackbar', {text: "Couldn't delete diagnosis!", color: "error", })
+            });
         },
         editDiagnosis: function(editId) {
             this.$router.push({name: "editDiagnosis", params: {id: editId}});

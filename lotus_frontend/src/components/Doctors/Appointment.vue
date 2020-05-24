@@ -2,7 +2,14 @@
     <v-container fluid>
         <v-row align="center" justify="center">
             <v-col cols="6">
-                <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true"/>
+                <v-expansion-panels>
+                    <v-expansion-panel>
+                        <v-expansion-panel-header style="background:#424242;color:white" class="spacerHeader">Medical record</v-expansion-panel-header>
+                        <v-expansion-panel-content eager >
+                            <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true" class="mt-4"/>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-col>
         </v-row>
         <v-row align="center" justify="center">
@@ -16,8 +23,15 @@
                     <v-card-text>
                         <v-row>
                             <v-col>
-                                <v-text-field
+                                <v-autocomplete
                                     label="Diagnosis"
+                                    item-text="name"
+                                    item-value="id"
+                                    chips
+                                    deletable-chips
+                                    selected
+                                    multiple
+                                    :items="allDiagnosis"
                                     v-model="diagnosis"/>
                             </v-col>
                             <v-col>
@@ -25,20 +39,32 @@
                                     label="Medicine"
                                     item-text="name"
                                     item-value="id"
+                                    chips
+                                    deletable-chips
+                                    selected
+                                    multiple
                                     :items="allMedicines"
                                     v-model="medicine"/>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col>
-                            <v-text-field
-                                label="Information"
-                                v-model="info"/>
+                            <v-textarea
+                                color="teal"
+                                v-model="info"
+                                label="Description">
+                            </v-textarea>
                             </v-col>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="success" block>End appointment</v-btn>
+                        <v-row>
+                            <v-col><v-btn color="primary" block>New appointment</v-btn></v-col>
+                            <v-col><v-btn color="primary" block>New operation</v-btn></v-col>
+                        </v-row>
+                    </v-card-actions>
+                    <v-card-actions>
+                        <v-btn color="success" block @click="endAppointment()">End appointment</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -47,8 +73,8 @@
 </template>
 
 <script>
-import MedicalRecord from "../Medical Record/MedicalRecord"
-const apiURL = "http://localhost:9001/api"
+import MedicalRecord from "../MedicalRecord/MedicalRecord"
+const apiURL = "/api/appointments/info"
 
 export default {
     name: "startAppointment",
@@ -66,7 +92,8 @@ export default {
             diagnosis: "",
             medicine: "",
             info: "",
-            allMedicines : []
+            allMedicines: [],
+            allDiagnosis: []
 
         }
     },
@@ -74,23 +101,33 @@ export default {
         if (this.appointment == {})
             this.$router.push({name: "home"});
 
-        //getuj sve lekove
         this.axios({
-            url: apiURL + "/medicines",
+            url: apiURL,
             method: 'GET'
         }).then(response => {
-            this.allMedicines = response.data;
+            this.allMedicines = response.data.medicines;
+            this.allDiagnosis = response.data.diagnosis;
         }).catch(error =>{
             console.log(error);
         })
     },
     methods: {
-        
+        endAppointment() {
+
+        }
     }
     
 }
 </script>
 
 <style scoped>
+
+.spacerHeader {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 </style>

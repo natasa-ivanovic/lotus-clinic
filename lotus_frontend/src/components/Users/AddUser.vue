@@ -140,7 +140,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/";
+const apiClinics = "/api/clinics";
 export default {
     name: "AddUser",
     data() {
@@ -198,6 +198,7 @@ export default {
         if (!this.valid) {
           return;
         }
+        // bolja provera, da li se dodaju admini ili cadmini?
         if(this.$role == 'CENTRE_ADMIN') {
           var i;
           for(i = 0; i < this.clinics.length; i++) {
@@ -212,9 +213,9 @@ export default {
         this.user.gender = this.selectedGender.toUpperCase();     
         var url = "";
         if (this.userType == "patients")
-          url = apiURL + "auth/register";
+          url = "/auth/register";
         else
-          url = apiURL + "api/" + this.userType; 
+          url = "/api/" + this.userType; 
         console.log('userType:' + this.userType);
         this.axios({url : url, 
             method: 'POST',
@@ -243,7 +244,7 @@ export default {
     },
     mounted() {
       if(this.userType=='admins')
-        this.axios({url : apiURL + "api/clinics", 
+        this.axios({url : apiClinics, 
             method: 'GET',
           }).then(response => {
             this.clinics = response.data;

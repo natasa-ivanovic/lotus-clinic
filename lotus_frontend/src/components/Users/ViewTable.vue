@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/";
+const apiURL = "/api";
 
 export default {
     name: "ViewTable",
@@ -57,13 +57,14 @@ export default {
         }
     },    
     mounted() {
-        fetch(apiURL + this.userType, {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(users => {
-            this.users = users;
-        })
+        this.axios({url : apiURL + "/" + this.userType, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.users = response;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
         /*deleteUser: function(id) {
