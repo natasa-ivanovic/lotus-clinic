@@ -38,6 +38,7 @@ import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/Add"
 import EditDiagnosis from "../components/Diagnosis/Edit"
 import Appointment from "../components/Doctors/Appointment"
+import ScheduleAppointment from "../components/Doctors/ScheduleAppointment"
 import RegistrationRequestView from "../components/RegistrationRequests/RegistrationRequests"
 import SuccesfulRegistration from "../components/Patients/SuccesfulRegistration"
 import PatientClinicView from "../components/Patients/ClinicsView"
@@ -246,7 +247,13 @@ const routes = [
         name: "editPassword",
         path: "/profile/change_password",
         props: true
-    },   
+    },
+    {
+        component: ScheduleAppointment,
+        name: "scheduleAppointment",
+        path: "/appointment/new_appointment",
+        props: true
+    }, 
     {
         path: "/*",
         redirect: "/home"
