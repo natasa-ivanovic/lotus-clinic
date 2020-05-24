@@ -9,7 +9,7 @@ matrix:
     - language: node_js
       node_js: 
         - node
-      before_script:
+      before_install:
         - cd lotus_frontend
       install:
         - npm install
