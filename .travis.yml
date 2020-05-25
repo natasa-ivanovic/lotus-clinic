@@ -16,7 +16,7 @@ matrix:
         - ./mvnw clean install
       deploy:
         provider: heroku
-        api_key: 788072a3-1bea-4d4a-a0d0-4ad4c512bb42
+        api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
         app: lotus-clinic-api
         on: 
           all_branches: true
@@ -32,7 +32,7 @@ matrix:
         - npm run build
       deploy:
         provider: heroku
-        api_key: 788072a3-1bea-4d4a-a0d0-4ad4c512bb42
+        api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
         app: lotus-clinic
         on: 
           all_branches: true
