@@ -106,7 +106,7 @@ public class RequestController {
 	      .toString();
 		
 	    String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is valid.\nPlease follow this link to activate your account:\n"
-	    		+ "http://localhost:8081/registrations/" + generatedString + "/nLotus Clinic Staff";
+	    		+ "https://lotus-clinic.herokuapp.com/registrations/" + generatedString + " \nLotus Clinic Staff";
 		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		rgReq.setKey(generatedString);
 		service.save(req);
