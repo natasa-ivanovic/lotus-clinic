@@ -32,6 +32,8 @@ deploy:
   api_key: 
     secure: c2dfe0f2-e742-4bdb-b377-ba0768416483
   app: lotus-clinic
+  on: 
+    all_branches: true
 
 notifications:
   email: 
