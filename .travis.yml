@@ -1,0 +1,46 @@
+matrix:
+  include:
+    - language: java
+      jdk: 
+        - oraclejdk8
+      services:
+        - postgresql
+      before_script:
+        - psql -c 'create database lotus;' -U postgres
+      before_install:
+        - cd lotus_backend
+      install:
+        - mvn -N io.takari:maven:wrapper
+        - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      script:
+        - ./mvnw clean install
+      deploy:
+        provider: heroku
+        api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
+        app: lotus-clinic-api
+        on: 
+          all_branches: true
+
+    - language: node_js
+      node_js: 
+        - node
+      before_install:
+        - cd lotus_frontend
+      install:
+        - npm install
+      script:
+        - npm run build
+      deploy:
+        provider: heroku
+        api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
+        app: lotus-clinic
+        on: 
+          all_branches: true
+
+
+dist: trusty
+
+  
+notifications:
+  email: 
+    - natasaivanovic98@yahoo.com
