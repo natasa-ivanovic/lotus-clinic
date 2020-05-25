@@ -45,7 +45,7 @@ addons:
   sonarcloud:
     organization: "lotus-clinic"
     token:
-      secure: SONAR_TOKEN
+      secure: $SONAR_TOKEN
 
   
 notifications:
