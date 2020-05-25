@@ -56,8 +56,8 @@
 </template>
 
 <script>
-const passURL = "http://localhost:9001/auth/change-password";
-const loginURL = "http://localhost:9001/auth/login";
+const passURL = "/auth/change-password";
+const loginURL = "/auth/login";
 export default {
   name: "EditUser",
   props: ['id', 'userType'],

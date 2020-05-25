@@ -112,7 +112,7 @@
 <script>
 import {util} from '../../util.js'
 
-const apiURL = "http://localhost:9001/api";
+const apiURL = "/api";
 
 export default {
   name: "EditUser",
@@ -156,22 +156,24 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL + "/" + this.userType + "/" + this.id, {headers: { 'Authorization': this.$authKey }})
-      .then(response => {
-        return response.json();
-      })
-      .then(user => {
-        if (this.$role == "PATIENT") {
+    this.axios({url : apiURL + "/" + this.userType + "/" + this.id, 
+                    method: 'GET'
+        }).then(res =>   {
+          var user = res.data;
+          if (this.$role == "PATIENT") {
                 this.user = user.patient;
                 this.record = user.record;
                 this.dateString = util.dateToString(user.patient.birthDate);
                 this.selectedGender = user.patient.gender.charAt(0) + user.patient.gender.slice(1).toLowerCase();
-        } else {
-            this.user= user;
-            this.dateString = util.dateToString(user.birthDate);
-            this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
-        }
-      })
+          } else {
+              this.user = user;
+              this.dateString = util.dateToString(user.birthDate);
+              this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
+          }
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch user!", color: "error", })
+        });
   },
   methods: {
       editUser: function() {
@@ -182,24 +184,23 @@ export default {
         var oldDate = this.user.birthDate.split('T')[1]; 
         this.user.birthDate = this.dateString + 'T' + oldDate;
         this.user.gender = this.selectedGender.toUpperCase();
-        fetch(apiURL + "/" + this.userType + "/" + this.id, {method: 'PUT', 
-                        headers: {'Content-Type': 'application/json',
-                                'Authorization': this.$authKey}, 
-                        body: JSON.stringify(this.user)})
-          .then(response => {
-            if (response.status != 200) {
-              this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again.", color: "error", });
-            }
-            else {
-              this.$store.commit('showSnackbar', {text: "Successfully edited user!", color: "success", });
-              if (this.id == "self") {
-                this.$router.push({ name: "profile" })
-              }
-              else {
-                this.$router.push({ name: this.userType })
-              }
-            }
-          })
+        this.axios({url : apiURL + "/" + this.userType + "/" + this.id, 
+                        method: 'PUT',
+                        data: this.user
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully updated user.", color: "success", })
+                if (this.id == "self") {
+                  this.$router.push({ name: "profile" })
+                }
+                else {
+                  this.$router.push({ name: this.userType })
+                }
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't update user!", color: "error", })
+            });
     }
   }
 }

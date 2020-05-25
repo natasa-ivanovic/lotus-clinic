@@ -54,7 +54,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentTypes"
+const apiURL = "/api/appointmentTypes"
 export default {
     name: "editAppointmentType",
     props: ['id'],
@@ -70,30 +70,34 @@ export default {
         }
     },
     mounted() {
-        this.$refs.form.validate();
-        if (!this.valid) {
-          alert("Error")
-          return;
-        }
-        fetch(apiURL + "/" + this.id, {headers: { 'Authorization': this.$authKey}})
-        .then(response => {
-            return response.json();
-        })
-        .then(appType => {
-            this.appType = appType;
-        })
+        this.axios({url : apiURL + "/" + this.id, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.appType = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch appointment type!", color: "error", })
+        });
     },
     methods: {
         editAppType: function() {
-            fetch(apiURL + "/" + this.id, {method: 'PUT',
-                  headers: {'Content-Type': 'application/json', 'Authorization': this.$authKey},
-                  body: JSON.stringify(this.appType)})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't update appointment type!");
-                else
-                    this.$router.push({name :"appointmentTypes"});
-            })
+            this.$refs.form.validate();
+            if (!this.valid) {
+              this.$store.commit('showSnackbar', {text: "Please fill in all the required fields!", color: "error", })
+              return;
+            }
+            this.axios({url : apiURL + "/" + this.id, 
+                        method: 'PUT',
+                        data: this.appType
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully updated appointment type.", color: "success", })
+                this.$router.push({name :"appointmentTypes"});
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't update appointment type!", color: "error", })
+            });
         }
     }
     

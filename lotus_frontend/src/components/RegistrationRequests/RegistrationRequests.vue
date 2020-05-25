@@ -167,7 +167,9 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/requests";
+const apiGet = "/api/requests/registrations";
+const apiAccept = "/api/requests/registrations/auth";
+const apiDecline = "/api/requests/registrations/decline";
 export default {
     data() {
         return {
@@ -182,25 +184,18 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/registrations", {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-                if (response.status == 200)
-                    return response.json();
-                else 
-                    return false
-                })
-            .then(requests => {
-                if (!requests) {
-                    alert("Nesto ne valja");
-                    return;
-                }
-                this.requests = requests
-                var i;
-                for(i = 0; i < this.requests.length; ++i) {
-                    this.$set(this.requests[i], 'loading', false);
-                    this.$set(this.requests[i], 'decline', false);
-                }
-            })
+        this.axios({url : apiGet
+        }).then(response =>   {
+            this.requests = response.data;
+            var i;
+            for(i = 0; i < this.requests.length; ++i) {
+                this.$set(this.requests[i], 'loading', false);
+                this.$set(this.requests[i], 'decline', false);
+            }
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
         accept(req) {
@@ -208,15 +203,17 @@ export default {
                 this.$store.commit('showSnackbar', {text: "Request already being processed!", color: "error", })
                 return;
             }
-            fetch(apiURL + "/registrations/auth/" + req.id, {
-                method: "POST",
-                headers: { 'Authorization': this.$authKey }})
-                .then(response => {
-                    if (response.status == 200) {
-                        this.$store.commit('showSnackbar', {text: "Successfully accepted patient!", color: "success", })
-                        this.requests.splice(this.requests.indexOf(req), 1);
-                    }
-                }) 
+            this.axios({url : apiAccept + "/" + req.id, 
+                        method: 'POST',
+            }).then(() =>   {
+                this.$store.commit('showSnackbar', {text: "Successfully accepted patient!", color: "success", })
+                this.requests.splice(this.requests.indexOf(req), 1);
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't accept patient!", color: "error", });
+                req.loading = false;
+            });
             req.loading = true;        
         },
         declineShow(req) {
@@ -244,7 +241,25 @@ export default {
                 this.$store.commit('showSnackbar', {text: "Request already being processed!", color: "error", })
                 return;
             }
-            fetch(apiURL + "/registrations/decline/" + this.req.id, {
+            this.axios({url : apiDecline + "/" + this.req.id, 
+                        method: 'POST',
+                        data: this.declineText,
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
+            }).then(() =>   {
+                this.$store.commit('showSnackbar', {text: "Successfully declined patient!", color: "success", })
+                this.requests.splice(this.requests.indexOf(this.req), 1);
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't accept patient!", color: "error", });
+                this.req.decline = false;
+                this.declineOverlay = false;
+            });
+            this.req.decline = true;    
+            this.declineOverlay = false;
+            /*fetch(apiURL + "/registrations/decline/" + this.req.id, {
                 method: "POST",
                 headers: {'Authorization': this.$authKey},
                 body: this.declineText
@@ -259,7 +274,7 @@ export default {
                 }
             })
             this.req.decline = true;    
-            this.declineOverlay = false;
+            this.declineOverlay = false;*/
         },
         checkLoad(req) {
             return req.loading;

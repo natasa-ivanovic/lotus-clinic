@@ -48,7 +48,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointments/doctor/today";
+const apiURL = "/api/appointments/doctor/today";
 export default {
     data() {
         return {

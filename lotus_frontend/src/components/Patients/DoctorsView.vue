@@ -52,7 +52,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/patients/request/finish";
+const apiURL = "/api/patients/request/finish";
 export default {
     data() {
         return {

@@ -94,7 +94,7 @@
                             <v-card-actions>
                                 <v-row>
                                     <v-col>
-                                        <v-btn block @click="editPatient()" color="indigo" dark height=60>Change information</v-btn>
+                                        <v-btn block @click="editUser()" color="indigo" dark height=60>Change information</v-btn>
                                     </v-col>
                                     <v-col>
                                         <v-btn block @click="changePassword()" color="indigo" dark height=60 >Change password</v-btn>
@@ -111,9 +111,9 @@
 
 <script>
 import {util} from '../../util.js'
-import MedicalRecord from '../Medical Record/MedicalRecord'
+import MedicalRecord from '../MedicalRecord/MedicalRecord'
 
-const apiURL = "http://localhost:9001/api";
+const apiURL = "/api";
 export default {
     data() {
         return {
@@ -141,11 +141,10 @@ export default {
             user = "admins"
         if (this.$role == "CLINIC_ADMIN")
             user = "cadmins"
-        fetch(apiURL + "/" + user +"/self", {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(user => {
+        this.axios({url : apiURL + "/" + user +"/self", 
+                    method: 'GET'
+        }).then(res =>   {
+            var user = res.data;
             if (this.$role == "PATIENT") {
                 this.user = user.patient;
                 this.id = user.patient.id;
@@ -157,10 +156,13 @@ export default {
                 this.dateString = util.dateToString(user.birthDate);
                 this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
             }
-        })
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch user!", color: "error", })
+        });
     },
     methods: {
-        editPatient: function() {
+        editUser: function() {
             var user = ""
             if (this.$role == "PATIENT")
                 user = "patients"

@@ -17,8 +17,7 @@
                 :headers="this.headers"
                 :items="this.items"
                 :search="search"
-                >
-                </v-data-table>
+                ></v-data-table>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -43,13 +42,11 @@ export default {
     },
     data() {
         return {
-            search: '',
-            
+            search: ''
         }
     },
     methods: {
         turnOff() {
-            //this.$overlay = false;
             this.$emit('update:overlay', false)
         }
     }

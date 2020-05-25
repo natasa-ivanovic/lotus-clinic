@@ -51,14 +51,9 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-autocomplete
+                        <v-text-field
                         label="Allergies"
-                        item-text="name"
-                        selected
-                        multiple
-                        return-object
-                        v-model="record.allergies"
-                        :items="allAllergies"
+                        v-model="record.allergies" 
                         :readonly="!this.isEditing" />
                     </v-col>
                     <v-col>
@@ -86,7 +81,7 @@
 import Overlay from "./MROverlay"
 
 
-const apiURL = "http://localhost:9001/api/medicalRecord/"
+const apiURL = "/api/medicalRecord"
 
 export default {
     name: "MedicalRecord",
@@ -109,7 +104,6 @@ export default {
             appointments: [],
             isEditing: false,
             bloodTypes: ['A', 'B', 'AB', 'O'],
-            allAllergies: [],
             cachedRecord: {},
             allergies: [],
             overlay: false,
@@ -120,15 +114,7 @@ export default {
     },
     mounted() {
         this.axios({
-            url: "http://localhost:9001/api/allergies",
-            method: 'GET'
-        }).then(response => {
-            this.allAllergies = response.data;
-        }).catch(error => {
-            alert(error);
-        })
-        this.axios({
-            url: apiURL + this.id,
+            url: apiURL + "/" + this.id,
             method: 'GET'
         }).then(response => {
             this.record = response.data.patient.record;
@@ -201,7 +187,7 @@ export default {
             this.appointments.forEach(app => {
                 var el = {
                     date: this.getDate(app.startDate).date,
-                    diagnosis: app.diagnosis.join(', '),
+                    diagnosis: app.diagnosis,
                     description: app.description,
                     prescription: app.prescription
                 }

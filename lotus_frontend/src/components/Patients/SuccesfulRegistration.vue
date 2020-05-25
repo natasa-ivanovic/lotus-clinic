@@ -17,19 +17,18 @@
 
 <script>
 
-const apiURL = "http://localhost:9001/api/requests/registrations";
+const apiURL = "/api/requests/registrations";
 
 export default {
     props: ['logkey'],
     mounted() {
-        fetch(apiURL + "/" + this.logkey)
-        .then(response => {
-            if (response.status != 200){
-                this.msg = "An error has occurred on our servers. Please try again later."
-            }
-            else
+        this.axios({url : apiURL + "/" + this.logkey
+            }).then(() =>   {                
                 this.msg = "Your request has been approved by our administrators. Please log in using the button on the top right."
-        })
+            }).catch(() => {
+                // todo dodati da se zna tacno sta je
+                this.msg = "An error has occurred. Your request may have already been approved, or your request is invalid."
+            });
     },
     data() {
         return {

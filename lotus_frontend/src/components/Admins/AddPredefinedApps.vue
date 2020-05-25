@@ -191,9 +191,10 @@
 </template>
 
 <script>
-  const apiTypes = "http://localhost:9001/api/appointmentPrices";
-  const apiRooms = "http://localhost:9001/api/rooms/free";
-  const apiAddApp = "http://localhost:9001/api/appointments";
+
+  const apiTypes = "/api/appointmentPrices";
+  const apiRooms = "/api/rooms/free";
+  const apiAddApp = "/api/appointments";
 
   export default {
     data () {
@@ -238,14 +239,14 @@
       }
     },
     mounted() {
-      fetch(apiTypes, {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(response => {
-            this.appTypes = response;
-        })
-
+      this.axios({url : apiTypes, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.appTypes = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
       getToday: function() {
@@ -306,19 +307,14 @@
         this.appointment.startDateString = this.startDate + " " + this.startTime;
         //console.log(date);
         this.e1 = 4;
-        fetch(apiRooms, {method: 'POST', headers: {'Content-Type': 'application/json', 
-              'Authorization': this.$authKey},
-              body: this.appointment.startDateString})
-        .then(response => {
-          if (response.status != 200)
-            return false;
-          else
-            return response.json();
-        })
-        .then(rooms => {
-          if (rooms == false)
-            return; //NAPRAVI TROUGAO
-          else {
+        this.axios({url : apiRooms, 
+                    method: 'POST',
+                    data:  this.appointment.startDateString,
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    }
+        }).then(response =>   {
+            var rooms = response.data;
             var r = [];
             rooms.rooms.forEach(el => {
               var room = {
@@ -330,9 +326,10 @@
             this.freeRooms = rooms.rooms;
             this.rooms = r;
             this.appointment.endDateLong = new Date(rooms.endDate);
-          }
-            
-        })
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
       },
       convertEndDate: function() {
         if (this.appointment.room == "") {
@@ -375,18 +372,18 @@
       finishAppointment: function() {
         console.log(this.appointment);
         this.appointment.endDateLong = this.appointment.endDateLong.getTime();
-        fetch(apiAddApp, {method: 'POST', 
-                  headers: {'Content-Type': 'application/json',
-                            'Authorization': this.$authKey },
-                  body: JSON.stringify(this.appointment)})
-            .then(response => {
-              if (response.status != 200)
-                alert("Couldn't add this appointment!");
-              else {
-                alert("Appointment is successfully created!")
-                this.$router.push({name : "home"});
-              }
-          })
+        // ako bude bacao error proveri stringify za appointment al ne bi trebalo
+        this.axios({url : apiAddApp, 
+                    method: 'POST',
+                    data:  this.appointment
+        }).then(response =>   {
+            console.log(response);
+            this.$store.commit('showSnackbar', {text: "Appointment is successfully created!", color: "success", })
+            this.$router.push({name : "home"}); 
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't add appointment! Please try again later.", color: "error", })
+        });
       },
       redirect: function() {
         this.$router.push({name : "home"}); //TODO ASK YES OR NO

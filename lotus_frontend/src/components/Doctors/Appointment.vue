@@ -74,9 +74,10 @@
 </template>
 
 <script>
-import MedicalRecord from "../Medical Record/MedicalRecord"
+import MedicalRecord from "../MedicalRecord/MedicalRecord"
 import ScheduleAppointment from "./ScheduleAppointment"
-const apiURL = "http://localhost:9001/api"
+
+const apiURL = "/api/appointments/info"
 
 export default {
     name: "startAppointment",
@@ -97,6 +98,7 @@ export default {
             info: "",
             allMedicines: [],
             allDiagnosis: []
+
         }
     },
     mounted() {
@@ -104,7 +106,7 @@ export default {
             this.$router.push({name: "home"});
 
         this.axios({
-            url: apiURL + "/appointments/info",
+            url: apiURL,
             method: 'GET'
         }).then(response => {
             this.allMedicines = response.data.medicines;
