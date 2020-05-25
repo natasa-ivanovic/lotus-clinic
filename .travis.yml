@@ -3,6 +3,10 @@ matrix:
     - language: java
       jdk: 
         - oraclejdk8
+      services:
+        - postgresql
+      before_script:
+        - psql -c 'create database lotus;' -U postgres
       before_install:
         - cd lotus_backend
       install:
@@ -20,9 +24,6 @@ matrix:
         - npm install
       script:
         - npm run build
-
-services:
-  - postgresql
 
 dist: trusty
 
