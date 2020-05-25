@@ -26,8 +26,8 @@ Object.defineProperty(Vue.prototype, '$role', {
 Vue.use(VueAxios, Axios);
 
 Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
-
-Vue.axios.defaults.baseURL = "http://localhost:9001"
+Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+Vue.axios.defaults.baseURL = "http://lotus-clinic-api.herokuapp.com"
 
 // all errors pass through this function before being catched in individual catch functions
 Vue.axios.interceptors.response.use(response => {
