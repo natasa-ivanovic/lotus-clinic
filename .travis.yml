@@ -14,6 +14,12 @@ matrix:
         - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       script:
         - ./mvnw clean install
+      deploy:
+        provider: heroku
+        api_key: c2dfe0f2-e742-4bdb-b377-ba0768416483
+        app: lotus-clinic-api
+        on: 
+          all_branches: true
 
     - language: node_js
       node_js: 
@@ -24,16 +30,17 @@ matrix:
         - npm install
       script:
         - npm run build
+      deploy:
+        provider: heroku
+        api_key: c2dfe0f2-e742-4bdb-b377-ba0768416483
+        app: lotus-clinic
+        on: 
+          all_branches: true
+
 
 dist: trusty
 
-deploy:
-  provider: heroku
-  api_key: c2dfe0f2-e742-4bdb-b377-ba0768416483
-  app: lotus-clinic
-  on: 
-    all_branches: true
-
+  
 notifications:
   email: 
     - natasaivanovic98@yahoo.com
