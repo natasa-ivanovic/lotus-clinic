@@ -47,7 +47,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api";
+const apiURL = "/api/appointments/patient";
 export default {
     data() {
         return {
@@ -56,23 +56,17 @@ export default {
         };
     },
     mounted() {
-        fetch(apiURL + "/appointments/patient", {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            if (response.status != 200)
-                return false;
-            else
-                return response.json();
-        })
-        .then(apps => {
-            if (apps == false ) {
-                console.log("TODO: Log me out!");
-            } else {
-                this.appointments = apps;
-                this.appointments.forEach(app => {
-                    app.date = app.startDate.split("T")[0]
-                    app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
-                })
-            }
+        this.axios({url: apiURL,
+            method: 'GET'
+        }).then(response => {
+            console.log(response);
+            this.appointments = response.data;
+            this.appointments.forEach(app => {
+                app.date = app.startDate.split("T")[0]
+                app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
+            })
+        }).catch(error => {
+            console.log(error);
         })
     },
     methods: {

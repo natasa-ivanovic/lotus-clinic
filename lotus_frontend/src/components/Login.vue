@@ -46,7 +46,7 @@
 </template>
 
 <script>
-const apiURL = "http://lotus-clinic-api.herokuapp.com/auth/login";
+const apiURL = "/auth/login";
 
 export default {
   name: "login",

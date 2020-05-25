@@ -58,7 +58,6 @@ export default {
     },
     logout: function() {
         this.$role = null;
-        this.$authKey = null;
         localStorage.removeItem('authKey');
         this.axios.defaults.headers['Authorization'] = "";
         localStorage.removeItem('role');
