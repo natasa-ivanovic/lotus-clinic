@@ -66,7 +66,7 @@ export default {
             }).then(response =>   {
                 // test this
                 console.log(response);
-                this.clinics.pop(clinic);
+                this.clinics.splice(this.clinics.indexOf(clinic), 1);
                 this.$store.commit('showSnackbar', {text: "Successfully deleted clinic.", color: "success", })
             }).catch(error => {
                 console.log(error.request);

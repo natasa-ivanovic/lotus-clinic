@@ -39,7 +39,7 @@
 </template>
 
 <script>
-const apiURL = "/api/rooms/";
+const apiURL = "/api/rooms";
 export default {
     name: "rooms",
   data() {
@@ -69,10 +69,9 @@ export default {
       this.axios({url : apiURL + "/" + room.id, 
                   method: 'DELETE'
       }).then(response =>   {
-          // test this
-          console.log(response);
-          this.rooms.pop(room);
-          this.$store.commit('showSnackbar', {text: "Successfully deleted room.", color: "success", })
+            console.log(response);
+            this.rooms.splice(this.rooms.indexOf(room), 1);
+            this.$store.commit('showSnackbar', {text: "Successfully deleted room.", color: "success", })
       }).catch(error => {
           console.log(error.request);
           // navesti razlog errora

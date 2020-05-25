@@ -62,7 +62,7 @@ export default {
                     method: 'DELETE'
         }).then(() =>   {
            // test this
-           this.appTypes.pop(type);
+           this.appTypes.splice(this.appTypes.indexOf(type), 1);
            this.$store.commit('showSnackbar', {text: "Successfully deleted appointment type.", color: "success", })
         }).catch(error => {
             console.log(error.request);

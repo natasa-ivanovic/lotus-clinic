@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "/api/medicines/";
+const apiURL = "/api/medicines";
 export default {
     name: "medicines",
     data() {
@@ -63,7 +63,7 @@ export default {
             }).then(response =>   {
                 // test this
                 console.log(response);
-                this.diagnoses.pop(medicine);
+                this.medicines.splice(this.medicines.indexOf(medicine), 1);
                 this.$store.commit('showSnackbar', {text: "Successfully deleted medicine.", color: "success", })
             }).catch(error => {
                 console.log(error.request);

@@ -63,7 +63,7 @@ export default {
             }).then(response =>   {
                 // test this
                 console.log(response);
-                this.diagnoses.pop(diag);
+                this.diagnoses.splice(this.diagnoses.indexOf(diag), 1);
                 this.$store.commit('showSnackbar', {text: "Successfully deleted diagnosis.", color: "success", })
             }).catch(error => {
                 console.log(error.request);
