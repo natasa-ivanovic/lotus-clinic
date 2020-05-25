@@ -210,7 +210,7 @@
       this.axios({url : apiTypes, 
                     method: 'GET'
         }).then(response =>   {
-            this.appTypes = response;
+            this.appTypes = response.data;
         }).catch(error => {
             console.log(error.request);
             this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
@@ -277,7 +277,8 @@
         this.axios({url : apiRooms, 
                     method: 'POST',
                     data:  this.appointment.startDateString
-        }).then(rooms =>   {
+        }).then(response =>   {
+            var rooms = response.data;
             var r = [];
             rooms.rooms.forEach(el => {
               var room = {

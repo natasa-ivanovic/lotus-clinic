@@ -61,7 +61,7 @@ export default {
         this.axios({url : apiURL + "/" + this.id, 
                     method: 'GET'
         }).then(response =>   {
-            this.appType = response;
+            this.appType = response.data;
         }).catch(error => {
             console.log(error.request);
             this.$store.commit('showSnackbar', {text: "Couldn't fetch appointment type!", color: "error", })

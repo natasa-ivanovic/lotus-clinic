@@ -62,7 +62,7 @@ export default {
         this.axios({url : apiURL + "/" + this.id, 
                     method: 'GET'
         }).then(response =>   {
-            this.room = response;
+            this.room = response.data;
         }).catch(error => {
             console.log(error.request);
             this.$store.commit('showSnackbar', {text: "Couldn't fetch diagnosis!", color: "error", })

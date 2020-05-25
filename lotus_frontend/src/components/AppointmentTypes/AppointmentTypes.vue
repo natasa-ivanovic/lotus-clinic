@@ -50,7 +50,7 @@ export default {
     this.axios({url : apiURL, 
                     method: 'GET'
         }).then(response =>   {
-            this.appTypes = response;
+            this.appTypes = response.data;
         }).catch(error => {
             console.log(error.request);
             this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
