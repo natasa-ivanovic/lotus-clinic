@@ -161,7 +161,7 @@ const apiURL = "/api/appointments/doctor";
       this.axios({url : apiURL, 
                     method: 'GET'
         }).then(response => {
-            this.appointments = response;
+            this.appointments = response.data;
             for(var i = 0; i < this.appointments.length; i++)
             {
               this.events.push({

@@ -51,7 +51,10 @@ export default {
             }
             this.axios({url : apiURL, 
                         method: 'POST',
-                        data: this.medicine.name
+                        data: this.medicine.name,
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
             }).then(response =>   {
                 console.log(response);
                 this.$store.commit('showSnackbar', {text: "Successfully added medicine.", color: "success", })

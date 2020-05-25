@@ -47,7 +47,10 @@ export default {
       }
       this.axios({url : apiURL, 
                         method: 'POST',
-                        data: this.name
+                        data: this.name,
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
             }).then(response =>   {
                 console.log(response);
                 this.$store.commit('showSnackbar', {text: "Successfully added room.", color: "success", })

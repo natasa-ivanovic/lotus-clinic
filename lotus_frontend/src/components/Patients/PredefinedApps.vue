@@ -58,7 +58,7 @@ export default {
             method: 'GET'
         }).then(response => {
             console.log(response);
-            this.apps = response;
+            this.apps = response.data;
             this.apps.forEach(app => {
                 var start = new Date(app.startDate);
                 var end = new Date(app.endDate);

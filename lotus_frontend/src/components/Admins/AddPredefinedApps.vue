@@ -276,7 +276,10 @@
         this.e1 = 4;
         this.axios({url : apiRooms, 
                     method: 'POST',
-                    data:  this.appointment.startDateString
+                    data:  this.appointment.startDateString,
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    }
         }).then(response =>   {
             var rooms = response.data;
             var r = [];
