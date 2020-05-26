@@ -36,7 +36,7 @@
                     outlined />
                   <v-text-field
                     label="Discount"
-                    :rules="[rules.required, rules.isNumber]"
+                    :rules="[rules.required, rules.isNumber, rules/isBetween]"
                     v-model="appType.discount"
                     outlined />
                 </v-form>
@@ -63,7 +63,8 @@ export default {
             appType: {},
             rules: {
                 required: value => !!value || value === 0 || 'Field is required.',
-                isNumber: value => !isNaN(value) || 'Price must be a number.'
+                isNumber: value => !isNaN(value) || 'Price must be a number.',
+                isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
             },
             valid: true
         }

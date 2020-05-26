@@ -150,13 +150,12 @@
               <v-container>
                 <v-row>
                 </v-row>
-                  <v-autocomplete
-                  suffix="%"
-                  label="Discount"
-                  items="[0, 10, 20, 30, 40, 50]"
-                  :rules="[rules.required]"
-                  v-model="appointment.discount"
-                  required />
+                  <v-text-field
+                    label="Discount"
+                    suffix="%"
+                    :rules="[rules.required, rules.isNumber, rules.isBetween]"
+                    v-model="appointment.discount"
+                    required />
               </v-container>
                <v-btn color="primary" @click="checkDiscount()" class="ml-8" width="100">Continue</v-btn>
               </v-card>
@@ -227,8 +226,9 @@
           step3: () => this.step3, //doctor
           step4: () => this.step4, //room
           step5: () => this.step5,  //price
-          required: value => !!value || 'Field is required.',
-          isNumber: value => !isNaN(value) || 'Price must be a number.'
+          required: value => !!value || value === 0 || 'Field is required.',
+          isNumber: value => !isNaN(value) || 'Price must be a number.',
+          isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
         },
         step1: true,
         step2: true,
