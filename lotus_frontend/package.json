@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sonar-scanner": "node_modules/sonar-scanner/bin/sonar-scanner.bat"
     "start": "node server.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -12,6 +13,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^3.6.4",
     "express": "^4.17.1",
+    "sonar-scanner": "^3.1.0",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-moment": "^4.1.0",
