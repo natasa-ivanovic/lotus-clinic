@@ -42,7 +42,9 @@ public class Appointment {
 	private Date endDate;
 	@Column(name="status", unique=false, nullable=false)
 	private AppointmentStatus status;
+	@Column(name="price", unique=false, nullable=false)
 	private double price;
+	@Column(name="discount", unique=false, nullable=false)
 	private double discount;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private MedicalRecord medicalRecord;

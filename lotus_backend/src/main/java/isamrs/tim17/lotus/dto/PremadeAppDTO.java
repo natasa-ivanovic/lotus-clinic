@@ -27,6 +27,8 @@ public class PremadeAppDTO {
 	private List<String> recipes;
 	private boolean rated;
 	private String description;
+	private double price;
+	private double discount;
 	
 	public PremadeAppDTO() {
 	}
@@ -40,6 +42,8 @@ public class PremadeAppDTO {
 		this.doctorSurname = app.getDoctor().getSurname();
 		this.roomId = app.getRoom().getId();
 		this.roomName = app.getRoom().getName();
+		this.price = app.getPrice();
+		this.discount = app.getDiscount();
 		this.setType(app.getAppointmentType().getName());
 		if (app.getMedicalRecord() != null) {
 			this.patientName = app.getMedicalRecord().getPatient().getName();
@@ -209,6 +213,24 @@ public class PremadeAppDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+	
+	
 	
 
 }
