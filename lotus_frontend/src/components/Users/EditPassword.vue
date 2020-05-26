@@ -115,10 +115,10 @@ export default {
           this.axios({url : loginURL, 
                   method: 'POST',
                   data: user                  
-            }).then(response => {
-              this.$authKey = "Bearer " + response.data.accessToken;
-              localStorage.setItem('authKey', "Bearer " + response.data.accessToken);
-              this.axios.defaults.headers['Authorization'] = "Bearer " + response.data.accessToken;
+            }).then(resp => {
+              this.$authKey = "Bearer " + resp.data.accessToken;
+              localStorage.setItem('authKey', "Bearer " + resp.data.accessToken);
+              this.axios.defaults.headers['Authorization'] = "Bearer " + resp.data.accessToken;
               this.$store.commit('showSnackbar', {text: "Successfully changed password!", color: "success", })
               this.$router.push({ name: "profile" })
         }).catch(error => {
@@ -132,7 +132,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

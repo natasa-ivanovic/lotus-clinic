@@ -19,31 +19,6 @@
                                     single-line
                                     hide-details></v-text-field>
                                 </v-card-title>
-                                <!--v-carousel v-model="selectedDay" hide-delimiters
-                                    :continuous="false"
-                                    :show-arrows="true"
-                                    hide-delimiter-background
-                                    height="40"
-                                    light
-                                >
-                                <v-carousel-item
-                                    v-for="(slide, i) in ['1', '2', '3']"
-                                    :key="i"
-                                    class="mb-15"
-                                >
-                                    <v-sheet
-                                    height="100%"
-                                    tile
-                                    >
-                                    <v-row
-                                        align="center"
-                                        justify="center"
-                                    >
-                                        <div class="display-1">{{slide}}</div>
-                                    </v-row>
-                                    </v-sheet>
-                                </v-carousel-item>
-                                </v-carousel-->
                                 <v-data-table
                                 :headers="header"
                                 :items="rooms"
@@ -139,7 +114,3 @@ export default {
     
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -144,17 +144,16 @@ export default {
         this.axios({url : apiURL + "/" + user +"/self", 
                     method: 'GET'
         }).then(res =>   {
-            var user = res.data;
             if (this.$role == "PATIENT") {
-                this.user = user.patient;
-                this.id = user.patient.id;
-                this.record = user.record;
-                this.dateString = util.dateToString(user.patient.birthDate);
-                this.selectedGender = user.patient.gender.charAt(0) + user.patient.gender.slice(1).toLowerCase();
+                this.user = res.data.patient;
+                this.id = res.data.patient.id;
+                this.record = res.data.record;
+                this.dateString = util.dateToString(res.data.patient.birthDate);
+                this.selectedGender = res.data.patient.gender.charAt(0) + res.data.patient.gender.slice(1).toLowerCase();
             } else {
-                this.user= user;
-                this.dateString = util.dateToString(user.birthDate);
-                this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
+                this.user= res.data;
+                this.dateString = util.dateToString(res.data.birthDate);
+                this.selectedGender = res.data.gender.charAt(0) + res.data.gender.slice(1).toLowerCase();
             }
         }).catch(error => {
             console.log(error.request);

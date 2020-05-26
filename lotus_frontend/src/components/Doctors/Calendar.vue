@@ -90,9 +90,6 @@
           </v-card>
         </v-menu>
       </v-sheet>
-      <!--v-sheet>
-        <h1>{{this.appointments}}</h1>
-      </v-sheet-->
     </v-col>
   </v-row>
 </template>
@@ -255,7 +252,3 @@ const apiURL = "/api/appointments/doctor";
     },
   }
 </script>
-
-<style scoped>
-
-</style>

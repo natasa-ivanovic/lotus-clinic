@@ -22,7 +22,7 @@
                                     Room: {{app.roomName}} <br />
                                     Time: {{app.time}}
                                 </v-list-item-content>
-                            <v-btn v-if="checkTime(app)" v-on:click="start(app)" block color="success">Start appointment</v-btn>
+                            <v-btn v-on:click="start(app)" block color="success">Start appointment</v-btn>
                             </v-list-item-content>
                         </v-list-item>
                         </v-list-item-group>
@@ -85,18 +85,6 @@ export default {
             var dateLong = date.getTime();
             return dateLong;
         },
-        checkTime: function(app) {
-            var current = new Date();
-            var start = new Date(app.startDate);
-            console.log(current);
-            console.log(start);
-            var difference = start.getTime() - current.getTime();
-            var resultInMinutes = Math.round(difference / 60000);
-            console.log('Difference: ' + resultInMinutes);
-            if (resultInMinutes <= 10)
-                return true;
-            return true; //NE ZABORAVI DA VRATIS NA FALSE!!!!
-        },
         start: function(app) {
             console.log(app);
             this.$router.push({name: "startAppointment", params: {appointment: app}})
@@ -105,9 +93,3 @@ export default {
     }
 }
 </script>
-
-
-
-<style scoped>
-
-</style>
