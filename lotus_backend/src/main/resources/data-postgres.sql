@@ -107,7 +107,6 @@ insert into appointments (start_date, end_date, price, discount, status, appoint
 insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 19:00:00.508-07', '2020-05-24 19:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
 
 
-
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (1, 1);
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (2, 2);
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);

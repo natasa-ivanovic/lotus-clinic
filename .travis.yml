@@ -5,6 +5,11 @@ matrix:
         - oraclejdk8
       services:
         - postgresql
+      addons:
+        sonarcloud:
+        organization: "lotus-clinic-api"
+        token:
+           secure: "S7fShgL4IWwTAGPcilBUaZFgfNQLbTETTI+M/jmpR1D9FA7cN38jOE1i965/j1JQhni81o98/Z983ch9+jyUjt1XIUFtZgRMXHg46A7ePScmNRFt7CXgh8H4R2BblAibAH2I8C4SLACKmRkk97/gzIpomYv8OjJ3KYOtxQZ3lTWWeRz/KZo+WS4bYtV1f9COBai40GjJQ6smJr2MYluQ1bl4DCV7lhq/xy9A+Ac9FcaXSdOVXKDDLxHsjt/+b+s8s8d9afiHeCrzJDLfOcBm0esrEh9o5WQl2Y2Ievs408nfrhmnG/LZrD6tXMyMzLop/VnehZUh9uc4GN2NC+xidYO8MipiDOos+jM99vrFJiB1HKqtaksJFaDzJy2WnIyEVD5e1bfQ9+IXYTu3Q55IIHndmLy4Xq/d/6RDH/cOEyBKNSf7WT0Mza72i0igOGm3ESeqyL+YxgLaVQawmC/qMNLiBw/+SwruTCLI6BXuUqgTWF1a0RajFulAN6JPWvsnWHyk/VHOTiBnWkqPUvrImmQAqqfYu4maz3BwE7DlX0gC3kh1SE5fQHq6PWmftAyUOXYJA+xqpyU4BFim+pwttD3airb4Em9b+EmBZV13BuKY4giKt6Gasq0xSHtR5mAhADsVvjsyMYGF+a496RD8aSQmQrQd07ep382JXvCULgs="
       before_script:
         - psql -c 'create database lotus;' -U postgres
       before_install:
@@ -14,7 +19,7 @@ matrix:
         - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       script:
         - ./mvnw clean install
-        - ./mvnw sonar:sonar -Dsonar.projectKey=natasa-ivanovic_lotus-clinic
+        - ./mvnw sonar:sonar -Dsonar.projectKey=natasa-ivanovic_lotus-clinic-api -Dsonar.organization=lotus-clinic-api -Dsonar.host.url=https://sonarcloud.io
       deploy:
         provider: heroku
         api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
@@ -25,13 +30,18 @@ matrix:
     - language: node_js
       node_js: 
         - node
+      addons:
+        sonarcloud:
+        organization: "lotus-clinic"
+        token:
+           secure: "S7fShgL4IWwTAGPcilBUaZFgfNQLbTETTI+M/jmpR1D9FA7cN38jOE1i965/j1JQhni81o98/Z983ch9+jyUjt1XIUFtZgRMXHg46A7ePScmNRFt7CXgh8H4R2BblAibAH2I8C4SLACKmRkk97/gzIpomYv8OjJ3KYOtxQZ3lTWWeRz/KZo+WS4bYtV1f9COBai40GjJQ6smJr2MYluQ1bl4DCV7lhq/xy9A+Ac9FcaXSdOVXKDDLxHsjt/+b+s8s8d9afiHeCrzJDLfOcBm0esrEh9o5WQl2Y2Ievs408nfrhmnG/LZrD6tXMyMzLop/VnehZUh9uc4GN2NC+xidYO8MipiDOos+jM99vrFJiB1HKqtaksJFaDzJy2WnIyEVD5e1bfQ9+IXYTu3Q55IIHndmLy4Xq/d/6RDH/cOEyBKNSf7WT0Mza72i0igOGm3ESeqyL+YxgLaVQawmC/qMNLiBw/+SwruTCLI6BXuUqgTWF1a0RajFulAN6JPWvsnWHyk/VHOTiBnWkqPUvrImmQAqqfYu4maz3BwE7DlX0gC3kh1SE5fQHq6PWmftAyUOXYJA+xqpyU4BFim+pwttD3airb4Em9b+EmBZV13BuKY4giKt6Gasq0xSHtR5mAhADsVvjsyMYGF+a496RD8aSQmQrQd07ep382JXvCULgs="
       before_install:
         - cd lotus_frontend
       install:
         - npm install
       script:
         - npm run build
-        - sonar-scanner 
+        - sonar-scanner -Dsonar.projectKey=natasa-ivanovic_lotus-clinic -Dsonar.organization=lotus-clinic -Dsonar.host.url=https://sonarcloud.io
       deploy:
         provider: heroku
         api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
@@ -41,11 +51,6 @@ matrix:
 
 dist: trusty
 
-addons:
-  sonarcloud:
-    organization: "lotus-clinic"
-    token:
-       secure: "S7fShgL4IWwTAGPcilBUaZFgfNQLbTETTI+M/jmpR1D9FA7cN38jOE1i965/j1JQhni81o98/Z983ch9+jyUjt1XIUFtZgRMXHg46A7ePScmNRFt7CXgh8H4R2BblAibAH2I8C4SLACKmRkk97/gzIpomYv8OjJ3KYOtxQZ3lTWWeRz/KZo+WS4bYtV1f9COBai40GjJQ6smJr2MYluQ1bl4DCV7lhq/xy9A+Ac9FcaXSdOVXKDDLxHsjt/+b+s8s8d9afiHeCrzJDLfOcBm0esrEh9o5WQl2Y2Ievs408nfrhmnG/LZrD6tXMyMzLop/VnehZUh9uc4GN2NC+xidYO8MipiDOos+jM99vrFJiB1HKqtaksJFaDzJy2WnIyEVD5e1bfQ9+IXYTu3Q55IIHndmLy4Xq/d/6RDH/cOEyBKNSf7WT0Mza72i0igOGm3ESeqyL+YxgLaVQawmC/qMNLiBw/+SwruTCLI6BXuUqgTWF1a0RajFulAN6JPWvsnWHyk/VHOTiBnWkqPUvrImmQAqqfYu4maz3BwE7DlX0gC3kh1SE5fQHq6PWmftAyUOXYJA+xqpyU4BFim+pwttD3airb4Em9b+EmBZV13BuKY4giKt6Gasq0xSHtR5mAhADsVvjsyMYGF+a496RD8aSQmQrQd07ep382JXvCULgs="
 
   
 notifications:
