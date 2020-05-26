@@ -29,6 +29,7 @@ public class AppointmentType {
 	@Column(name= "name", unique = false, nullable = false)
 	private String name;
 	private double price;
+	private double discount;
     
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
@@ -41,10 +42,11 @@ public class AppointmentType {
 	
 	public AppointmentType() {}
 	
-	public AppointmentType(String name, double price) {
+	public AppointmentType(String name, double price, double discount) {
 		this.id = this.getId();
 		this.name = name;
 		this.price = price;
+		this.discount = discount;
 	}
 	
 	@Override
@@ -98,6 +100,14 @@ public class AppointmentType {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 
 }

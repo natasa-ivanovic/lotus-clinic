@@ -280,6 +280,7 @@
         this.appTypes.forEach(el => {
           console.log(el.id);
           if (this.appointment.appointmentType == el.id) {
+            this.appointment.discount = el.discount;
             el.doctors.forEach(doc => {
               var doctor = {
                 text: doc.name + " " + doc.surname,

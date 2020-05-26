@@ -6,10 +6,10 @@ insert into rooms (name, clinic_id) values ('C1-Room 105', 1);
 insert into rooms (name, clinic_id) values ('C2-Room 210', 2);
 insert into rooms (name, clinic_id) values ('C2-Room 230', 2);
 
-insert into appointment_types (name, price, clinic_id) values ('Office visit', 200, 1);
-insert into appointment_types (name, price, clinic_id) values ('Physical evaluation', 300, 1);
-insert into appointment_types (name, price, clinic_id) values ('Dentist appointment', 400, 2);
-insert into appointment_types (name, price, clinic_id) values ('Optometrist appointment', 500, 2);
+insert into appointment_types (name, price, discount, clinic_id) values ('Office visit', 200, 0, 1);
+insert into appointment_types (name, price, discount, clinic_id) values ('Physical evaluation', 300, 50, 1);
+insert into appointment_types (name, price, discount, clinic_id) values ('Dentist appointment', 400, 0, 2);
+insert into appointment_types (name, price, discount, clinic_id) values ('Optometrist appointment', 500, 10, 2);
 
 insert into clinical_centres (name) values ('Centre 1');
 

@@ -18,6 +18,11 @@
                 :rules="[rules.required, rules.isNumber]"
                 v-model="appointmentType.price"
                 required />
+                <v-text-field
+                label="Discount"
+                :rules="[rules.required, rules.isNumber]"
+                v-model="appointmentType.discount"
+                required />
             </v-form>
             <v-card-actions>
               <v-btn block v-on:click="addAppType()" color="primary">Add</v-btn>
@@ -38,6 +43,7 @@ export default {
         appointmentType: {
           name: '',
           price: '',
+          discount: '',
         },
         rules: {
           required: value => !!value || 'Field is required.',

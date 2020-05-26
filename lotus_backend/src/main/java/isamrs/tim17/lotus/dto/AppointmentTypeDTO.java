@@ -11,6 +11,7 @@ public class AppointmentTypeDTO {
 	private long id;
 	private String name;
 	private double price;
+	private double discount;
 	private Set<UserDTO> doctors = new HashSet<UserDTO>();
 	
 	public AppointmentTypeDTO() {}
@@ -19,6 +20,7 @@ public class AppointmentTypeDTO {
 		this.id = at.getId();
 		this.name = at.getName();
 		this.price = at.getPrice();
+		this.discount = at.getDiscount();
 		for(Doctor d : at.getDoctors()) {
 			doctors.add(new UserDTO(d));
 		}		
@@ -54,6 +56,14 @@ public class AppointmentTypeDTO {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 
 }

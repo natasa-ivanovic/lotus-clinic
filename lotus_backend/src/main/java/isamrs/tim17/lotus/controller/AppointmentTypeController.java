@@ -33,7 +33,7 @@ public class AppointmentTypeController {
 		System.out.println("Adding an appointment type...");
 		System.out.println(appointmentDTO.getName());
 		
-		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice());
+		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice(), appointmentDTO.getDiscount());
 		service.save(at);
 		return new ResponseEntity<>(at, HttpStatus.OK);
 	}
@@ -76,6 +76,7 @@ public class AppointmentTypeController {
 		
 		at.setName(newAppointmentType.getName());
 		at.setPrice(newAppointmentType.getPrice());
+		at.setDiscount(newAppointmentType.getDiscount());
 		at = service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

@@ -34,6 +34,11 @@
                     :rules="[rules.required, rules.isNumber]"
                     v-model="appType.price"
                     outlined />
+                  <v-text-field
+                    label="Discount"
+                    :rules="[rules.required, rules.isNumber]"
+                    v-model="appType.discount"
+                    outlined />
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -57,7 +62,7 @@ export default {
         return {
             appType: {},
             rules: {
-                required: value => !!value || 'Field is required.',
+                required: value => !!value || value === 0 || 'Field is required.',
                 isNumber: value => !isNaN(value) || 'Price must be a number.'
             },
             valid: true
