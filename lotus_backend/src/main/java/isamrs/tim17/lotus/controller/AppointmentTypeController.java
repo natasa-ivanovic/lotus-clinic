@@ -29,11 +29,11 @@ public class AppointmentTypeController {
 	
 	@PostMapping("/appointmentTypes")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<AppointmentType> addAppointmentType(@RequestBody String name) {
+	public ResponseEntity<AppointmentType> addAppointmentType(@RequestBody AppointmentTypeDTO appointmentDTO) {
 		System.out.println("Adding an appointment type...");
-		System.out.println(name);
+		System.out.println(appointmentDTO.getName());
 		
-		AppointmentType at = new AppointmentType(name);
+		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice());
 		service.save(at);
 		return new ResponseEntity<>(at, HttpStatus.OK);
 	}
@@ -75,6 +75,7 @@ public class AppointmentTypeController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		at.setName(newAppointmentType.getName());
+		at.setPrice(newAppointmentType.getPrice());
 		at = service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

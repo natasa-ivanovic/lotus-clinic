@@ -11,7 +11,12 @@
               <v-text-field
                 label="Name"
                 :rules="[rules.required]"
-                v-model="name"
+                v-model="appointmentType.name"
+                required />
+                <v-text-field
+                label="Price"
+                :rules="[rules.required, rules.isNumber]"
+                v-model="appointmentType.price"
                 required />
             </v-form>
             <v-card-actions>
@@ -30,9 +35,13 @@ export default {
     name: "addAppointmentType",
     data() {
       return {
-        name: '',
+        appointmentType: {
+          name: '',
+          price: '',
+        },
         rules: {
-          required: value => !!value || 'Field is required.'
+          required: value => !!value || 'Field is required.',
+          isNumber: value => !isNaN(value) || 'Price must be a number.'
         },
         valid: true
       }
@@ -47,10 +56,10 @@ export default {
             fetch(apiURL, {method: 'POST', 
                   headers: {'Content-Type': 'application/json',
                             'Authorization': this.$authKey },
-                  body: this.name})
+                  body: JSON.stringify(this.appointmentType)})
             .then(response => {
               if (response.status != 200)
-                alert("Couldn't add " + this.name + "!");
+                alert("Couldn't add " + this.appointmentType.name + "!");
               else
                 this.$router.push({ name: "appointmentTypes" });
           })
