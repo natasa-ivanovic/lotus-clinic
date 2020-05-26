@@ -42,6 +42,8 @@ public class Appointment {
 	private Date endDate;
 	@Column(name="status", unique=false, nullable=false)
 	private AppointmentStatus status;
+	private double price;
+	private double discount;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private MedicalRecord medicalRecord;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -64,32 +66,43 @@ public class Appointment {
 	
 	public Appointment() {}
 
-	public Appointment(String information, Date startDate, Date endDate, AppointmentStatus status,
-			MedicalRecord medicalRecord, Doctor doctor, Room room, AppointmentType appointmentType, HashSet<Diagnosis> diagnosis) {
-		this.id = this.getId();
+	public Appointment(long id, String information, Date startDate, Date endDate, AppointmentStatus status,
+			double price, double discount, MedicalRecord medicalRecord, Doctor doctor, Room room, Clinic clinic,
+			AppointmentType appointmentType, Set<Diagnosis> diagnosis, Set<Prescription> prescriptions,
+			boolean reviewed) {
+		super();
+		this.id = id;
 		this.information = information;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.status = status;
+		this.price = price;
+		this.discount = discount;
 		this.medicalRecord = medicalRecord;
 		this.doctor = doctor;
 		this.room = room;
+		this.clinic = clinic;
 		this.appointmentType = appointmentType;
 		this.diagnosis = diagnosis;
-		this.reviewed = false;
+		this.prescriptions = prescriptions;
+		this.reviewed = reviewed;
 	}
 	
-	public Appointment(Date startDate, Date endDate, AppointmentType type, Doctor doctor, Room room, Clinic clinic) {
+	public Appointment(Date startDate, Date endDate, double price, double discount, AppointmentType appointmentType, Doctor doctor, Room room,
+			Clinic clinic) {
+		super();
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.appointmentType = type;
+		this.appointmentType = appointmentType;
+		this.price = price;
+		this.discount = discount;
 		this.doctor = doctor;
 		this.room = room;
 		this.status = AppointmentStatus.PREMADE; //IZMENITI
 		this.clinic = clinic;
 		this.reviewed = false;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Appointment [id=" + id + ", information=" + information + ", startDate=" + startDate + ", endDate="
@@ -199,6 +212,22 @@ public class Appointment {
 
 	public void setReviewed(boolean reviewed) {
 		this.reviewed = reviewed;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}	
 
 }

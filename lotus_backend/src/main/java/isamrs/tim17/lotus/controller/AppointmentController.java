@@ -261,7 +261,7 @@ public class AppointmentController {
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		System.out.println(clinic);
 		
-		Appointment newApp = new Appointment(start, end, at, doc, room, clinic);
+		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at, doc, room, clinic);
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -296,6 +296,7 @@ public class AppointmentController {
 		app.setEndDate(endDate);
 		app.setAppointmentType(doctor.getSpecialty());
 		app = service.save(app);
+		app.setPrice(app.getAppointmentType().getPrice());
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"

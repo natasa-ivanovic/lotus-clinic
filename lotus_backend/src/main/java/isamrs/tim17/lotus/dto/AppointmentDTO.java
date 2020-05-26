@@ -11,6 +11,8 @@ public class AppointmentDTO {
 	private Date endDate;
 	private Date startDate;
 	private String startDateString;
+	private double price;
+	private double discount;
 
 	public AppointmentDTO() {}
 	
@@ -20,6 +22,8 @@ public class AppointmentDTO {
 		this.doctor = app.getDoctor();
 		this.appointmentType = app.getAppointmentType();
 		this.room = app.getRoom();
+		this.price = app.price;
+		this.discount = app.discount;
 	}
 
 	public String getStartDateString() {
@@ -78,10 +82,20 @@ public class AppointmentDTO {
 		this.startDate = startDate;
 	}
 
-	
+	public double getPrice() {
+		return price;
+	}
 
-	
-		
-	
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
 
 }
