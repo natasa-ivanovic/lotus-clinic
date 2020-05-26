@@ -150,9 +150,11 @@
               <v-container>
                 <v-row>
                 </v-row>
-                  <v-text-field
+                  <v-autocomplete
+                  suffix="%"
                   label="Discount"
-                  :rules="[rules.required, rules.isNumber]"
+                  items="[0, 10, 20, 30, 40, 50]"
+                  :rules="[rules.required]"
                   v-model="appointment.discount"
                   required />
               </v-container>
@@ -175,7 +177,9 @@
                   <v-list-item-subtitle>Appointment type: {{this.aType}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Doctor: {{this.doc}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Room: {{this.room}}</v-list-item-subtitle>
-                  <v-list-item-subtitle>Discount: {{this.appointment.discount}} </v-list-item-subtitle>
+                  <!--v-list-item-subtitle>Price: {{this.price}}</v-list-item-subtitle-->
+                  <v-list-item-subtitle>Discount: {{this.appointment.discount}} %</v-list-item-subtitle>
+                  <!--v-list-item-subtitle>Price with discount: {{this.price}}</v-list-item-subtitle-->
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
@@ -255,6 +259,7 @@
         }
         this.step1 = true;
         var data = [];
+        //get prices for app type
         this.appTypes.forEach(el => {
           var type = {}
           if (el.doctors.length != 0) {
@@ -265,7 +270,6 @@
             data.push(type);
           }
         });
-        //this.getRooms(); //get all free rooms
         this.types = data;
         this.e1 = 2;
       },
