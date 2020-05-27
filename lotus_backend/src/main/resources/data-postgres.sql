@@ -11,6 +11,9 @@ insert into appointment_types (name, price, discount, clinic_id) values ('Physic
 insert into appointment_types (name, price, discount, clinic_id) values ('Dentist appointment', 400, 0, 2);
 insert into appointment_types (name, price, discount, clinic_id) values ('Optometrist appointment', 500, 10, 2);
 
+insert into appointment_price (discount, price, clinic_id, type_id) values (1, 100, 1, 1);
+insert into appointment_price (discount, price, clinic_id, type_id) values (1, 200, 2, 1);
+
 insert into clinical_centres (name) values ('Centre 1');
 
 /* patients */

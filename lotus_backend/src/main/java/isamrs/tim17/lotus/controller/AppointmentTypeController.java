@@ -28,7 +28,7 @@ public class AppointmentTypeController {
 	private AppointmentTypeService service;
 	
 	@PostMapping("/appointmentTypes")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<AppointmentType> addAppointmentType(@RequestBody AppointmentTypeDTO appointmentDTO) {
 		System.out.println("Adding an appointment type...");
 		System.out.println(appointmentDTO.getName());
@@ -39,7 +39,7 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes")
-	@PreAuthorize("hasAnyRole('ADMIN, PATIENT')")
+	@PreAuthorize("hasAnyRole('PATIENT, CENTRE_ADMIN, ADMIN')")
 	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
 		System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOO");
 		List<AppointmentType> atypes = service.findAll();
@@ -53,7 +53,7 @@ public class AppointmentTypeController {
 	}
 	
 	@GetMapping("/appointmentTypes/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<AppointmentTypeDTO> getAppointmentType(@PathVariable("id") long id) {
 		AppointmentType at = service.findOne(id);
 		AppointmentTypeDTO dto = new AppointmentTypeDTO(at);
@@ -63,7 +63,7 @@ public class AppointmentTypeController {
 	}
 	
 	@PutMapping("/appointmentTypes/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<Object> updateAppointmentType(@RequestBody AppointmentTypeDTO newAppointmentType, @PathVariable("id") long id) {
 		
 		if(id != newAppointmentType.getId())
@@ -82,7 +82,7 @@ public class AppointmentTypeController {
 	}
 	
 	@DeleteMapping("appointmentTypes/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
 		System.out.println(id);
 		AppointmentType at = service.findOne(id);
