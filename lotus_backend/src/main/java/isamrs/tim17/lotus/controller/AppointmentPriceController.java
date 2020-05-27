@@ -38,7 +38,10 @@ public class AppointmentPriceController {
 	@GetMapping("")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<AppointmentPriceDTO>> getallAppointmentPrices() {
-		List<AppointmentPrice> priceList = service.findAll();
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
+		
+		List<AppointmentPrice> priceList = service.findByClinicId(admin.getClinic());
 		List<AppointmentPriceDTO> priceListDTO = new ArrayList<>();
 		
 		for(AppointmentPrice ap : priceList)

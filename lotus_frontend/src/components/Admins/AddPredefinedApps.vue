@@ -191,7 +191,7 @@
 </template>
 
 <script>
-  const apiTypes = "http://localhost:9001/api/appointmentTypes";
+  const apiTypes = "http://localhost:9001/api/appointmentPrices";
   const apiRooms = "http://localhost:9001/api/rooms/free";
   const apiAddApp = "http://localhost:9001/api/appointments";
 

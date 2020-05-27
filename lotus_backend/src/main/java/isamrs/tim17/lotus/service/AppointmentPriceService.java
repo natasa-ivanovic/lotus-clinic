@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.AppointmentPrice;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.repository.AppointmentPriceRepository;
 
 @Service
@@ -24,5 +25,9 @@ public class AppointmentPriceService {
 	
 	public AppointmentPrice findOne(long id) {
 		return appointmentPrices.findById(id).orElseGet(null);
+	}
+	
+	public List<AppointmentPrice> findByClinicId(Clinic c) {
+		return appointmentPrices.findByClinicId(c.getId());
 	}
 }
