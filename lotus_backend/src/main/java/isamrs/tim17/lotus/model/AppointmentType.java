@@ -37,9 +37,6 @@ public class AppointmentType {
 	@OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
-	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
-	
 	public AppointmentType() {}
 	
 	public AppointmentType(String name, double price, double discount) {
@@ -84,14 +81,6 @@ public class AppointmentType {
 
 	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
-	}
-
-	public Set<Doctor> getDoctors() {
-		return doctors;
-	}
-
-	public void setDoctors(Set<Doctor> doctors) {
-		this.doctors = doctors;
 	}
 
 	public double getPrice() {

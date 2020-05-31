@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 public class Doctor extends User {
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	private AppointmentType specialty;
+	private AppointmentPrice specialty;
 	//@Column(name = "operation", unique = false, nullable = true)
 	//public Operation operation;
 	
@@ -32,11 +32,11 @@ public class Doctor extends User {
 	
 	public Doctor() {}
 
-	public AppointmentType getSpecialty() {
+	public AppointmentPrice getSpecialty() {
 		return specialty;
 	}
 
-	public void setSpecialty(AppointmentType specialty) {
+	public void setSpecialty(AppointmentPrice specialty) {
 		this.specialty = specialty;
 	}
 

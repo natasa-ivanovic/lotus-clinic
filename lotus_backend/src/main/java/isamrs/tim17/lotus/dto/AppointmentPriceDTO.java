@@ -1,6 +1,10 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import isamrs.tim17.lotus.model.AppointmentPrice;
+import isamrs.tim17.lotus.model.Doctor;
 
 public class AppointmentPriceDTO {
 	private long id;
@@ -8,6 +12,7 @@ public class AppointmentPriceDTO {
 	private long type_id;
 	private double price;
 	private double discount;
+	private Set<UserDTO> doctors = new HashSet<UserDTO>();
 	
 	public AppointmentPriceDTO() {
 		super();
@@ -18,9 +23,11 @@ public class AppointmentPriceDTO {
 		this.id = ap.getId();
 		this.name = ap.getType().getName();
 		this.type_id = ap.getType().getId();
-
 		this.price = ap.getPrice();
 		this.discount = ap.getDiscount();
+		for(Doctor d : ap.getDoctors()) {
+			doctors.add(new UserDTO(d));
+		}	
 	}
 
 	public long getId() {
@@ -61,5 +68,13 @@ public class AppointmentPriceDTO {
 
 	public void setType_id(long type_id) {
 		this.type_id = type_id;
+	}
+
+	public Set<UserDTO> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(Set<UserDTO> doctors) {
+		this.doctors = doctors;
 	}
 }

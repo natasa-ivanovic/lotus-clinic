@@ -20,10 +20,7 @@ public class AppointmentTypeDTO {
 		this.id = at.getId();
 		this.name = at.getName();
 		this.price = at.getPrice();
-		this.discount = at.getDiscount();
-		for(Doctor d : at.getDoctors()) {
-			doctors.add(new UserDTO(d));
-		}		
+		this.discount = at.getDiscount();	
 	}
 
 	public String getName() {
