@@ -3,8 +3,6 @@ package isamrs.tim17.lotus.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,6 @@ import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicAdminService;
 import isamrs.tim17.lotus.service.ClinicService;
-import isamrs.tim17.lotus.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -75,14 +72,12 @@ public class ClinicAdminController {
 		a.setCity(admin.getCity());
 		a.setCountry(admin.getCountry());
 		a.setPhoneNumber(admin.getPhoneNumber());
-		a = service.save(a);
+		service.save(a);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@PostMapping("/admins")
-	public ResponseEntity<Object> addClinicAdmin(@RequestBody ClinicAdminDTO admin) {
-		System.out.println("Adding a clinic admin...");
-		
+	public ResponseEntity<Object> addClinicAdmin(@RequestBody ClinicAdminDTO admin) {		
 		if(isEmptyOrNull(admin)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -112,7 +107,7 @@ public class ClinicAdminController {
 		
 		clinicAdmin.setClinic(clinic);
 		clinicAdmin.setEnabled(true);
-		ArrayList<Authority> auth = new ArrayList<Authority>();
+		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_ADMIN"));
 		clinicAdmin.setAuthorities(auth);
 		service.save(clinicAdmin);

@@ -195,7 +195,7 @@ public class RoomController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getTermsForRooms(@RequestBody String date) {
 
-		if (date == null || date == "")
+		if (date == null || "".equals(date))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();

@@ -13,7 +13,7 @@ public class MedicalRecordService {
 	private MedicalRecordRepository medicalRecords;
 	
 	public MedicalRecord findOne(long id) {
-		return medicalRecords.findById(id).orElseGet(null);
+		return medicalRecords.findOneById(id);
 	}
 
 	

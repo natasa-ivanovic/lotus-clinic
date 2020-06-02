@@ -15,7 +15,7 @@ public class ClinicService {
 	private ClinicRepository clinics;
 	
 	public Clinic findOne(long id) {
-		return clinics.findById(id).orElseGet(null);
+		return clinics.findOneById(id);
 	}
 	
 	public List<Clinic> findAll() {

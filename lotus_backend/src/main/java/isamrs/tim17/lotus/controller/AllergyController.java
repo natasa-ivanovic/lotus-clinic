@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AllergyDTO;
-import isamrs.tim17.lotus.dto.DiagnosisDTO;
 import isamrs.tim17.lotus.model.Allergy;
-import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.service.AllergyService;
 
 @RestController
@@ -35,17 +33,13 @@ public class AllergyController {
 		for(Allergy d : allergies) {
 			allergiesDTO.add(new AllergyDTO(d));
 		}
-		return new ResponseEntity<List<AllergyDTO>>(allergiesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(allergiesDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Object> addAllergy(@RequestBody String name) {
-		System.out.println("Adding an allergy...");
-		System.out.print(name);
-		
 		Allergy allergy = new Allergy(name);
 		service.save(allergy);
-		System.out.println("Database is ok...");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -54,35 +48,33 @@ public class AllergyController {
 		Allergy allergy = service.findOne(id);
 		
 		if(allergy == null)
-			return new ResponseEntity<AllergyDTO>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<AllergyDTO>(new AllergyDTO(allergy), HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<AllergyDTO> updateAllergy(@RequestBody Allergy newAllergy, @PathVariable long id) {
+	public ResponseEntity<AllergyDTO> updateAllergy(@RequestBody AllergyDTO newAllergy, @PathVariable long id) {
 		
 		if (id != newAllergy.getId())
-			return new ResponseEntity<AllergyDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		Allergy allergy = service.findOne(newAllergy.getId());
 		
 		if (allergy == null)
-			return new ResponseEntity<AllergyDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		allergy.setName(newAllergy.getName());
 		allergy = service.save(allergy);
 		
-		return new ResponseEntity<AllergyDTO>(new AllergyDTO(allergy), HttpStatus.OK);
+		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<AllergyDTO> deleteAllergy(@PathVariable("id") long id) {
-		System.out.println(id);
 		Allergy allergy = service.findOne(id);
 
 		if (allergy == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + allergy);
 		service.remove(id);
 		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
 	}

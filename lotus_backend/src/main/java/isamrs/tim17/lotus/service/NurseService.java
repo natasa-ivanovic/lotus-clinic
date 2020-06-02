@@ -15,7 +15,7 @@ public class NurseService {
 	private NurseRepository nurses;
 	
 	public Nurse findOne(long id) {
-		return nurses.findById(id).orElseGet(null);
+		return nurses.findOneById(id);
 	}
 
 	public List<Nurse> findAll() {

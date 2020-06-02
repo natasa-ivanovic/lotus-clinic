@@ -30,18 +30,17 @@ public class AppointmentTypeController {
 	@PostMapping("/appointmentTypes")
 	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<AppointmentType> addAppointmentType(@RequestBody AppointmentTypeDTO appointmentDTO) {
-		System.out.println("Adding an appointment type...");
-		System.out.println(appointmentDTO.getName());
+		if (appointmentDTO == null || "".equals(appointmentDTO.getName()) || appointmentDTO.getName() == null || appointmentDTO.getPrice() == 0)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice(), appointmentDTO.getDiscount());
 		service.save(at);
-		return new ResponseEntity<>(at, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@GetMapping("/appointmentTypes")
 	@PreAuthorize("hasAnyRole('PATIENT, CENTRE_ADMIN, ADMIN')")
 	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
-		System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOO");
 		List<AppointmentType> atypes = service.findAll();
 		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
 		
@@ -77,19 +76,17 @@ public class AppointmentTypeController {
 		at.setName(newAppointmentType.getName());
 		at.setPrice(newAppointmentType.getPrice());
 		at.setDiscount(newAppointmentType.getDiscount());
-		at = service.save(at);
+		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("appointmentTypes/{id}")
 	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
-		System.out.println(id);
 		AppointmentType at = service.findOne(id);
 		
 		if (at == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + at);
 		service.remove(id);
 		return new ResponseEntity<>(at, HttpStatus.OK);
 	}
