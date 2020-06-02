@@ -33,10 +33,10 @@ public class AppointmentType {
 	private Clinic clinic;
 	
 	@OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
+	private Set<Doctor> doctors = new HashSet<>();
 	
 	public AppointmentType() {}
 	

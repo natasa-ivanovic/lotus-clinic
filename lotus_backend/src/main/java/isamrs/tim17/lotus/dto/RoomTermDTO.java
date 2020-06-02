@@ -48,4 +48,7 @@ public class RoomTermDTO implements Comparable<RoomTermDTO> {
 		return getTerm().compareTo(o.getTerm());
 	}
 
+	
+	
+
 }

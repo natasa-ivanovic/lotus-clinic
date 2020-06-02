@@ -84,19 +84,9 @@ public class PatientController {
 	@GetMapping("/patients")
 	@PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
 	public ResponseEntity<List<UserDTO>> getPatients() {
-		/*Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		long clinicId;
-		try {
-			Doctor loggedIn = (Doctor) a.getPrincipal();			
-			clinicId = loggedIn.getClinic().getId();
-		} catch(Exception e) {
-			Nurse loggedIn = (Nurse) a.getPrincipal();		
-			clinicId = loggedIn.getClinic().getId();			
-		}*/
 		List<Patient> patients = service.findAll();
 		List<UserDTO> patientsDTO = new ArrayList<>();
 		for (Patient p : patients) {
-			//if (p.getClinic().getId().equals(clinicId))
 				patientsDTO.add(new UserDTO(p));
 		}
 		return new ResponseEntity<>(patientsDTO, HttpStatus.OK);
@@ -177,7 +167,7 @@ public class PatientController {
 		p.setCity(patient.getCity());
 		p.setCountry(patient.getCountry());
 		p.setPhoneNumber(patient.getPhoneNumber());
-		p = service.save(p);
+		service.save(p);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -237,7 +227,7 @@ public class PatientController {
 				// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
 				List<Clinic> clinics = clinicService.findAll();
 				ListIterator<Clinic> it = clinics.listIterator();
-				List<ClinicDTO> clinicList = new ArrayList<ClinicDTO>();
+				List<ClinicDTO> clinicList = new ArrayList<>();
 				while (it.hasNext()) {
 					Clinic c = it.next();
 					if (c.getDoctors().isEmpty())
@@ -278,7 +268,7 @@ public class PatientController {
 			} else {
 				// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
 				List<Doctor> doctors = doctorService.findAll();
-				List<DoctorDTO> results = new ArrayList<DoctorDTO>();
+				List<DoctorDTO> results = new ArrayList<>();
 				ListIterator<Doctor> it = doctors.listIterator();
 				while (it.hasNext()) {
 					Doctor d = it.next();
@@ -308,7 +298,7 @@ public class PatientController {
 	@PostMapping("/patients/request/finish")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequest request) {
-		if (request.getDate().equals(new Date()) || request.getDate().equals(null) || request.getDoctor() == 0)
+		if (request.getDate().equals(new Date()) || request.getDoctor() == 0)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();

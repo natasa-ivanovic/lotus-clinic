@@ -55,7 +55,7 @@ public class RequestController {
 		for(RegistrationRequest rq: li) {
 			liDTO.add(new RegistrationRequestDTO(rq));
 		}
-		return new ResponseEntity<List<RegistrationRequestDTO>>(liDTO, HttpStatus.OK);
+		return new ResponseEntity<>(liDTO, HttpStatus.OK);
 	}
 	
 	@GetMapping("/rooms")
@@ -137,7 +137,7 @@ public class RequestController {
 		RegistrationRequest rgReq = (RegistrationRequest) req;
 		rgReq.getPatient().setEnabled(true);
 		service.save(req);
-		MedicalRecord mr = new MedicalRecord(170, 90, new HashSet<Allergy>(), "", rgReq.getPatient());
+		MedicalRecord mr = new MedicalRecord(170, 90, new HashSet<>(), "", rgReq.getPatient());
 		medicalService.save(mr);
 		
 		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
