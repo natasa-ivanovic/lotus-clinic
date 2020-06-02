@@ -26,6 +26,7 @@ import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
 import isamrs.tim17.lotus.dto.RatingDTO;
+import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
@@ -199,7 +200,7 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		p.setName(patient.getName());
 		p.setSurname(patient.getSurname());
-		p.setUsername(patient.getEmail());
+		p.setUsername(patient.getUsername());
 		p.setBirthDate(patient.getBirthDate());
 		p.setGender(patient.getGender());
 		p.setAddress(patient.getAddress());
@@ -229,8 +230,12 @@ public class PatientController {
 	@PostMapping("/patients/request")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestList(@RequestBody PatientRequest pr) {
+		if (pr.getRequestDate() == 0)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Date date = new Date(pr.getRequestDate());
 		AppointmentType type = typeService.findOne(pr.getAppointmentType());
+		if (type == null)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		try {
 			if (pr.isClinics()) {
 				// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
@@ -297,7 +302,6 @@ public class PatientController {
 						 results.add(new DoctorDTO(d, rating, availableDates));
 					}
 				}
-				// potencijalno u jos jedan loop ali sumnjam da treba, ovo gore mozda u jedan loop isto
 				return new ResponseEntity<>(results, HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -307,15 +311,15 @@ public class PatientController {
 	
 	@PostMapping("/patients/request/finish")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequest request) {
-		if (request.getDate().equals(new Date()) || request.getDate() == null || request.getDoctor() == 0)
+	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
+		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
-		request.setPatient(patient.getId());
-		request.setStatus(RequestStatus.PENDING);
-		request.setType(RoomRequestType.PATIENT_APP);
-		requestService.save(request);
+		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
+		
+		roomRequest.setStatus(RequestStatus.PENDING);
+		requestService.save(roomRequest);
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 	

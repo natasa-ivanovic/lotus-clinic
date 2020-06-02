@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import isamrs.tim17.lotus.dto.UserDTO;
+
 @Entity
 @DiscriminatorValue("DOCTOR")
 public class Doctor extends User {
@@ -32,6 +34,9 @@ public class Doctor extends User {
 	
 	public Doctor() {}
 
+	public Doctor(UserDTO doctor) {
+		super(doctor);		
+	}
 	public AppointmentPrice getSpecialty() {
 		return specialty;
 	}

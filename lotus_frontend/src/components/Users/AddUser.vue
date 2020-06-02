@@ -54,6 +54,18 @@
                       v-model="user.surname" />                      
                   </v-col>
                 </v-row>
+                <v-row v-if="this.userType == 'doctors'">
+                  <v-col>
+                    <v-select
+                      
+                      label="Speciality"
+                      :rules="[rules.required]"
+                      :items="appTypes"
+                      item-text="name"
+                      item-value="id"
+                      v-model="speciality" />
+                  </v-col>
+                </v-row>
                 <v-row>
                   <v-col>
                     <v-select
@@ -141,6 +153,7 @@
 
 <script>
 const apiClinics = "/api/clinics";
+const apiAppTypes = "/api/appointmentTypes";
 export default {
     name: "AddUser",
     data() {
@@ -181,7 +194,9 @@ export default {
         showPass: false,
         showConfirmPass: false,
         errorUserName: false,
-        errorSSID: false
+        errorSSID: false,
+        appTypes: [],
+        speciality: ""
       }
     },
     props: {
@@ -214,8 +229,11 @@ export default {
         var url = "";
         if (this.userType == "patients")
           url = "/auth/register";
-        else
+        else {
           url = "/api/" + this.userType; 
+          if (this.userType == "doctors")
+            url = url + "/" + this.speciality;
+        }
         console.log('userType:' + this.userType);
         this.axios({url : url, 
             method: 'POST',
@@ -255,6 +273,12 @@ export default {
           }).catch(error => {
             alert(error);
           })
+      if (this.userType == "doctors") {
+        this.axios({url: apiAppTypes, method: 'GET'
+        }).then(response => {
+          this.appTypes = response.data;
+        })
+      }
     }
     
 }

@@ -6,42 +6,43 @@ import isamrs.tim17.lotus.model.Gender;
 import isamrs.tim17.lotus.model.User;
 
 public class UserDTO {
-	
+
 	private Long id;
 	private Long ssid;
-	private String email;
+	private String username;
 	private String name;
 	private String surname;
 	private String address;
+	private String password;
 	private String city;
 	private String country;
 	private String phoneNumber;
 	private Date birthDate;
 	private Gender gender;
-	
-	public UserDTO() {}
-	
+
+	public UserDTO() {
+	}
+
 	public UserDTO(User user) {
-		this.id = user.getId(); 
-		this.email = user.getUsername();
-		this.name =	user.getName(); 
-		this.surname = user.getSurname(); 
+		this.id = user.getId();
+		this.username = user.getUsername();
+		this.name = user.getName();
+		this.surname = user.getSurname();
 		this.address = user.getAddress();
-		this.city =	user.getCity();
+		this.city = user.getCity();
 		this.country = user.getCountry();
 		this.phoneNumber = user.getPhoneNumber();
 		this.birthDate = user.getBirthDate();
 		this.gender = user.getGender();
 		this.ssid = user.getSsid();
 	}
-	
 
-	public String getEmail() {
-		return email;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getName() {
@@ -124,5 +125,22 @@ public class UserDTO {
 		return id;
 	}
 
-	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean isEmpty() {
+		if (getName() == null || "".equals(getName()) || getSurname() == null || "".equals(getSurname())
+				|| getUsername() == null || "".equals(getUsername()) || getAddress() == null || "".equals(getAddress())
+				|| getCity() == null || "".equals(getCity()) || getCountry() == null || "".equals(getCountry())
+				|| getPhoneNumber() == null || "".equals(getPhoneNumber()) || getGender() == null
+				|| "".equals(getGender().toString()) || getBirthDate() == null || "".equals(getBirthDate().toString()))
+			return true;
+		return false;
+	}
+
 }

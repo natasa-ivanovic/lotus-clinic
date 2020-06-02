@@ -1,7 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
+import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 
@@ -32,6 +35,11 @@ import isamrs.tim17.lotus.service.DoctorService;
 public class DoctorController {
 	@Autowired private DoctorService service;
 	@Autowired private ClinicService clinicService;
+	@Autowired private AppointmentTypeService appTypeService;
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthorityService authorityService;
 
 	/**
 	 * This method is used for adding a doctor.
@@ -39,26 +47,35 @@ public class DoctorController {
 	 * @param doctor This is a doctor object from the HTTP request.
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
-	@PostMapping("/doctors")
+	@PostMapping("/doctors/{speciality}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Object> addDoctor(@RequestBody DoctorDTO doctor) {
+	public ResponseEntity<Object> addDoctor(@RequestBody UserDTO doctor, @PathVariable("speciality") long speciality) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		
-		if (isEmptyOrNull(doctor))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (doctor == null || doctor.isEmpty())
+			return new ResponseEntity<>("Some fields are still empty", HttpStatus.BAD_REQUEST);
 		
-		if (service.alreadyExistsUsername(doctor.getUsername())) {
-			HashMap<String, String> error = new HashMap<>();
-			error.put("text", "That username already exists!");
-
-			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-			
-		}
+		if (service.alreadyExistsUsername(doctor.getUsername()))
+			return new ResponseEntity<>("That username already exists!", HttpStatus.BAD_REQUEST);
+		
+		AppointmentType spec = appTypeService.findOne(speciality);
+		if (spec == null)
+			return new ResponseEntity<>("Speciality not filled in", HttpStatus.BAD_REQUEST);
 		
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
-		doctor.setClinic(clinic);
-		service.save(doctor);
+		if (clinic == null)
+			return new ResponseEntity<>("Admin's clinic is null!", HttpStatus.BAD_REQUEST);
+		
+		Doctor d = new Doctor(doctor);
+		ArrayList<Authority> auth = new ArrayList<Authority>();
+		auth.add(authorityService.findByName("ROLE_DOCTOR"));
+		d.setAuthorities(auth);
+		d.setClinic(clinic);
+		d.setSpecialty(spec);
+		d.setPassword(passwordEncoder.encode(doctor.getPassword()));
+		d.setEnabled(true);
+		service.save(d);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -164,7 +181,7 @@ public class DoctorController {
 
 		doctor.setName(newDoctor.getName());
 		doctor.setSurname(newDoctor.getSurname());
-		doctor.setUsername(newDoctor.getEmail());
+		doctor.setUsername(newDoctor.getUsername());
 		doctor.setBirthDate(newDoctor.getBirthDate());
 		doctor.setGender(newDoctor.getGender());
 		doctor.setAddress(newDoctor.getAddress());
@@ -195,31 +212,6 @@ public class DoctorController {
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
 	
-	
-	private boolean isEmptyOrNull(Doctor doctor) {
-		if (doctor == null)
-			return true;
-		if (doctor.getName() == null || "".equals(doctor.getName()))
-			return true;
-		if (doctor.getSurname() == null || "".equals(doctor.getSurname()))
-			return true;
-		if (doctor.getUsername() == null || "".equals(doctor.getUsername()))
-			return true;
-		if (doctor.getPassword() == null || "".equals(doctor.getPassword()))
-			return true;
-		if (doctor.getAddress() == null || "".equals(doctor.getAddress()))
-			return true;
-		if (doctor.getCity() == null || "".equals(doctor.getCity()))
-			return true;
-		if (doctor.getCountry() == null || "".equals(doctor.getCountry()))
-			return true;
-		if (doctor.getPhoneNumber() == null || "".equals(doctor.getPhoneNumber()))
-			return true;
-		if (doctor.getGender() == null || "".equals(doctor.getGender().toString()))
-			return true;
-		if (doctor.getBirthDate() == null || "".equals(doctor.getBirthDate().toString()))
-			return true;
-		return false;
-	}
+
 
 }
