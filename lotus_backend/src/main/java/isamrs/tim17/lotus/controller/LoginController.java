@@ -132,10 +132,10 @@ public class LoginController {
 			return new ResponseEntity<>("New password must be at least 5 characters!", HttpStatus.BAD_REQUEST);
 		}
 		String user = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-		if (user == "error") {
+		if (user.equals("error")) {
 			return new ResponseEntity<>("Server error has occurred. Please try again later.", HttpStatus.BAD_REQUEST);
 		}
-		if (user == "pass") {
+		if (user.equals("pass")) {
 			return new ResponseEntity<>("Incorrect old password. Please try again.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(user, HttpStatus.OK);

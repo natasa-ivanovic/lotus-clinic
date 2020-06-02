@@ -16,7 +16,7 @@ public class DoctorReviewService {
 	private DoctorReviewRepository reviewRepo;
 	
 	public DoctorReview findOne(long id) {
-		return reviewRepo.findById(id).orElseGet(null);
+		return reviewRepo.findOneById(id);
 	}
 
 	public List<DoctorReview> findAll() {

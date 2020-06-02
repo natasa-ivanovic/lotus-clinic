@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.AppointmentType;
 
 public interface AppointmentTypeRepository extends JpaRepository<AppointmentType, Long> {
 	
-	AppointmentType findOneById(String id);
+	AppointmentType findOneById(Long id);
 	List<AppointmentType> findByNameAllIgnoringCase(String name);
 	Page<AppointmentType> findAll(Pageable pageable);
 	AppointmentType findOneByNameIgnoringCase(String name);

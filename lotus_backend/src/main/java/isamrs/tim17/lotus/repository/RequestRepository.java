@@ -17,7 +17,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	List<RegistrationRequest> getAllRegistrations();
 	@Query("SELECT a FROM RegistrationRequest a where a.key = :key")
 	List<RegistrationRequest> findByKey(@Param("key")String key);
-	Request findOneById(String id);
+	Request findOneById(Long id);
 	@Query("SELECT a FROM RoomRequest a where a.status = 0")
 	List<RoomRequest> getAllRoomRequests();
 	Page<Request> findAll(Pageable pageable);

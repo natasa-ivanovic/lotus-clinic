@@ -6,6 +6,6 @@ import isamrs.tim17.lotus.model.MedicalRecord;
 
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long> {
 	
-	MedicalRecord findOneById(String id);
+	MedicalRecord findOneById(Long id);
 
 }

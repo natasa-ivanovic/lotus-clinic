@@ -192,7 +192,7 @@ public class PatientController {
 	 */
 	@PutMapping("/patients/{id}")
 	public ResponseEntity<Object> updatePatient(@RequestBody UserDTO patient, @PathVariable("id") Long id) {
-		if (id != patient.getId())
+		if (!id.equals(patient.getId()))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Patient p = service.findOne(id);
 		if (p == null)
@@ -308,7 +308,7 @@ public class PatientController {
 	@PostMapping("/patients/request/finish")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequest request) {
-		if (request.getDate().equals(new Date()) || request.getDate().equals(null) || request.getDoctor() == 0)
+		if (request.getDate().equals(new Date()) || request.getDate() == null || request.getDoctor() == 0)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();

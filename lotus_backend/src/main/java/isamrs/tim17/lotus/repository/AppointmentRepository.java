@@ -18,7 +18,7 @@ import isamrs.tim17.lotus.model.Room;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 	
-	Appointment findOneById(String id);
+	Appointment findOneById(Long id);
 	Page<Appointment> findAll(Pageable pageable);
 	List<Appointment> findByStatus(AppointmentStatus status);
 	List<Appointment> findByMedicalRecord(MedicalRecord id);

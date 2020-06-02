@@ -81,7 +81,7 @@ public class AppointmentController {
 	public ResponseEntity<Appointment> getAppointment(@PathVariable("id") long id) {
 		Appointment app = service.findOne(id);
 		if (app == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(app, HttpStatus.OK);
 	}
 	
@@ -90,8 +90,8 @@ public class AppointmentController {
 	public ResponseEntity<List<PremadeAppDTO>> getPremadeApps() {
 		List<Appointment> app = service.findByStatus(AppointmentStatus.PREMADE);
 		if (app == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment a : app) {
 			dto.add(new PremadeAppDTO(a));
 		}
@@ -121,8 +121,8 @@ public class AppointmentController {
 		
 		List<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord());
 		if (apps == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			if (app.getStatus().equals(AppointmentStatus.SCHEDULED))
 				dto.add(new PremadeAppDTO(app));
@@ -138,8 +138,8 @@ public class AppointmentController {
 		
 		List<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord());
 		if (apps == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			if (app.getStatus().equals(AppointmentStatus.FINISHED))
 				dto.add(new PremadeAppDTO(app));
@@ -156,8 +156,8 @@ public class AppointmentController {
 		
 		List<Appointment> apps = service.findByDoctor(doctor);
 		if (apps == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		List<PremadeAppDTO> dto = new ArrayList<PremadeAppDTO>();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			if(app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
@@ -172,7 +172,6 @@ public class AppointmentController {
 	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
-		System.out.println(startDate);
 		
 		long sd = Long.parseLong(startDate);
 		HashMap<String, Date> period = getPeriod(sd);
@@ -180,7 +179,7 @@ public class AppointmentController {
 		Date end = period.get("end");
 		
 		List<Appointment> apps = service.findByDate(doctor, start, end);
-		List <PremadeAppDTO> info = new ArrayList<>();
+		List<PremadeAppDTO> info = new ArrayList<>();
 		for (Appointment app: apps) {
 			if (app.getStatus() == AppointmentStatus.SCHEDULED) {
 				PremadeAppDTO dto = new PremadeAppDTO(app);
@@ -227,7 +226,7 @@ public class AppointmentController {
 		cal.set(Calendar.SECOND, 59);
 		Date end = cal.getTime();
 		
-		HashMap<String, Date> period = new HashMap<String, Date>();
+		HashMap<String, Date> period = new HashMap<>();
 		period.put("start", start);
 		period.put("end", end);
 		
@@ -240,7 +239,6 @@ public class AppointmentController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		
-		System.out.println(app);
 		SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date start = null;
 		Date end = new Date(app.getEndDateLong());
@@ -250,16 +248,12 @@ public class AppointmentController {
 			e.printStackTrace();
 		}
 		Room room = roomService.findOne(app.getRoom());
-		System.out.println(room);
 		
 		Doctor doc = doctorService.findOne(app.getDoctor());
-		System.out.println(doc);
 		
 		AppointmentType at = appointmentTypeService.findOne(app.getAppointmentType());
-		System.out.println(at);
 		
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
-		System.out.println(clinic);
 		
 		Appointment newApp = new Appointment(start, end, at, doc, room, clinic);
 		service.save(newApp);
@@ -269,8 +263,8 @@ public class AppointmentController {
 	@PostMapping("/appointments/notification")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> sendNotification(@RequestBody RoomAndRequestDTO dto) {
-		
-		//TODO VALIDACIJE
+		if (dto.getRequest() == 0 || dto.getRoom() == 0 || dto.getStartDate() == 0)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		long roomId = dto.getRoom();
 		long requestId = dto.getRequest();
@@ -280,6 +274,9 @@ public class AppointmentController {
 		//nadji rikvest i sobu, napravi appointment, setuj na zakazan, sacuvaj u bazu
 		Room room = roomService.findOne(roomId);
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
+		if (room == null || rr == null)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
 		Doctor doctor = doctorService.findOne(rr.getDoctor());
 		Patient patient = patientService.findOne(rr.getPatient());
 		Clinic clinic = doctor.getClinic();
@@ -295,7 +292,7 @@ public class AppointmentController {
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
 		app.setAppointmentType(doctor.getSpecialty());
-		app = service.save(app);
+		service.save(app);
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
@@ -311,7 +308,7 @@ public class AppointmentController {
 		mailSender.sendMsg(doctor.getUsername(), "Appointment notiffication", contentDoctor);
 		
 		rr.setStatus(RequestStatus.APPROVED);
-		rr = (RoomRequest) requestService.save(rr);
+		requestService.save(rr);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 		
@@ -341,19 +338,4 @@ public class AppointmentController {
 		
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
-	
-	
-	/*private boolean isEmptyOrNull(Appointment app) {
-		if (app == null)
-			return true;
-		if (app.getStartDate() == null || "".equals(app.getStartDate().toString()))
-			return true;
-		if (app.getEndDate() == null || "".equals(app.getEndDate().toString()))
-			return true;
-		
-			
-	}*/
-	
-	
 }

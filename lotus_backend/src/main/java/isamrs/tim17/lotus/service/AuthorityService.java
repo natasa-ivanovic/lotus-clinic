@@ -13,7 +13,7 @@ public class AuthorityService {
 	private AuthorityRepository authority;
 	
 	public Authority findOne(long id) {
-		return authority.findById(id).orElseGet(null);
+		return authority.findOneById(id);
 	}
 	
 	public Authority findByName(String id) {

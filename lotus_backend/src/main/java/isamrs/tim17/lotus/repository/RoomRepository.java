@@ -12,7 +12,7 @@ import isamrs.tim17.lotus.model.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 	
-	Room findOneById(String id);
+	Room findOneById(Long id);
 	List<Room> findByNameAllIgnoringCase(String name);
 	Room findOneByNameIgnoringCase(String name);
 	Page<Room> findAll(Pageable pageable);

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
@@ -40,10 +41,9 @@ public class DoctorController {
 	 */
 	@PostMapping("/doctors")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Object> addDoctor(@RequestBody Doctor doctor) {
+	public ResponseEntity<Object> addDoctor(@RequestBody DoctorDTO doctor) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
-		System.out.println("Adding a doctor...");
 		
 		if (isEmptyOrNull(doctor))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -59,7 +59,6 @@ public class DoctorController {
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		doctor.setClinic(clinic);
 		service.save(doctor);
-		System.out.println("Database is ok...");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -78,7 +77,6 @@ public class DoctorController {
 		// convert doctors to DTOs
 		List<UserDTO> doctorsDTO = new ArrayList<>();
 		for (Doctor d : doctors) {
-			System.out.println(d);
 			doctorsDTO.add(new UserDTO(d));
 		}
 
@@ -94,8 +92,6 @@ public class DoctorController {
 	@GetMapping("/doctors/{id}")
 	public ResponseEntity<Doctor> getDoctor(@PathVariable("id") long id) {
 		Doctor doctor = service.findOne(id);
-		System.out.println(doctor);
-		// doctor must exist
 		if (doctor == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
@@ -157,7 +153,7 @@ public class DoctorController {
 
 	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
 		
-		if (id != newDoctor.getId())
+		if (!id.equals(newDoctor.getId()))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		// a doctor must exist

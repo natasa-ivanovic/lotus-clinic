@@ -15,7 +15,7 @@ public class PatientService {
 	private PatientRepository patients;
 	
 	public Patient findOne(long id) {
-		return patients.findById(id).orElseGet(null);
+		return patients.findOneById(id);
 	}
 	
 	public Patient findOneByUsername(String email) {
