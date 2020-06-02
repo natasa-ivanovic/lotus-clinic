@@ -113,7 +113,7 @@ public class RoomController {
 	 */
 	@PutMapping("/rooms/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Room> updateRoom(@RequestBody Room newRoom, @PathVariable long id) {
+	public ResponseEntity<Room> updateRoom(@RequestBody RoomDTO newRoom, @PathVariable long id) {
 
 		// TODO VALIDATION!
 

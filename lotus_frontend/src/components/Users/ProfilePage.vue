@@ -15,7 +15,7 @@
                                 <v-col>
                                     <v-text-field
                                     label="Email"
-                                    v-model="user.email" 
+                                    v-model="user.username" 
                                     readonly />
                                 </v-col>
                                 </v-row>

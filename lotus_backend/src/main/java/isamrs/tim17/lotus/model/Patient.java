@@ -14,6 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import isamrs.tim17.lotus.dto.UserDTO;
+
 @Entity
 @DiscriminatorValue("PATIENT")
 public class Patient extends User {
@@ -35,6 +37,10 @@ public class Patient extends User {
 		this.clinicalCentre = clinicalCentre;
 	}
 
+
+	public Patient(UserDTO p) {
+		super(p);
+	}
 
 	public ClinicalCentre getClinicalCentre() {
 		return clinicalCentre;

@@ -118,8 +118,8 @@ export default {
             }
             var longDate = new Date(doctor.selectedDate).getTime();
             var data = {
-                date: longDate,
-                doctor: doctor.id
+                startDate: longDate,
+                doctor: { id: doctor.id }
             };
             this.axios({url : apiURL, 
                     method: 'POST',

@@ -6,6 +6,7 @@ package isamrs.tim17.lotus.model;
  ***********************************************************************/
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import isamrs.tim17.lotus.dto.UserDTO;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="role", discriminatorType=DiscriminatorType.STRING, length = 20)
@@ -85,7 +88,9 @@ public abstract class User implements UserDetails {
     @Column(name="role", insertable = false, updatable = false)
     protected String role;
     
-	public User() {}
+	public User() {
+		this.lastPasswordResetDate = Timestamp.from(Instant.now());
+	}
 	
 	public User(String email, String password, String name, String surname, String address, String city, String country,
 			String phoneNumber, long ssid, Date birthDate, Gender gender) {
@@ -105,6 +110,20 @@ public abstract class User implements UserDetails {
 	
 	
 
+	public User(UserDTO user) {
+		this();
+		setUsername(user.getUsername());
+		setName(user.getName());
+		setSurname(user.getSurname());
+		setAddress(user.getAddress());
+		setCity(user.getCity());
+		setCountry(user.getCountry());
+		setPhoneNumber(user.getPhoneNumber());
+		setGender(user.getGender());
+		setSsid(user.getSsid());
+		setBirthDate(user.getBirthDate());
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + username + ", password=" + password + ", name=" + name + ", surname="
@@ -117,7 +136,7 @@ public abstract class User implements UserDetails {
 	}
 
 	public void setUsername(String username) {
-		this.username= username;
+		this.username = username;
 	}
 
 	public String getPassword() {

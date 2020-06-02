@@ -10,7 +10,7 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>List of {{userType}}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn :to="{ name: 'addUser', params: {userType: userType} }" v-if="userType != 'patients'">Add new {{userType}}</v-btn>
+                    <v-btn :to="{ name: 'addUser', params: {userType: userType, header: 'Add new ' + userType} }" v-if="userType != 'patients'">Add new {{userType}}</v-btn>
                 </v-toolbar>
             </template>
             <!--template v-slot:item.edit="{ item }">
@@ -40,7 +40,7 @@ export default {
         return {
             users: [],
             headers: [
-                {text: 'Email', value: 'email'},
+                {text: 'Email', value: 'username'},
                 {text: 'Insurance ID', value: 'ssid'},
                 {text: 'Name', value: 'name'},
                 {text: 'Surname', value: 'surname'},

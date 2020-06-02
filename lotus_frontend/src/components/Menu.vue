@@ -31,7 +31,7 @@
                     <v-btn text :to="{ name: 'clinics'}">Clinics</v-btn>
                     <v-btn text :to="{ name: 'diagnoses'}">Diagnoses</v-btn>
                     <v-btn text :to="{ name: 'registrationRequestView'}">Registration Requests</v-btn>
-                    <v-btn text :to="{ name: 'register'}">Add centre admin</v-btn>
+                    <v-btn text :to="{ name: 'addUser', params: { userType: 'admins', header: 'Add clinic admin'}}">Add clinic admin</v-btn>
                 </v-toolbar-items>
                 <v-spacer />
                 <v-toolbar-items v-if="!checkRole(null)">
@@ -40,7 +40,7 @@
                     <v-btn text v-on:click="logout()">Logout</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole(null)">
-                    <v-btn text :to="{ name: 'register'}">Register</v-btn>
+                    <v-btn text :to="{ name: 'addUser', params: { userType: 'patients', header: 'Register'}}">Register</v-btn>
                     <v-btn text :to="{ name: 'login'}">Login</v-btn>
                 </v-toolbar-items>
                 
