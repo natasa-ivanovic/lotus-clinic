@@ -45,7 +45,7 @@ public class Clinic {
 	
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
-	private Set<ClinicReview> reviews = new HashSet<ClinicReview>();
+	private Set<ClinicReview> reviews = new HashSet<>();
 	
 	
 	public Clinic() {}

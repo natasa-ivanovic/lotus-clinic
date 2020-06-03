@@ -17,14 +17,13 @@ public class Doctor extends User {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentType specialty;
-	//@Column(name = "operation", unique = false, nullable = true)
-	//public Operation operation;
+
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-	private Set<DoctorReview> reviews = new HashSet<DoctorReview>();
+	private Set<DoctorReview> reviews = new HashSet<>();
 	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -63,15 +62,5 @@ public class Doctor extends User {
 	public void setReviews(Set<DoctorReview> reviews) {
 		this.reviews = reviews;
 	}
-
-	/*public Doctor(String email, String password, String name, String surname, String address, String city,
-			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
-			AppointmentType speciality, Operation operation, Clinic clinic) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender, clinic);
-		this.speciality = speciality;
-		this.operation = operation;
-	}*/
-	
-	 
 
 }
