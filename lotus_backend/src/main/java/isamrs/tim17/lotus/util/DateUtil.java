@@ -1,6 +1,5 @@
 package isamrs.tim17.lotus.util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,29 +10,30 @@ import isamrs.tim17.lotus.model.AppointmentStatus;
 
 public class DateUtil {
 
-	public final static int weekdayWorkStart = 8;
-	public final static int weekdayWorkEnd = 18;
-	public final static int weekdayBreakStart = 11;
+	public static final int WEEKDAYWORKSTART = 8;
+	public static final int WEEKDAYWORKEND = 18;
+	public static final int WEEKDAYBREAKSTART = 11;
 
-	public final static int weekendWorkStart = 8;
-	public final static int weekendWorkEnd = 13;
-	public final static int weekendBreakStart = 11;
+	public static final int WEEKENDWORKSTART = 8;
+	public static final int WEEKENDWORKEND = 13;
+	public static final int WEEKENDBREAKSTART = 11;
 
-	public final static int breakDurationHours = 1;
+	public static final int BREAKDURATIONHOURS = 1;
 
-	public final static int termsPerHour = 2;
+	public static final int TERMSPERHOUR = 2;
 
+	private DateUtil() {}
+	
 	public static boolean overlap(Date start1, Date end1, Date start2, Date end2) {
 		return start1.getTime() <= end2.getTime() && start2.getTime() <= end1.getTime();
 	}
 
 	public static Date addMinutes(Date startDate, int minutes) {
-		long one_minute_in_millis = 60000;
+		final long ONE_MINUTE_IN_MILLIS = 60000;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		long start = cal.getTimeInMillis();
-		Date endDate = new Date(start + (minutes * one_minute_in_millis));
-		return endDate;
+		return new Date(start + (minutes * ONE_MINUTE_IN_MILLIS));
 	}
 
 	public static Date endOfDay(Date startDate) {
@@ -48,34 +48,36 @@ public class DateUtil {
 	}
 
 	public static List<Date> getAllTerms(Date day) {
-		List<Date> data = new ArrayList<Date>();
+		List<Date> data = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(day);
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			return data;
 		}
-		int workStart, workEnd, breakStart;
+		int workStart;
+		int workEnd;
+		int breakStart;
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			workStart = weekendWorkStart;
-			workEnd = weekendWorkEnd;
-			breakStart = weekendBreakStart;
+			workStart = WEEKENDWORKSTART;
+			workEnd = WEEKENDWORKEND;
+			breakStart = WEEKENDBREAKSTART;
 		} else {
-			workStart = weekdayWorkStart;
-			workEnd = weekdayWorkEnd;
-			breakStart = weekdayBreakStart;
+			workStart = WEEKDAYWORKSTART;
+			workEnd = WEEKDAYWORKEND;
+			breakStart = WEEKDAYBREAKSTART;
 		}
 		int currentTime = workStart;
 		cal.set(Calendar.HOUR_OF_DAY, currentTime);
 		cal.set(Calendar.MINUTE, 0);
-		int termDuration = 60 / termsPerHour;
+		int termDuration = 60 / TERMSPERHOUR;
 		// TODO: maybe change so term duration is flexible?
 		while (currentTime != workEnd) {
 			if (currentTime == breakStart) {
-				currentTime += breakDurationHours;
-				cal.add(Calendar.HOUR_OF_DAY, breakDurationHours);
+				currentTime += BREAKDURATIONHOURS;
+				cal.add(Calendar.HOUR_OF_DAY, BREAKDURATIONHOURS);
 				continue;
 			}
-			for (int i = 0; i != termsPerHour; i++) {
+			for (int i = 0; i != TERMSPERHOUR; i++) {
 				Date newDate = cal.getTime();
 				data.add(newDate);
 				cal.add(Calendar.MINUTE, termDuration);

@@ -30,7 +30,7 @@ public class Medicine {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentre clinicalCentre;
 	@OneToMany(mappedBy="medicine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Prescription> prescriptions = new HashSet<Prescription>();
+	private Set<Prescription> prescriptions = new HashSet<>();
 
 	public Medicine() {
 	}
