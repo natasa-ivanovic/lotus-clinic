@@ -38,8 +38,8 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentPrices";
-const apiTypes = "http://localhost:9001/api/appointmentTypes";
+const apiURL = "/api/appointmentPrices";
+const apiTypes = "/api/appointmentTypes";
 export default {
     name: "addAppointmentPrice",
     data() {
@@ -65,30 +65,27 @@ export default {
       addAppPrice: function() {
             this.$refs.form.validate();
             if (!this.valid) {
-            alert("Error")
-            return;
-          }
+              return;
+            }
             this.appointmentPrice.type_id = this.typeElem;
-            fetch(apiURL, {method: 'POST', 
-                    headers: {'Content-Type': 'application/json',
-                            'Authorization': this.$authKey },
-                    body: JSON.stringify(this.appointmentPrice)})
-            .then(response => {
-                if (response.status != 200)
-                alert("Couldn't add " + this.appointmentPrice.name + "!");
-                else
-                this.$router.push({ name: "appointmentPrices" });
-          })
+            this.axios({url : apiURL, 
+                    method: 'POST',
+                    data: this.appointmentPrice,
+                }).then(response =>   {
+                    console.log(response);
+                    this.$store.commit('showSnackbar', {text: "Successfully added appointment type price.", color: "success", })
+                    this.$router.push({ name: "appointmentPrices" });
+                }).catch(error => {
+                    console.log(error.request.responseText);
+                    this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+                });
         }
     },
     mounted() {
-        fetch(apiTypes, {headers: {'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(response => {
+        this.axios({url : apiTypes})
+          .then(response => {
             var data = [];
-            this.types = response;
+            this.types = response.data;
             this.types.forEach(el => {
                 var type = {
                     text: el.name,
@@ -97,7 +94,11 @@ export default {
                 data.push(type);
             });
             this.typesNames = data;
-        })
+          }).catch(error => {
+              console.log(error.request.responseText);
+              this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+             
+          });
     }
 }
 </script>

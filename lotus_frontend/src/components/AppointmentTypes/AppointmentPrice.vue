@@ -15,14 +15,14 @@
       </template>
       <template v-slot:item.edit="{ item }">
         <v-icon
-          @click="editAppPrice(item.id)"
+          @click="editAppPrice(item)"
         >
           mdi-pencil
         </v-icon>
       </template>
       <template v-slot:item.delete="{ item }">
         <v-icon
-          @click="deleteAppPrice(item.id)"
+          @click="deleteAppPrice(item)"
         >
           mdi-delete
         </v-icon>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentPrices/";
+const apiURL = "/api/appointmentPrices";
 export default {
   name: "appointmentPrices",
   data() {
@@ -49,29 +49,31 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
-    .then(response => {
-      return response.json(); //name, doctors
-    })
-    .then(r => {
-      this.appPrices = r;
-    })
+    this.axios({url : apiURL, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.appPrices = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
   },
   methods: {
-    deleteAppPrice: function(id) {
-      fetch(apiURL + id, {headers: { 'Authorization': this.$authKey}, method: 'DELETE'})
-        .then(response => {
-          if (response.status != 200)
-            alert("Couldn't delete appointment Price!");
-          else
-            return response.json();
-        })
-        .then(r => {
-          this.appPrices.pop(r);
-        })
+    deleteAppPrice: function(type) {
+      this.axios({url : apiURL + "/" + type.id, 
+                    method: 'DELETE'
+        }).then(() =>   {
+           // test this
+           this.appPrices.splice(this.appPrices.indexOf(type), 1);
+           this.$store.commit('showSnackbar', {text: "Successfully deleted appointment type.", color: "success", })
+        }).catch(error => {
+            console.log(error.request);
+            // navesti razlog errora
+            this.$store.commit('showSnackbar', {text: "Couldn't delete appointment type!", color: "error", })
+        });
     },
-    editAppPrice: function(editId) {
-      this.$router.push({name: "editAppointmentPrice", params: {id : editId}});
+    editAppPrice: function(type) {
+      this.$router.push({name: "editAppointmentPrice", params: {id : type.id}});
     },
     addAppPrice: function() {
       this.$router.push({name: "addAppointmentPrice"});

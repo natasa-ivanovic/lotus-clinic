@@ -112,33 +112,33 @@ const routes = [
     {
         component: AppointmentTypes,
         name: "appointmentTypes",
-        path: "/appointmentTypes/"
+        path: "/appointment_types"
     },
     {
         component: AddAppointmentType,
         name: "addAppointmentType",
-        path: "/appointmentTypes/add"
+        path: "/appointment_types/add"
     },
     {
         component: EditAppointmentType,
         name: "editAppointmentType",
-        path: "/appointmentTypes/edit/:id",
+        path: "/appointment_types/edit/:id",
         props: true
     },
     {
         component: AppointmentPrice,
         name: "appointmentPrices",
-        path: "/appointmentPrices/"
+        path: "/appointment_prices"
     },
     {
         component: AddAppointmentPrice,
         name: "addAppointmentPrice",
-        path: "/appointmentPrices/add"
+        path: "/appointment_prices/add"
     },
     {
         component: EditAppointmentPrice,
         name: "editAppointmentPrice",
-        path: "/appointmentPrices/edit/:id",
+        path: "/appointment_prices/edit/:id",
         props: true
     },
     {

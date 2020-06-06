@@ -21,14 +21,17 @@ Object.defineProperty(Vue.prototype, '$role', {
   }
 })
 
-// axios
-// cfg
+// axios config
 Vue.use(VueAxios, Axios);
 
 Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
 Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
-//Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-Vue.axios.defaults.baseURL = "http://localhost:9001";
+
+// keep on heroku for deploy and localhost for testing
+
+Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+// Vue.axios.defaults.baseURL = "http://localhost:9001";
+
 
 // all errors pass through this function before being catched in individual catch functions
 Vue.axios.interceptors.response.use(response => {

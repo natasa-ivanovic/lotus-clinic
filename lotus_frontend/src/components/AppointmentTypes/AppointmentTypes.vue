@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "api/appointmentTypes";
+const apiURL = "/api/appointmentTypes";
 export default {
   name: "appointmentTypes",
   data() {
