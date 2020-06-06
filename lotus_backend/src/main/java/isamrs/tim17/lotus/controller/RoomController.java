@@ -52,16 +52,12 @@ public class RoomController {
 	@PostMapping("/rooms")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> addRoom(@RequestBody String name) {
-		System.out.println("Adding a room...");
-		System.out.println(name);
 
-		/*
-		 * if (isEmptyOrNull(room)) { System.out.println("Something's wrong..."); return
-		 * new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-		 */
+		if(name == null || name == "")
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
 		Room room = new Room(name);
 		service.save(room);
-		System.out.println("Database is ok...");
 		return new ResponseEntity<>(room, HttpStatus.OK);
 	}
 
@@ -115,7 +111,8 @@ public class RoomController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> updateRoom(@RequestBody RoomDTO newRoom, @PathVariable long id) {
 
-		// TODO VALIDATION!
+		if(isEmptyOrNull(newRoom))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		if (id != newRoom.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -141,13 +138,11 @@ public class RoomController {
 	@DeleteMapping("/rooms/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<RoomDTO> deleteRoom(@PathVariable("id") long id) {
-		System.out.println(id);
 		Room room = service.findOne(id);
 
 		if (room == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		RoomDTO dto = new RoomDTO(room);
-		System.out.println("Deleting " + room);
 		service.remove(id);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
@@ -155,7 +150,6 @@ public class RoomController {
 	@PostMapping("/rooms/free")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<RoomDateDTO> getFreeRooms(@RequestBody String date) {
-		System.out.println(date);
 		Date startDate = null;
 		try {
 			startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
@@ -164,28 +158,20 @@ public class RoomController {
 		}
 
 		Date endDate = DateUtil.addMinutes(startDate, 30);
-		System.out.println(startDate);
-		System.out.println("End date: " + endDate);
 
 		List<Room> rooms = service.findAll();
 		List<RoomDTO> dto = new ArrayList<>();
 
 		for (Room r : rooms) {
-			System.out.println("-------------------");
-			System.out.println(r.getName());
 			boolean free = true;
 			for (Appointment a : r.getAppointments()) {
-				System.out.println("Zahtev => START: " + startDate + " KRAJ: " + endDate);
-				System.out.println("Staroo => START: " + a.getStartDate() + " KRAJ: " + a.getEndDate());
-				if (DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate()) == true) {
+				if (DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate())) {
 					free = false;
 				}
 			}
-			if (free == true) {
+			if (free) {
 				dto.add(new RoomDTO(r));
 			}
-			System.out.println("Slobodno: " + free);
-			System.out.println("***");
 		}
 		RoomDateDTO roomDto = new RoomDateDTO(dto, endDate.getTime());
 		return new ResponseEntity<>(roomDto, HttpStatus.OK);
@@ -211,7 +197,7 @@ public class RoomController {
 		List<Room> rooms = service.findByClinic(clinic);
 		// napravi mapu -> key je dan, value je objekat koji ima sobu i prvi slobodan
 		// termin
-		List<RoomTermDTO> roomInfo = new ArrayList<RoomTermDTO>();
+		List<RoomTermDTO> roomInfo = new ArrayList<>();
 		for (Room r : rooms) {
 			for (Date d : allDays) {
 				Calendar cal = Calendar.getInstance();
@@ -225,7 +211,7 @@ public class RoomController {
 				List<Date> allTermsInDay = getAllTerms(d);
 				// pronadji prvi slobodan termin za tu sobu tog dana
 				List<Date> clearTerms = removeOverlap(allTermsInDay, apps);
-				Date firstTerm = clearTerms.size() != 0 ? clearTerms.get(0) : null;
+				Date firstTerm = clearTerms.isEmpty() ? clearTerms.get(0) : null;
 				if (firstTerm != null) {
 					roomInfo.add(new RoomTermDTO(r, firstTerm));
 					break;
@@ -261,11 +247,10 @@ public class RoomController {
 
 	public static List<Date> getAllTerms(Date day) {
 
-		//int weekdayWorkStart = 8;
+		//TODO NATASA OVO OBAVEZNO MORAS IZMENITI!!!!!!!!!!!!!!!
 		int weekdayWorkEnd = 18;
 		int weekdayBreakStart = 11;
 
-		//int weekendWorkStart = 8;
 		int weekendWorkEnd = 13;
 		int weekendBreakStart = 11;
 
@@ -273,13 +258,15 @@ public class RoomController {
 
 		int termsPerHour = 2;
 
-		List<Date> data = new ArrayList<Date>();
+		List<Date> data = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(day);
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			return data;
 		}
-		int workStart, workEnd, breakStart;
+		int workStart; 
+		int workEnd;
+		int breakStart;
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
 			workStart = cal.get(Calendar.HOUR_OF_DAY);
 			workEnd = weekendWorkEnd;
@@ -293,7 +280,7 @@ public class RoomController {
 		cal.set(Calendar.HOUR_OF_DAY, currentTime);
 		cal.set(Calendar.MINUTE, 0);
 		int termDuration = 60 / termsPerHour;
-		// TODO: maybe change so term duration is flexible?
+		
 		while (currentTime != workEnd) {
 			if (currentTime == breakStart) {
 				currentTime += breakDurationHours;
@@ -308,6 +295,12 @@ public class RoomController {
 			currentTime++;
 		}
 		return data;
+	}
+	
+	boolean isEmptyOrNull(RoomDTO r) {
+		if(r == null)
+			return true;
+		return ((r.getName() == null) || ("".equals(r.getName())));
 	}
 
 }

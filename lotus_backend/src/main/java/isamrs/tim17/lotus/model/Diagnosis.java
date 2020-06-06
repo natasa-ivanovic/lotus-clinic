@@ -32,7 +32,7 @@ public class Diagnosis {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentre clinicalCentre;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	public Diagnosis() {}
 	

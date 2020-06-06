@@ -26,7 +26,7 @@ public class Nurse extends User {
 	private Clinic clinic;
 	
 	@OneToMany(mappedBy = "nurse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Prescription> prescriptions = new HashSet<Prescription>();
+	private Set<Prescription> prescriptions = new HashSet<>();
 	
 	public Nurse() {}
 

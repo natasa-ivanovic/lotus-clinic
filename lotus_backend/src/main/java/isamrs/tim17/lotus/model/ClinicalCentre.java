@@ -26,17 +26,17 @@ public class ClinicalCentre {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<ClinicalCentreAdministrator> clinicalCentreAdministrators = new HashSet<ClinicalCentreAdministrator>();
+	private Set<ClinicalCentreAdministrator> clinicalCentreAdministrators = new HashSet<>();
 	@Column(name="name", unique = false, nullable = false)
 	private String name;
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Clinic> clinics = new HashSet<Clinic>();
+	private Set<Clinic> clinics = new HashSet<>();
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
+	private Set<Diagnosis> diagnosis = new HashSet<>();
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Medicine> medicines = new HashSet<Medicine>();
+	private Set<Medicine> medicines = new HashSet<>();
 	@OneToMany(mappedBy = "clinicalCentre", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Patient> patients = new HashSet<Patient>();
+	private Set<Patient> patients = new HashSet<>();
 	
 	public ClinicalCentre() {}
 	

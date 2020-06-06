@@ -4,10 +4,7 @@ public class RatingDTO {
 	private float doctorRating;
 	private float clinicRating;
 	private long appointmentId;
-	
-	public RatingDTO() {}
 
-	
 	public float getDoctorRating() {
 		return doctorRating;
 	}

@@ -34,7 +34,7 @@ public class MedicalRecord {
 	@Column(name="weight", unique=false, nullable=false)
 	private float weight;
 	@ManyToMany(mappedBy = "medicalRecords", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Allergy> allergies = new HashSet<Allergy>();
+	private Set<Allergy> allergies = new HashSet<>();
 	@Column(name="bloodType", unique=false, nullable=false)
 	private String bloodType;
    
@@ -43,13 +43,13 @@ public class MedicalRecord {
 	private Patient patient;
 	
 	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	//TODO OPERATIONS
 	
 	public MedicalRecord() {}
 
-	public MedicalRecord(float height, float weight, HashSet<Allergy> allergies, String bloodType, Patient patient) {
+	public MedicalRecord(float height, float weight, Set<Allergy> allergies, String bloodType, Patient patient) {
 		this.id = this.getId();
 		this.height = height;
 		this.weight = weight;

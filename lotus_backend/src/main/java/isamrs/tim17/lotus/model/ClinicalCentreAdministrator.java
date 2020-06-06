@@ -23,7 +23,7 @@ public class ClinicalCentreAdministrator extends User {
 	private ClinicalCentre clinicalCentre;
 	
 	@OneToMany(mappedBy = "admin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Request.class)
-	private Set<Request> requests = new HashSet<Request>();
+	private Set<Request> requests = new HashSet<>();
 	
 	public ClinicalCentreAdministrator() {}
 	

@@ -1,9 +1,7 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -113,7 +111,7 @@ public class LoginController {
 		Patient patient = new Patient(p);
 		patient.setEnabled(false);
 		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-		ArrayList<Authority> auth = new ArrayList<Authority>();
+		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
 		userService.save(patient);
@@ -124,9 +122,9 @@ public class LoginController {
 	
 	
 	
-	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@PostMapping("/change-password")
 	@PreAuthorize("hasAnyRole('PATIENT','DOCTOR','ADMIN','CENTRE_ADMIN','NURSE')")
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+	public ResponseEntity<Object> changePassword(@RequestBody PasswordChanger passwordChanger) {
 		if (passwordChanger.newPassword.length() < 5) {
 			return new ResponseEntity<>("New password must be at least 5 characters!", HttpStatus.BAD_REQUEST);
 		}
@@ -144,5 +142,4 @@ public class LoginController {
 		public String oldPassword;
 		public String newPassword;
 	}
-		
 }

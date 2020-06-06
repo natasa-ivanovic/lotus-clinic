@@ -10,7 +10,7 @@ public class AppointmentTypeDTO {
 	
 	private long id;
 	private String name;
-	private Set<UserDTO> doctors = new HashSet<UserDTO>();
+	private Set<UserDTO> doctors = new HashSet<>();
 	
 	public AppointmentTypeDTO() {}
 	

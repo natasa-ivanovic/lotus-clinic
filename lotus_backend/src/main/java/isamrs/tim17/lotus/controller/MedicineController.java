@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.MedicalRecordDTO;
 import isamrs.tim17.lotus.dto.MedicineDTO;
 import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.service.MedicineService;
@@ -33,7 +34,7 @@ public class MedicineController {
 		for(Medicine m : medicines) {
 			medicinesDTO.add(new MedicineDTO(m));
 		}
-		return new ResponseEntity<List<MedicineDTO>>(medicinesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(medicinesDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping("/medicines")
@@ -46,17 +47,14 @@ public class MedicineController {
 		Medicine medicine = new Medicine(name);
 		service.save(medicine);
 		System.out.println("Database is ok...");
-		return new ResponseEntity<>(medicine, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/medicines/{id}")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
-		System.out.println(id);
 		Medicine medicine = service.findOne(id);
-
 		if (medicine == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + medicine);
 		service.remove(id);
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
@@ -76,7 +74,8 @@ public class MedicineController {
 	@PutMapping("/medicines/{id}")
 	public ResponseEntity<Medicine> updateMedicine(@RequestBody MedicineDTO newMedicine, @PathVariable long id) {
 		
-		//TODO VALIDATION!
+		if(isEmptyOrNull(newMedicine))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		if (id != newMedicine.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -90,5 +89,11 @@ public class MedicineController {
 		medicine.setName(newMedicine.getName());
 		medicine = service.save(medicine);
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
+	}
+	
+	private boolean isEmptyOrNull(MedicineDTO m) {
+		if (m == null) return true;
+		return (m.getName() == null || "".equals(m.getName()));
+			
 	}
 }
