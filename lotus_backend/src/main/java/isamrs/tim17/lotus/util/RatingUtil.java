@@ -13,24 +13,20 @@ public class RatingUtil {
 		if (reviews.isEmpty())
 			return 0;
 		double result = 0.0;
-		int counter = 0;
 		for (DoctorReview dr : reviews) {
 			result += dr.getGrade();
-			counter++;
 		}
-		return result / counter;
+		return result / reviews.size();
 	}
 
 	public static double getAverageClinicRating(List<ClinicReview> reviews) {
 		if (reviews.isEmpty())
 			return 0;
 		double result = 0.0;
-		int counter = 0;
 		for (ClinicReview cr : reviews) {
 			result += cr.getGrade();
-			counter++;
 		}
-		return result / counter;
+		return result / reviews.size();
 
 	}
 }

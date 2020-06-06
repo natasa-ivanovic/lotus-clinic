@@ -53,7 +53,7 @@ public class RoomController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Room> addRoom(@RequestBody String name) {
 
-		if(name == null || name == "")
+		if(name == null || "".equals(name))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		Room room = new Room(name);
