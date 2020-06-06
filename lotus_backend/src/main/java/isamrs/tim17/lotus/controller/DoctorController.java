@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
-import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
@@ -35,7 +35,7 @@ import isamrs.tim17.lotus.service.DoctorService;
 public class DoctorController {
 	@Autowired private DoctorService service;
 	@Autowired private ClinicService clinicService;
-	@Autowired private AppointmentTypeService appTypeService;
+	@Autowired private AppointmentPriceService appPriceService;
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	@Autowired
@@ -59,7 +59,7 @@ public class DoctorController {
 		if (service.alreadyExistsUsername(doctor.getUsername()))
 			return new ResponseEntity<>("That username already exists!", HttpStatus.BAD_REQUEST);
 		
-		AppointmentType spec = appTypeService.findOne(speciality);
+		AppointmentPrice spec = appPriceService.findOne(speciality);
 		if (spec == null)
 			return new ResponseEntity<>("Speciality not filled in", HttpStatus.BAD_REQUEST);
 		
