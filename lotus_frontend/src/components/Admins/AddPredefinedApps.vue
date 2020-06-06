@@ -139,8 +139,30 @@
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step step="5" >Review</v-stepper-step>
+            <v-stepper-step :editable="true"  :rules="[() => this.step5]" :complete="e1 > 5" step="5">Discount
+            <small v-if="!this.step5">Please enter a discount.</small></v-stepper-step>
             <v-stepper-content step="5">
+              <v-card
+                class="mb-12"
+                color="white"
+                elevation="0"
+              >
+              <v-container>
+                <v-row>
+                </v-row>
+                  <v-text-field
+                    label="Discount"
+                    suffix="%"
+                    :rules="[rules.required, rules.isNumber, rules.isBetween]"
+                    v-model="appointment.discount"
+                    required />
+              </v-container>
+               <v-btn color="primary" @click="checkDiscount()" class="ml-8" width="100">Continue</v-btn>
+              </v-card>
+            </v-stepper-content>
+
+            <v-stepper-step step="6" >Review</v-stepper-step>
+            <v-stepper-content step="6">
               <v-card
                 class="mt-n2"
                 color="white"
@@ -154,6 +176,9 @@
                   <v-list-item-subtitle>Appointment type: {{this.aType}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Doctor: {{this.doc}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Room: {{this.room}}</v-list-item-subtitle>
+                  <!--v-list-item-subtitle>Price: {{this.price}}</v-list-item-subtitle-->
+                  <v-list-item-subtitle>Discount: {{this.appointment.discount}} %</v-list-item-subtitle>
+                  <!--v-list-item-subtitle>Price with discount: {{this.price}}</v-list-item-subtitle-->
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
@@ -166,7 +191,7 @@
 </template>
 
 <script>
-  const apiTypes = "http://localhost:9001/api/appointmentTypes";
+  const apiTypes = "http://localhost:9001/api/appointmentPrices";
   const apiRooms = "http://localhost:9001/api/rooms/free";
   const apiAddApp = "http://localhost:9001/api/appointments";
 
@@ -181,7 +206,8 @@
           endDateLong: "",
           appointmentType: "",
           doctor: "",
-          room: ""
+          room: "",
+          discount: ""
         },
         appTypes: [],
         types: [],
@@ -198,12 +224,17 @@
           step1: () => this.step1, //date and time
           step2: () => this.step2, //appointment type
           step3: () => this.step3, //doctor
-          step4: () => this.step4  //room
+          step4: () => this.step4, //room
+          step5: () => this.step5,  //price
+          required: value => !!value || value === 0 || 'Field is required.',
+          isNumber: value => !isNaN(value) || 'Price must be a number.',
+          isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
         },
         step1: true,
         step2: true,
         step3: true,
-        step4: true
+        step4: true,
+        step5: true,
       }
     },
     mounted() {
@@ -228,6 +259,7 @@
         }
         this.step1 = true;
         var data = [];
+        //get prices for app type
         this.appTypes.forEach(el => {
           var type = {}
           if (el.doctors.length != 0) {
@@ -238,7 +270,6 @@
             data.push(type);
           }
         });
-        //this.getRooms(); //get all free rooms
         this.types = data;
         this.e1 = 2;
       },
@@ -253,6 +284,7 @@
         this.appTypes.forEach(el => {
           console.log(el.id);
           if (this.appointment.appointmentType == el.id) {
+            this.appointment.discount = el.discount;
             el.doctors.forEach(doc => {
               var doctor = {
                 text: doc.name + " " + doc.surname,
@@ -313,6 +345,14 @@
         this.formattedEndDate = elem.substring(0, 5);
         this.getAppInfo();
         this.e1 = 5;
+      },
+      checkDiscount: function() {
+        if (this.appointment.discount == "") {
+          this.step5 = false;
+          return;
+        }
+        this.step5 = true;
+        this.e1 = 6;
       },
       getAppInfo: function() {
         this.appTypes.forEach(el => {

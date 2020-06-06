@@ -24,7 +24,7 @@ public class DoctorDTO {
 		this.rating = rating;
 		this.availableTimes = times;
 		this.setClinic(new ClinicDTO(d.getClinic()));
-		this.setType(d.getSpecialty().getName());
+		this.setType(d.getSpecialty().getType().getName());
 	}
 
 	public String getName() {

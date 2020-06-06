@@ -20,29 +20,31 @@
                 <v-form v-model="valid" ref="form">
                   <v-text-field
                     label="ID"
-                    v-model="appType.id"
+                    v-model="appPrice.id"
                     readonly
                     filled
                     outlined />
                   <v-text-field
                     label="Name"
                     :rules="[rules.required]"
-                    v-model="appType.name"
+                    v-model="appPrice.name"
+                    readonly
+                    filled
                     outlined />
                   <v-text-field
                     label="Price"
                     :rules="[rules.required, rules.isNumber]"
-                    v-model="appType.price"
+                    v-model="appPrice.price"
                     outlined />
                   <v-text-field
                     label="Discount"
                     :rules="[rules.required, rules.isNumber, rules/isBetween]"
-                    v-model="appType.discount"
+                    v-model="appPrice.discount"
                     outlined />
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn v-on:click="editAppType()" color="primary" block>Edit
+                <v-btn v-on:click="editAppPrice()" color="primary" block>Edit
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -54,13 +56,13 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentTypes"
+const apiURL = "http://localhost:9001/api/appointmentPrices"
 export default {
-    name: "editAppointmentType",
+    name: "editAppointmentPrice",
     props: ['id'],
     data() {
         return {
-            appType: {},
+            appPrice: {},
             rules: {
                 required: value => !!value || value === 0 || 'Field is required.',
                 isNumber: value => !isNaN(value) || 'Price must be a number.',
@@ -79,20 +81,20 @@ export default {
         .then(response => {
             return response.json();
         })
-        .then(appType => {
-            this.appType = appType;
+        .then(appPrice => {
+            this.appPrice = appPrice;
         })
     },
     methods: {
-        editAppType: function() {
+        editAppPrice: function() {
             fetch(apiURL + "/" + this.id, {method: 'PUT',
                   headers: {'Content-Type': 'application/json', 'Authorization': this.$authKey},
-                  body: JSON.stringify(this.appType)})
+                  body: JSON.stringify(this.appPrice)})
             .then(response => {
                 if (response.status != 200)
                     alert("Couldn't update appointment type!");
                 else
-                    this.$router.push({name :"appointmentTypes"});
+                    this.$router.push({name :"appointmentPrices"});
             })
         }
     }

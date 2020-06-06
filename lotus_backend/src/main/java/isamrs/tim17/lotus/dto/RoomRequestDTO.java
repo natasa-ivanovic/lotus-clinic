@@ -21,7 +21,7 @@ public class RoomRequestDTO {
 		this.startDate = date;
 		this.patient = new UserDTO(patient);
 		this.doctor = new UserDTO(doctor);
-		this.type = doctor.getSpecialty().getName();
+		this.type = doctor.getSpecialty().getType().getName();
 	}
 
 	public String getType() {

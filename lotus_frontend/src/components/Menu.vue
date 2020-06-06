@@ -22,9 +22,9 @@
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
                     <v-btn text :to="{ name: 'doctors'}">Doctors</v-btn>
                     <v-btn text :to="{ name: 'rooms'}">Rooms</v-btn>
-                    <v-btn text :to="{ name: 'appointmentTypes'}">Appointment types</v-btn>
                     <v-btn text :to="{ name: 'medicines'}">Medicines</v-btn>
                     <v-btn text :to="{ name: 'appointments'}">Add appointment</v-btn>
+                    <v-btn text :to="{ name: 'appointmentPrices'}">Appointment types</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('CENTRE_ADMIN')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
@@ -32,6 +32,7 @@
                     <v-btn text :to="{ name: 'diagnoses'}">Diagnoses</v-btn>
                     <v-btn text :to="{ name: 'registrationRequestView'}">Registration Requests</v-btn>
                     <v-btn text :to="{ name: 'register'}">Add centre admin</v-btn>
+                    <v-btn text :to="{ name: 'appointmentTypes'}">Appointment types</v-btn>
                 </v-toolbar-items>
                 <v-spacer />
                 <v-toolbar-items v-if="!checkRole(null)">

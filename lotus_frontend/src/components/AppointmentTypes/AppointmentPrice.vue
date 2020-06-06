@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="appTypes"
+      :items="appPrices"
       item-key="id"
       class="elevation-1"
     >
@@ -10,19 +10,19 @@
         <v-toolbar flat color="white">
           <v-toolbar-title>List of appointment types</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn @click="addAppType()">Add new appointment type</v-btn>
+          <v-btn @click="addAppPrice()">Add new appointment type</v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.edit="{ item }">
         <v-icon
-          @click="editAppType(item.id)"
+          @click="editAppPrice(item.id)"
         >
           mdi-pencil
         </v-icon>
       </template>
       <template v-slot:item.delete="{ item }">
         <v-icon
-          @click="deleteAppType(item.id)"
+          @click="deleteAppPrice(item.id)"
         >
           mdi-delete
         </v-icon>
@@ -32,12 +32,12 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointmentTypes/";
+const apiURL = "http://localhost:9001/api/appointmentPrices/";
 export default {
-  name: "appointmentTypes",
+  name: "appointmentPrices",
   data() {
     return {
-      appTypes: [],
+      appPrices: [],
       headers: [
         {text: 'ID', value: 'id'},
         {text: 'Name', value: 'name'},
@@ -54,27 +54,27 @@ export default {
       return response.json(); //name, doctors
     })
     .then(r => {
-      this.appTypes = r;
+      this.appPrices = r;
     })
   },
   methods: {
-    deleteAppType: function(id) {
+    deleteAppPrice: function(id) {
       fetch(apiURL + id, {headers: { 'Authorization': this.$authKey}, method: 'DELETE'})
         .then(response => {
           if (response.status != 200)
-            alert("Couldn't delete appointment type!");
+            alert("Couldn't delete appointment Price!");
           else
             return response.json();
         })
         .then(r => {
-          this.appTypes.pop(r);
+          this.appPrices.pop(r);
         })
     },
-    editAppType: function(editId) {
-      this.$router.push({name: "editAppointmentType", params: {id : editId}});
+    editAppPrice: function(editId) {
+      this.$router.push({name: "editAppointmentPrice", params: {id : editId}});
     },
-    addAppType: function() {
-      this.$router.push({name: "addAppointmentType"});
+    addAppPrice: function() {
+      this.$router.push({name: "addAppointmentPrice"});
     }
 
   }

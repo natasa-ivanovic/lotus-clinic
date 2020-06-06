@@ -261,7 +261,7 @@ public class AppointmentController {
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		System.out.println(clinic);
 		
-		Appointment newApp = new Appointment(start, end, at, doc, room, clinic);
+		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at, doc, room, clinic);
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -294,17 +294,18 @@ public class AppointmentController {
 		app.setStatus(status);
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
-		app.setAppointmentType(doctor.getSpecialty());
+		app.setAppointmentType(doctor.getSpecialty().getType());
+		app.setPrice(doctor.getSpecialty().getPrice());
 		app = service.save(app);
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
-				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty().getName() + ".\n"
+				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
 				+ "We look forward to seeing you.\nLotus Clinic Staff";
 		
 		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nYou have a new appointment.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
-				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + " and the appointment type is " + doctor.getSpecialty().getName()+ ".\n"
+				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + " and the appointment type is " + doctor.getSpecialty().getType().getName()+ ".\n"
 				+ "Lotus Clinic Staff";
 		
 		mailSender.sendMsg(patient.getUsername(), "Appointment notiffication", contentPatient);

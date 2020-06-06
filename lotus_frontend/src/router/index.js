@@ -46,6 +46,9 @@ import PatientDoctorView from "../components/Patients/DoctorsView"
 import PreviousAppointments from "../components/Patients/PreviousAppointments"
 import FreeRooms from "../components/Admins/FreeRooms"
 import EditPassword from "../components/Users/EditPassword"
+import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
+import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
+import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
 
 const routes = [
     {
@@ -121,6 +124,22 @@ const routes = [
         component: EditAppointmentType,
         name: "editAppointmentType",
         path: "/appointmentTypes/edit/:id",
+        props: true
+    },
+    {
+        component: AppointmentPrice,
+        name: "appointmentPrices",
+        path: "/appointmentPrices/"
+    },
+    {
+        component: AddAppointmentPrice,
+        name: "addAppointmentPrice",
+        path: "/appointmentPrices/add"
+    },
+    {
+        component: EditAppointmentPrice,
+        name: "editAppointmentPrice",
+        path: "/appointmentPrices/edit/:id",
         props: true
     },
     {
