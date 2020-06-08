@@ -40,10 +40,10 @@ public class PremadeAppDTO {
 		this.doctorId = app.getDoctor().getId();
 		this.doctorName = app.getDoctor().getName();
 		this.doctorSurname = app.getDoctor().getSurname();
-		this.roomId = app.getRoom().getId();
-		this.roomName = app.getRoom().getName();
 		this.price = app.getPrice();
 		this.discount = app.getDiscount();
+		this.roomId = app.getRoom().getId();
+		this.roomName = app.getRoom().getName();		
 		this.setType(app.getAppointmentType().getName());
 		if (app.getMedicalRecord() != null) {
 			this.patientName = app.getMedicalRecord().getPatient().getName();

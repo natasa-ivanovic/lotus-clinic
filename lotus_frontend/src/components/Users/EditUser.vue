@@ -14,7 +14,7 @@
                       <v-text-field
                         label="Email"
                         :rules="[rules.email, rules.required]"
-                        v-model="user.email" 
+                        v-model="user.username" 
                         required
                         readonly/>
                     </v-col>
@@ -142,7 +142,7 @@ export default {
   computed: {
     formIsValid () {
       return (
-        this.user.email &&
+        this.user.username &&
         this.user.name &&
         this.user.surname &&
         this.user.gender &&

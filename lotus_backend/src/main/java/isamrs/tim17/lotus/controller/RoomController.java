@@ -211,7 +211,7 @@ public class RoomController {
 				List<Date> allTermsInDay = getAllTerms(d);
 				// pronadji prvi slobodan termin za tu sobu tog dana
 				List<Date> clearTerms = removeOverlap(allTermsInDay, apps);
-				Date firstTerm = clearTerms.isEmpty() ? clearTerms.get(0) : null;
+				Date firstTerm = !clearTerms.isEmpty() ? clearTerms.get(0) : null;
 				if (firstTerm != null) {
 					roomInfo.add(new RoomTermDTO(r, firstTerm));
 					break;
