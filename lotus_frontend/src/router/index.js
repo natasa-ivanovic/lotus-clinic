@@ -45,12 +45,9 @@ import PatientDoctorView from "../components/Patients/DoctorsView"
 import PreviousAppointments from "../components/Patients/PreviousAppointments"
 import FreeRooms from "../components/Admins/FreeRooms"
 import EditPassword from "../components/Users/EditPassword"
-<<<<<<< HEAD
-=======
 import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
 import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
 import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 
 const routes = [
     {

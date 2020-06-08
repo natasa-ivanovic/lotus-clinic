@@ -84,8 +84,6 @@
 
 <script>
 import Overlay from "./MROverlay"
-
-
 const apiURL = "/api/medicalRecord"
 
 export default {
@@ -120,19 +118,7 @@ export default {
     },
     mounted() {
         this.axios({
-<<<<<<< HEAD:lotus_frontend/src/components/Medical Record/MedicalRecord.vue
-            url: "http://localhost:9001/api/allergies",
-            method: 'GET'
-        }).then(response => {
-            this.allAllergies = response.data;
-        }).catch(error => {
-            alert(error);
-        })
-        this.axios({
-            url: apiURL + this.id,
-=======
             url: apiURL + "/" + this.id,
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37:lotus_frontend/src/components/MedicalRecord/MedicalRecord.vue
             method: 'GET'
         }).then(response => {
             this.record = response.data.patient.record;

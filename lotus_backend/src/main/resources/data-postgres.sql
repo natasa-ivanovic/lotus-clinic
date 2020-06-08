@@ -23,10 +23,7 @@ insert into users (ssid, address, birth_date, city, country, username, gender, n
 /* doctors */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (42367854326, 'Fruskogorska 66', '1995-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor1@gmail.com', 1, 'Doktorko', '$2y$10$z8hfS/qHY011xAZ4qpMutOdAVRufZbPYVQyXOsO37InW4nwqTA6V2', '0699114909', 'Dokic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 1);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (53451231231, 'Bulevar Cara Lazara 15', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor2@gmail.com', 0, 'Doktorka', '$2y$10$0Z7PPfPQ94jhjz5j.6UAt.JQxw5w7RdvCr.LdMhenZWnu4vJW.s1y', '0699114909', 'Dakic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 2);
-<<<<<<< HEAD
-=======
 
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 /* nurses */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', '$2a$10$t7KnHQ52xqsAdt7m.WXYs.1GdxOOMbPcbLJBBmFzhVaiCKkp9OKGu', '0699114909', 'Sestric', 1, 'NURSE', true, '2020-04-30 16:00:00.508-07');
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (54326162342, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'nurse2@gmail.com', 0, 'Medinko', '$2a$10$lIe3MF.s.bJ801yZMnyMn.xvi2KJEOT9Z3b.V0Kx2piI2zaiaEWqO', '0699114909', 'Bratic', 2, 'NURSE', true, '2020-04-30 16:00:00.508-07');
@@ -88,8 +85,6 @@ insert into allergies (name) values ('Pollen');
 insert into allergies (name) values ('Pork');
 insert into allergies (name) values ('Ibuprofen');
 insert into allergies (name) values ('Tomato');
-<<<<<<< HEAD
-=======
 
 insert into medical_records (blood_type, height, weight, patient_id) values ('A', '196', '95', 1);
 insert into medical_records (blood_type, height, weight, patient_id) values ('B', '170', '57', 2);
@@ -110,39 +105,11 @@ insert into appointments (start_date, end_date, price, discount, status, appoint
 insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 14:00:00.508-07', '2020-05-24 14:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
 insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 18:00:00.508-07', '2020-05-24 18:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
 insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 19:00:00.508-07', '2020-05-24 19:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 
-insert into medical_records (blood_type, height, weight, patient_id) values ('A', '196', '95', 1);
-insert into medical_records (blood_type, height, weight, patient_id) values ('B', '170', '57', 2);
-insert into medical_records (blood_type, height, weight, patient_id) values ('A', '175', '65', 3);
-
-<<<<<<< HEAD
-insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (1, 2);
-insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (2, 2);
-insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (3, 3);
-insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (4, 3);
-
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-05-12 17:25:00.508-07', '2020-05-12 17:55:00.508-07', 4, 1, 1, 4, 1, 1, false, 'Patient reports coughing up blood, chest pains for over a week and night sweats.');
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-05-12 20:30:00.508-07', '2020-05-12 21:00:00.508-07', 4, 1, 1, 4, 1, 2, false, 'Patient reports symptoms of a common cold. To be treated with over the counter medication and stay at home.');
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-05-12 22:00:00.508-07', '2020-05-12 22:30:00.508-07', 4, 1, 1, 4, 1, 3, false, 'Patient tested positive for COVID-19. Report immediately to specialist clinic');
-/*insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-11 23:00:00.508-07', '2020-05-11 23:30:00.508-07', 1, 1, 1, 4, 1, 1, false);*/
-
-
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 10:00:00.508-07', '2020-05-24 10:30:00.508-07', 1, 2, 3, 5, 2, 1, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 14:00:00.508-07', '2020-05-24 14:30:00.508-07', 1, 2, 3, 5, 2, 1, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 18:00:00.508-07', '2020-05-24 18:30:00.508-07', 1, 2, 4, 5, 2, 2, false);
-insert into appointments (start_date, end_date, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-05-24 19:00:00.508-07', '2020-05-24 19:30:00.508-07', 1, 2, 4, 5, 2, 2, false);
 
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (1, 1);
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (2, 2);
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);
-
-=======
-insert into diagnosis_appointments(diagnosis_id, appointments_id) values (1, 1);
-insert into diagnosis_appointments(diagnosis_id, appointments_id) values (2, 2);
-insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);
-
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 
 /* requests */
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 10:00:00.508-07', 0, 5, 1);

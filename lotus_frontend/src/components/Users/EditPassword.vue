@@ -56,13 +56,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-const passURL = "http://localhost:9001/auth/change-password";
-const loginURL = "http://localhost:9001/auth/login";
-=======
 const passURL = "/auth/change-password";
 const loginURL = "/auth/login";
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 export default {
   name: "EditUser",
   props: ['id', 'userType'],
@@ -120,17 +115,10 @@ export default {
           this.axios({url : loginURL, 
                   method: 'POST',
                   data: user                  
-<<<<<<< HEAD
-            }).then(response => {
-              this.$authKey = "Bearer " + response.data.accessToken;
-              localStorage.setItem('authKey', "Bearer " + response.data.accessToken);
-              this.axios.defaults.headers['Authorization'] = "Bearer " + response.data.accessToken;
-=======
             }).then(resp => {
               this.$authKey = "Bearer " + resp.data.accessToken;
               localStorage.setItem('authKey', "Bearer " + resp.data.accessToken);
               this.axios.defaults.headers['Authorization'] = "Bearer " + resp.data.accessToken;
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
               this.$store.commit('showSnackbar', {text: "Successfully changed password!", color: "success", })
               this.$router.push({ name: "profile" })
         }).catch(error => {
@@ -143,12 +131,4 @@ export default {
         });}
   }
 }
-<<<<<<< HEAD
 </script>
-
-<style scoped>
-
-</style>
-=======
-</script>
->>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
