@@ -12,7 +12,7 @@ public class AppointmentPriceDTO {
 	private long type_id;
 	private double price;
 	private double discount;
-	private Set<UserDTO> doctors = new HashSet<UserDTO>();
+	private Set<UserDTO> doctors = new HashSet<>();
 	
 	public AppointmentPriceDTO() {
 		super();

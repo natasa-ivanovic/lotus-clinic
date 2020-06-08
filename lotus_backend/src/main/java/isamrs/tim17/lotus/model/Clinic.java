@@ -34,20 +34,22 @@ public class Clinic {
 	@Column(name = "description", nullable = false, unique = false)
 	private String description;
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Doctor.class)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
+	private Set<Doctor> doctors = new HashSet<>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Nurse.class)
-	private Set<Nurse> nurses = new HashSet<Nurse>();
+	private Set<Nurse> nurses = new HashSet<>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ClinicAdministrator.class)
-	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<ClinicAdministrator>();
+	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<>();
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClinicalCentre clinicalCentre;
-	
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AppointmentPrice> pricelist = new HashSet<>();
+
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
-	private Set<ClinicReview> reviews = new HashSet<ClinicReview>();
+	private Set<ClinicReview> reviews = new HashSet<>();
 	
 	
 	public Clinic() {}
@@ -118,6 +120,38 @@ public class Clinic {
 
 	public void setClinicalCentre(ClinicalCentre clinicalCentre) {
 		this.clinicalCentre = clinicalCentre;
+	}
+
+	public Set<ClinicAdministrator> getClinicAdministrators() {
+		return clinicAdministrators;
+	}
+
+	public void setClinicAdministrators(Set<ClinicAdministrator> clinicAdministrators) {
+		this.clinicAdministrators = clinicAdministrators;
+	}
+
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public Set<AppointmentPrice> getPricelist() {
+		return pricelist;
+	}
+
+	public void setPricelist(Set<AppointmentPrice> pricelist) {
+		this.pricelist = pricelist;
+	}
+
+	public Set<ClinicReview> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<ClinicReview> reviews) {
+		this.reviews = reviews;
 	}
 	
 	

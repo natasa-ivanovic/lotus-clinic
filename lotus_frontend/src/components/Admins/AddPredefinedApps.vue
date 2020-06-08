@@ -208,7 +208,7 @@
           appointmentType: "",
           doctor: "",
           room: "",
-          discount: ""
+          discount: "0"
         },
         appTypes: [],
         types: [],
@@ -344,7 +344,7 @@
         this.e1 = 5;
       },
       checkDiscount: function() {
-        if (this.appointment.discount == "") {
+        if (this.appointment.discount === "") {
           this.step5 = false;
           return;
         }

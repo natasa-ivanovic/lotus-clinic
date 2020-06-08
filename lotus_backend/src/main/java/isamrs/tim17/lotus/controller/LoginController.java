@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
@@ -62,14 +61,14 @@ public class LoginController {
 	public ResponseEntity<Object> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
 
-		// 
 		String username = authenticationRequest.getUsername();
 		User u = userService.findByUsername(username);
 		if (u == null) {
 			return new ResponseEntity<>("User with username " + username + " doesn't exist!", HttpStatus.BAD_REQUEST);
 		}
 		if (!u.isEnabled()) {
-			return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
+			if (u.getRole().equals("PATIENT"))
+				return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
 		}
 		Authentication authentication;
 		try {
@@ -90,6 +89,9 @@ public class LoginController {
 		int expiresIn = tokenUtils.getExpiredIn();
 
 		// Vrati token kao odgovor na uspesnu autentifikaciju
+		if (u.getLastPasswordResetDate() == null) {
+			return new ResponseEntity<>(new UserTokenState(jwt, expiresIn, user.getRole()), HttpStatus.TEMPORARY_REDIRECT);
+		}
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getRole()));
 	}
 		
@@ -107,13 +109,12 @@ public class LoginController {
 			return new ResponseEntity<>("User with that username already exists", HttpStatus.BAD_REQUEST);
 		}
 		if (p.isEmpty()) {
-			System.out.println("Error in patient!");
 			return new ResponseEntity<>("Not all fields are filled", HttpStatus.BAD_REQUEST);
 		}
 		Patient patient = new Patient(p);
 		patient.setEnabled(false);
 		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-		ArrayList<Authority> auth = new ArrayList<Authority>();
+		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
 		userService.save(patient);
@@ -124,9 +125,9 @@ public class LoginController {
 	
 	
 	
-	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@PostMapping("/change-password")
 	@PreAuthorize("hasAnyRole('PATIENT','DOCTOR','ADMIN','CENTRE_ADMIN','NURSE')")
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+	public ResponseEntity<Object> changePassword(@RequestBody PasswordChanger passwordChanger) {
 		if (passwordChanger.newPassword.length() < 5) {
 			return new ResponseEntity<>("New password must be at least 5 characters!", HttpStatus.BAD_REQUEST);
 		}

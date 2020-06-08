@@ -141,6 +141,10 @@ export default {
             user = "admins"
         if (this.$role == "CLINIC_ADMIN")
             user = "cadmins"
+        if (user === "") {
+            this.$router.push({ name: "home"});
+            return;
+        }
         this.axios({url : apiURL + "/" + user +"/self", 
                     method: 'GET'
         }).then(res =>   {

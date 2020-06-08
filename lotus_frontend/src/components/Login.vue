@@ -76,15 +76,11 @@ export default {
                     method: 'POST',
                     data: this.user
         }).then(response =>   {
-            this.$authKey = "Bearer " + response.data.accessToken;
             this.$role = response.data.userRole;
-            localStorage.setItem('authKey', "Bearer " + response.data.accessToken);
             localStorage.setItem('role', response.data.userRole);
+            localStorage.setItem('authKey', "Bearer " + response.data.accessToken);
             this.axios.defaults.headers['Authorization'] = "Bearer " + response.data.accessToken;
             this.$router.push({ name: "home" })
-        }).catch(error => {
-            console.log(error.request.responseText);
-            this.$store.commit('showSnackbar', {text: error.request.responseText, color: "error", })
         });
     }
   }

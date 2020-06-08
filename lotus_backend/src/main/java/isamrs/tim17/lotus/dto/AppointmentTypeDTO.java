@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import isamrs.tim17.lotus.model.AppointmentType;
-import isamrs.tim17.lotus.model.Doctor;
 
 public class AppointmentTypeDTO {
 	
@@ -12,7 +11,7 @@ public class AppointmentTypeDTO {
 	private String name;
 	private double price;
 	private double discount;
-	private Set<UserDTO> doctors = new HashSet<UserDTO>();
+	private Set<UserDTO> doctors = new HashSet<>();
 	
 	public AppointmentTypeDTO() {}
 	

@@ -7,16 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Nurse;
-import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.NurseService;
 
 @RestController
@@ -36,7 +33,7 @@ public class NurseController {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -55,7 +52,7 @@ public class NurseController {
 		nurseToUpdate.setCity(nurse.getCity());
 		nurseToUpdate.setCountry(nurse.getCountry());
 		nurseToUpdate.setPhoneNumber(nurse.getPhoneNumber());
-		nurseToUpdate = service.save(nurseToUpdate);
+		service.save(nurseToUpdate);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

@@ -17,7 +17,7 @@ public class MedicalRecordDTO {
 	private List<AllergyDTO> allergies;
 	private String bloodType;
 	
-	private Set<PremadeAppDTO> apps = new HashSet<PremadeAppDTO>();
+	private Set<PremadeAppDTO> apps = new HashSet<>();
 	
 	public MedicalRecordDTO() {}
 

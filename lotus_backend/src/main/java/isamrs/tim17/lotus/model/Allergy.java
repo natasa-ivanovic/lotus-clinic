@@ -26,7 +26,7 @@ public class Allergy {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentre clinicalCentre;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<MedicalRecord> medicalRecords = new HashSet<MedicalRecord>();
+	private Set<MedicalRecord> medicalRecords = new HashSet<>();
 	
 	public Allergy() {}
 	

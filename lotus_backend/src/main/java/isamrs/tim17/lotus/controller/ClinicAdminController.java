@@ -107,6 +107,7 @@ public class ClinicAdminController {
 		
 		clinicAdmin.setClinic(clinic);
 		clinicAdmin.setEnabled(true);
+		clinicAdmin.setLastPasswordResetDate(null);
 		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_ADMIN"));
 		clinicAdmin.setAuthorities(auth);
@@ -135,9 +136,7 @@ public class ClinicAdminController {
 			return true;
 		if (clinicAdmin.getGender() == null || "".equals(clinicAdmin.getGender().toString()))
 			return true;
-		if (clinicAdmin.getBirthDate() == null || "".equals(clinicAdmin.getBirthDate().toString()))
-			return true;
-		return false;
+		return (clinicAdmin.getBirthDate() == null || "".equals(clinicAdmin.getBirthDate().toString()));
 	}
 
 }

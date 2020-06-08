@@ -34,6 +34,7 @@ public class AllergyController {
 			allergiesDTO.add(new AllergyDTO(d));
 		}
 		return new ResponseEntity<>(allergiesDTO, HttpStatus.OK);
+
 	}
 	
 	@PostMapping
@@ -47,8 +48,8 @@ public class AllergyController {
 	public ResponseEntity<AllergyDTO> getAllergy(@PathVariable("id") long id) {
 		Allergy allergy = service.findOne(id);
 		
-		if(allergy == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if(allergy == null)	
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
 	}
 	
@@ -67,6 +68,7 @@ public class AllergyController {
 		allergy = service.save(allergy);
 		
 		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
+
 	}
 	
 	@DeleteMapping("/{id}")
@@ -74,7 +76,8 @@ public class AllergyController {
 		Allergy allergy = service.findOne(id);
 
 		if (allergy == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 		service.remove(id);
 		return new ResponseEntity<>(new AllergyDTO(allergy), HttpStatus.OK);
 	}

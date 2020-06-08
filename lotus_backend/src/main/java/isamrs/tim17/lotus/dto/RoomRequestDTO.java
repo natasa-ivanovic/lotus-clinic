@@ -2,7 +2,6 @@ package isamrs.tim17.lotus.dto;
 
 import java.util.Date;
 
-import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Patient;
 

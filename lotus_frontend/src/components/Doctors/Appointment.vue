@@ -98,7 +98,6 @@ export default {
             info: "",
             allMedicines: [],
             allDiagnosis: []
-
         }
     },
     mounted() {
