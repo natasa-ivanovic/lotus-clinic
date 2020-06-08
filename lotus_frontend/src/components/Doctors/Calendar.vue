@@ -95,7 +95,7 @@
 </template>
 
 <script>
-const apiURL = "/api/appointments/doctor";
+const apiURL = "/api/calendarentries"
   export default {
     data() {
         return {
@@ -159,19 +159,43 @@ const apiURL = "/api/appointments/doctor";
                     method: 'GET'
         }).then(response => {
             this.appointments = response.data;
+            var color = '';
+            var name = '';
+            var room = '';
+            var patientName = '';
+            var patientSurname = '';
             for(var i = 0; i < this.appointments.length; i++)
             {
+              if(this.appointments[i].appointment != null)
+              {
+                color = 'blue';
+                name = 'Appointment';
+                room = this.appointments[i].appointment.roomName;
+                if(this.appointments[i].appointment.patient != null) {
+                  patientName = this.appointments[i].appointment.patient.patient.name;
+                  patientSurname = this.appointments[i].appointment.patient.patient.surname;
+                } else {
+                  patientName = 'not available';
+                  patientSurname = '';
+                }
+              } else if (this.appointments[i].operation != null)
+              {
+                //add operation parameters here
+              } else if (this.appointments[i].vacation != null) {
+                //add vacation parameters here
+              }
               this.events.push({
-                name: 'Appointment',
+                name: name,
                 start: this.formatDate(new Date(this.appointments[i].startDate), true),
                 end: this.formatDate(new Date(this.appointments[i].endDate), true),
-                color: 'blue',
-                room: this.appointments[i].roomName,
-                patientName: this.appointments[i].patientName,
-                patientSurname: this.appointments[i].patientSurname
+                color: color,
+                room: room,
+                patientName: patientName,
+                patientSurname: patientSurname,
               })
             }
         }).catch(error => {
+          alert(error)
             console.log(error.request);
             this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
         });

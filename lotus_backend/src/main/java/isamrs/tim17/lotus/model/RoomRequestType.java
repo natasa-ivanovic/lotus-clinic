@@ -5,7 +5,6 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class RoomRequestType
  ***********************************************************************/
 
-import java.util.*;
 
 public enum RoomRequestType {
    PATIENT_APP,

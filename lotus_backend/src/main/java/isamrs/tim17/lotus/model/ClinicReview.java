@@ -5,8 +5,6 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class ClinicReview
  ***********************************************************************/
 
-import java.util.*;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

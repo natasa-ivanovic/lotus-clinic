@@ -30,6 +30,7 @@ import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Diagnosis;
@@ -41,6 +42,7 @@ import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.AppointmentService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
@@ -63,6 +65,7 @@ public class AppointmentController {
 	@Autowired public MailSenderModel mailSender;
 	@Autowired private MedicineService medicineService;
 	@Autowired private DiagnosisService diagnosisService;
+	@Autowired private CalendarEntryService calendarService;
 	
 	
 	@GetMapping("/appointments")
@@ -299,6 +302,8 @@ public class AppointmentController {
 		
 		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room, clinic);
 		service.save(newApp);
+		CalendarEntry entry = new CalendarEntry(newApp);
+		calendarService.save(entry);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -337,6 +342,10 @@ public class AppointmentController {
 		app.setAppointmentType(doctor.getSpecialty().getType());
 		app.setPrice(doctor.getSpecialty().getPrice());
 		service.save(app);
+		
+		CalendarEntry entry = new CalendarEntry(app);
+		calendarService.save(entry);
+		
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ", at our clinic " + app.getClinic().getName() + ".\n"
