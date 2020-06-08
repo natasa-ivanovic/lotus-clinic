@@ -107,6 +107,7 @@ public class ClinicAdminController {
 		
 		clinicAdmin.setClinic(clinic);
 		clinicAdmin.setEnabled(true);
+		clinicAdmin.setLastPasswordResetDate(null);
 		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_ADMIN"));
 		clinicAdmin.setAuthorities(auth);
