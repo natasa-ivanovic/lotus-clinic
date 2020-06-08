@@ -75,6 +75,7 @@ public class DoctorController {
 		d.setSpecialty(spec);
 		d.setPassword(passwordEncoder.encode(doctor.getPassword()));
 		d.setEnabled(true);
+		d.setLastPasswordResetDate(null);
 		service.save(d);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

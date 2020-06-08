@@ -67,7 +67,8 @@ public class LoginController {
 			return new ResponseEntity<>("User with username " + username + " doesn't exist!", HttpStatus.BAD_REQUEST);
 		}
 		if (!u.isEnabled()) {
-			return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
+			if (u.getRole().equals("PATIENT"))
+				return new ResponseEntity<>("Your account hasn't been activated yet. Please check your email.", HttpStatus.BAD_REQUEST);
 		}
 		Authentication authentication;
 		try {
@@ -88,6 +89,9 @@ public class LoginController {
 		int expiresIn = tokenUtils.getExpiredIn();
 
 		// Vrati token kao odgovor na uspesnu autentifikaciju
+		if (u.getLastPasswordResetDate() == null) {
+			return new ResponseEntity<>(new UserTokenState(jwt, expiresIn, user.getRole()), HttpStatus.TEMPORARY_REDIRECT);
+		}
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, user.getRole()));
 	}
 		
