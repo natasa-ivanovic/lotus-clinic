@@ -7,15 +7,25 @@ package isamrs.tim17.lotus.model;
 
 import java.util.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "operations")
 public class Operation {
-   private int id;
-   private Date startDate;
-   private Date endDate;
-   private OperationStatus status;
-   
-   public AppointmentType type;
-   public MedicalRecord patient;
-   public Room room;
-   public Doctor[] doctor;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+//	private Date startDate;
+//	private Date endDate;
+//	private OperationStatus status;
+//
+//	public AppointmentType type;
+//	public MedicalRecord patient;
+//	public Room room;
+//	public Doctor[] doctor;
 
 }

@@ -137,3 +137,8 @@ insert into doctor_review (grade, doctor_id) values (3.5, 13);
 insert into doctor_review (grade, doctor_id) values (3, 14);
 insert into doctor_review (grade, doctor_id) values (3, 15);
 
+/*calendar entries */
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-07 22:00:00.508-07', '2020-06-07 22:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-07 22:00:00.508-07', '2020-06-07 22:30:00.508-07', 4, 8);
+
+
