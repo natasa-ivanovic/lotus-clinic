@@ -165,7 +165,7 @@ public class RoomController {
 		for (Room r : rooms) {
 			boolean free = true;
 			for (Appointment a : r.getAppointments()) {
-				if (DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate()) == true) {
+				if (DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate())) {
 					free = false;
 				}
 			}
