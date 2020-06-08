@@ -67,6 +67,11 @@ export default {
                     value: 'address'
                 },
                 {
+                    text: 'Price (RSD)',
+                    sortable: true,
+                    value: 'price'
+                },
+                {
                     text: 'View doctors',
                     sortable: false,
                     value: 'viewDoctors',

@@ -44,7 +44,9 @@ public class Clinic {
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClinicalCentre clinicalCentre;
-	
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AppointmentPrice> pricelist = new HashSet<>();
+
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
 	private Set<ClinicReview> reviews = new HashSet<ClinicReview>();
@@ -118,6 +120,38 @@ public class Clinic {
 
 	public void setClinicalCentre(ClinicalCentre clinicalCentre) {
 		this.clinicalCentre = clinicalCentre;
+	}
+
+	public Set<ClinicAdministrator> getClinicAdministrators() {
+		return clinicAdministrators;
+	}
+
+	public void setClinicAdministrators(Set<ClinicAdministrator> clinicAdministrators) {
+		this.clinicAdministrators = clinicAdministrators;
+	}
+
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public Set<AppointmentPrice> getPricelist() {
+		return pricelist;
+	}
+
+	public void setPricelist(Set<AppointmentPrice> pricelist) {
+		this.pricelist = pricelist;
+	}
+
+	public Set<ClinicReview> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<ClinicReview> reviews) {
+		this.reviews = reviews;
 	}
 	
 	

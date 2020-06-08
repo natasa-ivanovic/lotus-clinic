@@ -10,7 +10,7 @@
                     <template v-if="items.length != 0">
                         <v-card>
                             <v-card-title>
-                            Doctors
+                            Doctors for {{this.doctorList[0].type}}
                             <v-spacer></v-spacer>
                             <v-text-field
                                 v-model="search"
@@ -75,9 +75,9 @@ export default {
                     value: 'rating'
                 },
                 {
-                    text: "Appointment type",
+                    text: "Price (RSD)",
                     sortable: true,
-                    value: 'type'
+                    value: 'price'
                 },
                 {
                     text: 'Clinic name',

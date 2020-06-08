@@ -28,8 +28,8 @@ import isamrs.tim17.lotus.dto.MedicineDiagnosisDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.AppointmentStatus;
-import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Diagnosis;
@@ -251,11 +251,11 @@ public class AppointmentController {
 		
 		Doctor doc = doctorService.findOne(app.getDoctor());
 		
-		AppointmentType at = appointmentTypeService.findOne(app.getAppointmentType());
+		AppointmentPrice at = doc.getSpecialty();
 		
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		
-		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at, doc, room, clinic);
+		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room, clinic);
 		service.save(newApp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
