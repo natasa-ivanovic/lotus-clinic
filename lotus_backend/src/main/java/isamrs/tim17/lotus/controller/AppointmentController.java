@@ -107,6 +107,16 @@ public class AppointmentController {
 		Patient patient = (Patient) a.getPrincipal();
 		app.setMedicalRecord(patient.getMedicalRecord());
 		service.save(app);
+		String finalPrice = String.format("%.2f", app.getPrice() * (100-app.getDiscount()) / 100);
+		String message = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nYou have scheduled an appointment using our premade function.\n"
+				+ "The appointment is scheduled for " + app.getStartDate() + " in room " + app.getRoom().getName() + ", at our clinic " + app.getClinic().getName() + ".\n"
+				+ "The clinic is located at " + app.getClinic().getAddress() + ".\n"
+				+ "The doctor's name is " + app.getDoctor().getName() + " " + app.getDoctor().getSurname() + "and the appointment type is " + app.getDoctor().getSpecialty().getType().getName() + ".\n"
+				+ "The appointment price is " + String.format("%.2f", app.getPrice()) + " RSD and you get a " + String.format("%.2f", app.getDiscount()) 
+				+ "% discount for using our premade function, totalling " + finalPrice + " RSD.\n"
+				+ "We look forward to seeing you.\nLotus Clinic Staff";
+		
+		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
@@ -332,6 +342,7 @@ public class AppointmentController {
 				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ", at our clinic " + app.getClinic().getName() + ".\n"
 				+ "The clinic is located at " + app.getClinic().getAddress() + ".\n"
 				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
+				+ "The appointment price is " + String.format("%.2f", app.getPrice()) + " RSD.\n"
 				+ "We look forward to seeing you.\nLotus Clinic Staff";
 		
 		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nYou have a new appointment.\n"
