@@ -29,6 +29,16 @@ public class CalendarEntry {
 	private Operation operation;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Vacation vacation;
+	
+	public CalendarEntry() {}
+	
+	public CalendarEntry(Appointment app) {
+		this.startDate = app.getStartDate();
+		this.endDate = app.getEndDate();
+		this.medicalPerson = app.getDoctor();
+		this.appointment = app;
+	}
+	
 	public Long getId() {
 		return id;
 	}

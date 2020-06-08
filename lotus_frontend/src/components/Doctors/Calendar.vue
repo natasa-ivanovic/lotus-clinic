@@ -171,12 +171,17 @@ const apiURL = "/api/calendarentries"
                 color = 'blue';
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
-                patientName = this.appointments[i].appointment.patient.patient.name;
-                patientSurname = this.appointments[i].appointment.patient.patient.surname;
-              } else if (this.appointment[i].operation != null)
+                if(this.appointments[i].appointment.patient != null) {
+                  patientName = this.appointments[i].appointment.patient.patient.name;
+                  patientSurname = this.appointments[i].appointment.patient.patient.surname;
+                } else {
+                  patientName = 'not available';
+                  patientSurname = '';
+                }
+              } else if (this.appointments[i].operation != null)
               {
                 //add operation parameters here
-              } else if (this.appointment[i].vacation != null) {
+              } else if (this.appointments[i].vacation != null) {
                 //add vacation parameters here
               }
               this.events.push({

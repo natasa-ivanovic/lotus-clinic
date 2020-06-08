@@ -15,8 +15,11 @@ public class CalendarEntryService {
 	@Autowired
 	private CalendarEntryRepository calendarEntries;
 	
-	public List<CalendarEntry> findByMedicalPersonId(User u)
-	{
+	public List<CalendarEntry> findByMedicalPersonId(User u) {
 		return calendarEntries.findBymedicalPerson(u);
+	}
+	
+	public CalendarEntry save(CalendarEntry entry) {
+		return calendarEntries.save(entry);
 	}
 }
