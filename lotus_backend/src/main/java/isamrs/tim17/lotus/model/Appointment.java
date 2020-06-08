@@ -56,40 +56,16 @@ public class Appointment {
 	private Clinic clinic;
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentType appointmentType;
-	//@OneToOne(fetch = FetchType.EAGER)
-	//private Diagnosis diagnosis;
 	@ManyToMany(mappedBy="appointments", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Diagnosis> diagnosis = new HashSet<Diagnosis>();
+	private Set<Diagnosis> diagnosis = new HashSet<>();
 	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Prescription> prescriptions = new HashSet<Prescription>();
+	private Set<Prescription> prescriptions = new HashSet<>();
 	
 	@Column(name="reviewed", unique = false, nullable=false)
 	private boolean reviewed;
 	
 	public Appointment() {}
 
-	public Appointment(long id, String information, Date startDate, Date endDate, AppointmentStatus status,
-			double price, double discount, MedicalRecord medicalRecord, Doctor doctor, Room room, Clinic clinic,
-			AppointmentType appointmentType, Set<Diagnosis> diagnosis, Set<Prescription> prescriptions,
-			boolean reviewed) {
-		super();
-		this.id = id;
-		this.information = information;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.status = status;
-		this.price = price;
-		this.discount = discount;
-		this.medicalRecord = medicalRecord;
-		this.doctor = doctor;
-		this.room = room;
-		this.clinic = clinic;
-		this.appointmentType = appointmentType;
-		this.diagnosis = diagnosis;
-		this.prescriptions = prescriptions;
-		this.reviewed = reviewed;
-	}
-	
 	public Appointment(Date startDate, Date endDate, double price, double discount, AppointmentType appointmentType, Doctor doctor, Room room,
 			Clinic clinic) {
 		super();
@@ -188,7 +164,7 @@ public class Appointment {
 		return diagnosis;
 	}
 
-	public void setDiagnosis(HashSet<Diagnosis> diagnosis) {
+	public void setDiagnosis(Set<Diagnosis> diagnosis) {
 		this.diagnosis = diagnosis;
 	}
 

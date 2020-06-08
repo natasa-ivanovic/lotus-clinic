@@ -106,13 +106,12 @@ public class LoginController {
 			return new ResponseEntity<>("User with that username already exists", HttpStatus.BAD_REQUEST);
 		}
 		if (p.isEmpty()) {
-			System.out.println("Error in patient!");
 			return new ResponseEntity<>("Not all fields are filled", HttpStatus.BAD_REQUEST);
 		}
 		Patient patient = new Patient(p);
 		patient.setEnabled(false);
 		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-		ArrayList<Authority> auth = new ArrayList<Authority>();
+		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
 		userService.save(patient);
@@ -123,9 +122,9 @@ public class LoginController {
 	
 	
 	
-	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	@PostMapping("/change-password")
 	@PreAuthorize("hasAnyRole('PATIENT','DOCTOR','ADMIN','CENTRE_ADMIN','NURSE')")
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+	public ResponseEntity<Object> changePassword(@RequestBody PasswordChanger passwordChanger) {
 		if (passwordChanger.newPassword.length() < 5) {
 			return new ResponseEntity<>("New password must be at least 5 characters!", HttpStatus.BAD_REQUEST);
 		}

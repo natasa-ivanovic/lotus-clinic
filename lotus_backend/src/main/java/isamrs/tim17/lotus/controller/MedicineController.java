@@ -33,30 +33,25 @@ public class MedicineController {
 		for(Medicine m : medicines) {
 			medicinesDTO.add(new MedicineDTO(m));
 		}
-		return new ResponseEntity<List<MedicineDTO>>(medicinesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(medicinesDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping("/medicines")
 	public ResponseEntity<Object> addClinic(@RequestBody String name) {
 		if (name == null || "".equals(name))
 			return new ResponseEntity<>("Name cannot be empty!", HttpStatus.BAD_REQUEST);
-		System.out.println("Adding a medicine...");
-		System.out.println(name);
 		
 		Medicine medicine = new Medicine(name);
 		service.save(medicine);
-		System.out.println("Database is ok...");
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/medicines/{id}")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
-		System.out.println(id);
 		Medicine medicine = service.findOne(id);
 
 		if (medicine == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + medicine);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		service.remove(id);
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
@@ -68,7 +63,7 @@ public class MedicineController {
 
 		// room must exist
 		if (medicine == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 
 	}
@@ -76,7 +71,8 @@ public class MedicineController {
 	@PutMapping("/medicines/{id}")
 	public ResponseEntity<Medicine> updateMedicine(@RequestBody MedicineDTO newMedicine, @PathVariable long id) {
 		
-		//TODO VALIDATION!
+		if(newMedicine == null || "".equals(newMedicine.getName()))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		if (id != newMedicine.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

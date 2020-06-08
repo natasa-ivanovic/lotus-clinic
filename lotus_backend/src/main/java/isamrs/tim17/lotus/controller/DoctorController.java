@@ -68,7 +68,7 @@ public class DoctorController {
 			return new ResponseEntity<>("Admin's clinic is null!", HttpStatus.BAD_REQUEST);
 		
 		Doctor d = new Doctor(doctor);
-		ArrayList<Authority> auth = new ArrayList<Authority>();
+		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_DOCTOR"));
 		d.setAuthorities(auth);
 		d.setClinic(clinic);

@@ -263,11 +263,10 @@ public class AppointmentController {
 	@PostMapping("/appointments/notification")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> sendNotification(@RequestBody RoomAndRequestDTO dto) {
+		
 		if (dto.getRequest() == 0 || dto.getRoom() == 0 || dto.getStartDate() == 0)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		
-		//TODO VALIDACIJE
-		
+			
 		long roomId = dto.getRoom();
 		long requestId = dto.getRequest();
 		Date startDate = new Date(dto.getStartDate());

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,7 +26,7 @@ public class AppointmentPrice {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
 	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
+	private Set<Doctor> doctors = new HashSet<>();
 
 	public long getId() {
 		return id;

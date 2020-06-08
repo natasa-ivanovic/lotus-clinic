@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +41,6 @@ public class MedicalRecordController {
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> getMedicalRecord(@PathVariable("id") long id) {
-		System.out.println(id);
 		Patient patient = patientService.findOne(id);
 		PatientDTO patientDto = new PatientDTO(patient); //patient, record
 		List<Appointment> finishedApps = appService.findFinished(patient.getMedicalRecord());
@@ -68,7 +66,7 @@ public class MedicalRecordController {
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<Object> updateMedicalRecord(@RequestBody MedicalRecordDTO medicalRecord) {
 		
-		if (isEmptyOrNull(medicalRecord) == true)
+		if (isEmptyOrNull(medicalRecord))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		MedicalRecord mr = service.findOne(medicalRecord.getId());
 		if (mr == null)
@@ -78,7 +76,7 @@ public class MedicalRecordController {
 		mr.setWeight(medicalRecord.getWeight());
 		
 		List<AllergyDTO> allergies = medicalRecord.getAllergies();
-		HashSet<Allergy> allergySet = new HashSet<Allergy>();
+		HashSet<Allergy> allergySet = new HashSet<>();
 		
 		for (AllergyDTO a : allergies) {
 			Allergy al = allergyService.findOne(a.getId());
@@ -88,7 +86,7 @@ public class MedicalRecordController {
 		mr.setAllergies(allergySet);
 		mr.setBloodType(medicalRecord.getBloodType());
 		
-		mr = service.save(mr);
+		service.save(mr);
 		return new ResponseEntity<>("Successfully updated medical record!", HttpStatus.OK);
 				
 	}
@@ -96,9 +94,7 @@ public class MedicalRecordController {
 	private boolean isEmptyOrNull(MedicalRecordDTO mr) {
 		if (mr == null)
 			return true;
-		if (mr.getBloodType() == null || "".equals(mr.getBloodType()))
-			return true;
-		return false;
+		return (mr.getBloodType() == null || "".equals(mr.getBloodType()));
 	}
 	
 

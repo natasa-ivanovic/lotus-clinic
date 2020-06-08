@@ -135,9 +135,7 @@ public class ClinicAdminController {
 			return true;
 		if (clinicAdmin.getGender() == null || "".equals(clinicAdmin.getGender().toString()))
 			return true;
-		if (clinicAdmin.getBirthDate() == null || "".equals(clinicAdmin.getBirthDate().toString()))
-			return true;
-		return false;
+		return (clinicAdmin.getBirthDate() == null || "".equals(clinicAdmin.getBirthDate().toString()));
 	}
 
 }

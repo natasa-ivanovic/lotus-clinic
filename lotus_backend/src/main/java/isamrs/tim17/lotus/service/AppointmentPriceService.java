@@ -24,7 +24,7 @@ public class AppointmentPriceService {
 	}
 	
 	public AppointmentPrice findOne(long id) {
-		return appointmentPrices.findById(id).orElseGet(null);
+		return appointmentPrices.findOneById(id);
 	}
 	
 	public List<AppointmentPrice> findByClinicId(Clinic c) {

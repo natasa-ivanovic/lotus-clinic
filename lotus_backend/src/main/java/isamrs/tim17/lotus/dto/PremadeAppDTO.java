@@ -52,7 +52,7 @@ public class PremadeAppDTO {
 		}
 		
 		if (!app.getPrescriptions().isEmpty()) {
-			this.recipes = new ArrayList<String>();
+			this.recipes = new ArrayList<>();
 			Iterator<Prescription> it = app.getPrescriptions().iterator();
 			while (it.hasNext()) {
 				Prescription p = it.next();

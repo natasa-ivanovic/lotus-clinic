@@ -134,13 +134,11 @@ public class UserDTO {
 	}
 
 	public boolean isEmpty() {
-		if (getName() == null || "".equals(getName()) || getSurname() == null || "".equals(getSurname())
+		return (getName() == null || "".equals(getName()) || getSurname() == null || "".equals(getSurname())
 				|| getUsername() == null || "".equals(getUsername()) || getAddress() == null || "".equals(getAddress())
 				|| getCity() == null || "".equals(getCity()) || getCountry() == null || "".equals(getCountry())
 				|| getPhoneNumber() == null || "".equals(getPhoneNumber()) || getGender() == null
-				|| "".equals(getGender().toString()) || getBirthDate() == null || "".equals(getBirthDate().toString()))
-			return true;
-		return false;
+				|| "".equals(getGender().toString()) || getBirthDate() == null || "".equals(getBirthDate().toString()));
 	}
 
 }

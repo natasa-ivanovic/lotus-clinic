@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import isamrs.tim17.lotus.model.Clinic;
-import isamrs.tim17.lotus.model.Doctor;
 
 public class ClinicDTO {
 
@@ -12,7 +11,7 @@ public class ClinicDTO {
 	private String name;
 	private String address;
 	private String description;
-	private List<DoctorDTO> doctors = new ArrayList<DoctorDTO>();
+	private List<DoctorDTO> doctors = new ArrayList<>();
 	private double rating;
 	
 	public ClinicDTO() {

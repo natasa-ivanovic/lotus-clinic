@@ -17,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.AppointmentPriceDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
-import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
-import isamrs.tim17.lotus.service.ClinicService;
 
 @RestController
 @RequestMapping("/api/appointmentPrices")
@@ -92,7 +89,7 @@ public class AppointmentPriceController {
 		
 		at.setPrice(newAppointmentPrice.getPrice());
 		at.setDiscount(newAppointmentPrice.getDiscount());
-		at = service.save(at);
+		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

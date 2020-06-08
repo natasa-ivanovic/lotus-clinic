@@ -34,20 +34,20 @@ public class Clinic {
 	@Column(name = "description", nullable = false, unique = false)
 	private String description;
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Doctor.class)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
+	private Set<Doctor> doctors = new HashSet<>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Nurse.class)
-	private Set<Nurse> nurses = new HashSet<Nurse>();
+	private Set<Nurse> nurses = new HashSet<>();
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ClinicAdministrator.class)
-	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<ClinicAdministrator>();
+	private Set<ClinicAdministrator> clinicAdministrators = new HashSet<>();
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClinicalCentre clinicalCentre;
 	
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
-	private Set<ClinicReview> reviews = new HashSet<ClinicReview>();
+	private Set<ClinicReview> reviews = new HashSet<>();
 	
 	
 	public Clinic() {}

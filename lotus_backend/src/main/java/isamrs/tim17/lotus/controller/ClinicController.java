@@ -22,7 +22,6 @@ import isamrs.tim17.lotus.dto.ClinicDTO;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicalCentre;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
-import isamrs.tim17.lotus.service.ClinicCentreService;
 import isamrs.tim17.lotus.service.ClinicService;
 
 @RestController
@@ -46,15 +45,15 @@ public class ClinicController {
 	@PostMapping("/clinics")
 	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<ClinicDTO> addClinic(@RequestBody ClinicDTO clinic) {
-		ClinicalCentre c_centre;
+		ClinicalCentre cCentre;
 		Clinic c = new Clinic(clinic);
 		try {
 			Authentication a = SecurityContextHolder.getContext().getAuthentication();
 			ClinicalCentreAdministrator admin = (ClinicalCentreAdministrator) a.getPrincipal();
-			c_centre = admin.getClinicalCentre();
-			if (c_centre == null)
+			cCentre = admin.getClinicalCentre();
+			if (cCentre == null)
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			c.setClinicalCentre(c_centre);				
+			c.setClinicalCentre(cCentre);				
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);			
