@@ -90,15 +90,12 @@
           </v-card>
         </v-menu>
       </v-sheet>
-      <!--v-sheet>
-        <h1>{{this.appointments}}</h1>
-      </v-sheet-->
     </v-col>
   </v-row>
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointments/doctor";
+const apiURL = "/api/appointments/doctor";
   export default {
     data() {
         return {
@@ -158,26 +155,26 @@ const apiURL = "http://localhost:9001/api/appointments/doctor";
     },
     mounted () {
       this.$refs.calendar.checkChange()
-      fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
-            .then(response => {
-                return response.json();
-            })
-            .then(c => {
-                this.appointments = c;
-                for(var i = 0; i < this.appointments.length; i++)
-                {
-                    this.events.push({
-                        name: 'Appointment',
-                        start: this.formatDate(new Date(this.appointments[i].startDate), true),
-                        end: this.formatDate(new Date(this.appointments[i].endDate), true),
-                        color: 'blue',
-                        room: this.appointments[i].roomName,
-                        patientName: this.appointments[i].patientName,
-                        patientSurname: this.appointments[i].patientSurname
-                })
-                }
-
-            })
+      this.axios({url : apiURL, 
+                    method: 'GET'
+        }).then(response => {
+            this.appointments = response.data;
+            for(var i = 0; i < this.appointments.length; i++)
+            {
+              this.events.push({
+                name: 'Appointment',
+                start: this.formatDate(new Date(this.appointments[i].startDate), true),
+                end: this.formatDate(new Date(this.appointments[i].endDate), true),
+                color: 'blue',
+                room: this.appointments[i].roomName,
+                patientName: this.appointments[i].patientName,
+                patientSurname: this.appointments[i].patientSurname
+              })
+            }
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
       viewDay ({ date }) {
@@ -255,7 +252,3 @@ const apiURL = "http://localhost:9001/api/appointments/doctor";
     },
   }
 </script>
-
-<style scoped>
-
-</style>

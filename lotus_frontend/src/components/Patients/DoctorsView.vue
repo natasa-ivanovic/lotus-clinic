@@ -52,7 +52,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/patients/request/finish";
+const apiURL = "/api/patients/request/finish";
 export default {
     data() {
         return {
@@ -118,8 +118,8 @@ export default {
             }
             var longDate = new Date(doctor.selectedDate).getTime();
             var data = {
-                date: longDate,
-                doctor: doctor.id
+                startDate: longDate,
+                doctor: { id: doctor.id }
             };
             this.axios({url : apiURL, 
                     method: 'POST',
@@ -153,7 +153,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -48,8 +48,12 @@ export default {
     }
     
 }
+<<<<<<< HEAD
 </script>
 
 <style scoped>
 
 </style>
+=======
+</script>
+>>>>>>> f7906b54d4cfe3d5347062995199362700a63b37

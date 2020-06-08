@@ -28,7 +28,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/diagnoses/";
+const apiURL = "/api/diagnoses/";
 export default {
     name: "addDiagnosis",
     data() {
@@ -45,25 +45,26 @@ export default {
     methods: {
         addDiagnosis: function() {
             this.$refs.form.validate();
-            if (!this.valid) {
-                alert("Error")
-            return;
+            if (!this.valid) {         
+                this.$store.commit('showSnackbar', {text: "Please fill in all the required fields!", color: "error", })
+                return;
             }
-            fetch(apiURL, {method: 'POST',
-                    headers: {'Content-Type': 'application/json',
-                    'Authorization': this.$authKey},
-                    body: this.diagnosis.name})
-                .then(response => {
-                    if(response.status != 200)
-                        alert("Couldn't add " + this.diagnosis.name + "!" + response.status)
-                    else
-                        this.$router.push({name: "diagnoses"})
-                })
+            this.axios({url : apiURL, 
+                        method: 'POST',
+                        data: this.diagnosis.name,
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully added diagnosis.", color: "success", })
+                this.$router.push({name: "diagnoses"})
+            }).catch(error => {
+                console.log(error.request);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't add diagnosis!", color: "error", })
+            });
         }
     }
 }
 </script>
-
-<style scoped>
-
-</style>

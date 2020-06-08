@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.DiagnosisDTO;
 import isamrs.tim17.lotus.model.Diagnosis;
-import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.service.DiagnosisService;
 
 @RestController
@@ -34,18 +33,16 @@ public class DiagnosisController {
 		for(Diagnosis d : diagnoses) {
 			diagnosesDTO.add(new DiagnosisDTO(d));
 		}
-		return new ResponseEntity<List<DiagnosisDTO>>(diagnosesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(diagnosesDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Diagnosis> addDiagnosis(@RequestBody String name) {
-		System.out.println("Adding a diagnosis...");
-		System.out.print(name);
-		
+		if (name == null || "".equals(name))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		Diagnosis diagnosis = new Diagnosis(name);
 		service.save(diagnosis);
-		System.out.println("Database is ok...");
-		return new ResponseEntity<Diagnosis>(diagnosis, HttpStatus.OK);
+		return new ResponseEntity<>(diagnosis, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
@@ -53,35 +50,33 @@ public class DiagnosisController {
 		Diagnosis diagnosis = service.findOne(id);
 		
 		if(diagnosis == null)
-			return new ResponseEntity<DiagnosisDTO>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<DiagnosisDTO>(new DiagnosisDTO(diagnosis), HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new DiagnosisDTO(diagnosis), HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<DiagnosisDTO> updateDiagnosis(@RequestBody Diagnosis newDiagnosis, @PathVariable long id) {
+	public ResponseEntity<DiagnosisDTO> updateDiagnosis(@RequestBody DiagnosisDTO newDiagnosis, @PathVariable long id) {
 		
 		if (id != newDiagnosis.getId())
-			return new ResponseEntity<DiagnosisDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		Diagnosis diagnosis = service.findOne(newDiagnosis.getId());
 		
 		if (diagnosis == null)
-			return new ResponseEntity<DiagnosisDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		diagnosis.setName(newDiagnosis.getName());
-		diagnosis = service.save(diagnosis);
+		service.save(diagnosis);
 		
-		return new ResponseEntity<DiagnosisDTO>(new DiagnosisDTO(diagnosis), HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<DiagnosisDTO> deleteDiagnosis(@PathVariable("id") long id) {
-		System.out.println(id);
 		Diagnosis diagnosis = service.findOne(id);
 
 		if (diagnosis == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + diagnosis);
 		service.remove(id);
 		return new ResponseEntity<>(new DiagnosisDTO(diagnosis), HttpStatus.OK);
 	}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +36,7 @@ import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
+import isamrs.tim17.lotus.util.RandomUtil;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -94,19 +94,10 @@ public class RequestController {
 		req.setStatus(RequestStatus.APPROVED);
 		req.setAdmin(admin);
 		
-		//random string generation
-	    int leftLimit = 97; // letter 'a'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 30;
-	    Random random = new Random();
-	 
-	    String generatedString = random.ints(leftLimit, rightLimit + 1)
-	      .limit(targetStringLength)
-	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	      .toString();
+	    String generatedString = RandomUtil.buildAuthString();
 		
 	    String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is valid.\nPlease follow this link to activate your account:\n"
-	    		+ "http://localhost:8081/registrations/" + generatedString + "/nLotus Clinic Staff";
+	    		+ "https://lotus-clinic.herokuapp.com/registrations/" + generatedString + " \nLotus Clinic Staff";
 		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		rgReq.setKey(generatedString);
 		service.save(req);

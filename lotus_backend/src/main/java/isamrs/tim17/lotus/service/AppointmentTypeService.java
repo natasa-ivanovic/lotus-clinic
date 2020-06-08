@@ -15,7 +15,7 @@ public class AppointmentTypeService {
 	private AppointmentTypeRepository appointmentTypes;
 	
 	public AppointmentType findOne(long id) {
-		return appointmentTypes.findById(id).orElseGet(null);
+		return appointmentTypes.findOneById(id);
 	}
 
 	public List<AppointmentType> findAll() {

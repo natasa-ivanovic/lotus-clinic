@@ -43,7 +43,8 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api";
+const apiTerms = "/api/rooms/terms";
+const apiFinish = "/api/appointments/notification";
 export default {
     name: "freeRooms",
     props: ['request'],
@@ -64,7 +65,7 @@ export default {
         var milli = date.getTime();
         this.axios({
             headers: {'Content-Type' : 'text/plain'},
-            url: apiURL + "/rooms/terms",
+            url: apiTerms,
             method: "POST",
             data: milli
         }).then(response => {
@@ -95,7 +96,7 @@ export default {
                 startDate: millis
             }
             this.axios({
-                url: apiURL + "/appointments/notification",
+                url: apiFinish,
                 method: 'POST',
                 data: el
                 }).then(response => {
@@ -113,7 +114,3 @@ export default {
     
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -16,7 +16,7 @@ public class RoomService {
 	private RoomRepository rooms;
 	
 	public Room findOne(long id) {
-		return rooms.findById(id).orElseGet(null);
+		return rooms.findOneById(id);
 	}
 
 	public List<Room> findAll() {

@@ -22,7 +22,7 @@
             </template>
             <template v-slot:item.delete="{ item }">
                 <v-icon
-                    @click="deleteRoom(item.id)"
+                    @click="deleteRoom(item)"
                 >
                     mdi-delete
                 </v-icon>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/rooms/";
+const apiURL = "/api/rooms";
 export default {
     name: "rooms",
   data() {
@@ -55,26 +55,28 @@ export default {
     }
   },
   mounted() {
-    fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
-      .then(response => {
-        return response.json();
-      })
-      .then(r => {
-        this.rooms = r;
-      })
+    this.axios({url : apiURL, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.rooms = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
   },
   methods: {
-    deleteRoom: function(id) {
-      fetch(apiURL + id, {method: 'DELETE', headers: { 'Authorization': this.$authKey}})
-        .then(response => {
-          if (response.status != 200)
-            alert("Couldn't delete room!");
-          else
-            return response.json();
-        })
-        .then(r => {
-          this.rooms.pop(r);
-        })
+    deleteRoom: function(room) {
+      this.axios({url : apiURL + "/" + room.id, 
+                  method: 'DELETE'
+      }).then(response =>   {
+            console.log(response);
+            this.rooms.splice(this.rooms.indexOf(room), 1);
+            this.$store.commit('showSnackbar', {text: "Successfully deleted room.", color: "success", })
+      }).catch(error => {
+          console.log(error.request);
+          // navesti razlog errora
+          this.$store.commit('showSnackbar', {text: "Couldn't delete room!", color: "error", })
+      });
     },
     editRoom: function(editId) {
       this.$router.push({name: "editRoom", params: {id : editId}});
@@ -89,7 +91,3 @@ export default {
     
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -44,7 +44,7 @@
 
 <script>
 
-const apiURL = "http://localhost:9001/api/rooms";
+const apiURL = "/api/rooms";
 
 export default {
     name: "editRoom",
@@ -59,13 +59,14 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/" + this.id, {headers: { 'Authorization': this.$authKey}})
-        .then(response => {
-            return response.json();
-        })
-        .then(room => {
-            this.room = room;
-        })
+        this.axios({url : apiURL + "/" + this.id, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.room = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch diagnosis!", color: "error", })
+        });
     },
     methods: {
         editRoom: function() {
@@ -74,21 +75,20 @@ export default {
               alert("Error")
               return;
             }
-            fetch(apiURL + "/" + this.id, {method: 'PUT',
-                  headers: {'Content-Type': 'application/json', 'Authorization': this.$authKey},
-                  body: JSON.stringify(this.room)})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't update room!");
-                else
-                    this.$router.push({name :"rooms"});
-            })
+            this.axios({url : apiURL + "/" + this.id, 
+                        method: 'PUT',
+                        data: this.room
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully updated room.", color: "success", })
+                this.$router.push({name :"rooms"});
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't update room!", color: "error", })
+            });
         }
     }
     
 }
 </script>
-
-<style scoped>
-
-</style>

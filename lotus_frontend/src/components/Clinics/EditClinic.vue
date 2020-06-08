@@ -48,7 +48,7 @@
 
 <script>
 
-const apiURL = "http://localhost:9001/api/clinics";
+const apiURL = "/api/clinics";
 
 export default {
     name: "editClinic",
@@ -63,37 +63,36 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/" + this.id,{headers: { 'Authorization': this.$authKey}})
-        .then(response => {
-            return response.json();
-        })
-        .then(clinic => {
-            this.clinic = clinic;
-        })
+        this.axios({url : apiURL + "/" + this.id, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.clinic = response;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch clinic!", color: "error", })
+        });
     },
     methods: {
         editClinic: function() {
             this.$refs.form.validate();
             if (!this.valid) {
-              alert("Error")
+              this.$store.commit('showSnackbar', {text: "Please fill in all the required fields!", color: "error", })
               return;
             }
-            fetch(apiURL + "/" + this.id, {method: 'PUT',
-                  headers: {'Content-Type': 'application/json',
-                  'Authorization': this.$authKey},
-                  body: JSON.stringify(this.clinic)})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't update clinic!");
-                else
-                    this.$router.push({name :"clinics"});
-            })
+            this.axios({url : apiURL + "/" + this.id, 
+                        method: 'PUT',
+                        data: this.clinic
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully updated clinic.", color: "success", })
+                this.$router.push({name :"clinics"});
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't update clinic!", color: "error", })
+            });
         }
     }
     
 }
 </script>
-
-<style scoped>
-
-</style>

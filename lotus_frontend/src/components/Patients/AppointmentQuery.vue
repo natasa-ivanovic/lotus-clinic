@@ -59,8 +59,8 @@
 </template>
 
 <script>
-const apiAppTypes = "http://localhost:9001/api/appointmentTypes";
-const apiRequest = "http://localhost:9001/api/patients/request";
+const apiAppTypes = "/api/appointmentTypes";
+const apiRequest = "/api/patients/request";
 
 export default {
     data() {
@@ -84,14 +84,6 @@ export default {
     mounted() {
         if (this.title == "")   
             this.$router.push( {name: 'appointmentView'});
-        
-        /*fetch(apiTypes, {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(response => {
-            this.appTypes = response;
-        })*/
         this.axios({url : apiAppTypes, 
             method: 'GET'
           }).then(response =>   {
@@ -132,8 +124,3 @@ export default {
     }
 }
 </script>
-
-
-<style scoped>
-
-</style>

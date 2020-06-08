@@ -37,7 +37,6 @@ public class Medicine {
 	
 	public Medicine(String name) {
 		this.name = name;
-		this.id = this.getId();
 	}
 	
 	public long getId() {

@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import isamrs.tim17.lotus.dto.ClinicDTO;
+
 @Entity
 @Table(name = "clinics")
 public class Clinic {
@@ -54,6 +56,12 @@ public class Clinic {
 		this.name = name;
 		this.address = address;
 		this.description = description;
+	}
+
+	public Clinic(ClinicDTO clinic) {
+		this.name = clinic.getName();
+		this.address = clinic.getAddress();
+		this.description = clinic.getDescription();
 	}
 
 	public Long getId() {

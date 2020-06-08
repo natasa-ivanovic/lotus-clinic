@@ -37,14 +37,16 @@ public class MedicineController {
 	}
 	
 	@PostMapping("/medicines")
-	public ResponseEntity<Medicine> addClinic(@RequestBody String name) {
+	public ResponseEntity<Object> addClinic(@RequestBody String name) {
+		if (name == null || "".equals(name))
+			return new ResponseEntity<>("Name cannot be empty!", HttpStatus.BAD_REQUEST);
 		System.out.println("Adding a medicine...");
 		System.out.println(name);
 		
 		Medicine medicine = new Medicine(name);
 		service.save(medicine);
 		System.out.println("Database is ok...");
-		return new ResponseEntity<Medicine>(medicine, HttpStatus.OK);
+		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/medicines/{id}")
@@ -72,7 +74,7 @@ public class MedicineController {
 	}
 	
 	@PutMapping("/medicines/{id}")
-	public ResponseEntity<Medicine> updateMedicine(@RequestBody Medicine newMedicine, @PathVariable long id) {
+	public ResponseEntity<Medicine> updateMedicine(@RequestBody MedicineDTO newMedicine, @PathVariable long id) {
 		
 		//TODO VALIDATION!
 		

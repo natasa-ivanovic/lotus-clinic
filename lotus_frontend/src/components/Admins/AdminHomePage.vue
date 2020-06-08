@@ -37,7 +37,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api";
+const apiURL = "/api/requests/rooms";
 export default {
     data() {
         return {
@@ -45,20 +45,14 @@ export default {
         }
     },
     mounted() {
-        /*fetch(apiURL + "/patients/requests", {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(pats => {
-            this.requests = pats;
-        })*/
         this.axios({
-            url: apiURL + "/requests/rooms",
+            url: apiURL,
             method: "GET"
         }).then(response => {
             this.requests = response.data;
         }).catch(error => {
-            alert(error);
+            console.log(error);
+            this.$store.commit('showSnackbar', {text: "Error in fetching room requests!", color: "error", })
         });
     },
     methods: {
@@ -77,7 +71,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

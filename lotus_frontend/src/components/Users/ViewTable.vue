@@ -10,7 +10,7 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>List of {{userType}}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn :to="{ name: 'addUser', params: {userType: userType} }" v-if="userType != 'patients'">Add new {{userType}}</v-btn>
+                    <v-btn :to="{ name: 'addUser', params: {userType: userType, header: 'Add new ' + userType} }" v-if="userType != 'patients'">Add new {{userType}}</v-btn>
                 </v-toolbar>
             </template>
             <!--template v-slot:item.edit="{ item }">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/";
+const apiURL = "/api";
 
 export default {
     name: "ViewTable",
@@ -40,7 +40,7 @@ export default {
         return {
             users: [],
             headers: [
-                {text: 'Email', value: 'email'},
+                {text: 'Email', value: 'username'},
                 {text: 'Insurance ID', value: 'ssid'},
                 {text: 'Name', value: 'name'},
                 {text: 'Surname', value: 'surname'},
@@ -57,13 +57,14 @@ export default {
         }
     },    
     mounted() {
-        fetch(apiURL + this.userType, {headers: { 'Authorization': this.$authKey }})
-        .then(response => {
-            return response.json();
-        })
-        .then(users => {
-            this.users = users;
-        })
+        this.axios({url : apiURL + "/" + this.userType, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.users = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
         /*deleteUser: function(id) {
@@ -87,7 +88,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

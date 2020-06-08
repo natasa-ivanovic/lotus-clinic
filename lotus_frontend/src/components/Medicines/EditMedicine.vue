@@ -38,7 +38,7 @@
 
 <script>
 
-const apiURL = "http://localhost:9001/api/medicines";
+const apiURL = "/api/medicines";
 
 export default {
     name: "editMedicine",
@@ -53,13 +53,14 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL + "/" + this.id,{headers: { 'Authorization': this.$authKey}})
-        .then(response => {
-            return response.json();
-        })
-        .then(medicine => {
-            this.medicine = medicine;
-        })
+        this.axios({url : apiURL + "/" + this.id, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.medicine = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "Couldn't fetch clinic!", color: "error", })
+        });
     },
     methods: {
         editMedicine: function() {
@@ -68,22 +69,20 @@ export default {
               alert("Error")
               return;
             }
-            fetch(apiURL + "/" + this.id, {method: 'PUT',
-                  headers: {'Content-Type': 'application/json',
-                  'Authorization': this.$authKey},
-                  body: JSON.stringify(this.medicine)})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't update medicine!");
-                else
-                    this.$router.push({name :"medicines"});
-            })
+            this.axios({url : apiURL + "/" + this.id, 
+                        method: 'PUT',
+                        data: this.medicine
+            }).then(response =>   {
+                console.log(response);
+                this.$store.commit('showSnackbar', {text: "Successfully updated medicine.", color: "success", })
+                this.$router.push({name :"medicines"});
+            }).catch(error => {
+                console.log(error.request.responseText);
+                // tip errora
+                this.$store.commit('showSnackbar', {text: "Couldn't update medicine!", color: "error", })
+            });
         }
     }
     
 }
 </script>
-
-<style scoped>
-
-</style>

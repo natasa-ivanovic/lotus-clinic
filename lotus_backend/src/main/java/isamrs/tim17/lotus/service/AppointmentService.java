@@ -20,7 +20,7 @@ public class AppointmentService {
 	private AppointmentRepository appointments;
 
 	public Appointment findOne(long id) {
-		return appointments.findById(id).orElseGet(null);
+		return appointments.findOneById(id);
 	}
 
 	public List<Appointment> findByStatus(AppointmentStatus status) {

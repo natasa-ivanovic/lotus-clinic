@@ -46,7 +46,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/auth/login";
+const apiURL = "/auth/login";
 
 export default {
   name: "login",
@@ -91,7 +91,3 @@ export default {
     
 }
 </script>
-
-<style scoped>
-
-</style>

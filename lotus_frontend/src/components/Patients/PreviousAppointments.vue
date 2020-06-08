@@ -43,7 +43,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/appointments/patient/past";
+const apiURL = "/api/appointments/patient/past";
 import RatingDialog from "./RatingDialog"
 import DiagnosisDialog from "./DiagnosisDialog"
 export default {
@@ -146,7 +146,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

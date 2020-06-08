@@ -49,14 +49,9 @@ export default {
     },
     methods: {
         turnOff() {
-            //this.$overlay = false;
             this.$emit('update:overlay', false)
         }
     }
     
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -22,7 +22,7 @@
             </template>
             <template v-slot:item.delete="{ item }">
                 <v-icon
-                    @click="deleteClinic(item.id)"
+                    @click="deleteClinic(item)"
                 >
                     mdi-delete
                 </v-icon>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/clinics";
+const apiURL = "/api/clinics";
 export default {
     name: "clinics",
     data() {
@@ -47,41 +47,34 @@ export default {
         }
     },
     mounted() {
-        fetch(apiURL, {headers: { 'Authorization': this.$authKey}})
-            .then(response => {
-                return response.json();
-            })
-            .then(c => {
-                this.clinics = c;
-            })
+        this.axios({url : apiURL, 
+                    method: 'GET'
+        }).then(response =>   {
+            this.clinics = response.data;
+        }).catch(error => {
+            console.log(error.request);
+            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+        });
     },
     methods: {
         editClinic: function(editId) {
             this.$router.push({name: "editClinic", params: {id: editId}});
         },
-        deleteClinic: function(id) {
-            fetch(apiURL + "/" + id, {method: 'DELETE',
-            headers: {'Authorization': this.$authKey}})
-            .then(response => {
-                if (response.status != 200)
-                    alert("Couldn't delete clinic!")
-                else
-                    return response.json();
-            })
-            .then(r => {
-                for(var i = 0; i < this.clinics.length; i++)
-                {
-                    if(this.clinics[i].id === r.id)
-                    {
-                        this.clinics.splice(i,1);
-                    }
-                }
-            })
+        deleteClinic: function(clinic) {
+            this.axios({url : apiURL + "/" + clinic.id, 
+                        method: 'DELETE'
+            }).then(response =>   {
+                // test this
+                console.log(response);
+                this.clinics.splice(this.clinics.indexOf(clinic), 1);
+                this.$store.commit('showSnackbar', {text: "Successfully deleted clinic.", color: "success", })
+            }).catch(error => {
+                console.log(error.request);
+                // navesti razlog errora
+                this.$store.commit('showSnackbar', {text: "Couldn't delete clinic!", color: "error", })
+            });
         }
         
     }
 }
 </script>
-
-<style scoped>
-</style>

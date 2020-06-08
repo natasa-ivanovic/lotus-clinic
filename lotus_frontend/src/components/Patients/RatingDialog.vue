@@ -65,7 +65,7 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/api/patients/rate";
+const apiURL = "/api/patients/rate";
 export default {
     data() {
         return {
@@ -92,7 +92,7 @@ export default {
                 this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
                 return;
             }
-            if (this.docRating == 0 | this.clinicRating == 0 ) {
+            if (this.docRating == 0 || this.clinicRating == 0 ) {
                 this.$store.commit('showSnackbar', {text: "Please enter a rating for both the clinic and the doctor.", color: "info", })
                 return;
             }
@@ -120,7 +120,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

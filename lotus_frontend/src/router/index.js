@@ -12,31 +12,30 @@ import Login from "../components/Login"
 import Patients from "../components/Patients/Patients"
 import Doctors from "../components/Doctors/Doctors"
 import AppointmentTypes from "../components/AppointmentTypes/AppointmentTypes"
-import AddAppointmentType from "../components/AppointmentTypes/Add"
-import EditAppointmentType from "../components/AppointmentTypes/Edit"
+import AddAppointmentType from "../components/AppointmentTypes/AddAppType"
+import EditAppointmentType from "../components/AppointmentTypes/EditAppType"
 import EditUser from "../components/Users/EditUser"
 import AddUser from "../components/Users/AddUser"
 import Rooms from "../components/Rooms/Rooms"
-import EditRooms from "../components/Rooms/Edit"
+import EditRooms from "../components/Rooms/EditRoom"
 import Clinics from "../components/Clinics/Clinics"
-import AddClinic from "../components/Clinics/Add"
-import EditClinic from "../components/Clinics/Edit"
-import AddRoom from "../components/Rooms/Add"
+import AddClinic from "../components/Clinics/AddClinic"
+import EditClinic from "../components/Clinics/EditClinic"
+import AddRoom from "../components/Rooms/AddRoom"
 import Medicines from "../components/Medicines/Medicines"
-import AddMedicine from "../components/Medicines/Add"
-import EditMedicine from "../components/Medicines/Edit"
+import AddMedicine from "../components/Medicines/AddMedicine"
+import EditMedicine from "../components/Medicines/EditMedicine"
 import HomePage from "../components/HomePage"
 import AppointmentView from "../components/Patients/AppointmentView"
 import PredefinedApps from "../components/Patients/PredefinedApps"
 import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
-import Register from "../components/Patients/Register"
 import MyClinic from "../components/Clinics/MyClinic"
 import AppointmentQuery from "../components/Patients/AppointmentQuery"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
-import AddDiagnosis from "../components/Diagnosis/Add"
-import EditDiagnosis from "../components/Diagnosis/Edit"
+import AddDiagnosis from "../components/Diagnosis/AddDiagnosis"
+import EditDiagnosis from "../components/Diagnosis/EditDiagnosis"
 import Appointment from "../components/Doctors/Appointment"
 import ScheduleAppointment from "../components/Doctors/ScheduleAppointment"
 import RegistrationRequestView from "../components/RegistrationRequests/RegistrationRequests"
@@ -46,6 +45,12 @@ import PatientDoctorView from "../components/Patients/DoctorsView"
 import PreviousAppointments from "../components/Patients/PreviousAppointments"
 import FreeRooms from "../components/Admins/FreeRooms"
 import EditPassword from "../components/Users/EditPassword"
+<<<<<<< HEAD
+=======
+import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
+import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
+import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
+>>>>>>> f7906b54d4cfe3d5347062995199362700a63b37
 
 const routes = [
     {
@@ -110,17 +115,33 @@ const routes = [
     {
         component: AppointmentTypes,
         name: "appointmentTypes",
-        path: "/appointmentTypes/"
+        path: "/appointment_types"
     },
     {
         component: AddAppointmentType,
         name: "addAppointmentType",
-        path: "/appointmentTypes/add"
+        path: "/appointment_types/add"
     },
     {
         component: EditAppointmentType,
         name: "editAppointmentType",
-        path: "/appointmentTypes/edit/:id",
+        path: "/appointment_types/edit/:id",
+        props: true
+    },
+    {
+        component: AppointmentPrice,
+        name: "appointmentPrices",
+        path: "/appointment_prices"
+    },
+    {
+        component: AddAppointmentPrice,
+        name: "addAppointmentPrice",
+        path: "/appointment_prices/add"
+    },
+    {
+        component: EditAppointmentPrice,
+        name: "editAppointmentPrice",
+        path: "/appointment_prices/edit/:id",
         props: true
     },
     {
@@ -174,11 +195,6 @@ const routes = [
         component: Calendar,
         name: "calendar",
         path: "/users/doctors/calendar"
-    },
-    {
-        component: Register,
-        name: "register",
-        path: "/register"
     },
     {
         component: MyClinic,

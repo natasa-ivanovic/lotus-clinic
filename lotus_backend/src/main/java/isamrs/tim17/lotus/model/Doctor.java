@@ -11,12 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import isamrs.tim17.lotus.dto.UserDTO;
+
 @Entity
 @DiscriminatorValue("DOCTOR")
 public class Doctor extends User {
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	private AppointmentType specialty;
+	private AppointmentPrice specialty;
 	//@Column(name = "operation", unique = false, nullable = true)
 	//public Operation operation;
 	
@@ -32,11 +34,14 @@ public class Doctor extends User {
 	
 	public Doctor() {}
 
-	public AppointmentType getSpecialty() {
+	public Doctor(UserDTO doctor) {
+		super(doctor);		
+	}
+	public AppointmentPrice getSpecialty() {
 		return specialty;
 	}
 
-	public void setSpecialty(AppointmentType specialty) {
+	public void setSpecialty(AppointmentPrice specialty) {
 		this.specialty = specialty;
 	}
 

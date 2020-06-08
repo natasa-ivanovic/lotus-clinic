@@ -28,6 +28,8 @@ public class AppointmentType {
 	private long id;
 	@Column(name= "name", unique = false, nullable = false)
 	private String name;
+	private double price;
+	private double discount;
     
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
@@ -35,14 +37,13 @@ public class AppointmentType {
 	@OneToMany(mappedBy = "appointmentType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
-	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Doctor> doctors = new HashSet<Doctor>();
-	
 	public AppointmentType() {}
 	
-	public AppointmentType(String name) {
+	public AppointmentType(String name, double price, double discount) {
 		this.id = this.getId();
 		this.name = name;
+		this.price = price;
+		this.discount = discount;
 	}
 	
 	@Override
@@ -82,16 +83,20 @@ public class AppointmentType {
 		this.appointments = appointments;
 	}
 
-	public Set<Doctor> getDoctors() {
-		return doctors;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setDoctors(Set<Doctor> doctors) {
-		this.doctors = doctors;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
-	
-	
-	
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
 
 }

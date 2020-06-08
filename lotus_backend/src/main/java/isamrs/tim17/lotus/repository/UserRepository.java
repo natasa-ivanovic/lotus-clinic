@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
 	
-	User findOneById(String id);
+	User findOneById(Long id);
 	Page<User> findAll(Pageable pageable);
 	List<User> findAllBySurname(String surname);
 	List<User> findByNameAndSurnameAllIgnoringCase(String name, String surname);

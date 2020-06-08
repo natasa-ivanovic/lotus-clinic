@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.ClinicDTO;
 import isamrs.tim17.lotus.model.Clinic;
-import isamrs.tim17.lotus.model.Medicine;
+import isamrs.tim17.lotus.model.ClinicalCentre;
+import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
+import isamrs.tim17.lotus.service.ClinicCentreService;
 import isamrs.tim17.lotus.service.ClinicService;
 
 @RestController
@@ -27,6 +31,7 @@ public class ClinicController {
 
 	@Autowired
 	private ClinicService service;
+		
 	
 	@GetMapping("/clinics")
 	public ResponseEntity<List<ClinicDTO>> getAllClinics() {
@@ -39,14 +44,23 @@ public class ClinicController {
 	}
 	
 	@PostMapping("/clinics")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<ClinicDTO> addClinic(@RequestBody Clinic clinic) {
-		System.out.println("Adding a clinic...");
-		System.out.println(clinic);
-		
-		service.save(clinic);
-		System.out.println("Database is ok...");
-		return new ResponseEntity<>(new ClinicDTO(clinic), HttpStatus.OK);
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
+	public ResponseEntity<ClinicDTO> addClinic(@RequestBody ClinicDTO clinic) {
+		ClinicalCentre c_centre;
+		Clinic c = new Clinic(clinic);
+		try {
+			Authentication a = SecurityContextHolder.getContext().getAuthentication();
+			ClinicalCentreAdministrator admin = (ClinicalCentreAdministrator) a.getPrincipal();
+			c_centre = admin.getClinicalCentre();
+			if (c_centre == null)
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			c.setClinicalCentre(c_centre);				
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);			
+		}
+		service.save(c);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@GetMapping("/clinics/{id}")
@@ -59,7 +73,7 @@ public class ClinicController {
 	}
 	
 	@PutMapping("/clinics/{id}")
-	public ResponseEntity<ClinicDTO> updateMedicine(@RequestBody Clinic newClinic, @PathVariable long id) {
+	public ResponseEntity<ClinicDTO> updateClinic(@RequestBody ClinicDTO newClinic, @PathVariable long id) {
 		if(id != newClinic.getId())
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
@@ -71,18 +85,16 @@ public class ClinicController {
 		clinic.setName(newClinic.getName());
 		clinic.setAddress(newClinic.getAddress());
 		clinic.setDescription(newClinic.getDescription());
-		clinic = service.save(clinic);
-		return new ResponseEntity<>(new ClinicDTO(clinic), HttpStatus.OK);
+		service.save(clinic);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/clinics/{id}")
 	public ResponseEntity<ClinicDTO> deleteRoom(@PathVariable("id") long id) {
-		System.out.println(id);
 		Clinic clinic = service.findOne(id);
 
 		if (clinic == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		System.out.println("Deleting " + clinic);
 		service.remove(id);
 		return new ResponseEntity<>(new ClinicDTO(clinic), HttpStatus.OK);
 	}

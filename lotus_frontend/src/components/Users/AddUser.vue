@@ -54,6 +54,18 @@
                       v-model="user.surname" />                      
                   </v-col>
                 </v-row>
+                <v-row v-if="this.userType == 'doctors'">
+                  <v-col>
+                    <v-select
+                      
+                      label="Speciality"
+                      :rules="[rules.required]"
+                      :items="appTypes"
+                      item-text="name"
+                      item-value="id"
+                      v-model="speciality" />
+                  </v-col>
+                </v-row>
                 <v-row>
                   <v-col>
                     <v-select
@@ -140,7 +152,8 @@
 </template>
 
 <script>
-const apiURL = "http://localhost:9001/";
+const apiClinics = "/api/clinics";
+const apiAppTypes = "/api/appointmentTypes";
 export default {
     name: "AddUser",
     data() {
@@ -181,7 +194,9 @@ export default {
         showPass: false,
         showConfirmPass: false,
         errorUserName: false,
-        errorSSID: false
+        errorSSID: false,
+        appTypes: [],
+        speciality: ""
       }
     },
     props: {
@@ -198,6 +213,7 @@ export default {
         if (!this.valid) {
           return;
         }
+        // bolja provera, da li se dodaju admini ili cadmini?
         if(this.$role == 'CENTRE_ADMIN') {
           var i;
           for(i = 0; i < this.clinics.length; i++) {
@@ -212,9 +228,12 @@ export default {
         this.user.gender = this.selectedGender.toUpperCase();     
         var url = "";
         if (this.userType == "patients")
-          url = apiURL + "auth/register";
-        else
-          url = apiURL + "api/" + this.userType; 
+          url = "/auth/register";
+        else {
+          url = "/api/" + this.userType; 
+          if (this.userType == "doctors")
+            url = url + "/" + this.speciality;
+        }
         console.log('userType:' + this.userType);
         this.axios({url : url, 
             method: 'POST',
@@ -243,7 +262,7 @@ export default {
     },
     mounted() {
       if(this.userType=='admins')
-        this.axios({url : apiURL + "api/clinics", 
+        this.axios({url : apiClinics, 
             method: 'GET',
           }).then(response => {
             this.clinics = response.data;
@@ -254,11 +273,13 @@ export default {
           }).catch(error => {
             alert(error);
           })
+      if (this.userType == "doctors") {
+        this.axios({url: apiAppTypes, method: 'GET'
+        }).then(response => {
+          this.appTypes = response.data;
+        })
+      }
     }
     
 }
 </script>
-
-<style scoped>
-
-</style>

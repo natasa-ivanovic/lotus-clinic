@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.Clinic;
 
 public interface ClinicRepository extends JpaRepository<Clinic, Long> {
 
-	Clinic findOneById(String id);
+	Clinic findOneById(Long id);
 	List<Clinic> findByNameAllIgnoringCase(String name);
 	Page<Clinic> findAll(Pageable pagable);
 }

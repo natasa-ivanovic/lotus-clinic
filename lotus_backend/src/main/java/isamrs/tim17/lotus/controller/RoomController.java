@@ -113,7 +113,7 @@ public class RoomController {
 	 */
 	@PutMapping("/rooms/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Room> updateRoom(@RequestBody Room newRoom, @PathVariable long id) {
+	public ResponseEntity<Room> updateRoom(@RequestBody RoomDTO newRoom, @PathVariable long id) {
 
 		// TODO VALIDATION!
 
@@ -195,7 +195,7 @@ public class RoomController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getTermsForRooms(@RequestBody String date) {
 
-		if (date == null || date == "")
+		if (date == null || "".equals(date))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();

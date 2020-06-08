@@ -1,8 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,13 +14,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.dto.UserTokenState;
 import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Patient;
@@ -64,7 +62,6 @@ public class LoginController {
 	public ResponseEntity<Object> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
 
-		// 
 		String username = authenticationRequest.getUsername();
 		User u = userService.findByUsername(username);
 		if (u == null) {
@@ -103,15 +100,16 @@ public class LoginController {
 	 *         current patients.
 	 */
 	@PostMapping("/register")
-	public ResponseEntity<Patient> register(@RequestBody Patient patient) {
-		User existUser = this.userService.findByUsername(patient.getUsername());
+	public ResponseEntity<Object> register(@RequestBody UserDTO p) {
+		User existUser = this.userService.findByUsername(p.getUsername());
 		if (existUser != null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("User with that username already exists", HttpStatus.BAD_REQUEST);
 		}
-		if (isEmptyOrNull(patient)) {
+		if (p.isEmpty()) {
 			System.out.println("Error in patient!");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Not all fields are filled", HttpStatus.BAD_REQUEST);
 		}
+		Patient patient = new Patient(p);
 		patient.setEnabled(false);
 		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 		ArrayList<Authority> auth = new ArrayList<Authority>();
@@ -132,10 +130,10 @@ public class LoginController {
 			return new ResponseEntity<>("New password must be at least 5 characters!", HttpStatus.BAD_REQUEST);
 		}
 		String user = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-		if (user == "error") {
+		if (user.equals("error")) {
 			return new ResponseEntity<>("Server error has occurred. Please try again later.", HttpStatus.BAD_REQUEST);
 		}
-		if (user == "pass") {
+		if (user.equals("pass")) {
 			return new ResponseEntity<>("Incorrect old password. Please try again.", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(user, HttpStatus.OK);
@@ -145,31 +143,5 @@ public class LoginController {
 		public String oldPassword;
 		public String newPassword;
 	}
-	
-	private boolean isEmptyOrNull(Patient patient) {
-		if (patient == null)
-			return true;
-		if (patient.getName() == null || "".equals(patient.getName()))
-			return true;
-		if (patient.getSurname() == null || "".equals(patient.getSurname()))
-			return true;
-		if (patient.getUsername() == null || "".equals(patient.getUsername()))
-			return true;
-		if (patient.getPassword() == null || "".equals(patient.getPassword()))
-			return true;
-		if (patient.getAddress() == null || "".equals(patient.getAddress()))
-			return true;
-		if (patient.getCity() == null || "".equals(patient.getCity()))
-			return true;
-		if (patient.getCountry() == null || "".equals(patient.getCountry()))
-			return true;
-		if (patient.getPhoneNumber() == null || "".equals(patient.getPhoneNumber()))
-			return true;
-		if (patient.getGender() == null || "".equals(patient.getGender().toString()))
-			return true;
-		if (patient.getBirthDate() == null || "".equals(patient.getBirthDate().toString()))
-			return true;
-		return false;
-	}
-	
+		
 }

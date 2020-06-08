@@ -10,7 +10,7 @@ import isamrs.tim17.lotus.model.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 	
-	Patient findOneById(String id);
+	Patient findOneById(Long id);
 	Patient findOneByUsername(String username);
 	Page<Patient> findAll(Pageable pageable);
 	List<Patient> findAllBySurname(String surname);
