@@ -241,7 +241,7 @@ public class PatientController {
 					Iterator<Doctor> docIt = c.getDoctors().iterator();
 					while (docIt.hasNext()){
 						Doctor d = docIt.next();
-						if (d.getSpecialty().getId() != type.getId()) {
+						if (d.getSpecialty().getType().getId() != type.getId()) {
 							docIt.remove();						
 							continue;
 						}									
@@ -256,6 +256,7 @@ public class PatientController {
 							 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
 							 double rating = RatingUtil.getAverageDoctorRating(ratingList);
 							 dto.getDoctors().add(new DoctorDTO(d, rating, availableDates));
+							 dto.setPrice(d.getSpecialty().getPrice());
 						 }
 					}
 					if (c.getDoctors().isEmpty()) 

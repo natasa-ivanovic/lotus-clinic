@@ -25,7 +25,10 @@
                             <v-card-text>
                                 Doctor: {{app.doctorName}}
                                 {{app.doctorSurname}} <br/>
-                                Room: {{app.roomName}}
+                                Clinic: {{app.clinic}} <br/>
+                                Room: {{app.roomName}} <br/>
+                                Price: {{app.price}} <br/>
+                                Price with discount({{app.discount}}%): {{app.price * (100-app.discount)/100}}
                             </v-card-text>
 
                         <v-btn block v-on:click="details(app)" color=success dark >Schedule
@@ -53,7 +56,6 @@ export default {
         }
     },
     mounted() {
-        // fetch zahtev za sve appointmente koji su trenutno predefined
         this.axios({url: apiRequest,
             method: 'GET'
         }).then(response => {
@@ -63,7 +65,6 @@ export default {
                 var start = new Date(app.startDate);
                 var end = new Date(app.endDate);
                 app.time = this.dateFormat(start,end);
-                //app.time = app.startDate.split("T")[0].split().reverse().join() + " " + app.startDate.split("T")[1].split(".")[0] + "-" + app.endDate.split("T")[1].split(".")[0] 
             })
         }).catch(error => {
             console.log(error);
@@ -71,8 +72,6 @@ export default {
     },
     methods: {
         details: function(app) {
-            // TODO: napravi ovo da mozda bude overlay sa vise podataka
-            // za sada samo zakazuje
             this.axios({url : apiFinish + "/" + app.id, 
                         method: 'POST'
             }).then(response =>   {
@@ -80,8 +79,7 @@ export default {
                 this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success", })
                 this.apps.splice(this.apps.indexOf(app), 1);
             }).catch(error => {
-                console.log(error.request);
-                // tip errora                        
+                console.log(error.request);          
                 this.$store.commit('showSnackbar', {text: "Something went wrong! Please try again.", color: "error", })
             });
         },

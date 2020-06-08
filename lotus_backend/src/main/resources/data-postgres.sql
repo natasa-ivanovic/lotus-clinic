@@ -11,8 +11,16 @@ insert into appointment_types (name, price, discount, clinic_id) values ('Physic
 insert into appointment_types (name, price, discount, clinic_id) values ('Dentist appointment', 400, 0, 2);
 insert into appointment_types (name, price, discount, clinic_id) values ('Optometrist appointment', 500, 10, 2);
 
-insert into appointment_price (discount, price, clinic_id, type_id) values (1, 123, 1, 1);
-insert into appointment_price (discount, price, clinic_id, type_id) values (1, 200, 2, 1);
+/* clinic 1 prices */
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1000, 1, 1);
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 500, 1, 2);
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 2000, 1, 4);
+
+/* clinic 2 prices */
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1500, 2, 1);
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 750, 2, 2);
+insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1500, 2, 3);
+
 
 insert into clinical_centres (name) values ('Centre 1');
 
@@ -22,7 +30,7 @@ insert into users (ssid, address, birth_date, city, country, username, gender, n
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date) values (51927654821, 'Puskinova 13', '1997-01-05 02:00:00', 'Novi Sad', 'Srbija', 'patient3@gmail.com', 0, 'Pacijenta', '$2y$10$Wrm.29pcasDLrhgZ.ZNfIetGo8RUX/tGEdT.MF7uJqnSTb859bn8K', '066124909', 'Pacijentanovic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07');
 /* doctors */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (42367854326, 'Fruskogorska 66', '1995-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor1@gmail.com', 1, 'Doktorko', '$2y$10$z8hfS/qHY011xAZ4qpMutOdAVRufZbPYVQyXOsO37InW4nwqTA6V2', '0699114909', 'Dokic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 1);
-insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (53451231231, 'Bulevar Cara Lazara 15', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor2@gmail.com', 0, 'Doktorka', '$2y$10$0Z7PPfPQ94jhjz5j.6UAt.JQxw5w7RdvCr.LdMhenZWnu4vJW.s1y', '0699114909', 'Dakic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 2);
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (53451231231, 'Bulevar Cara Lazara 15', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor2@gmail.com', 0, 'Doktorka', '$2y$10$0Z7PPfPQ94jhjz5j.6UAt.JQxw5w7RdvCr.LdMhenZWnu4vJW.s1y', '0699114909', 'Dakic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 4);
 
 /* nurses */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', '$2a$10$t7KnHQ52xqsAdt7m.WXYs.1GdxOOMbPcbLJBBmFzhVaiCKkp9OKGu', '0699114909', 'Sestric', 1, 'NURSE', true, '2020-04-30 16:00:00.508-07');
@@ -37,9 +45,9 @@ insert into users (ssid, address, birth_date, city, country, username, gender, n
 /* more doctors, inserted here so we don't have to manually change ids from other data, ids start from 12 */
 
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (65412378925, 'Kraljievca Marka 1', '1994-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor3@gmail.com', 0, 'Dragana', '$2y$10$OJZywu3dD0EHOYHP/gnSR.rtbn/RPO.TM5FNbwGYW0vDmaQtfVJV.', '0698594526', 'Doktoric', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 1);
-insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (96854575153, 'Berislava Berica 62', '1989-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor4@gmail.com', 1, 'Dominik', '$2y$10$FIBWbrMtr1SU.jZIum2uheCvqYGOhzw1XdXYmYd.zlwQnVNxAgLra', '066489123', 'Dominicevic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 2);
-insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (63594857861, 'Kisacka 11', '1992-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor5@gmail.com', 1, 'Davor', '$2y$10$rS0kN.RAOu/AwT1HjT2LieuQ2n/R.xXFFK/GuC1dfyExtuGWDphjG', '063789417', 'Davorovic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 1);
-insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (36995475628, 'Dositejeva 96', '1990-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor6@gmail.com', 1, 'Dimitrije', '$2y$10$LNnQfpepzcKbH1YySP74lOsZ7r1FDCcYiKJfHrD/6dj0HxoJQ53KO', '069546209', 'Dimitrijevic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 2);
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (96854575153, 'Berislava Berica 62', '1989-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor4@gmail.com', 1, 'Dominik', '$2y$10$FIBWbrMtr1SU.jZIum2uheCvqYGOhzw1XdXYmYd.zlwQnVNxAgLra', '066489123', 'Dominicevic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 6);
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (63594857861, 'Kisacka 11', '1992-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor5@gmail.com', 1, 'Davor', '$2y$10$rS0kN.RAOu/AwT1HjT2LieuQ2n/R.xXFFK/GuC1dfyExtuGWDphjG', '063789417', 'Davorovic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 3);
+insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id) values (36995475628, 'Dositejeva 96', '1990-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor6@gmail.com', 1, 'Dimitrije', '$2y$10$LNnQfpepzcKbH1YySP74lOsZ7r1FDCcYiKJfHrD/6dj0HxoJQ53KO', '069546209', 'Dimitrijevic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 5);
 
 
 

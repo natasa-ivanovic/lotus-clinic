@@ -13,6 +13,7 @@ public class DoctorDTO {
 	private List<Date> availableTimes;
 	private ClinicDTO clinic;
 	private String type;
+	private double price;
 	
 	public DoctorDTO() {}
 
@@ -25,6 +26,7 @@ public class DoctorDTO {
 		this.availableTimes = times;
 		this.setClinic(new ClinicDTO(d.getClinic()));
 		this.setType(d.getSpecialty().getType().getName());
+		this.setPrice(d.getSpecialty().getPrice());
 	}
 
 	public String getName() {
@@ -81,6 +83,14 @@ public class DoctorDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	
 	
