@@ -29,15 +29,21 @@ Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 // keep on heroku for deploy and localhost for testing
 
-Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-// Vue.axios.defaults.baseURL = "http://localhost:9001";
+// Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+Vue.axios.defaults.baseURL = "http://localhost:9001";
 
 
 // all errors pass through this function before being catched in individual catch functions
 Vue.axios.interceptors.response.use(response => {
   return response;
 }, error => {
-  if (401 === error.response.status) {
+  if (307 === error.response.status) {
+    store.commit('showSnackbar', {text: "Please change your password before logging in!", color: "info"});
+    Vue.axios.defaults.headers['Authorization'] = "Bearer " + error.response.data.accessToken;
+    router.push({name: "editPassword"});
+    return Promise.reject(error);
+  }
+  else if (401 === error.response.status) {
     // automatic check for timed out sessions
     store.commit('showSnackbar', {text: "Your session has expired! Please log in again.", color: "error", })
     Vue.prototype.$role = null;
@@ -52,6 +58,8 @@ Vue.axios.interceptors.response.use(response => {
     router.push({name: 'home'});
     return Promise.reject(error);
   } else {
+    console.log(error.request.responseText);
+    store.commit('showSnackbar', {text: error.request.responseText, color: "error", });
     return Promise.reject(error);
   }
 })

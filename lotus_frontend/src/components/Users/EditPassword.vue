@@ -116,19 +116,21 @@ export default {
                   method: 'POST',
                   data: user                  
             }).then(resp => {
-              this.$authKey = "Bearer " + resp.data.accessToken;
               localStorage.setItem('authKey', "Bearer " + resp.data.accessToken);
               this.axios.defaults.headers['Authorization'] = "Bearer " + resp.data.accessToken;
               this.$store.commit('showSnackbar', {text: "Successfully changed password!", color: "success", })
-              this.$router.push({ name: "profile" })
-        }).catch(error => {
-          console.log(error.data);
-          this.$store.commit('showSnackbar', {text: error.data, color: "error", })
-        });
-        }).catch(error => {
-          console.log(error.request.responseText);
-          this.$store.commit('showSnackbar', {text: error.request.responseText, color: "error", })
-        });}
+              if (this.$role == null) {
+                  // when it's first time logging in and we change role
+                  this.$role = resp.data.userRole;
+                  localStorage.setItem('role', resp.data.userRole);
+                  this.$router.push({ name: "home" });
+                  return;
+              }
+              this.$router.push({ name: "profile" });
+            });
+          });
+    }
+
   }
 }
 </script>
