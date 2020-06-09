@@ -24,8 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	public void setPasswordEncoder(PasswordEncoder pe) {
+		this.passwordEncoder = pe;
+	}
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
