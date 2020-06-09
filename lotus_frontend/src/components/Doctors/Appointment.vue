@@ -69,6 +69,8 @@
                                     :nudge-width="50"
                                     elevation-10
                                     offset-x
+                                    @click:outside="turnOffAppointment()" 
+                                    @keydown.esc="turnOffAppointment()"
                                 >
                                     <template v-slot:activator="{on, attrs}">
                                         <v-btn color="primary" 
@@ -94,15 +96,19 @@
                                                 <v-row>
                                                     <v-col>
                                                         <v-menu
-                                                        ref="dialog"
-                                                        v-model="menu"
+                                                        @click:outside="turnOffAppointment()" 
+                                                        @keydown.esc="turnOffAppointment()"
+                                                        max-width="290px"
+                                                        min-width="290px"
+                                                        ref="dialogAppointment"
+                                                        v-model="menuDatePickerApp"
                                                         :return-value.sync="appointmentDate"
                                                         persistent
                                                         :close-on-content-click="false"
                                                         transition="scale-transition"
                                                         nudge-left="308">
                                                             <template v-slot:activator="{on, attrs}">
-                                                                <v-text-field 
+                                                                <v-text-field
                                                                 prepend-icon="mdi-calendar"
                                                                 v-model="appointmentDate"
                                                                 label="Date"
@@ -113,18 +119,26 @@
                                                                 :min="getToday()"
                                                                 v-model="appointmentDate">
                                                                 <v-spacer></v-spacer>
-                                                                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                                                <v-btn text color="primary" @click="$refs.dialog.save(appointmentDate)">OK</v-btn>
+                                                                <v-btn text color="primary" @click="menuDatePickerApp = false">Cancel</v-btn>
+                                                                <v-btn text color="primary" v-on:click="getFreeTerms()" @click="$refs.dialogAppointment.save(appointmentDate)">OK</v-btn>
                                                             </v-date-picker>
                                                         </v-menu>
                                                     </v-col>
-                                                    <v-col><v-text-field prepend-icon="mdi-clock" label="Time"/></v-col>
+                                                </v-row>
+                                                    <v-row>
+                                                    <v-col>
+                                                        <v-autocomplete 
+                                                            prepend-icon="mdi-clock" 
+                                                            label="Time"
+                                                            :items="formatTerms()"/>
+                                                    </v-col>
+
                                                 </v-row>
                                             </v-form>
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="error" text @click="menuAppointment = false">Cancel</v-btn>
+                                            <v-btn color="error" text @click="turnOffAppointment()">Cancel</v-btn>
                                             <v-btn color="primary" text @click="menuAppointment = false">Schedule</v-btn>
                                         </v-card-actions>
                                     </v-card>
@@ -211,8 +225,12 @@ export default {
             info: "",
             allMedicines: [],
             allDiagnosis: [],
+            freeTerms: [],
+            appointmentDate: "",
+            appoitnmentTime: "",
             menuAppointment: false,
-            menuOperation: false
+            menuOperation: false,
+            menuDatePickerApp: false
         }
     },
     mounted() {
@@ -238,7 +256,41 @@ export default {
         getToday() {
             var today = new Date();
             return today.toISOString();
+        },
+        turnOffAppointment() {
+            this.menuDatePickerApp = false;
+            this.menuAppointment = false;
+            this.appointmentDate = "";
+            this.appointmentTime = "";
+        },
+        getFreeTerms() {
+            var date = new Date(this.appointmentDate);
+            this.axios({
+                url: "/api/doctors/newAppointment",
+                method: 'POST',
+                data: date.getTime(),
+                headers: {
+                        'Content-Type': 'text/plain'
+                    }
+            }).then(response => {
+                this.freeTerms = response.data;
+            }); 
+        },
+        formatTime: function(t) {
+            var time = new Date(t);
+            var timeString = time.toTimeString().substring(0, 5) + " " + time.toDateString();
+            console.log(time);
+            return timeString;
+        },
+        formatTerms() {
+            var list = [];
+            this.freeTerms.forEach(el => {
+                var t = this.formatTime(el);
+                list.push(t);
+            });
+            return list;
         }
+
     }
     
 }
