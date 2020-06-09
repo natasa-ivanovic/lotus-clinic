@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,13 +41,8 @@ public class DoctorController {
 	@Autowired
 	private AppointmentPriceService appPriceService;
 	
-	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	public void setPasswordEncoder(PasswordEncoder pe) {
-		this.passwordEncoder = pe;
-	}
-	
+	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 	@Autowired
 	private AuthorityService authorityService;
 

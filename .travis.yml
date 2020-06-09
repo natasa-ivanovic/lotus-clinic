@@ -24,7 +24,7 @@ matrix:
         provider: heroku
         api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
         app: lotus-clinic-api
-        on: master
+        on: Bug#141
 
     - language: node_js
       node_js: 
@@ -45,7 +45,7 @@ matrix:
         provider: heroku
         api_key: 0aaa2845-6bb6-474e-8223-763a3a5213d6
         app: lotus-clinic
-        on: master
+        on: Bug#141
 
 dist: trusty
 

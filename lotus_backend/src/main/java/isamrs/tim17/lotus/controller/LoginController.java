@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,12 +49,7 @@ public class LoginController {
 	@Autowired
 	private UserService userService;
 	
-    private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-	public void setPasswordEncoder(PasswordEncoder pe) {
-		this.passwordEncoder = pe;
-	}
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	@Autowired
 	private AuthorityService authorityService;
