@@ -49,7 +49,7 @@ public class AppointmentService {
 	public Page<Appointment> findByMedicalRecord(MedicalRecord record, AppointmentStatus status, Pageable p) {
 		return appointments.findAllByMedicalRecordAndStatus(record, status, p);
 	}
-
+	
 
 	public List<Appointment> findByDoctor(Doctor record) {
 		return appointments.findByDoctor(record);

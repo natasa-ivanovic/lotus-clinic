@@ -171,8 +171,8 @@ public class AppointmentController {
 			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, sortBy));
 		else
 			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.ASC, sortBy));	
-		Page<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord(), AppointmentStatus.FINISHED, paging);
-
+		Page<Appointment> apps;
+		apps = service.findByMedicalRecord(patient.getMedicalRecord(), AppointmentStatus.FINISHED, paging);
 		if (apps == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		List<PremadeAppDTO> dto = new ArrayList<>();
