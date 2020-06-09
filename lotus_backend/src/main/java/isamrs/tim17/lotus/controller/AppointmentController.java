@@ -43,11 +43,13 @@ import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
+import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
@@ -162,33 +164,64 @@ public class AppointmentController {
 
 	@GetMapping("/appointments/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<Page<PremadeAppDTO>> getMyPastAppointments(@RequestParam(defaultValue = "0") Integer pageNo,
+	public ResponseEntity<Object> getMyPastAppointments(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
 			@RequestParam(defaultValue = "true") String descending) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
+
+		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
+	}
+
+	public ResponseEntity<Object> getPastAppointments(MedicalRecord medicalRecord, Integer pageNo, Integer pageSize,
+			String sortBy, String descending) {
 		Pageable paging;
 		if (descending.equals("true"))
 			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, sortBy));
 		else
-			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.ASC, sortBy));	
-		Page<Appointment> apps;
-		apps = service.findByMedicalRecord(patient.getMedicalRecord(), AppointmentStatus.FINISHED, paging);
-		if (apps == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.ASC, sortBy));
+		Page<Appointment> apps = null;
+		try {
+			apps = service.findByMedicalRecord(medicalRecord, AppointmentStatus.FINISHED, paging);
 
+		} catch (Exception e) {
+			return new ResponseEntity<>("Error in forwarded arguments for sort!", HttpStatus.BAD_REQUEST);
+		}
+		if (apps == null)
+			return new ResponseEntity<>("Something went wrong. Please try again later.", HttpStatus.BAD_REQUEST);
 		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			dto.add(new PremadeAppDTO(app));
 		}
-		Page<PremadeAppDTO> dto_page = apps.map(
-				new Function<Appointment, PremadeAppDTO>() {
-					@Override
-					public PremadeAppDTO apply(Appointment app) {
-						return new PremadeAppDTO(app);
-					}
-				});
+		Page<PremadeAppDTO> dto_page = apps.map(new Function<Appointment, PremadeAppDTO>() {
+			@Override
+			public PremadeAppDTO apply(Appointment app) {
+				return new PremadeAppDTO(app);
+			}
+		});
 		return new ResponseEntity<>(dto_page, HttpStatus.OK);
+	}
+
+	@GetMapping("/appointments/patient/{id}/past")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+	public ResponseEntity<Object> getPatientsPastAppointments(@PathVariable("id") String id, @RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "true") String descending) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		long patientId;
+		try {
+			patientId = Long.parseLong(id);			
+		} catch (NumberFormatException e) {
+			return new ResponseEntity<>("Forwarded id isn't a number", HttpStatus.BAD_REQUEST);
+		}
+		if (user.getRole().equals("PATIENT") && user.getId() != patientId)
+			return new ResponseEntity<>("Cannot get another patient's medical record!", HttpStatus.BAD_REQUEST);
+		Patient patient = patientService.findOne(patientId);
+		if (patient == null)
+			return new ResponseEntity<>("Patient with specified ID doesn't exist in database!", HttpStatus.BAD_REQUEST);
+		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
+		
 	}
 
 	@GetMapping("/appointments/patient/cancel/{id}")

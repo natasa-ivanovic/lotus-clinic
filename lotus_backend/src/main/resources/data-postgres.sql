@@ -81,18 +81,18 @@ INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (9, 4);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (10, 5);
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (11, 5);
 
-insert into medicines (name) values ('Acetaminophen');
-insert into medicines (name) values ('Ibuprofene');
-insert into medicines (name) values ('Iben');
+insert into medicines (name, clinical_centre_id) values ('Acetaminophen', 1);
+insert into medicines (name, clinical_centre_id) values ('Ibuprofene', 1);
+insert into medicines (name, clinical_centre_id) values ('Iben', 1);
 
-insert into diagnosis (name) values ('Tuberculosis');
-insert into diagnosis (name) values ('Cold');
-insert into diagnosis (name) values ('COVID-19');
+insert into diagnosis (name, clinical_centre_id) values ('Tuberculosis', 1);
+insert into diagnosis (name, clinical_centre_id) values ('Cold', 1);
+insert into diagnosis (name, clinical_centre_id) values ('COVID-19', 1);
 
-insert into allergies (name) values ('Pollen');
-insert into allergies (name) values ('Pork');
-insert into allergies (name) values ('Ibuprofen');
-insert into allergies (name) values ('Tomato');
+insert into allergies (name, clinical_centre_id) values ('Pollen', 1);
+insert into allergies (name, clinical_centre_id) values ('Pork', 1);
+insert into allergies (name, clinical_centre_id) values ('Ibuprofen', 1);
+insert into allergies (name, clinical_centre_id) values ('Tomato', 1);
 
 insert into medical_records (blood_type, height, weight, patient_id) values ('A', '196', '95', 1);
 insert into medical_records (blood_type, height, weight, patient_id) values ('B', '170', '57', 2);

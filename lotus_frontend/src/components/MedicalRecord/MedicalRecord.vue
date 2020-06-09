@@ -1,6 +1,6 @@
 <template>
     <v-form>
-        <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :items="this.itemsOverlay"/>
+        <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :id="this.id"/>
         <v-card class="elevation-4">
             <v-toolbar flat color="secondary" dark>
                 <v-toolbar-title>{{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
@@ -158,7 +158,6 @@ export default {
         showAppointments() {
             this.title = "Appointments";
             console.log(this.appointments);
-            var apps = [];
             this.headerOverlay = [
                 { text: 'Date', value: 'date' },
                 { text: 'Appointment type', value: 'type' },
@@ -166,6 +165,7 @@ export default {
                 { text: 'Room', value: 'room' },
                 { text: 'Clinic', value: 'clinic'}
             ];
+            /* var apps = [];
             this.appointments.forEach(app => {
                 var el = {
                     date: this.getDate(app.startDate).time,
@@ -176,7 +176,7 @@ export default {
                 }
                 apps.push(el);
             });
-            this.itemsOverlay = apps;
+            this.itemsOverlay = apps;*/
             this.overlay = true;
         },
         showIllnesses() {
@@ -187,7 +187,7 @@ export default {
                 { text: 'Description', value: 'description' },
                 { text: 'Prescription', value: 'prescription' } //list of medicines
             ];
-            var illnesses = [];
+            /*var illnesses = [];
             this.appointments.forEach(app => {
                 var el = {
                     date: this.getDate(app.startDate).date,
@@ -197,7 +197,7 @@ export default {
                 }
                 illnesses.push(el);
             })
-            this.itemsOverlay = illnesses;
+            this.itemsOverlay = illnesses;*/
             this.overlay = true;
         },
         formatGender() {

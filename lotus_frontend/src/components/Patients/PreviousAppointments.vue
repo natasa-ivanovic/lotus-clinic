@@ -108,9 +108,6 @@ export default {
             deep: true,
         },
     },
-    mounted() {
-        // this.getDataFromApi();
-    },
     methods: {
         getDataFromApi: function() {
             this.loading = true;
@@ -127,8 +124,6 @@ export default {
                     requestUrl = requestUrl + "&sortBy=room.name&descending=" + sortDesc[0];
                 else if (sortBy[0] == "clinic")
                     requestUrl = requestUrl + "&sortBy=clinic.name&descending=" + sortDesc[0];
-                else
-                    requestUrl = requestUrl + "&sortBy=" + sortBy[0] + "&descending=" + sortDesc[0];
             }
             console.log(requestUrl);
             this.axios({url : requestUrl, 
