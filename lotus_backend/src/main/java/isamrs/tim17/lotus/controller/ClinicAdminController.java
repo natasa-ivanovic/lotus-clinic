@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +23,7 @@ import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicAdminService;
 import isamrs.tim17.lotus.service.ClinicService;
@@ -31,12 +31,19 @@ import isamrs.tim17.lotus.service.ClinicService;
 @RestController
 @RequestMapping("/api")
 public class ClinicAdminController {
+
+	@Autowired
+	private ClinicAdminService service;
 	
-	@Autowired private ClinicAdminService service;
-	@Autowired private PasswordEncoder passwordEncoder;
-	@Autowired private AuthorityService authorityService;
-	@Autowired private ClinicService clinicService;
+	@Autowired
+	private AuthorityService authorityService;
 	
+	@Autowired
+	private ClinicService clinicService;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
+
 	@GetMapping("/admins/self")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserDTO> getYourself() {
@@ -44,13 +51,12 @@ public class ClinicAdminController {
 			Authentication a = SecurityContextHolder.getContext().getAuthentication();
 			UserDTO admin = new UserDTO((User) a.getPrincipal());
 			return new ResponseEntity<>(admin, HttpStatus.OK);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@GetMapping("/admins/{id}")
 	public ResponseEntity<ClinicAdministrator> getAdmin(@PathVariable("id") long id) {
 		ClinicAdministrator admin = service.findOne(id);
@@ -58,7 +64,7 @@ public class ClinicAdminController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(admin, HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/admins/self")
 	public ResponseEntity<Object> updateYourself(@RequestBody UserDTO admin) {
 		ClinicAdministrator a = service.findOne(admin.getId());
@@ -75,26 +81,25 @@ public class ClinicAdminController {
 		service.save(a);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/admins")
-	public ResponseEntity<Object> addClinicAdmin(@RequestBody ClinicAdminDTO admin) {		
-		if(isEmptyOrNull(admin)) {
+	public ResponseEntity<Object> addClinicAdmin(@RequestBody ClinicAdminDTO admin) {
+		if (isEmptyOrNull(admin)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		if(service.alreadyExistsUsername(admin.getUsername())) {
+
+		if (service.alreadyExistsUsername(admin.getUsername())) {
 			HashMap<String, String> error = new HashMap<>();
 			error.put("text", "That username already exists!");
 			return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Clinic clinic = clinicService.findOne(admin.getClinicId());
 
-		
 		ClinicAdministrator clinicAdmin = new ClinicAdministrator();
-		
+
 		clinicAdmin.setUsername(admin.getUsername());
-		clinicAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
+		clinicAdmin.setPassword(userDetailsService.encodePassword(admin.getPassword()));
 		clinicAdmin.setName(admin.getName());
 		clinicAdmin.setSurname(admin.getSurname());
 		clinicAdmin.setGender(admin.getGender());
@@ -104,7 +109,7 @@ public class ClinicAdminController {
 		clinicAdmin.setCountry(admin.getCountry());
 		clinicAdmin.setPhoneNumber(admin.getPhoneNumber());
 		clinicAdmin.setSsid(admin.getSsid());
-		
+
 		clinicAdmin.setClinic(clinic);
 		clinicAdmin.setEnabled(true);
 		clinicAdmin.setLastPasswordResetDate(null);
@@ -114,7 +119,7 @@ public class ClinicAdminController {
 		service.save(clinicAdmin);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	private boolean isEmptyOrNull(ClinicAdminDTO clinicAdmin) {
 		if (clinicAdmin == null)
 			return true;

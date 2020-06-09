@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +24,7 @@ import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicService;
@@ -40,15 +40,11 @@ public class DoctorController {
 	@Autowired
 	private AppointmentPriceService appPriceService;
 	
-	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	public void setPasswordEncoder(PasswordEncoder pe) {
-		this.passwordEncoder = pe;
-	}
-	
 	@Autowired
 	private AuthorityService authorityService;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
 	/**
 	 * This method is used for adding a doctor.
@@ -82,7 +78,7 @@ public class DoctorController {
 		d.setAuthorities(auth);
 		d.setClinic(clinic);
 		d.setSpecialty(spec);
-		d.setPassword(passwordEncoder.encode(doctor.getPassword()));
+		d.setPassword(userDetailsService.encodePassword(doctor.getPassword()));
 		d.setEnabled(true);
 		d.setLastPasswordResetDate(null);
 		service.save(d);
