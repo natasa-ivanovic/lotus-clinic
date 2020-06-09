@@ -5,8 +5,6 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class Operation
  ***********************************************************************/
 
-import java.util.*;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

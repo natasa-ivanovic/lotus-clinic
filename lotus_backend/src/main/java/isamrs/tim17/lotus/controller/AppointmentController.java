@@ -42,7 +42,6 @@ import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.AppointmentService;
-import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
@@ -59,7 +58,6 @@ public class AppointmentController {
 	
 	@Autowired private AppointmentService service;
 	@Autowired private RoomService roomService;
-	@Autowired private AppointmentTypeService appointmentTypeService;
 	@Autowired private DoctorService doctorService;
 	@Autowired private ClinicService clinicService;
 	@Autowired private PatientService patientService;
@@ -112,6 +110,16 @@ public class AppointmentController {
 		Patient patient = (Patient) a.getPrincipal();
 		app.setMedicalRecord(patient.getMedicalRecord());
 		service.save(app);
+		String finalPrice = String.format("%.2f", app.getPrice() * (100-app.getDiscount()) / 100);
+		String message = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nYou have scheduled an appointment using our premade function.\n"
+				+ "The appointment is scheduled for " + app.getStartDate() + " in room " + app.getRoom().getName() + ", at our clinic " + app.getClinic().getName() + ".\n"
+				+ "The clinic is located at " + app.getClinic().getAddress() + ".\n"
+				+ "The doctor's name is " + app.getDoctor().getName() + " " + app.getDoctor().getSurname() + "and the appointment type is " + app.getDoctor().getSpecialty().getType().getName() + ".\n"
+				+ "The appointment price is " + String.format("%.2f", app.getPrice()) + " RSD and you get a " + String.format("%.2f", app.getDiscount()) 
+				+ "% discount for using our premade function, totalling " + finalPrice + " RSD.\n"
+				+ "We look forward to seeing you.\nLotus Clinic Staff";
+		
+		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
@@ -148,6 +156,40 @@ public class AppointmentController {
 				dto.add(new PremadeAppDTO(app));
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/appointments/patient/cancel/{id}")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Object> cancelAppointmentPatient(@PathVariable("id") long id) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = (Patient) a.getPrincipal();
+		
+		Appointment app = service.findOne(id);
+		if (app == null)
+			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
+		if (app.getMedicalRecord().getId() != patient.getId())
+			return new ResponseEntity<>("Cannot cancel another patient's appointment!", HttpStatus.BAD_REQUEST);
+		Date now = new Date();
+		Date appDate = app.getStartDate();
+		
+		if (appDate.getTime() - now.getTime() < 86400000)
+			return new ResponseEntity<>("Cannot cancel appointment which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
+		app.setStatus(AppointmentStatus.CANCELED);
+		
+		// TODO kada bude kalendar, ovde nece vise trebati setRoom na null (trenutno je zbog Freerooms), nego izbaci ovu stavku iz kalendara
+		app.setRoom(null);
+		// mozda treba nesto jos za doktora, ali kada bude kalendar sigurno nece trebati
+		service.save(app);
+	
+		String message = "Hello " + app.getDoctor().getName() + " " + app.getDoctor().getSurname() + "!\nAn existing appointment has been canceled.\n"
+				+ "The appointment was scheduled for " + app.getStartDate() +".\n"
+				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + " and the appointment type is " + app.getDoctor().getSpecialty().getType().getName()+ ".\n"
+				+ "Your work calendar has been updated.\n" 
+				+ "Lotus Clinic Staff";
+		
+		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	
@@ -306,8 +348,10 @@ public class AppointmentController {
 		
 		
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname() + "!\nIn response to your appointment request, we have created a term for you in our centre.\n"
-				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ".\n"
+				+ "The appointment is scheduled for " + startDate + " in room " + room.getName() + ", at our clinic " + app.getClinic().getName() + ".\n"
+				+ "The clinic is located at " + app.getClinic().getAddress() + ".\n"
 				+ "The doctor's name is " + doctor.getName() + " " + doctor.getSurname() + "and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
+				+ "The appointment price is " + String.format("%.2f", app.getPrice()) + " RSD.\n"
 				+ "We look forward to seeing you.\nLotus Clinic Staff";
 		
 		String contentDoctor = "Hello " + doctor.getName() + " " + doctor.getSurname() + "!\nYou have a new appointment.\n"
@@ -315,8 +359,8 @@ public class AppointmentController {
 				+ "The patient's name is " + patient.getName() + " " + patient.getSurname() + " and the appointment type is " + doctor.getSpecialty().getType().getName()+ ".\n"
 				+ "Lotus Clinic Staff";
 		
-		mailSender.sendMsg(patient.getUsername(), "Appointment notiffication", contentPatient);
-		mailSender.sendMsg(doctor.getUsername(), "Appointment notiffication", contentDoctor);
+		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
+		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);
 		
 		rr.setStatus(RequestStatus.APPROVED);
 		requestService.save(rr);

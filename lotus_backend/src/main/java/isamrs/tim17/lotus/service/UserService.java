@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.repository.UserRepository;
 
