@@ -212,12 +212,11 @@ public class AppointmentController {
 			return new ResponseEntity<>("Forwarded id isn't a number", HttpStatus.BAD_REQUEST);
 		}
 		if (user.getRole().equals("PATIENT") && user.getId() != patientId)
-			return new ResponseEntity<>("Cannot get another patient's medical record!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Cannot get another patient's medical history!", HttpStatus.BAD_REQUEST);
 		Patient patient = patientService.findOne(patientId);
 		if (patient == null)
 			return new ResponseEntity<>("Patient with specified ID doesn't exist in database!", HttpStatus.BAD_REQUEST);
 		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
-		
 	}
 
 	@GetMapping("/appointments/patient/cancel/{id}")

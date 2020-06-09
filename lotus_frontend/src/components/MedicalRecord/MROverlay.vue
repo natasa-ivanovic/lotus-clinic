@@ -16,6 +16,9 @@
                 :footer-props="{
                     itemsPerPageOptions: [1, 5, 10]
                 }">
+                <template v-slot:item.doctors="{ item }">
+                    <v-select :items="item.doctors" :value="item.doctors[0]"/>
+                </template>
                 </v-data-table>
             </v-card-text>
         </v-card>
@@ -47,8 +50,8 @@ export default {
             items: [],
             totalItems: 0,
             loading: true,
-            options: {}
-            
+            options: {},
+            selectedDoctor: ""            
         }
     },
     watch: {
@@ -95,11 +98,25 @@ export default {
                         requestUrl = requestUrl + "&sortBy=room.name&descending=" + sortDesc[0];
                     else if (sortBy[0] == "clinic")
                         requestUrl = requestUrl + "&sortBy=clinic.name&descending=" + sortDesc[0];
+                    else if (sortBy[0] == "price")
+                        requestUrl = requestUrl + "&sortBy=doctor.specialty.price&descending=" + sortDesc[0];
                 }
             }
-            // else
+            else {
+                if (sortBy.length != 0) {
+                    if (sortBy[0] == "date") 
+                        requestUrl = requestUrl + "&sortBy=startDate&descending=" + sortDesc[0];
+                    else if (sortBy[0] == "operationType")
+                        requestUrl = requestUrl + "&sortBy=type.type.name&descending=" + sortDesc[0];
+                    else if (sortBy[0] == "roomName")
+                        requestUrl = requestUrl + "&sortBy=room.name&descending=" + sortDesc[0];
+                    else if (sortBy[0] == "clinicName")
+                        requestUrl = requestUrl + "&sortBy=clinic.name&descending=" + sortDesc[0];
+                    else if (sortBy[0] == "price")
+                        requestUrl = requestUrl + "&sortBy=type.price&descending=" + sortDesc[0];
+                    }
+            }
 
-            console.log(requestUrl);
             this.axios({url : requestUrl, 
                 method: 'GET'
             }).then(response => {
@@ -131,12 +148,18 @@ export default {
         updateAppointments(response) {
             var data = []
             response.data.content.forEach(app => {
+                var price = app.price;
+                if (app.discount != 0) {
+                    var priceDiscounted = app.price * (100-app.discount)/100;
+                    price = priceDiscounted + "(" + app.discount + "% off)"
+                }
                 var el = {
                     date: this.getDate(app.startDate).time,
                     type: app.type,
                     doctor: app.doctorName + " " + app.doctorSurname,
                     room: app.roomName,
-                    clinic: app.clinic
+                    clinic: app.clinic,
+                    price: price,
                     }
                 data.push(el);
                 });
@@ -144,7 +167,20 @@ export default {
             this.totalItems = response.data.totalElements;
         },
         updateOperations(response) {
-            console.log(response);
+            var data = []
+            response.data.content.forEach(op => {
+                var el = {
+                    date: this.getDate(op.startDate).time,
+                    operationType: op.operationType,
+                    roomName: op.roomName,
+                    clinicName: op.clinicName,
+                    price: op.price,
+                    doctors: op.doctors
+                    }
+                data.push(el);
+                });
+            this.items = data;
+            this.totalItems = response.data.totalElements;
         },
         getDate(date) {
             if (date == undefined)
