@@ -23,6 +23,9 @@
                 :rules="[rules.required, rules.isNumber, rules.isBetween]"
                 v-model="appointmentType.discount"
                 required />
+                <v-checkbox 
+                v-model="appointmentType.operation"
+                label="Operation" />
             </v-form>
             <v-card-actions>
               <v-btn block v-on:click="addAppType()" color="primary">Add</v-btn>
@@ -44,6 +47,7 @@ export default {
           name: '',
           price: '',
           discount: '',
+          operation: false
         },
         rules: {
           required: value => !!value || value === 0 || 'Field is required.',

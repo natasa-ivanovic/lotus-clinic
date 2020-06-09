@@ -189,17 +189,13 @@ public class AppointmentController {
 		}
 		if (apps == null)
 			return new ResponseEntity<>("Something went wrong. Please try again later.", HttpStatus.BAD_REQUEST);
-		List<PremadeAppDTO> dto = new ArrayList<>();
-		for (Appointment app : apps) {
-			dto.add(new PremadeAppDTO(app));
-		}
-		Page<PremadeAppDTO> dto_page = apps.map(new Function<Appointment, PremadeAppDTO>() {
+		Page<PremadeAppDTO> dto = apps.map(new Function<Appointment, PremadeAppDTO>() {
 			@Override
 			public PremadeAppDTO apply(Appointment app) {
 				return new PremadeAppDTO(app);
 			}
 		});
-		return new ResponseEntity<>(dto_page, HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@GetMapping("/appointments/patient/{id}/past")

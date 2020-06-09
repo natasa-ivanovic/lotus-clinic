@@ -66,7 +66,6 @@ export default {
         getDataFromApi: function() {
             this.loading = true;
             const { sortBy, sortDesc, page, itemsPerPage } = this.options
-            // logika da skontas jel gleda illness ili appointments
             var requestUrl;
             if (this.title != "Operations")
                 requestUrl = apiURL + this.id + "/past" + "?pageNo=" + (page - 1) + "&pageSize=" + itemsPerPage;

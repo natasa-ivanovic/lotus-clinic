@@ -1,17 +1,11 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AllergyDTO;
@@ -29,13 +22,10 @@ import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.AppointmentStatus;
-import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.service.AllergyService;
 import isamrs.tim17.lotus.service.AppointmentService;
-import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
 
@@ -51,8 +41,6 @@ public class MedicalRecordController {
 	private AppointmentService appService;
 	@Autowired
 	private AllergyService allergyService;
-	@Autowired
-	private DiagnosisService diagnosisService;
 
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
