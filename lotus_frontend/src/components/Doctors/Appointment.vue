@@ -24,6 +24,7 @@
                         <v-row>
                             <v-col>
                                 <v-autocomplete
+                                    dense
                                     label="Diagnosis"
                                     item-text="name"
                                     item-value="id"
@@ -36,6 +37,7 @@
                             </v-col>
                             <v-col>
                                 <v-autocomplete
+                                    dense
                                     label="Medicine"
                                     item-text="name"
                                     item-value="id"
@@ -50,6 +52,7 @@
                         <v-row>
                             <v-col>
                             <v-textarea
+                                dense
                                 color="teal"
                                 v-model="info"
                                 label="Description">
@@ -59,12 +62,122 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-row>
-                            <v-col><v-btn color="primary" block>Schedule appointment</v-btn></v-col>
-                            <v-col><v-btn color="primary" block>Schedule operation</v-btn></v-col>
+                            <v-col>
+                                <v-menu
+                                    v-model="menuAppointment"
+                                    :close-on-content-click="false"
+                                    :nudge-width="50"
+                                    elevation-10
+                                    offset-x
+                                >
+                                    <template v-slot:activator="{on, attrs}">
+                                        <v-btn color="primary" 
+                                                v-bind="attrs" 
+                                                v-on="on" 
+                                                block>
+                                                Schedule appointment
+                                        </v-btn>
+                                    </template>
+                                    <v-card>
+                                        <v-card-text>
+                                            <v-list>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>Patient: {{appointment.patientName}} {{appointment.patientSurname}}</v-list-item-title>
+                                                        <v-list-item-subtitle>Scheduling a new appointment</v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                        <v-icon large>mdi-account-heart-outline</v-icon>
+                                                </v-list-item>
+                                            </v-list>
+                                            <v-divider></v-divider>
+                                            <v-form>
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-menu
+                                                        ref="dialog"
+                                                        v-model="menu"
+                                                        :return-value.sync="appointmentDate"
+                                                        persistent
+                                                        :close-on-content-click="false"
+                                                        transition="scale-transition"
+                                                        nudge-left="308">
+                                                            <template v-slot:activator="{on, attrs}">
+                                                                <v-text-field 
+                                                                prepend-icon="mdi-calendar"
+                                                                v-model="appointmentDate"
+                                                                label="Date"
+                                                                v-bind="attrs"
+                                                                v-on="on"/>
+                                                            </template>
+                                                            <v-date-picker
+                                                                :min="getToday()"
+                                                                v-model="appointmentDate">
+                                                                <v-spacer></v-spacer>
+                                                                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                                                                <v-btn text color="primary" @click="$refs.dialog.save(appointmentDate)">OK</v-btn>
+                                                            </v-date-picker>
+                                                        </v-menu>
+                                                    </v-col>
+                                                    <v-col><v-text-field prepend-icon="mdi-clock" label="Time"/></v-col>
+                                                </v-row>
+                                            </v-form>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="error" text @click="menuAppointment = false">Cancel</v-btn>
+                                            <v-btn color="primary" text @click="menuAppointment = false">Schedule</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-menu>
+                            </v-col>
+                            <v-col>
+                                <v-menu
+                                    v-model="menuOperation"
+                                    :close-on-content-click="false"
+                                    :nudge-width="50"
+                                    nudge-left="827"
+                                    elevation-10
+                                    offset-x
+                                >
+                                    <template v-slot:activator="{on, attrs}">
+                                        <v-btn color="primary" 
+                                                v-bind="attrs" 
+                                                v-on="on" 
+                                                block>
+                                                Schedule operation
+                                        </v-btn>
+                                    </template>
+                                    <v-card>
+                                        <v-card-text>
+                                            <v-list>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>Patient: {{appointment.patientName}} {{appointment.patientSurname}}</v-list-item-title>
+                                                        <v-list-item-subtitle>Scheduling a new operation</v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                        <v-icon large>mdi-account-heart-outline</v-icon>
+                                                </v-list-item>
+                                            </v-list>
+                                            <v-divider></v-divider>
+                                            <v-form>
+                                                <v-row>
+                                                    <v-col><v-text-field label="Date"/></v-col>
+                                                    <v-col><v-text-field label="Time"/></v-col>
+                                                </v-row>
+                                            </v-form>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="error" text @click="menuOperation = false">Cancel</v-btn>
+                                            <v-btn color="primary" text @click="menuOperation = false">Save</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-menu>
+                            </v-col>
                         </v-row>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="success" block @click="endAppointment()" height="50">End appointment</v-btn>
+                        <v-btn color="success" block @click="endAppointment()">End appointment</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -97,10 +210,14 @@ export default {
             medicine: "",
             info: "",
             allMedicines: [],
-            allDiagnosis: []
+            allDiagnosis: [],
+            menuAppointment: false,
+            menuOperation: false
         }
     },
     mounted() {
+        console.log("PROVERA");
+        console.log(this.appointment);
         if (this.appointment == {})
             this.$router.push({name: "home"});
 
@@ -117,6 +234,10 @@ export default {
     methods: {
         endAppointment() {
 
+        },
+        getToday() {
+            var today = new Date();
+            return today.toISOString();
         }
     }
     
