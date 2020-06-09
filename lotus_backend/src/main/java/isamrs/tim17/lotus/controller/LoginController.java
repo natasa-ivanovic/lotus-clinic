@@ -48,8 +48,12 @@ public class LoginController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+	public void setPasswordEncoder(PasswordEncoder pe) {
+		this.passwordEncoder = pe;
+	}
 	
 	@Autowired
 	private AuthorityService authorityService;

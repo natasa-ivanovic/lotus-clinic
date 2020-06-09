@@ -39,7 +39,7 @@ public class DoctorController {
 	private ClinicService clinicService;
 	@Autowired
 	private AppointmentPriceService appPriceService;
-	//@Autowired
+	
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
