@@ -38,9 +38,11 @@ export default {
         },
         getDiagnosis: function(app) {
             var diagnosis = "";
-            app.diagnosis.forEach(d => {
-                diagnosis = diagnosis + d + ", ";
-            })
+            if (app.diagnosis != undefined) {
+                    app.diagnosis.forEach(d => {
+                        diagnosis = diagnosis + d + ", ";
+                })
+            }
             return diagnosis.substring(0, diagnosis.length - 2);
         }
     },

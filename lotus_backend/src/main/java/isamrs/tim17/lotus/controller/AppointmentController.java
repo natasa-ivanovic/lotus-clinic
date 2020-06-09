@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -161,7 +162,7 @@ public class AppointmentController {
 
 	@GetMapping("/appointments/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<List<PremadeAppDTO>> getMyPastAppointments(@RequestParam(defaultValue = "0") Integer pageNo,
+	public ResponseEntity<Page<PremadeAppDTO>> getMyPastAppointments(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
 			@RequestParam(defaultValue = "true") String descending) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
@@ -175,11 +176,19 @@ public class AppointmentController {
 		apps = service.findByMedicalRecord(patient.getMedicalRecord(), AppointmentStatus.FINISHED, paging);
 		if (apps == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			dto.add(new PremadeAppDTO(app));
 		}
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		Page<PremadeAppDTO> dto_page = apps.map(
+				new Function<Appointment, PremadeAppDTO>() {
+					@Override
+					public PremadeAppDTO apply(Appointment app) {
+						return new PremadeAppDTO(app);
+					}
+				});
+		return new ResponseEntity<>(dto_page, HttpStatus.OK);
 	}
 
 	@GetMapping("/appointments/patient/cancel/{id}")
