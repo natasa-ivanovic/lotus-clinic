@@ -8,7 +8,7 @@
       <v-card>
         <v-card-title class="headline">Your diagnosis</v-card-title>
         <v-card-text>
-            <v-text-field outlined label="Disease name" :value="app.diagnosis" readonly />
+            <v-text-field outlined label="Disease name" :value="getDiagnosis(app)" readonly />
             <v-textarea outlined label="Information about the appointment" :value="app.description" readonly />
             <v-autocomplete outlined label="Recipes from this appointment" :items="app.recipes" />
         </v-card-text>
@@ -35,6 +35,13 @@ export default {
     methods: {
         closeOverlay: function() {
             this.$emit('update:dialog', false);
+        },
+        getDiagnosis: function(app) {
+            var diagnosis = "";
+            app.diagnosis.forEach(d => {
+                diagnosis = diagnosis + d + ", ";
+            })
+            return diagnosis.substring(0, diagnosis.length - 2);
         }
     },
     props: {
