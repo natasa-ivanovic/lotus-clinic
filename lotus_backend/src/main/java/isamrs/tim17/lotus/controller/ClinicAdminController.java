@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +23,7 @@ import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicAdminService;
 import isamrs.tim17.lotus.service.ClinicService;
@@ -36,11 +35,14 @@ public class ClinicAdminController {
 	@Autowired
 	private ClinicAdminService service;
 	
-	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	@Autowired
 	private AuthorityService authorityService;
+	
 	@Autowired
 	private ClinicService clinicService;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
 	@GetMapping("/admins/self")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -97,7 +99,7 @@ public class ClinicAdminController {
 		ClinicAdministrator clinicAdmin = new ClinicAdministrator();
 
 		clinicAdmin.setUsername(admin.getUsername());
-		clinicAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
+		clinicAdmin.setPassword(userDetailsService.encodePassword(admin.getPassword()));
 		clinicAdmin.setName(admin.getName());
 		clinicAdmin.setSurname(admin.getSurname());
 		clinicAdmin.setGender(admin.getGender());

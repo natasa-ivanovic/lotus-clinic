@@ -74,4 +74,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		userRepository.save(user);
 		return username;
 	}
+	
+	public String encodePassword(String password) {
+		return passwordEncoder.encode(password);
+	}
 }
