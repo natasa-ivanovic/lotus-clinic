@@ -85,6 +85,7 @@
 <script>
 import Overlay from "./MROverlay"
 const apiURL = "/api/medicalRecord"
+const apiAllergies = "/api/allergies"
 
 export default {
     name: "MedicalRecord",
@@ -127,6 +128,11 @@ export default {
             this.patient = response.data.patient.patient;
         }).catch(error => {
             alert(error);
+        })
+        this.axios({
+            url: apiAllergies
+        }).then(response => {
+            this.allAllergies = response.data;
         })
     },
     methods: {
