@@ -17,6 +17,7 @@
                 <v-toolbar-items v-if="checkRole('NURSE')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
                     <v-btn text :to="{ name: 'patients'}">Patients</v-btn>
+                    <v-btn text :to="{ name: 'vacationRequest'}">Vacation</v-btn>
                 </v-toolbar-items>
                 <v-toolbar-items v-if="checkRole('ADMIN')">
                     <v-btn text :to="{ name: 'home'}">Home</v-btn>
