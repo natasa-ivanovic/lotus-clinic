@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
+import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.VacationRequest;
 import isamrs.tim17.lotus.repository.RequestRepository;
 
 @Service
@@ -43,5 +46,9 @@ public class RequestService {
 	public List<RoomRequest> getRoomRequests() {
 		return requests.getAllRoomRequests();
 	}
-
+	
+	public List<VacationRequest> getVacationRequests(Clinic clinic, RequestStatus status)
+	{
+		return requests.findByClinicAndStatus(clinic, status);
+	}
 }

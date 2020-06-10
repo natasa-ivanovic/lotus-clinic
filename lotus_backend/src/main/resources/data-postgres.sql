@@ -171,6 +171,19 @@ insert into requests(req_type, status, date, type, doctor, patient) values('ROOM
 
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 16);
 
+insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id) 
+values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6);
+insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id) 
+values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6);
+
+
+/* vacation */
+insert into vacation(start_date, end_date, medical_person_id)
+values ('2020-06-11 00:00:00.000-00', '2020-06-12 00:00:00.000-00', 4);
+insert into calendar (start_date, end_date, medical_person_id, vacation_id) values('2020-06-11 00:00:00.000-00', '2020-06-13 00:00:00.000-00', 4, 1);
+insert into vacation(start_date, end_date, medical_person_id)
+values ('2020-06-11 00:00:00.000-00', '2020-06-12 00:00:00.000-00', 6);
+insert into calendar (start_date, end_date, medical_person_id, vacation_id) values('2020-06-11 00:00:00.000-00', '2020-06-13 00:00:00.000-00', 6, 2);
 
 
 /* doctor reviews */
