@@ -42,6 +42,9 @@ public class Clinic {
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<>();
+	
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Operation> operations = new HashSet<>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClinicalCentre clinicalCentre;
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

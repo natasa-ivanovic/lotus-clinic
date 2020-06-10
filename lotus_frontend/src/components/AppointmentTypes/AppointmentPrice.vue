@@ -13,6 +13,9 @@
           <v-btn @click="addAppPrice()">Add new appointment type</v-btn>
         </v-toolbar>
       </template>
+      <template v-slot:item.operation="{ item} ">
+        {{ item.operation ? 'Yes' : 'No' }}
+      </template>
       <template v-slot:item.edit="{ item }">
         <v-icon
           @click="editAppPrice(item)"
@@ -43,6 +46,7 @@ export default {
         {text: 'Name', value: 'name'},
         {text: 'Price', value: 'price'},
         {text: 'Discount', value: 'discount'},
+        {text: 'Operation', value: 'operation'},
         {text: 'Edit', value: 'edit', sortable: false},
         {text: 'Delete', value: 'delete', sortable: false}
       ]

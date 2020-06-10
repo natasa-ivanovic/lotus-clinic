@@ -1,6 +1,6 @@
 <template>
     <v-form>
-        <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :items="this.itemsOverlay"/>
+        <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :id="this.id"/>
         <v-card class="elevation-4">
             <v-toolbar flat color="secondary" dark>
                 <v-toolbar-title>{{this.patient.name}} {{this.patient.surname}}</v-toolbar-title>
@@ -72,7 +72,7 @@
                 <v-row>
                     <v-col><v-btn block color="primary" @click="showIllnesses()">Illnesses</v-btn></v-col>
                     <v-col><v-btn block color="primary" @click="showAppointments()">Appointments</v-btn></v-col>
-                    <v-col><v-btn block color="primary" @click="showOperations()" disabled>Operations</v-btn></v-col>
+                    <v-col><v-btn block color="primary" @click="showOperations()">Operations</v-btn></v-col>
                 </v-row>
             </v-card-text>
             <v-card-actions>
@@ -158,25 +158,14 @@ export default {
         showAppointments() {
             this.title = "Appointments";
             console.log(this.appointments);
-            var apps = [];
             this.headerOverlay = [
                 { text: 'Date', value: 'date' },
                 { text: 'Appointment type', value: 'type' },
                 { text: 'Doctor', value: 'doctor' },
                 { text: 'Room', value: 'room' },
-                { text: 'Clinic', value: 'clinic'}
+                { text: 'Clinic', value: 'clinic'},
+                { text: 'Price (RSD)', value: 'price'}
             ];
-            this.appointments.forEach(app => {
-                var el = {
-                    date: this.getDate(app.startDate).time,
-                    type: app.type,
-                    doctor: app.doctorName + " " + app.doctorSurname,
-                    room: app.roomName,
-                    clinic: app.clinic
-                }
-                apps.push(el);
-            });
-            this.itemsOverlay = apps;
             this.overlay = true;
         },
         showIllnesses() {
@@ -187,17 +176,18 @@ export default {
                 { text: 'Description', value: 'description' },
                 { text: 'Prescription', value: 'prescription' } //list of medicines
             ];
-            var illnesses = [];
-            this.appointments.forEach(app => {
-                var el = {
-                    date: this.getDate(app.startDate).date,
-                    diagnosis: app.diagnosis.join(', '),
-                    description: app.description,
-                    prescription: app.prescription
-                }
-                illnesses.push(el);
-            })
-            this.itemsOverlay = illnesses;
+            this.overlay = true;
+        },
+        showOperations() {
+            this.title = "Operations";
+            this.headerOverlay = [
+                { text: 'Date', value: 'date'},
+                { text: 'Operation type', value: 'operationType'},
+                { text: 'Room', value: 'roomName'},
+                { text: 'Clinic', value: 'clinicName'},
+                { text: 'Price (RSD)', value: 'price'},
+                { text: 'Doctors', value: 'doctors', sortable: false}
+            ];
             this.overlay = true;
         },
         formatGender() {

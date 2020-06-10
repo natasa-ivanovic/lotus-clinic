@@ -39,6 +39,9 @@
                     :rules="[rules.required, rules.isNumber, rules/isBetween]"
                     v-model="appType.discount"
                     outlined />
+                  <v-checkbox 
+                    v-model="appType.operation"
+                    label="Operation" />
                 </v-form>
               </v-card-text>
               <v-card-actions>

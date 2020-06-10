@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -19,14 +20,15 @@ public class Doctor extends User {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentPrice specialty;
-	//@Column(name = "operation", unique = false, nullable = true)
-	//public Operation operation;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	public Set<Operation> operations = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-	private Set<DoctorReview> reviews = new HashSet<DoctorReview>();
+	private Set<DoctorReview> reviews = new HashSet<>();
 	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
