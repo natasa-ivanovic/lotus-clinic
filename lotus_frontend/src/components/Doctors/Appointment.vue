@@ -66,6 +66,7 @@
                                 <v-menu
                                     v-model="menuAppointment"
                                     :close-on-content-click="false"
+                                    :close-on-click="false"
                                     :nudge-width="50"
                                     elevation-10
                                     offset-x
@@ -111,7 +112,7 @@
                                                                 <v-text-field
                                                                 prepend-icon="mdi-calendar"
                                                                 v-model="appointmentDate"
-                                                                label="Date"
+                                                                label="Select date"
                                                                 v-bind="attrs"
                                                                 v-on="on"/>
                                                             </template>
@@ -129,7 +130,8 @@
                                                     <v-col>
                                                         <v-autocomplete 
                                                             prepend-icon="mdi-clock" 
-                                                            label="Time"
+                                                            label="Select term"
+                                                            v-model="appointmentTerm"
                                                             :items="formatTerms()"/>
                                                     </v-col>
 
@@ -139,7 +141,7 @@
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                             <v-btn color="error" text @click="turnOffAppointment()">Cancel</v-btn>
-                                            <v-btn color="primary" text @click="menuAppointment = false">Schedule</v-btn>
+                                            <v-btn color="primary" text @click="scheduleAppointment()">Schedule</v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-menu>
@@ -227,7 +229,7 @@ export default {
             allDiagnosis: [],
             freeTerms: [],
             appointmentDate: "",
-            appoitnmentTime: "",
+            appointmentTerm: "",
             menuAppointment: false,
             menuOperation: false,
             menuDatePickerApp: false
@@ -254,14 +256,16 @@ export default {
 
         },
         getToday() {
-            var today = new Date();
-            return today.toISOString();
+            var today = new Date()
+            var tomorrow = new Date(today)
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            return tomorrow.toISOString();
         },
         turnOffAppointment() {
             this.menuDatePickerApp = false;
             this.menuAppointment = false;
             this.appointmentDate = "";
-            this.appointmentTime = "";
+            this.appointmentTerm = "";
         },
         getFreeTerms() {
             var date = new Date(this.appointmentDate);
@@ -285,10 +289,40 @@ export default {
         formatTerms() {
             var list = [];
             this.freeTerms.forEach(el => {
-                var t = this.formatTime(el);
+                var t = {
+                    text: this.formatTime(el),
+                    value: el
+                };
                 list.push(t);
             });
             return list;
+        },
+        scheduleAppointment() {
+            //id doktora, id pacijenta, datum pocetka
+            var d = new Date(this.appointmentTerm);
+            var roomRequest = {
+                patient : {
+                    id: this.appointment.patientId
+                },
+                doctor: {
+                    id : this.appointment.doctorId
+                },
+                startDate: d.getTime()
+            };
+            console.log(roomRequest);
+            this.axios({
+                url: "/api/requests/appointment",
+                method: 'POST',
+                data: roomRequest
+            }).then(() => {
+                this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success", })
+            });
+            this.menuAppointment = false;
+            this.appointmentDate = "";
+            this.appointmentTerm = "";
+            this.freeTerms = [];
+
+
         }
 
     }

@@ -104,23 +104,23 @@ insert into allergies_medical_records (allergies_id, medical_records_patient_id)
 insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (4, 3);
 
 /* appointments and calendar entries */
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-09 17:25:00.508-07', '2020-06-09 17:55:00.508-07', 100, 0, 4, 1, 1, 4, 1, 1, false, 'Patient reports coughing up blood, chest pains for over a week and night sweats.');
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 17:25:00.508-07', '2020-06-09 17:55:00.508-07', 4, 1);
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-09 20:30:00.508-07', '2020-06-09 21:00:00.508-07', 100, 0, 4, 1, 1, 4, 1, 2, false, 'Patient reports symptoms of a common cold. To be treated with over the counter medication and stay at home.');
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 20:30:00.508-07', '2020-06-09 21:00:00.508-07', 4, 2);
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-09 22:00:00.508-07', '2020-06-09 22:30:00.508-07', 100, 0, 4, 1, 1, 4, 1, 3, false, 'Patient tested positive for COVID-19. Report immediately to specialist clinic');
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-10 17:25:00.508-07', '2020-06-10 17:55:00.508-07', 100, 0, 4, 1, 1, 4, 1, 1, false, 'Patient reports coughing up blood, chest pains for over a week and night sweats.');
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 17:25:00.508-07', '2020-06-10 17:55:00.508-07', 4, 1);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-10 20:30:00.508-07', '2020-06-10 21:00:00.508-07', 100, 0, 4, 1, 1, 4, 1, 2, false, 'Patient reports symptoms of a common cold. To be treated with over the counter medication and stay at home.');
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 20:30:00.508-07', '2020-06-10 21:00:00.508-07', 4, 2);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information) values ('2020-06-10 22:00:00.508-07', '2020-06-10 22:30:00.508-07', 100, 0, 4, 1, 1, 4, 1, 3, false, 'Patient tested positive for COVID-19. Report immediately to specialist clinic');
 insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 22:00:00.508-07', '2020-06-09 22:30:00.508-07', 4, 3);
-/*insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-09 23:00:00.508-07', '2020-06-09 23:30:00.508-07', 100, 0, 1, 1, 1, 4, 1, 1, false);*/
+/*insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-10 23:00:00.508-07', '2020-06-10 23:30:00.508-07', 100, 0, 1, 1, 1, 4, 1, 1, false);*/
 
 
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-09 10:00:00.508-07', '2020-06-09 10:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 10:00:00.508-07', '2020-06-09 10:30:00.508-07', 5, 4);
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-09 14:00:00.508-07', '2020-06-09 14:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 14:00:00.508-07', '2020-06-09 14:30:00.508-07', 5, 5);
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-09 18:00:00.508-07', '2020-06-09 18:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 18:00:00.508-07', '2020-06-09 18:30:00.508-07', 5, 6);
-insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-09 19:00:00.508-07', '2020-06-09 19:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
-insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-09 19:00:00.508-07', '2020-06-09 19:30:00.508-07', 5, 7);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-10 10:00:00.508-07', '2020-06-10 10:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 10:00:00.508-07', '2020-06-10 10:30:00.508-07', 5, 4);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-10 14:00:00.508-07', '2020-06-10 14:30:00.508-07', 100, 0, 1, 2, 3, 5, 2, 1, false);
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 14:00:00.508-07', '2020-06-09 14:30:00.508-07', 5, 5);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-10 18:00:00.508-07', '2020-06-10 18:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 18:00:00.508-07', '2020-06-10 18:30:00.508-07', 5, 6);
+insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed) values ('2020-06-10 19:00:00.508-07', '2020-06-10 19:30:00.508-07', 100, 0, 1, 2, 4, 5, 2, 2, false);
+insert into calendar (start_date, end_date, medical_person_id, appointment_id) values('2020-06-10 19:00:00.508-07', '2020-06-10 19:30:00.508-07', 5, 7);
 
 
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (1, 1);

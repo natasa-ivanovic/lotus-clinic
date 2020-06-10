@@ -30,6 +30,8 @@ import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.RoomRequestType;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
@@ -79,6 +81,27 @@ public class RequestController {
 			}
 		}
 		return new ResponseEntity<>(requests, HttpStatus.OK);
+	}
+	
+	@PostMapping("/appointment")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
+		
+		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		
+		RoomRequest roomRequest = null;
+		if (user.getRole().equals("PATIENT"))
+			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
+		else if (user.getRole().equals("DOCTOR"))
+			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), request.getDoctor().getId(), RoomRequestType.DOCTOR_APP);
+		
+		roomRequest.setStatus(RequestStatus.PENDING);
+		service.save(roomRequest);
+		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 	
 	

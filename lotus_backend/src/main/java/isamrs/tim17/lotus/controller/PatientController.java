@@ -300,21 +300,6 @@ public class PatientController {
 		}
 	}
 	
-	@PostMapping("/patients/request/finish")
-	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
-		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		Patient patient = (Patient) a.getPrincipal();
-		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
-		
-		roomRequest.setStatus(RequestStatus.PENDING);
-		requestService.save(roomRequest);
-		return new ResponseEntity<>(HttpStatus.OK);	
-	}
-	
-
 	@PostMapping("/patients/rate")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> sendRating(@RequestBody RatingDTO rating) {
