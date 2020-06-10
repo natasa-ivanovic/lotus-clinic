@@ -81,6 +81,15 @@ public class VacationRequestController {
 		service.save(req);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@PostMapping("/decline/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> rejectVacation(@PathVariable("id") long id) {
+		Request req = service.findOne(id);
+		req.setStatus(RequestStatus.REJECTED);
+		service.save(req);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
 
 class Dates {

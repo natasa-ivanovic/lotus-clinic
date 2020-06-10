@@ -59,7 +59,8 @@
                                     </v-list-item-content>
                                     
                                 </v-list-item-content>
-                                <v-btn @click="approveVacationRequest(req,i)" color="success">Approve</v-btn>
+                                <v-btn @click="processVacationRequest(req,i, true)" color="success">Approve</v-btn>
+                                <v-btn @click="processVacationRequest(req,i, false)" color="error">Reject</v-btn>
                             </v-list-item>
                             </v-list-item-group>
                         </v-list>
@@ -114,20 +115,25 @@ export default {
             var dateNew = d.toISOString().split("T")[0];
             return dateNew + " " + time;
         },
-        approveVacationRequest(req, idx) {
+        processVacationRequest(req, idx, choice) {
+            var targeURL = "";
+            if(choice == true) {
+                targeURL = vacationURL+"/auth/" + req.id;
+            }
+            else {
+                targeURL = vacationURL+"/decline/" + req.id;
+            }
             this.toRemoveIdx = idx
             this.axios({
-            url: vacationURL + "/auth/" + req.id,
+            url: targeURL,
             method: "POST"
         }).then(response => {
             console.log(response);
-            var i = this.toRemoveIdx;
-            console.log(i);
             this.vacationRequests.splice(this.toRemoveIdx,1);
 
         }).catch(error => {
             console.log(error);
-            this.$store.commit('showSnackbar', {text: "Error in approving vacation reqeuests!", color: "error", })
+            this.$store.commit('showSnackbar', {text: "Error in processing vacation reqeuests!", color: "error", })
         });
             
         }
