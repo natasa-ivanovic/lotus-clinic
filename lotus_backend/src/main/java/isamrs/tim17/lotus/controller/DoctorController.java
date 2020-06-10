@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +24,7 @@ import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.ClinicService;
@@ -33,13 +33,18 @@ import isamrs.tim17.lotus.service.DoctorService;
 @RestController
 @RequestMapping("/api")
 public class DoctorController {
-	@Autowired private DoctorService service;
-	@Autowired private ClinicService clinicService;
-	@Autowired private AppointmentPriceService appPriceService;
 	@Autowired
-    private PasswordEncoder passwordEncoder;
+	private DoctorService service;
+	@Autowired
+	private ClinicService clinicService;
+	@Autowired
+	private AppointmentPriceService appPriceService;
+	
 	@Autowired
 	private AuthorityService authorityService;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
 	/**
 	 * This method is used for adding a doctor.
@@ -52,28 +57,28 @@ public class DoctorController {
 	public ResponseEntity<Object> addDoctor(@RequestBody UserDTO doctor, @PathVariable("speciality") long speciality) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
-		
+
 		if (doctor == null || doctor.isEmpty())
 			return new ResponseEntity<>("Some fields are still empty", HttpStatus.BAD_REQUEST);
-		
+
 		if (service.alreadyExistsUsername(doctor.getUsername()))
 			return new ResponseEntity<>("That username already exists!", HttpStatus.BAD_REQUEST);
-		
+
 		AppointmentPrice spec = appPriceService.findOne(speciality);
 		if (spec == null)
 			return new ResponseEntity<>("Speciality not filled in", HttpStatus.BAD_REQUEST);
-		
+
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 		if (clinic == null)
 			return new ResponseEntity<>("Admin's clinic is null!", HttpStatus.BAD_REQUEST);
-		
+
 		Doctor d = new Doctor(doctor);
 		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_DOCTOR"));
 		d.setAuthorities(auth);
 		d.setClinic(clinic);
 		d.setSpecialty(spec);
-		d.setPassword(passwordEncoder.encode(doctor.getPassword()));
+		d.setPassword(userDetailsService.encodePassword(doctor.getPassword()));
 		d.setEnabled(true);
 		d.setLastPasswordResetDate(null);
 		service.save(d);
@@ -115,7 +120,7 @@ public class DoctorController {
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 
 	}
-	
+
 	/**
 	 * This method is used so doctors can get themselves.
 	 * 
@@ -129,17 +134,16 @@ public class DoctorController {
 			Authentication a = SecurityContextHolder.getContext().getAuthentication();
 			UserDTO patient = new UserDTO((Doctor) a.getPrincipal());
 			return new ResponseEntity<>(patient, HttpStatus.OK);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	/**
 	 * This method is used for editing your profile.
 	 * 
-	 * @param doc	  This is a doctor object from the HTTP request.
+	 * @param doc This is a doctor object from the HTTP request.
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/self")
@@ -159,7 +163,7 @@ public class DoctorController {
 		service.save(d);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	/**
 	 * This method is used for editing a doctor.
 	 * 
@@ -170,10 +174,10 @@ public class DoctorController {
 	@PutMapping("/doctors/{id}")
 
 	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
-		
+
 		if (!id.equals(newDoctor.getId()))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		
+
 		// a doctor must exist
 		Doctor doctor = service.findOne(newDoctor.getId());
 
@@ -202,7 +206,7 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@DeleteMapping("/doctors/{id}")
-	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") long	 id) {
+	public ResponseEntity<Object> deleteDoctor(@PathVariable("id") long id) {
 
 		Doctor doctor = service.findOne(id);
 
@@ -212,7 +216,5 @@ public class DoctorController {
 		service.remove(id);
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
-	
-
 
 }

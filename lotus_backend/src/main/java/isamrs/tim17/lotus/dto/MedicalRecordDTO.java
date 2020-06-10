@@ -8,6 +8,7 @@ import java.util.Set;
 
 import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.MedicalRecord;
 
 public class MedicalRecordDTO {
@@ -38,6 +39,8 @@ public class MedicalRecordDTO {
 		
 		this.bloodType = m.getBloodType();
 		for (Appointment a : m.getAppointments()) {
+			if (a.getStatus().equals(AppointmentStatus.CANCELED))
+				continue;
 			apps.add(new PremadeAppDTO(a));
 		}
 	}

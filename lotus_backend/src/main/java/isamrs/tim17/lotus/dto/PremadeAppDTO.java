@@ -40,10 +40,10 @@ public class PremadeAppDTO {
 		this.doctorId = app.getDoctor().getId();
 		this.doctorName = app.getDoctor().getName();
 		this.doctorSurname = app.getDoctor().getSurname();
-		this.roomId = app.getRoom().getId();
-		this.roomName = app.getRoom().getName();
 		this.price = app.getPrice();
 		this.discount = app.getDiscount();
+		this.roomId = app.getRoom().getId();
+		this.roomName = app.getRoom().getName();		
 		this.setType(app.getAppointmentType().getName());
 		if (app.getMedicalRecord() != null) {
 			this.patientName = app.getMedicalRecord().getPatient().getName();
@@ -51,8 +51,8 @@ public class PremadeAppDTO {
 			this.patientId = app.getMedicalRecord().getId();
 		}
 		
+		this.recipes = new ArrayList<>();
 		if (!app.getPrescriptions().isEmpty()) {
-			this.recipes = new ArrayList<>();
 			Iterator<Prescription> it = app.getPrescriptions().iterator();
 			while (it.hasNext()) {
 				Prescription p = it.next();
@@ -60,8 +60,8 @@ public class PremadeAppDTO {
 			}
 		}
 		
+		this.diagnosis = new ArrayList<>();
 		if (!app.getDiagnosis().isEmpty()) {
-			this.diagnosis = new ArrayList<>();
 			Iterator<Diagnosis> it = app.getDiagnosis().iterator();
 			while (it.hasNext()) {
 				Diagnosis d = it.next();

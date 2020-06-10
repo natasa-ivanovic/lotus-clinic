@@ -33,7 +33,7 @@ public class AppointmentTypeController {
 		if (appointmentDTO == null || "".equals(appointmentDTO.getName()) || appointmentDTO.getName() == null || appointmentDTO.getPrice() == 0)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
-		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice(), appointmentDTO.getDiscount());
+		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice(), appointmentDTO.getDiscount(), appointmentDTO.isOperation());
 		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -42,6 +42,19 @@ public class AppointmentTypeController {
 	@PreAuthorize("hasAnyRole('PATIENT, CENTRE_ADMIN, ADMIN')")
 	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypes() {
 		List<AppointmentType> atypes = service.findAll();
+		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
+		
+		for (AppointmentType at : atypes) {
+			typesDTO.add(new AppointmentTypeDTO(at));
+		}
+		
+		return new ResponseEntity<>(typesDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/appointmentTypes/appointments")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypesNoOperations() {
+		List<AppointmentType> atypes = service.findAllAppointments();
 		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
 		
 		for (AppointmentType at : atypes) {
@@ -76,6 +89,7 @@ public class AppointmentTypeController {
 		at.setName(newAppointmentType.getName());
 		at.setPrice(newAppointmentType.getPrice());
 		at.setDiscount(newAppointmentType.getDiscount());
+		at.setOperation(newAppointmentType.isOperation());
 		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

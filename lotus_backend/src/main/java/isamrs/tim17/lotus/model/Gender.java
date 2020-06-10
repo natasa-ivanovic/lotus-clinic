@@ -5,7 +5,6 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class Gender
  ***********************************************************************/
 
-import java.util.*;
 
 public enum Gender {
    FEMALE,

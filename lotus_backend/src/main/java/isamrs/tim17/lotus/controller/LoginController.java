@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,9 +46,6 @@ public class LoginController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-    private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private AuthorityService authorityService;
@@ -113,7 +109,7 @@ public class LoginController {
 		}
 		Patient patient = new Patient(p);
 		patient.setEnabled(false);
-		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+		patient.setPassword(userDetailsService.encodePassword(patient.getPassword()));
 		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);

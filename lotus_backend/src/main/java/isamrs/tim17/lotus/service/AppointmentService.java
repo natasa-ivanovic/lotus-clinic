@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Appointment;
@@ -43,6 +45,11 @@ public class AppointmentService {
 	public List<Appointment> findByMedicalRecord(MedicalRecord record) {
 		return appointments.findByMedicalRecord(record);
 	}
+	
+	public Page<Appointment> findByMedicalRecord(MedicalRecord record, AppointmentStatus status, Pageable p) {
+		return appointments.findAllByMedicalRecordAndStatus(record, status, p);
+	}
+	
 
 	public List<Appointment> findByDoctor(Doctor record) {
 		return appointments.findByDoctor(record);
@@ -58,6 +65,20 @@ public class AppointmentService {
 
 	public List<Appointment> findByRoomAndDate(Room room, Date startDate, Date endDate) {
 		return appointments.getAppointmentsByRoomAndDate(room, startDate, endDate);
+	}
+
+	public Appointment schedule(long id, MedicalRecord medicalRecord) {
+		try {
+			Appointment a = appointments.findOneById(id);
+			if (!a.getStatus().equals(AppointmentStatus.PREMADE))
+				return null;
+			a.setStatus(AppointmentStatus.SCHEDULED);
+			a.setMedicalRecord(medicalRecord);
+			a = appointments.save(a);
+			return a;
+		} catch (Exception e) {
+			return null;			
+		}
 	}
 
 }

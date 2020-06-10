@@ -85,7 +85,7 @@ const routes = [
     {    
         component: EditUser,
         name: "editUser",
-        path: "/users/:userType/edit/:id",
+        path: "/profile/change_info",
         props: true
     },
     {
