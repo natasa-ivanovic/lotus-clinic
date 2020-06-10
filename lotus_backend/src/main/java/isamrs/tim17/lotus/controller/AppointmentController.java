@@ -134,7 +134,13 @@ public class AppointmentController {
 	public ResponseEntity<Object> scheduleApp(@PathVariable("id") long id) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
-		Appointment app = service.schedule(id, patient.getMedicalRecord());
+		Appointment app = null;
+		try {
+			app = service.schedule(id, patient.getMedicalRecord());
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>("The appointment you tried to schedule is already scheduled.", HttpStatus.BAD_REQUEST);
+		}
 		if (app == null)
 			return new ResponseEntity<>("The appointment you tried to schedule is either already scheduled or doesn't exit.", HttpStatus.BAD_REQUEST);
 		String finalPrice = String.format("%.2f", app.getPrice() * (100 - app.getDiscount()) / 100);

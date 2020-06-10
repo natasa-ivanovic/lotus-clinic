@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
@@ -16,11 +17,13 @@ import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class AppointmentService {
 
 	@Autowired
 	private AppointmentRepository appointments;
 
+	
 	public Appointment findOne(long id) {
 		return appointments.findOneById(id);
 	}
@@ -34,10 +37,12 @@ public class AppointmentService {
 		return appointments.findAll();
 	}
 
+	@Transactional(readOnly = false)
 	public Appointment save(Appointment app) {
 		return appointments.save(app);
 	}
 
+	@Transactional(readOnly = false)
 	public void remove(long id) {
 		appointments.deleteById(id);
 	}
@@ -67,18 +72,17 @@ public class AppointmentService {
 		return appointments.getAppointmentsByRoomAndDate(room, startDate, endDate);
 	}
 
-	public Appointment schedule(long id, MedicalRecord medicalRecord) {
-		try {
-			Appointment a = appointments.findOneById(id);
-			if (!a.getStatus().equals(AppointmentStatus.PREMADE))
-				return null;
-			a.setStatus(AppointmentStatus.SCHEDULED);
-			a.setMedicalRecord(medicalRecord);
-			a = appointments.save(a);
+	@Transactional(readOnly = false)
+	public Appointment schedule(long id, MedicalRecord medicalRecord) throws InterruptedException {
+		Appointment a = appointments.findOneById(id);
+		if (a == null)
 			return a;
-		} catch (Exception e) {
-			return null;			
-		}
+		if (!a.getStatus().equals(AppointmentStatus.PREMADE))
+			return null;
+		a.setStatus(AppointmentStatus.SCHEDULED);
+		a.setMedicalRecord(medicalRecord);
+		a = appointments.save(a);
+		return a;
 	}
 
 }
