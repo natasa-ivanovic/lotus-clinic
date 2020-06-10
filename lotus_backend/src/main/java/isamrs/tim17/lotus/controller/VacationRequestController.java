@@ -20,18 +20,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.VacationRequestDTO;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Nurse;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
+import isamrs.tim17.lotus.model.Vacation;
 import isamrs.tim17.lotus.model.VacationRequest;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.RequestService;
+import isamrs.tim17.lotus.service.VacationService;
 
 @RestController
 @RequestMapping("/api/vacation")
 public class VacationRequestController {
 	
 	@Autowired RequestService service;
+	@Autowired VacationService vacationService;
+	@Autowired CalendarEntryService calendarEntryService;
 
 	@PostMapping("")
 	@PreAuthorize("hasRole('NURSE')")
@@ -75,10 +81,14 @@ public class VacationRequestController {
 	@PostMapping("/auth/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> setVacation(@PathVariable("id") long id) {
-		//TODO napravitiCalendar entry
 		Request req = service.findOne(id);
 		req.setStatus(RequestStatus.APPROVED);
 		service.save(req);
+		VacationRequest vacationRequest = (VacationRequest) req;
+		Vacation vacation = new Vacation(vacationRequest);
+		vacationService.save(vacation);
+		CalendarEntry entry = new CalendarEntry(vacation);
+		calendarEntryService.save(entry);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

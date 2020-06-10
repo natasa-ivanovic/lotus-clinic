@@ -39,6 +39,13 @@ public class CalendarEntry {
 		this.appointment = app;
 	}
 	
+	public CalendarEntry(Vacation vacation) {
+		this.startDate = vacation.getStartDate();
+		this.endDate = vacation.getEndDate();
+		this.medicalPerson = vacation.getMedicalPerson();
+		this.vacation = vacation;
+	}
+	
 	public Long getId() {
 		return id;
 	}

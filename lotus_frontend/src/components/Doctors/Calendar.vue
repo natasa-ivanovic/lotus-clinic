@@ -75,8 +75,8 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
-              <div>Room: {{selectedEvent.room}}</div>
-              <div>Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
+              <div v-if="selectedEvent.room">Room: {{selectedEvent.room}}</div>
+              <div v-if="selectedEvent.patientName">Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -182,7 +182,11 @@ const apiURL = "/api/calendarentries"
               {
                 //add operation parameters here
               } else if (this.appointments[i].vacation != null) {
-                //add vacation parameters here
+                color = 'green';
+                name = 'vacation'
+                room = '';
+                patientName = '';
+                patientSurname = '';
               }
               this.events.push({
                 name: name,

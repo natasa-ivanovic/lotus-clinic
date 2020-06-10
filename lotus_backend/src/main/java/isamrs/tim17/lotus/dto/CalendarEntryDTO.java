@@ -9,7 +9,7 @@ public class CalendarEntryDTO {
 	private Date endDate;
 	private AppointmentDTO appointment;
 	//private OperationDTO operation;
-	//private VacationDTO vacation;
+	private VacationDTO vacation;
 	
 	public CalendarEntryDTO() {}
 	
@@ -18,7 +18,7 @@ public class CalendarEntryDTO {
 		this.endDate = entry.getEndDate();
 		this.appointment = entry.getAppointment() != null ? new AppointmentDTO(entry.getAppointment()) : null;
 		//this.operation = 
-		//this.vacation = 
+		this.vacation = entry.getVacation() != null ? new VacationDTO(entry.getVacation()) : null;
 	}
 
 	public AppointmentDTO getAppointment() {
@@ -43,5 +43,13 @@ public class CalendarEntryDTO {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public VacationDTO getVacation() {
+		return vacation;
+	}
+
+	public void setVacation(VacationDTO vacation) {
+		this.vacation = vacation;
 	}
 }
