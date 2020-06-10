@@ -479,12 +479,12 @@ public class AppointmentController {
 				+ " and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
 				+ "Lotus Clinic Staff";
 
-		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
-		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);
 
 		rr.setStatus(RequestStatus.APPROVED);
 		requestService.save(rr);
 
+		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
+		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
