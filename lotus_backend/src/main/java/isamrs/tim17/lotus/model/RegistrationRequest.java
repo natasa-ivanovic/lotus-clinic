@@ -5,10 +5,7 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class RegistrationRequest
  ***********************************************************************/
 
-import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

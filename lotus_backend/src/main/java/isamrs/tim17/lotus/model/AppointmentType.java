@@ -30,6 +30,8 @@ public class AppointmentType {
 	private String name;
 	private double price;
 	private double discount;
+	@Column(name= "operation", unique = false, nullable = false)
+	private boolean operation;
     
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
@@ -39,11 +41,12 @@ public class AppointmentType {
 	
 	public AppointmentType() {}
 	
-	public AppointmentType(String name, double price, double discount) {
+	public AppointmentType(String name, double price, double discount, boolean operation) {
 		this.id = this.getId();
 		this.name = name;
 		this.price = price;
 		this.discount = discount;
+		this.operation = operation;
 	}
 	
 	@Override
@@ -97,6 +100,14 @@ public class AppointmentType {
 
 	public void setDiscount(double discount) {
 		this.discount = discount;
+	}
+
+	public boolean isOperation() {
+		return operation;
+	}
+
+	public void setOperation(boolean operation) {
+		this.operation = operation;
 	}
 
 }

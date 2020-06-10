@@ -25,10 +25,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	// Funkcija koja na osnovu username-a iz baze vraca objekat User-a
 	@Override
@@ -73,5 +73,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
 		return username;
+	}
+	
+	public String encodePassword(String password) {
+		return passwordEncoder.encode(password);
 	}
 }

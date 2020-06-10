@@ -22,6 +22,7 @@
                                     Room: {{app.roomName}} <br />
                                     Time: {{app.time}}
                                     </v-list-item-content>
+                            <v-btn v-on:click="cancel(app)" block color="error">Cancel appointment</v-btn>
                             </v-list-item-content>
                         </v-list-item>
                         </v-list-item-group>
@@ -48,6 +49,7 @@
 
 <script>
 const apiURL = "/api/appointments/patient";
+const cancelUrl = "/api/appointments/patient/cancel";
 export default {
     data() {
         return {
@@ -74,6 +76,14 @@ export default {
             var time1 = date1.toTimeString().split(" ")[0];
             var time2 = date2.toTimeString().split(" ")[0];
             return time1 + "-" + time2;
+        },
+        cancel: function(appointment) {
+            console.log(appointment);
+            this.axios({url: cancelUrl + "/" + appointment.id})
+                .then(() => {
+                    this.appointments.splice(this.appointments.indexOf(appointment), 1);
+                    this.$store.commit("showSnackbar", {text: "Successfully canceled appointment", color: "success"});
+                })
         }
     }
 }
