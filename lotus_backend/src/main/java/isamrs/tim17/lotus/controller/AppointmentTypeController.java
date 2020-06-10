@@ -51,6 +51,19 @@ public class AppointmentTypeController {
 		return new ResponseEntity<>(typesDTO, HttpStatus.OK);
 	}
 	
+	@GetMapping("/appointmentTypes/appointments")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<List<AppointmentTypeDTO>> getAllAppointmentTypesNoOperations() {
+		List<AppointmentType> atypes = service.findAllAppointments();
+		List<AppointmentTypeDTO> typesDTO = new ArrayList<>();
+		
+		for (AppointmentType at : atypes) {
+			typesDTO.add(new AppointmentTypeDTO(at));
+		}
+		
+		return new ResponseEntity<>(typesDTO, HttpStatus.OK);
+	}
+	
 	@GetMapping("/appointmentTypes/{id}")
 	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<AppointmentTypeDTO> getAppointmentType(@PathVariable("id") long id) {

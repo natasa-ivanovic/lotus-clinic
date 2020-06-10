@@ -29,6 +29,8 @@ public class CalendarEntry {
 	private Operation operation;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Vacation vacation;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Room room;
 	
 	public CalendarEntry() {}
 	
@@ -37,8 +39,17 @@ public class CalendarEntry {
 		this.endDate = app.getEndDate();
 		this.medicalPerson = app.getDoctor();
 		this.appointment = app;
+		this.room = app.getRoom();
 	}
 	
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 	public Long getId() {
 		return id;
 	}

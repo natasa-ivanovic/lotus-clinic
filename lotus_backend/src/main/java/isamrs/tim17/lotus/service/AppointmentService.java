@@ -67,4 +67,18 @@ public class AppointmentService {
 		return appointments.getAppointmentsByRoomAndDate(room, startDate, endDate);
 	}
 
+	public Appointment schedule(long id, MedicalRecord medicalRecord) {
+		try {
+			Appointment a = appointments.findOneById(id);
+			if (!a.getStatus().equals(AppointmentStatus.PREMADE))
+				return null;
+			a.setStatus(AppointmentStatus.SCHEDULED);
+			a.setMedicalRecord(medicalRecord);
+			a = appointments.save(a);
+			return a;
+		} catch (Exception e) {
+			return null;			
+		}
+	}
+
 }

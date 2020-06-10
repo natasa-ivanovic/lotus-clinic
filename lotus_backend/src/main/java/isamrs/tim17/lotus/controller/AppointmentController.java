@@ -104,6 +104,12 @@ public class AppointmentController {
 		return new ResponseEntity<>(app, HttpStatus.OK);
 	}
 
+	/**
+	 * This method is used for getting a list of all premade appointments.
+	 * 
+	 * @param Nothing.
+	 * @return ResponseEntity This returns the list of premade appointments and the status code.
+	 */
 	@GetMapping("/appointments/premade")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<List<PremadeAppDTO>> getPremadeApps() {
@@ -116,21 +122,24 @@ public class AppointmentController {
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-
+	
+	/**
+	 * This method is used for scheduling a premade appointment.
+	 * 
+	 * @param id Long which is the ID of the premade appointment.
+	 * @return ResponseEntity Status code.
+	 */
 	@PostMapping("/appointments/schedule/{id}")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> scheduleApp(@PathVariable("id") long id) {
-		Appointment app = service.findOne(id);
-		if (app == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		app.setStatus(AppointmentStatus.SCHEDULED);
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
-		app.setMedicalRecord(patient.getMedicalRecord());
-		service.save(app);
+		Appointment app = service.schedule(id, patient.getMedicalRecord());
+		if (app == null)
+			return new ResponseEntity<>("The appointment you tried to schedule is either already scheduled or doesn't exit.", HttpStatus.BAD_REQUEST);
 		String finalPrice = String.format("%.2f", app.getPrice() * (100 - app.getDiscount()) / 100);
 		String message = "Hello " + patient.getName() + " " + patient.getSurname()
-				+ "!\nYou have scheduled an appointment using our premade function.\n"
+				+ "!\nYou have scheduled an appointment using our premade appointment feature.\n"
 				+ "The appointment is scheduled for " + app.getStartDate() + " in room " + app.getRoom().getName()
 				+ ", at our clinic " + app.getClinic().getName() + ".\n" + "The clinic is located at "
 				+ app.getClinic().getAddress() + ".\n" + "The doctor's name is " + app.getDoctor().getName() + " "
@@ -140,11 +149,17 @@ public class AppointmentController {
 				+ String.format("%.2f", app.getDiscount()) + "% discount for using our premade function, totalling "
 				+ finalPrice + " RSD.\n" + "We look forward to seeing you.\nLotus Clinic Staff";
 
-		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
+		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment scheduled notification", message);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 
+	/**
+	 * This method is used so patients can get their appointments for displaying on the home page.
+	 * 
+	 * @param Nothing.
+	 * @return ResponseEntity Status code with the list of appointment dto's.
+	 */
 	@GetMapping("/appointments/patient")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<List<PremadeAppDTO>> getMyAppointments() {
@@ -161,7 +176,16 @@ public class AppointmentController {
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-
+	
+	/**
+	 * This method is used so patients can get their appointments for displaying in a table.
+	 * 
+	 * @param pageNo integer which represents the page number for the pageable object.
+	 * @param pageSize integer which represents the page size for the pageable object.
+	 * @param sortBy string which represents the sort criteria for the pageable object.
+	 * @param descending string which represents the sorting direction for the pageable object.
+	 * @return ResponseEntity Status code with the list of appointment dto's.
+	 */
 	@GetMapping("/appointments/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> getMyPastAppointments(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -172,7 +196,17 @@ public class AppointmentController {
 
 		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
 	}
-
+	
+	/**
+	 * This method is used to handle getting all the data in a specific page from the database.
+	 * 
+	 * @param medicalRecord MedicalRecord object of the selected patient.
+	 * @param pageNo integer which represents the page number for the pageable object.
+	 * @param pageSize integer which represents the page size for the pageable object.
+	 * @param sortBy string which represents the sort criteria for the pageable object.
+	 * @param descending string which represents the sorting direction for the pageable object.
+	 * @return ResponseEntity Status code with the list of appointment dto's.
+	 */
 	public ResponseEntity<Object> getPastAppointments(MedicalRecord medicalRecord, Integer pageNo, Integer pageSize,
 			String sortBy, String descending) {
 		Pageable paging;
@@ -198,6 +232,16 @@ public class AppointmentController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
+	/**
+	 * This method is used so patients can get their appointments for displaying in a table 
+	 * or so that doctors can get their patients appointments.
+	 * @param id integer which is the id of the queried patient.
+	 * @param pageNo integer which represents the page number for the pageable object.
+	 * @param pageSize integer which represents the page size for the pageable object.
+	 * @param sortBy string which represents the sort criteria for the pageable object.
+	 * @param descending string which represents the sorting direction for the pageable object.
+	 * @return ResponseEntity Status code with the list of appointment dto's.
+	 */
 	@GetMapping("/appointments/patient/{id}/past")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> getPatientsPastAppointments(@PathVariable("id") String id, @RequestParam(defaultValue = "0") Integer pageNo,
@@ -219,6 +263,11 @@ public class AppointmentController {
 		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
 	}
 
+	/**
+	 * This method is used so patients can cancel their scheduled appointments.
+	 * @param id integer which is the id of scheduled appointment
+	 * @return ResponseEntity Status code with the optional error message.
+	 */
 	@GetMapping("/appointments/patient/cancel/{id}")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> cancelAppointmentPatient(@PathVariable("id") long id) {
@@ -238,10 +287,9 @@ public class AppointmentController {
 					HttpStatus.BAD_REQUEST);
 		app.setStatus(AppointmentStatus.CANCELED);
 
-		// TODO kada bude kalendar, ovde nece vise trebati setRoom na null (trenutno je
-		// zbog Freerooms), nego izbaci ovu stavku iz kalendara
-		app.setRoom(null);
-		// mozda treba nesto jos za doktora, ali kada bude kalendar sigurno nece trebati
+		boolean success = calendarService.remove(app);
+		if (!success)
+			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
 		service.save(app);
 
 		String message = "Hello " + app.getDoctor().getName() + " " + app.getDoctor().getSurname()
@@ -255,6 +303,11 @@ public class AppointmentController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	/**
+	 * This method is used so doctors can get their appointments.
+	 * @param Nothing.
+	 * @return ResponseEntity Status code with the list of appointment dto's.
+	 */
 	@GetMapping("/appointments/doctor")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<PremadeAppDTO>> getDoctorAppointments() {
@@ -266,6 +319,7 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
+			// TODO check if premade appointments should be here
 			if (app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
 			PremadeAppDTO newDTO = new PremadeAppDTO(app);
@@ -277,6 +331,7 @@ public class AppointmentController {
 	@PostMapping("/appointments/doctor/today")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
+		// TODO mozda promeniti ovo da bude long ipak
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 
@@ -385,7 +440,7 @@ public class AppointmentController {
 		// nadji rikvest i sobu, napravi appointment, setuj na zakazan, sacuvaj u bazu
 		Room room = roomService.findOne(roomId);
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
-		if (room == null || rr == null)
+		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Doctor doctor = doctorService.findOne(rr.getDoctor());
@@ -424,12 +479,12 @@ public class AppointmentController {
 				+ " and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
 				+ "Lotus Clinic Staff";
 
-		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
-		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);
 
 		rr.setStatus(RequestStatus.APPROVED);
 		requestService.save(rr);
 
+		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
+		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
