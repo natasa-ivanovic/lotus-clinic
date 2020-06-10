@@ -27,10 +27,12 @@ import isamrs.tim17.lotus.dto.RoomDTO;
 import isamrs.tim17.lotus.dto.RoomDateDTO;
 import isamrs.tim17.lotus.dto.RoomTermDTO;
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.service.AppointmentService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.RoomService;
 import isamrs.tim17.lotus.util.DateUtil;
 
@@ -42,6 +44,8 @@ public class RoomController {
 	private RoomService service;
 	@Autowired
 	private AppointmentService appService;
+	@Autowired
+	private CalendarEntryService calService;
 
 	/**
 	 * This method is used for adding a room.
@@ -206,11 +210,13 @@ public class RoomController {
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
 				Date endDate = cal.getTime();
-				List<Appointment> apps = appService.findByRoomAndDate(r, d, endDate);
-				// svi termini u jednom danu
-				List<Date> allTermsInDay = getAllTerms(d);
+				// OVA METODA NE RADI DOBRO, NE VRACA KAKO TREBA
+				List<CalendarEntry> entries = calService.findByRoomAndDate(r, d, endDate);
+				//List<Appointment> apps = appService.findByRoomAndDate(r, d, endDate);
+				// svi termini u jednom danu, pocevsi sa satom prosledjenog datuma
+				List<Date> allTermsInDay = DateUtil.getAllTerms(d, true);
 				// pronadji prvi slobodan termin za tu sobu tog dana
-				List<Date> clearTerms = removeOverlap(allTermsInDay, apps);
+				List<Date> clearTerms = DateUtil.removeOverlap(allTermsInDay, entries);
 				Date firstTerm = !clearTerms.isEmpty() ? clearTerms.get(0) : null;
 				if (firstTerm != null) {
 					roomInfo.add(new RoomTermDTO(r, firstTerm));
@@ -225,7 +231,7 @@ public class RoomController {
 	
 
 	private List<Date> removeOverlap(List<Date> dates, List<Appointment> apps) {
-		Calendar startApp = Calendar.getInstance();
+		/*Calendar startApp = Calendar.getInstance();
 		Calendar endApp = Calendar.getInstance();
 		Calendar startTerm = Calendar.getInstance();
 		for (Appointment a : apps) {
@@ -240,8 +246,8 @@ public class RoomController {
 					break;
 				}
 			}
-		}
-		return dates;
+		}*/
+		return new ArrayList<Date>();
 
 	}
 
@@ -250,7 +256,7 @@ public class RoomController {
 		//TODO OBAVEZNO IZMENITI
 
 		//int weekdayWorkStart = 8;
-		int weekdayWorkEnd = 18;
+		/*int weekdayWorkEnd = 18;
 		int weekdayBreakStart = 11;
 
 		//int weekendWorkStart = 8;
@@ -298,6 +304,8 @@ public class RoomController {
 			currentTime++;
 		}
 		return data;
+		*/
+		return new ArrayList<Date>();
 	}
 	
 	boolean isEmptyOrNull(RoomDTO r) {

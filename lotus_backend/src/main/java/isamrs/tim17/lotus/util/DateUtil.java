@@ -45,7 +45,7 @@ public class DateUtil {
 		return end;
 	}
 
-	public static List<Date> getAllTerms(Date day) {
+	public static List<Date> getAllTerms(Date day, boolean startOnDayHour) {
 		List<Date> data = new ArrayList<Date>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(day);
@@ -54,26 +54,33 @@ public class DateUtil {
 		}
 		int workStart, workEnd, breakStart;
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			workStart = weekendWorkStart;
+			if (startOnDayHour)
+				workStart = cal.get(Calendar.HOUR_OF_DAY);
+			else
+				workStart = weekendWorkStart;
 			workEnd = weekendWorkEnd;
 			breakStart = weekendBreakStart;
 		} else {
-			workStart = weekdayWorkStart;
+			if (startOnDayHour)
+				workStart = cal.get(Calendar.HOUR_OF_DAY);
+			else
+				workStart = weekdayWorkStart;
 			workEnd = weekdayWorkEnd;
 			breakStart = weekdayBreakStart;
 		}
 		int currentTime = workStart;
 		cal.set(Calendar.HOUR_OF_DAY, currentTime);
-		cal.set(Calendar.MINUTE, 0);
+		if (!startOnDayHour)
+			cal.set(Calendar.MINUTE, 0);
 		int termDuration = 60 / termsPerHour;
-		// TODO: maybe change so term duration is flexible?
 		while (currentTime != workEnd) {
 			if (currentTime == breakStart) {
 				currentTime += breakDurationHours;
 				cal.add(Calendar.HOUR_OF_DAY, breakDurationHours);
 				continue;
 			}
-			for (int i = 0; i != termsPerHour; i++) {
+			int startMinutes = cal.get(Calendar.MINUTE) == 0 ? 0 : 1;
+			for (int i = startMinutes; i != termsPerHour; i++) {
 				Date newDate = cal.getTime();
 				data.add(newDate);
 				cal.add(Calendar.MINUTE, termDuration);
