@@ -20,7 +20,7 @@
                             <v-card-text>
                                 <div>Name: {{req.user.name}}</div>
                                 <div>Surname: {{req.user.surname}}</div>
-                                <div>Email: {{req.user.email}}</div>
+                                <div>Email: {{req.user.username}}</div>
                             </v-card-text>
                             <v-card-actions>
                                 <v-row>
