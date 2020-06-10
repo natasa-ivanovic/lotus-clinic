@@ -1,9 +1,11 @@
 package isamrs.tim17.lotus.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +24,7 @@ public class Doctor extends User {
 	private AppointmentPrice specialty;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	public Set<Operation> operations = new HashSet<>();
+	private Set<Operation> operations = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<>();
@@ -32,13 +34,26 @@ public class Doctor extends User {
 	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
-	public Clinic clinic;
+	private Clinic clinic;
 	
-	public Doctor() {}
+	@Column(name="last_requested")
+	private Date lastRequested;
+	
+
+	public Doctor() {
+		this.lastRequested = new Date();
+	}
 
 	public Doctor(UserDTO doctor) {
 		super(doctor);		
+		this.lastRequested = new Date();
 	}
+	
+	
+	public void setLastRequested(Date lastRequested) {
+		this.lastRequested = lastRequested;
+	}
+
 	public AppointmentPrice getSpecialty() {
 		return specialty;
 	}
@@ -71,13 +86,15 @@ public class Doctor extends User {
 		this.reviews = reviews;
 	}
 
-	/*public Doctor(String email, String password, String name, String surname, String address, String city,
-			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
-			AppointmentType speciality, Operation operation, Clinic clinic) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender, clinic);
-		this.speciality = speciality;
-		this.operation = operation;
-	}*/
+	public Set<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(Set<Operation> operations) {
+		this.operations = operations;
+	}
+
+
 	
 	 
 

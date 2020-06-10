@@ -20,6 +20,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.DiscriminatorOptions;
 
@@ -38,6 +39,13 @@ public abstract class Request {
 	private RequestStatus status;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentreAdministrator admin;
+	
+	@Version
+	private Long version;
+	
+	public Request() {
+		this.version = 0L;
+	}
 	
 	public Long getId() {
 		return id;

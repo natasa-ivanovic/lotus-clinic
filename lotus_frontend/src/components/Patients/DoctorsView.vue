@@ -127,10 +127,7 @@ export default {
                 }).then(() =>   {
                     this.$store.commit('showSnackbar', {text: "Successfully requested appointment! Check your email for further information.", color: "success", })
                     this.$router.push({name: "home"});
-                }).catch(error => {
-                    this.$store.commit('showSnackbar', {text: "Something went wrong! Please try again.", color: "error", })
-                    console.log(error);
-                });
+                })
         },
         getItems: function(times) {
             var data = []

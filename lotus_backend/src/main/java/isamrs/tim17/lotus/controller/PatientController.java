@@ -320,13 +320,21 @@ public class PatientController {
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
 		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Error in forwarded data! Start date and doctors cannot be null.", HttpStatus.BAD_REQUEST);
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
+		RoomRequest checkRequest = requestService.findByStartDateAndDoctor(request.getStartDate(), request.getDoctor().getId());
+		if (checkRequest != null)
+			return new ResponseEntity<>("Someone already requested the selected doctor in selected term!", HttpStatus.BAD_REQUEST);
+		
 		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
 		
 		roomRequest.setStatus(RequestStatus.PENDING);
-		requestService.save(roomRequest);
+		try {
+			requestService.save(roomRequest, request.getDoctor().getId());			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Someone already requested the selected doctor in selected term!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 	

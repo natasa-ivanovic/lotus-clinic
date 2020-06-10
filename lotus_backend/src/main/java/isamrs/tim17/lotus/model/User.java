@@ -27,6 +27,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.springframework.security.core.GrantedAuthority;
@@ -87,6 +88,9 @@ public abstract class User implements UserDetails {
     
     @Column(name="role", insertable = false, updatable = false)
     protected String role;
+    
+    @Version
+    private Long version;
     
 	public User() {
 		this.lastPasswordResetDate = Timestamp.from(Instant.now());

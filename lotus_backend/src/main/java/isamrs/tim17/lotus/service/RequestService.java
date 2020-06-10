@@ -1,20 +1,37 @@
 package isamrs.tim17.lotus.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.repository.RequestRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class RequestService {
 	@Autowired
 	private RequestRepository requests;
+
+	@Autowired
+	private DoctorService doctors;
 	
+	@Transactional(readOnly = false)
+	public Request save(Request request, Long doctor) {
+		Doctor d = doctors.findOne(doctor);
+		// forces the version increment to update
+		d.setLastRequested(new Date());
+		doctors.save(d);
+		return requests.save(request);
+	}
+	
+	@Transactional(readOnly = false)
 	public Request save(Request request) {
 		return requests.save(request);
 	}
@@ -35,7 +52,8 @@ public class RequestService {
 	public List<Request> findAll() {
 		return requests.findAll();
 	}
-	
+
+	@Transactional(readOnly = false)
 	public void remove(long id) {
 		requests.deleteById(id);
 	}
@@ -44,4 +62,8 @@ public class RequestService {
 		return requests.getAllRoomRequests();
 	}
 
+	public RoomRequest findByStartDateAndDoctor(Date startDate, long doctor) {
+		return requests.findOneByDateAndDoctor(startDate, doctor);
+	}
+	
 }

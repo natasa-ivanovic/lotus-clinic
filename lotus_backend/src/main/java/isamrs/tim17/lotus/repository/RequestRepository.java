@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -21,4 +22,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	@Query("SELECT a FROM RoomRequest a where a.status = 0")
 	List<RoomRequest> getAllRoomRequests();
 	Page<Request> findAll(Pageable pageable);
+
+	@Query("SELECT a FROM RoomRequest a where a.date = :date AND a.doctor = :doctor")
+	RoomRequest findOneByDateAndDoctor(@Param("date") Date startDate, @Param("doctor") long doctor);
 }

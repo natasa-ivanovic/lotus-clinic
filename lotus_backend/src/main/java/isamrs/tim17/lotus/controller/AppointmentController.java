@@ -157,7 +157,6 @@ public class AppointmentController {
 
 		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment scheduled notification", message);
 		return new ResponseEntity<>(HttpStatus.OK);
-
 	}
 
 	/**
@@ -466,6 +465,9 @@ public class AppointmentController {
 		app.setAppointmentType(doctor.getSpecialty().getType());
 		app.setPrice(doctor.getSpecialty().getPrice());
 		service.save(app);
+		
+		rr.setStatus(RequestStatus.APPROVED);
+		requestService.save(rr, doctor.getId());
 
 		CalendarEntry entry = new CalendarEntry(app);
 		calendarService.save(entry);
@@ -485,9 +487,6 @@ public class AppointmentController {
 				+ " and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
 				+ "Lotus Clinic Staff";
 
-
-		rr.setStatus(RequestStatus.APPROVED);
-		requestService.save(rr);
 
 		mailSender.sendMsg(patient.getUsername(), "Appointment notification", contentPatient);
 		mailSender.sendMsg(doctor.getUsername(), "Appointment notification", contentDoctor);

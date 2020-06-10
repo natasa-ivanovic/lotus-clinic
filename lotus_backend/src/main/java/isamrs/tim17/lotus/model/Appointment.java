@@ -67,10 +67,10 @@ public class Appointment {
 	private boolean reviewed;
 	
 	@Version
-	private Integer version;
+	private Long version;
 	
 	public Appointment() {
-		this.version = 0;
+		this.version = 0L;
 	}
 
 	public Appointment(Date startDate, Date endDate, double price, double discount, AppointmentType appointmentType, Doctor doctor, Room room,
@@ -216,8 +216,5 @@ public class Appointment {
 		this.discount = discount;
 	}
 
-	public Integer getVersion() {
-		return this.version;
-	}	
 
 }
