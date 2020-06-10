@@ -440,7 +440,7 @@ public class AppointmentController {
 		// nadji rikvest i sobu, napravi appointment, setuj na zakazan, sacuvaj u bazu
 		Room room = roomService.findOne(roomId);
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
-		if (room == null || rr == null)
+		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Doctor doctor = doctorService.findOne(rr.getDoctor());

@@ -45,6 +45,14 @@ public class DateUtil {
 		return end;
 	}
 
+	/**
+	 * This method is used to get all available terms for a given day.
+	 * 
+	 * @param day Date object which represents the day.
+	 * @param startOnDayHour Boolean which specifies whether the terms should start from 
+	 * 		the earliest available (false) or from the Hour data from the day Date object (true)
+	 * @return List<Date> all available terms for the day.
+	 */
 	public static List<Date> getAllTerms(Date day, boolean startOnDayHour) {
 		List<Date> data = new ArrayList<Date>();
 		Calendar cal = Calendar.getInstance();
@@ -91,20 +99,18 @@ public class DateUtil {
 	}
 
 	/**
-	 * Removes all dates from accepted list that are in use by any appointments in
+	 * Removes all dates from accepted list that are in use by any calendar entries in
 	 * accepted list;
 	 * 
 	 * @param dates - list of dates to be removed from
-	 * @param apps  - list of appointments to be checked againts
+	 * @param apps  - list of appointments to be checked against
 	 * @return list<Date> of free dates for that day
 	 */
 	public static List<Date> removeOverlap(List<Date> dates, List<CalendarEntry> entries) {
 		Calendar startApp = Calendar.getInstance();
-		Calendar endApp = Calendar.getInstance();
 		Calendar startTerm = Calendar.getInstance();
 		for (CalendarEntry c : entries) {
 			startApp.setTime(c.getStartDate());
-			endApp.setTime(c.getEndDate());
 			for (Date d : dates) {
 				startTerm.setTime(d);
 				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme

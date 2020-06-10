@@ -31,7 +31,6 @@ import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Room;
-import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.RoomService;
 import isamrs.tim17.lotus.util.DateUtil;
@@ -42,8 +41,6 @@ public class RoomController {
 
 	@Autowired
 	private RoomService service;
-	@Autowired
-	private AppointmentService appService;
 	@Autowired
 	private CalendarEntryService calService;
 
@@ -206,12 +203,13 @@ public class RoomController {
 			for (Date d : allDays) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(d);
+				cal.set(Calendar.HOUR_OF_DAY, 7);
+				Date currentDate = cal.getTime();
 				cal.set(Calendar.HOUR_OF_DAY, 18);
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
 				Date endDate = cal.getTime();
-				// OVA METODA NE RADI DOBRO, NE VRACA KAKO TREBA
-				List<CalendarEntry> entries = calService.findByRoomAndDate(r, d, endDate);
+				List<CalendarEntry> entries = calService.findByRoomAndDate(r, currentDate, endDate);
 				//List<Appointment> apps = appService.findByRoomAndDate(r, d, endDate);
 				// svi termini u jednom danu, pocevsi sa satom prosledjenog datuma
 				List<Date> allTermsInDay = DateUtil.getAllTerms(d, true);
@@ -228,86 +226,7 @@ public class RoomController {
 		Collections.sort(roomInfo);
 		return new ResponseEntity<>(roomInfo, HttpStatus.OK);
 	}
-	
-
-	private List<Date> removeOverlap(List<Date> dates, List<Appointment> apps) {
-		/*Calendar startApp = Calendar.getInstance();
-		Calendar endApp = Calendar.getInstance();
-		Calendar startTerm = Calendar.getInstance();
-		for (Appointment a : apps) {
-			startApp.setTime(a.getStartDate());
-			endApp.setTime(a.getEndDate());
-			for (Date d : dates) {
-				startTerm.setTime(d);
-				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme
-				if (startApp.get(Calendar.HOUR_OF_DAY) == startTerm.get(Calendar.HOUR_OF_DAY)
-						&& startApp.get(Calendar.MINUTE) == startTerm.get(Calendar.MINUTE)) {
-					dates.remove(d);
-					break;
-				}
-			}
-		}*/
-		return new ArrayList<Date>();
-
-	}
-
-	public static List<Date> getAllTerms(Date day) {
 		
-		//TODO OBAVEZNO IZMENITI
-
-		//int weekdayWorkStart = 8;
-		/*int weekdayWorkEnd = 18;
-		int weekdayBreakStart = 11;
-
-		//int weekendWorkStart = 8;
-		int weekendWorkEnd = 13;
-		int weekendBreakStart = 11;
-
-		int breakDurationHours = 1;
-
-		int termsPerHour = 2;
-
-		List<Date> data = new ArrayList<>();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(day);
-		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			return data;
-		}
-		int workStart; 
-		int workEnd; 
-		int breakStart;
-		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			workStart = cal.get(Calendar.HOUR_OF_DAY);
-			workEnd = weekendWorkEnd;
-			breakStart = weekendBreakStart;
-		} else {
-			workStart = cal.get(Calendar.HOUR_OF_DAY);
-			workEnd = weekdayWorkEnd;
-			breakStart = weekdayBreakStart;
-		}
-		int currentTime = workStart;
-		cal.set(Calendar.HOUR_OF_DAY, currentTime);
-		cal.set(Calendar.MINUTE, 0);
-		int termDuration = 60 / termsPerHour;
-		// TODO: maybe change so term duration is flexible?
-		while (currentTime != workEnd) {
-			if (currentTime == breakStart) {
-				currentTime += breakDurationHours;
-				cal.add(Calendar.HOUR_OF_DAY, breakDurationHours);
-				continue;
-			}
-			for (int i = 0; i != termsPerHour; i++) {
-				Date newDate = cal.getTime();
-				data.add(newDate);
-				cal.add(Calendar.MINUTE, termDuration);
-			}
-			currentTime++;
-		}
-		return data;
-		*/
-		return new ArrayList<Date>();
-	}
-	
 	boolean isEmptyOrNull(RoomDTO r) {
 		if(r == null)
 			return true;
