@@ -9,9 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import isamrs.tim17.lotus.dto.RatingDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
@@ -22,7 +26,12 @@ public class AppointmentService {
 
 	@Autowired
 	private AppointmentRepository appointments;
+	
+	@Autowired
+	private DoctorReviewService docReviewService;
 
+	@Autowired
+	private ClinicReviewService clinicReviewService;
 	
 	public Appointment findOne(long id) {
 		return appointments.findOneById(id);
@@ -39,6 +48,18 @@ public class AppointmentService {
 
 	@Transactional(readOnly = false)
 	public Appointment save(Appointment app) {
+		return appointments.save(app);
+	}
+	
+	@Transactional(readOnly = false)
+	public Appointment saveRatings(Appointment app, RatingDTO rating) {
+		Doctor d = app.getDoctor();
+		DoctorReview docReview = new DoctorReview(rating.getDoctorRating(), d);
+		docReviewService.save(docReview);
+		Clinic c = d.getClinic();
+		ClinicReview clinicReview = new ClinicReview(rating.getClinicRating(), c);
+		clinicReviewService.save(clinicReview);
+		app.setReviewed(true);
 		return appointments.save(app);
 	}
 

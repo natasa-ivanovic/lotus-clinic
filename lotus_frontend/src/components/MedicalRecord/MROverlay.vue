@@ -16,8 +16,8 @@
                 :footer-props="{
                     itemsPerPageOptions: [1, 5, 10]
                 }">
-                <template v-if="item.doctors != undefined" v-slot:item.doctors="{ item }">
-                    <v-select :items="item.doctors" :value="item.doctors[0]"/>
+                <template v-slot:item.doctors="{ item }">
+                    <v-select v-if="item.doctors != undefined" :items="item.doctors" :value="item.doctors[0]"/>
                 </template>
                 </v-data-table>
             </v-card-text>

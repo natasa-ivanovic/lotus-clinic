@@ -348,17 +348,15 @@ public class PatientController {
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> sendRating(@RequestBody RatingDTO rating) {
 		Appointment a = appointmentService.findOne(rating.getAppointmentId());
-		if (a == null || rating.getClinicRating() == 0 || rating.getDoctorRating() == 0 || a.isReviewed()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);			
+		if (a == null || rating.getClinicRating() == 0 || rating.getDoctorRating() == 0) 
+			return new ResponseEntity<>("Ratings cannot be 0 or null!", HttpStatus.BAD_REQUEST);			
+		if (a.isReviewed())
+			return new ResponseEntity<>("Cannot rate same appointment multiple times!", HttpStatus.BAD_REQUEST);			
+		try {
+			appointmentService.saveRatings(a, rating);			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Cannot rate same appointment multiple times!", HttpStatus.BAD_REQUEST);			
 		}
-		Doctor d = a.getDoctor();
-		DoctorReview docReview = new DoctorReview(rating.getDoctorRating(), d);
-		docReviewService.save(docReview);
-		Clinic c = d.getClinic();
-		ClinicReview clinicReview = new ClinicReview(rating.getClinicRating(), c);
-		clinicReviewService.save(clinicReview);
-		a.setReviewed(true);
-		appointmentService.save(a);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
