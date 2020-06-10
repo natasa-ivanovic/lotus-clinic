@@ -53,8 +53,8 @@
                                 <v-list-item-content>
                                     <v-list-item-title>New request</v-list-item-title>
                                     <v-list-item-content>
-                                        Start date: {{req.startDate.substring(0,10)}} <br/>
-                                        End date: {{req.endDate.substring(0,10)}} <br/>
+                                        Start date: {{dateFormatJustDay(req.startDate)}} <br/>
+                                        End date: {{dateFormatJustDay(req.endDate)}} <br/>
                                         From: {{req.name}} {{req.sureName}}
                                     </v-list-item-content>
                                     
@@ -109,10 +109,14 @@ export default {
             this.$router.push({name: "freeRooms", params: {request: req}}); 
                     
         },
+        dateFormatJustDay: function(datestr) {
+          var date = new Date(datestr);
+          return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        },
         formatDate(date) {
             var d = new Date(date);
             var time = d.toTimeString().split(" ")[0];
-            var dateNew = d.toISOString().split("T")[0];
+            var dateNew = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
             return dateNew + " " + time;
         },
         processVacationRequest(req, idx, choice) {
