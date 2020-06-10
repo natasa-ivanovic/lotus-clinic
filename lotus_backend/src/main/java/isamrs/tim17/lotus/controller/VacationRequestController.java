@@ -52,6 +52,7 @@ public class VacationRequestController {
 			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dates.endDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
 		VacationRequest request = new VacationRequest();
