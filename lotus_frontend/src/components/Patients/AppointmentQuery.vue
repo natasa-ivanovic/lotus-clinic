@@ -59,7 +59,7 @@
 </template>
 
 <script>
-const apiAppTypes = "/api/appointmentTypes";
+const apiAppTypes = "/api/appointmentTypes/appointments";
 const apiRequest = "/api/patients/request";
 
 export default {

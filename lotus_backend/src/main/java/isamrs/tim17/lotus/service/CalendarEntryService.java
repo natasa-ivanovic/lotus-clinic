@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,9 @@ public class CalendarEntryService {
 	
 	public CalendarEntry save(CalendarEntry entry) {
 		return calendarEntries.save(entry);
+	}
+	
+	public List<CalendarEntry> findByMedicalPersonAndDate(User u, Date startDate, Date endDate) {
+		return calendarEntries.getAllBetweenDatesForDoctor(u, startDate, endDate);
 	}
 }

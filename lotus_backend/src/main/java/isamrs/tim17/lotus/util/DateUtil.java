@@ -5,8 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.CalendarEntry;
 
 public class DateUtil {
 
@@ -92,15 +91,13 @@ public class DateUtil {
 	 * @param apps  - list of appointments to be checked againts
 	 * @return list<Date> of free dates for that day
 	 */
-	public static List<Date> removeOverlap(List<Date> dates, List<Appointment> apps) {
+	public static List<Date> removeOverlap(List<Date> dates, List<CalendarEntry> entries) {
 		Calendar startApp = Calendar.getInstance();
 		Calendar endApp = Calendar.getInstance();
 		Calendar startTerm = Calendar.getInstance();
-		for (Appointment a : apps) {
-			if (a.getStatus().equals(AppointmentStatus.PREMADE) || a.getStatus().equals(AppointmentStatus.CANCELED))
-				continue;
-			startApp.setTime(a.getStartDate());
-			endApp.setTime(a.getEndDate());
+		for (CalendarEntry c : entries) {
+			startApp.setTime(c.getStartDate());
+			endApp.setTime(c.getEndDate());
 			for (Date d : dates) {
 				startTerm.setTime(d);
 				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme

@@ -30,6 +30,7 @@ import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
@@ -40,6 +41,7 @@ import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicReviewService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
@@ -75,6 +77,9 @@ public class PatientController {
 
 	@Autowired
 	private ClinicReviewService clinicReviewService;
+	
+	@Autowired
+	private CalendarEntryService calendarService;
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -228,8 +233,6 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		try {
 			if (pr.isClinics()) {
-				// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
-				// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
 				List<Clinic> clinics = clinicService.findAll();
 				ListIterator<Clinic> it = clinics.listIterator();
 				List<ClinicDTO> clinicList = new ArrayList<>();
@@ -247,9 +250,8 @@ public class PatientController {
 						}									
 						List<Date> availableDates = DateUtil.getAllTerms(date);
 						Date endDate = DateUtil.endOfDay(date);
-						List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
-						// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
-						availableDates = DateUtil.removeOverlap(availableDates, appointments);
+						List<CalendarEntry> calendarEntries = calendarService.findByMedicalPersonAndDate(d, date, endDate);
+						availableDates = DateUtil.removeOverlap(availableDates, calendarEntries);
 						if (availableDates.isEmpty()) 
 							docIt.remove();						
 						 else {
@@ -278,15 +280,14 @@ public class PatientController {
 				ListIterator<Doctor> it = doctors.listIterator();
 				while (it.hasNext()) {
 					Doctor d = it.next();
-					if (d.getSpecialty().getId() != type.getId()) {
+					if (d.getSpecialty().getType().getId() != type.getId()) {
 						it.remove();
 						continue;
 					}
 					List<Date> availableDates = DateUtil.getAllTerms(date);
 					Date endDate = DateUtil.endOfDay(date);
-					List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
-					// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
-					availableDates = DateUtil.removeOverlap(availableDates, appointments);
+					List<CalendarEntry> calendarEntries = calendarService.findByMedicalPersonAndDate(d, date, endDate);
+					availableDates = DateUtil.removeOverlap(availableDates, calendarEntries);
 					if (!availableDates.isEmpty()) {
 						 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
 						 double rating = RatingUtil.getAverageDoctorRating(ratingList);
