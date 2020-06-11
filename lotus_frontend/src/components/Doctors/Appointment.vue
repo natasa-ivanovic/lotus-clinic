@@ -394,9 +394,9 @@ export default {
                 patient : {
                     id: this.appointment.patientId
                 },
-                doctor: {
+                doctors: [{
                     id : this.appointment.doctorId
-                },
+                }],
                 startDate: d.getTime()
             };
             console.log(roomRequest);

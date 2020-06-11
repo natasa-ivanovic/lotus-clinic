@@ -112,6 +112,9 @@ public class DateUtil {
 		for (CalendarEntry c : entries) {
 			startApp.setTime(c.getStartDate());
 			for (Date d : dates) {
+				if (c.getVacation() != null) 
+					if (c.getStartDate().before(d) && c.getEndDate().after(d))
+						return new ArrayList<Date>();
 				startTerm.setTime(d);
 				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme
 				if (startApp.get(Calendar.HOUR_OF_DAY) == startTerm.get(Calendar.HOUR_OF_DAY)

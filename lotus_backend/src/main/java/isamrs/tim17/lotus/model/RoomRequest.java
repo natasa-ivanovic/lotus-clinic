@@ -40,21 +40,14 @@ public class RoomRequest extends Request {
 	
 	public RoomRequest() {}
 		
-	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type, double price) {
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type, double price, AppointmentType appType) {
 		super();
 		this.date = date;
 		this.patient = patient;
 		this.doctors = doctors;
 		this.type = type;
 		this.price = price;
-	}
-	
-	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type) {
-		super();
-		this.date = date;
-		this.patient = patient;
-		this.doctors = doctors;
-		this.type = type;
+		this.appType = appType;
 	}
 	
 	
