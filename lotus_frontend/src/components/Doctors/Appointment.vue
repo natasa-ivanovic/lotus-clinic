@@ -17,8 +17,6 @@
                 <v-card class="elevation-3">
                     <v-toolbar flat color="secondary" dark>
                         <v-toolbar-title>Appointment type: {{appointment.type}}</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn>Report</v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-row>
@@ -194,7 +192,7 @@
                                                         persistent
                                                         :close-on-content-click="false"
                                                         transition="scale-transition"
-                                                        nudge-right="468">
+                                                        nudge-right="525">
                                                             <template v-slot:activator="{on, attrs}">
                                                                 <v-text-field
                                                                 prepend-icon="mdi-calendar"
@@ -278,8 +276,8 @@ export default {
     },
     data() {
         return {
-            diagnosis: "",
-            medicine: "",
+            diagnosis: [],
+            medicine: [],
             info: "",
             allMedicines: [],
             allDiagnosis: [],
@@ -322,6 +320,23 @@ export default {
     },
     methods: {
         endAppointment() {
+            var app = {
+                id : this.appointment.id,
+                diagnosis: this.diagnosis,
+                recipes: this.medicine,
+                description: this.info
+            }
+            this.axios({
+                url: "/api/appointments/finish",
+                method: "POST",
+                data: app
+            }).then(() => {
+                this.$store.commit('showSnackbar', {text: "Successfully finished appointment!", color: "success"});
+                this.$router.push({name: "home"});
+                this.medicine = "";
+                this.diagnosis = "";
+                this.description = "";
+            })
         },
         getToday() {
             var today = new Date()
@@ -419,7 +434,7 @@ export default {
                 method: 'POST',
                 data: roomRequest
             }).then(() => {
-                this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success"})
+                this.$store.commit('showSnackbar', {text: "Successfully scheduled operation!", color: "success"})
             });
             this.turnOffOperation();
         },

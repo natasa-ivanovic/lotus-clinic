@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,7 @@ import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Prescription;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
@@ -59,6 +60,7 @@ import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.MedicineService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
@@ -89,6 +91,8 @@ public class AppointmentController {
 	private DiagnosisService diagnosisService;
 	@Autowired
 	private CalendarEntryService calendarService;
+	@Autowired
+	private MedicalRecordService mrService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -428,12 +432,59 @@ public class AppointmentController {
 
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 
-		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room,
-				clinic);
+		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room, clinic);
 		service.save(newApp);
 		CalendarEntry entry = new CalendarEntry(newApp);
 		calendarService.save(entry);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/appointments/finish")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> finishAppointment(@RequestBody PremadeAppDTO app) {
+		if (app == null || app.getId() <= 0 || app.getDiagnosis().isEmpty() || app.getDiagnosis() == null || app.getRecipes() == null || 
+				app.getRecipes().isEmpty() || app.getDescription() == null || "".equals(app.getDescription())) {
+			return new ResponseEntity<>("Fill in all required fields!", HttpStatus.BAD_REQUEST);
+		}
+		
+		Appointment appointment = service.findOne(app.getId());
+		// setovati listu bolesti
+		Set<Diagnosis> diagnosis = new HashSet<>();
+		for(String d : app.getDiagnosis()) {
+			long id = 0;
+			try {
+				id = Long.parseLong(d);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			Diagnosis dg = diagnosisService.findOne(id);
+			dg.getAppointments().add(appointment);
+			diagnosis.add(dg);
+		}
+		Set<Prescription> prescriptions = new HashSet<>();
+		for(String r : app.getRecipes()) {
+			long id = 0;
+			try {
+				id = Long.parseLong(r);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			Medicine med = medicineService.findOne(id);
+			Prescription presp = new Prescription();
+			presp.setMedicine(med);
+			presp.setAppointment(appointment);
+			prescriptions.add(presp);
+		}
+
+		appointment.setDiagnosis(diagnosis);
+		appointment.setPrescriptions(prescriptions);
+		appointment.setInformation(app.getDescription());
+		appointment.setStatus(AppointmentStatus.FINISHED);
+		
+		service.save(appointment);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
 	}
 
 	@PostMapping("/appointments/notification")
