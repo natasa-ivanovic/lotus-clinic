@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +49,18 @@ import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Prescription;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.MedicineService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
@@ -85,6 +91,8 @@ public class AppointmentController {
 	private DiagnosisService diagnosisService;
 	@Autowired
 	private CalendarEntryService calendarService;
+	@Autowired
+	private MedicalRecordService mrService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -103,6 +111,7 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(app, HttpStatus.OK);
 	}
+
 
 	/**
 	 * This method is used for getting a list of all premade appointments.
@@ -159,6 +168,7 @@ public class AppointmentController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+
 	/**
 	 * This method is used so patients can get their appointments for displaying on the home page.
 	 * 
@@ -198,7 +208,7 @@ public class AppointmentController {
 			@RequestParam(defaultValue = "true") String descending) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
-
+		
 		return getPastAppointments(patient.getMedicalRecord(), pageNo, pageSize, sortBy, descending);
 	}
 	
@@ -292,6 +302,10 @@ public class AppointmentController {
 					HttpStatus.BAD_REQUEST);
 		app.setStatus(AppointmentStatus.CANCELED);
 
+		// TODO kada bude kalendar, ovde nece vise trebati setRoom na null (trenutno je
+		// zbog Freerooms), nego izbaci ovu stavku iz kalendara
+		app.setRoom(null);
+		// mozda treba nesto jos za doktora, ali kada bude kalendar sigurno nece trebati
 		boolean success = calendarService.remove(app);
 		if (!success)
 			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
@@ -324,6 +338,7 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		List<PremadeAppDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
+
 			// TODO check if premade appointments should be here
 			if (app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
@@ -422,19 +437,66 @@ public class AppointmentController {
 
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
 
-		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room,
-				clinic);
+		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room, clinic);
 		service.save(newApp);
 		CalendarEntry entry = new CalendarEntry(newApp);
 		calendarService.save(entry);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@PostMapping("/appointments/finish")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> finishAppointment(@RequestBody PremadeAppDTO app) {
+		if (app == null || app.getId() <= 0 || app.getDiagnosis().isEmpty() || app.getDiagnosis() == null || app.getRecipes() == null || 
+				app.getRecipes().isEmpty() || app.getDescription() == null || "".equals(app.getDescription())) {
+			return new ResponseEntity<>("Fill in all required fields!", HttpStatus.BAD_REQUEST);
+		}
+		
+		Appointment appointment = service.findOne(app.getId());
+		// setovati listu bolesti
+		Set<Diagnosis> diagnosis = new HashSet<>();
+		for(String d : app.getDiagnosis()) {
+			long id = 0;
+			try {
+				id = Long.parseLong(d);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			Diagnosis dg = diagnosisService.findOne(id);
+			dg.getAppointments().add(appointment);
+			diagnosis.add(dg);
+		}
+		Set<Prescription> prescriptions = new HashSet<>();
+		for(String r : app.getRecipes()) {
+			long id = 0;
+			try {
+				id = Long.parseLong(r);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			Medicine med = medicineService.findOne(id);
+			Prescription presp = new Prescription();
+			presp.setMedicine(med);
+			presp.setAppointment(appointment);
+			prescriptions.add(presp);
+		}
+
+		appointment.setDiagnosis(diagnosis);
+		appointment.setPrescriptions(prescriptions);
+		appointment.setInformation(app.getDescription());
+		appointment.setStatus(AppointmentStatus.FINISHED);
+		
+		service.save(appointment);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
 
 	@PostMapping("/appointments/notification")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> sendNotification(@RequestBody RoomAndRequestDTO dto) {
-
-		if (dto.getRequest() == 0 || dto.getRoom() == 0 || dto.getStartDate() == 0)
+		Date today = new Date();
+		if (dto.getRequest() == 0 || dto.getRoom() == 0 || dto.getStartDate() == 0 || dto.getStartDate() < (today.getTime()))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		long roomId = dto.getRoom();
@@ -447,8 +509,11 @@ public class AppointmentController {
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
 		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-		Doctor doctor = doctorService.findOne(rr.getDoctor());
+		if(rr.getType().equals(RoomRequestType.DOCTOR_OPER))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		List<Doctor> doctors = getDoctors(rr);
+		Doctor doctor = doctors.get(0);
 		Patient patient = patientService.findOne(rr.getPatient());
 		Clinic clinic = doctor.getClinic();
 		AppointmentStatus status = AppointmentStatus.SCHEDULED;
@@ -463,7 +528,8 @@ public class AppointmentController {
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
 		app.setAppointmentType(doctor.getSpecialty().getType());
-		app.setPrice(doctor.getSpecialty().getPrice());
+		app.setPrice(rr.getPrice()); // sacuvana cena iz requesta
+		app.setDiscount(0);
 		service.save(app);
 		
 		rr.setStatus(RequestStatus.APPROVED);
@@ -517,6 +583,19 @@ public class AppointmentController {
 		MedicineDiagnosisDTO dto = new MedicineDiagnosisDTO(medicinesDTO, diagnosisDTO);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	private List<Doctor> getDoctors(RoomRequest r) {
+		Set<Doctor> docs = r.getDoctors();
+		List<Doctor> doctors = new ArrayList<>();
+		
+		Iterator<Doctor> it = docs.iterator();
+		while(it.hasNext()) {
+			Doctor d = doctorService.findOne(it.next().getId());
+			doctors.add(d);
+		}
+		
+		return doctors;
 	}
 
 }

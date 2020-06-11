@@ -26,7 +26,6 @@ import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
 import isamrs.tim17.lotus.dto.RatingDTO;
-import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
@@ -36,9 +35,6 @@ import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
-import isamrs.tim17.lotus.model.RequestStatus;
-import isamrs.tim17.lotus.model.RoomRequest;
-import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
@@ -47,7 +43,6 @@ import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
-import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.util.DateUtil;
 import isamrs.tim17.lotus.util.RatingUtil;
 
@@ -65,9 +60,6 @@ public class PatientController {
 	
 	@Autowired
 	private AppointmentTypeService typeService;
-
-	@Autowired
-	private RequestService requestService;
 	
 	@Autowired
 	private AppointmentService appointmentService;
@@ -311,34 +303,6 @@ public class PatientController {
 	}
 	
 	/**
-	 * This method is used to send a request for an appointment.
-	 * 
-	 * @param request RoomRequestDTO object which contains all the necessary information for the appointment request.
-	 * @return ResponseEntity This returns the HTTP status code.
-	 */
-	@PostMapping("/patients/request/finish")
-	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
-		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
-			return new ResponseEntity<>("Error in forwarded data! Start date and doctors cannot be null.", HttpStatus.BAD_REQUEST);
-		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		Patient patient = (Patient) a.getPrincipal();
-		RoomRequest checkRequest = requestService.findByStartDateAndDoctor(request.getStartDate(), request.getDoctor().getId());
-		if (checkRequest != null)
-			return new ResponseEntity<>("Someone already requested the selected doctor in selected term!", HttpStatus.BAD_REQUEST);
-		
-		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
-		
-		roomRequest.setStatus(RequestStatus.PENDING);
-		try {
-			requestService.save(roomRequest, request.getDoctor().getId());			
-		} catch (Exception e) {
-			return new ResponseEntity<>("Someone already requested the selected doctor in selected term!", HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(HttpStatus.OK);	
-	}
-	
-	/**
 	 * This method is used to handle a rating for previous appointments.
 	 * 
 	 * @param rating RatingDTO object which contains all the necessary information for the doctor and clinic rating.
@@ -359,6 +323,6 @@ public class PatientController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
+	
 
 }

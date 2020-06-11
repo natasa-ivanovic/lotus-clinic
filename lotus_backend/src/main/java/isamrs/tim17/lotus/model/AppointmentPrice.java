@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,9 @@ public class AppointmentPrice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	@Column(name="price", unique = false, nullable = false)
 	private double price;
+	@Column(name="discount", unique = false, nullable = false)
 	private double discount;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private AppointmentType type;

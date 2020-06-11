@@ -35,9 +35,10 @@ public class Operation {
 	private Date endDate;
 	@Column(name="status", unique=false, nullable=false)
 	private OperationStatus status;
-
+	@Column(name="price", unique = false, nullable = false)
+	private double price;
 	@OneToOne(fetch = FetchType.EAGER)
-	private AppointmentPrice type;
+	private AppointmentType type; // tip operacije
 	@ManyToOne(fetch = FetchType.EAGER)
 	private MedicalRecord medicalRecord;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -77,12 +78,6 @@ public class Operation {
 	public void setStatus(OperationStatus status) {
 		this.status = status;
 	}
-	public AppointmentPrice getType() {
-		return type;
-	}
-	public void setType(AppointmentPrice type) {
-		this.type = type;
-	}
 	public MedicalRecord getMedicalRecord() {
 		return medicalRecord;
 	}
@@ -107,6 +102,19 @@ public class Operation {
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public AppointmentType getType() {
+		return type;
+	}
+	public void setType(AppointmentType type) {
+		this.type = type;
+	}
+	
 	
 	
 }

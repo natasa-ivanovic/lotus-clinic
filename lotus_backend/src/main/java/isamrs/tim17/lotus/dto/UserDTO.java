@@ -36,6 +36,7 @@ public class UserDTO {
 		this.gender = user.getGender();
 		this.ssid = user.getSsid();
 	}
+	
 
 	public String getUsername() {
 		return username;

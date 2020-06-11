@@ -42,6 +42,14 @@ public class CalendarEntry {
 		this.room = app.getRoom();
 	}
 	
+	public CalendarEntry(Vacation vacation) {
+		this.startDate = vacation.getStartDate();
+		this.endDate = vacation.getEndDate();
+		this.medicalPerson = vacation.getMedicalPerson();
+		this.vacation = vacation;
+    this.room = null;
+	}
+  
 	public Room getRoom() {
 		return room;
 	}

@@ -48,6 +48,7 @@ import EditPassword from "../components/Users/EditPassword"
 import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
 import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
 import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
+import VacationRequest from "../components/Users/VacationRequest"
 
 const routes = [
     {
@@ -266,7 +267,12 @@ const routes = [
         name: "scheduleAppointment",
         path: "/appointment/new_appointment",
         props: true
-    }, 
+    },
+    {
+        component: VacationRequest,
+        name: "vacationRequest",
+        path: "/vacation_request"
+    },
     {
         path: "/*",
         redirect: "/home"

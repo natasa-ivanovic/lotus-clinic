@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.repository.DoctorRepository;
 
@@ -29,6 +30,10 @@ public class DoctorService {
 		return doctors.findBySpecialty(specialty.toString());
 	}
 
+	public List<Doctor> findByClinic(Clinic clinic) {
+		return doctors.findAllByClinic(clinic);
+	}
+	
 	@Transactional(readOnly = false)
 	public Doctor save(Doctor doctor) {
 		return doctors.save(doctor);

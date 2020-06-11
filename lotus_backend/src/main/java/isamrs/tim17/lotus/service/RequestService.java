@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
+import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.VacationRequest;
 import isamrs.tim17.lotus.repository.RequestRepository;
 
 @Service
@@ -28,12 +31,6 @@ public class RequestService {
 		// forces the version increment to update
 		d.setLastRequested(new Date());
 		Request r = requests.save(request);
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		doctors.save(d);
 		return r;
 	}
@@ -73,4 +70,9 @@ public class RequestService {
 		return requests.findOneByDateAndDoctor(startDate, doctor);
 	}
 	
+	
+	public List<VacationRequest> getVacationRequests(Clinic clinic, RequestStatus status)
+	{
+		return requests.findByClinicAndStatus(clinic, status);
+	}
 }

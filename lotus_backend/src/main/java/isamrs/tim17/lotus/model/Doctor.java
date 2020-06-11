@@ -35,15 +35,15 @@ public class Doctor extends User {
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
-	
+
 	@Column(name="last_requested")
 	private Date lastRequested;
 	
-
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<RoomRequest> requests = new HashSet<>();
+	
 	public Doctor() {
-		this.lastRequested = new Date();
-	}
-
+		this.lastRequested = new Date();}
 	public Doctor(UserDTO doctor) {
 		super(doctor);		
 		this.lastRequested = new Date();
@@ -94,6 +94,14 @@ public class Doctor extends User {
 		this.operations = operations;
 	}
 
+
+	public Set<RoomRequest> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Set<RoomRequest> requests) {
+		this.requests = requests;
+	}
 
 	
 	 

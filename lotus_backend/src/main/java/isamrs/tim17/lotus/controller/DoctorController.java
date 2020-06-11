@@ -1,6 +1,7 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,32 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.Authority;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
+import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AuthorityService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.util.DateUtil;
 
 @RestController
 @RequestMapping("/api")
 public class DoctorController {
 	@Autowired
 	private DoctorService service;
+	
 	@Autowired
 	private ClinicService clinicService;
+	
+	@Autowired
+	private CalendarEntryService calendarService;
+	
 	@Autowired
 	private AppointmentPriceService appPriceService;
 	
@@ -86,16 +97,29 @@ public class DoctorController {
 	}
 
 	/**
-	 * This method is used for getting a list of doctors.
+	 * This method is used for getting a list of doctors in precised clinic.
 	 * 
 	 * @param Nothing.
 	 * @return ResponseEntity This returns the list of doctors and the HTTP status
 	 *         code.
 	 */
 	@GetMapping("/doctors")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
 	public ResponseEntity<List<UserDTO>> getAllDoctors() {
-		List<Doctor> doctors = service.findAll();
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		
+		Clinic clinic = null;
+		if (user.getRole().equals("ADMIN")) {
+			ClinicAdministrator admin = (ClinicAdministrator) user;
+			clinic = admin.getClinic();
+		}
+		else if (user.getRole().equals("DOCTOR")) {
+			Doctor doctor = (Doctor) user;
+			clinic = doctor.getClinic();
+		}
+		
+		List<Doctor> doctors = service.findByClinic(clinic);
 
 		// convert doctors to DTOs
 		List<UserDTO> doctorsDTO = new ArrayList<>();
@@ -172,7 +196,6 @@ public class DoctorController {
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
 	@PutMapping("/doctors/{id}")
-
 	public ResponseEntity<UserDTO> updateDoctor(@RequestBody UserDTO newDoctor, @PathVariable("id") Long id) {
 
 		if (!id.equals(newDoctor.getId()))
@@ -215,6 +238,30 @@ public class DoctorController {
 
 		service.remove(id);
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
+	}
+	
+	/**
+	 * This method returns list of free terms in day for a new requested appointment
+	 * during appointment
+	 * 
+	 * @param date This is the requested date for appointment
+	 * @return List<Date> This returns list of free terms
+	 */
+	@PostMapping("/doctors/newAppointment")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<Date>> getFreeTerms(@RequestBody String date) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		long dateMili = Long.parseLong(date);
+		Date startDate = new Date(dateMili);
+		Date endDate = DateUtil.endOfDay(startDate);
+		List<Date> terms = DateUtil.getAllTerms(startDate, false);
+		List<CalendarEntry> appointments = calendarService.findByMedicalPersonAndDate(doctor, startDate, endDate);
+		terms = DateUtil.removeOverlap(terms, appointments);
+		
+		return new ResponseEntity<>(terms, HttpStatus.OK);
+		
 	}
 
 }
