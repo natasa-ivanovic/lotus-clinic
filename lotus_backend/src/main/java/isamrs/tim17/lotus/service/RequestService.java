@@ -27,8 +27,15 @@ public class RequestService {
 		Doctor d = doctors.findOne(doctor);
 		// forces the version increment to update
 		d.setLastRequested(new Date());
+		Request r = requests.save(request);
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		doctors.save(d);
-		return requests.save(request);
+		return r;
 	}
 	
 	@Transactional(readOnly = false)
