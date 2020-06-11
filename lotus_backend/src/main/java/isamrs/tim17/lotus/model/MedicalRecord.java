@@ -34,7 +34,7 @@ public class MedicalRecord {
 	@Column(name="weight", unique=false, nullable=false)
 	private float weight;
 	@ManyToMany(mappedBy = "medicalRecords", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Allergy> allergies = new HashSet<Allergy>();
+	private Set<Allergy> allergies = new HashSet<>();
 	@Column(name="bloodType", unique=false, nullable=false)
 	private String bloodType;
    

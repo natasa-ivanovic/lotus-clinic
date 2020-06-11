@@ -1,9 +1,12 @@
 package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.dto.UserDTO;
+import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
@@ -30,6 +35,9 @@ import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.RoomRequestType;
+import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
@@ -46,6 +54,7 @@ public class RequestController {
 	@Autowired public PatientService patientService;
 	@Autowired public DoctorService doctorService;
 	@Autowired public AppointmentTypeService appTypeService;
+	@Autowired public AppointmentPriceService appPriceService;
 	@Autowired public MedicalRecordService medicalService;
 	@GetMapping("/registrations")
 	public ResponseEntity<List<RegistrationRequestDTO>> getRegistrations() {
@@ -70,18 +79,78 @@ public class RequestController {
 		List<Object> requests = new ArrayList<>();
 		
 		for (RoomRequest r : rr) {
-			Doctor doctor = doctorService.findOne(r.getDoctor());
-			if (doctor.getClinic().getId() == clinicId) {
-				Patient patient = patientService.findOne(r.getPatient());
-				Date startDate = r.getDate();
-				RoomRequestDTO dto = new RoomRequestDTO(r.getId(), startDate, patient, doctor);
-				requests.add(dto);
+			List<Doctor> doctors = getDoctors(r);
+			List<Doctor> clinicDoctors = new ArrayList<>();
+			Patient patient = patientService.findOne(r.getPatient());
+			Date startDate = r.getDate();
+			for (Doctor d : doctors) {
+				if (d.getClinic().getId() == clinicId) {
+					clinicDoctors.add(d);
+				}
 			}
+			RoomRequestDTO dto = null;
+			if (clinicDoctors.size() == 1)
+				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors.get(0));
+			else
+				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors, r.getAppType().getName());
+			requests.add(dto);
 		}
 		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 	
 	
+	@PostMapping("/appointment")
+	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
+		
+		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
+			return new ResponseEntity<>("Error in request for room! All fields must be populated.", HttpStatus.BAD_REQUEST);
+		
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		Set<Doctor> doctors = new HashSet<>();
+		Doctor doc = doctorService.findOne(request.getDoctors().get(0).getId());
+		doctors.add(doc);
+		RoomRequest roomRequest = null;
+		if (user.getRole().equals("PATIENT"))
+			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP, doc.getSpecialty().getPrice());
+		else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId())
+			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors, RoomRequestType.DOCTOR_APP, doc.getSpecialty().getPrice());
+		else 
+			return new ResponseEntity<>("Cannot request an appointment for another doctor!", HttpStatus.BAD_REQUEST);
+		roomRequest.setStatus(RequestStatus.PENDING);
+		service.save(roomRequest);
+		return new ResponseEntity<>(HttpStatus.OK);	
+	}
+	
+	@PostMapping("/operation")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> requestOperation(@RequestBody RoomRequestDTO request) {
+		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
+			return new ResponseEntity<>("Error in request for room! All fields must be populated.", HttpStatus.BAD_REQUEST);
+		
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		long appId = 0;
+		try {			
+			appId = Long.parseLong(request.getType());
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		AppointmentPrice type = appPriceService.findOne(appId);
+		Set<Doctor> doctors = convertDocsToSet(request.getDoctors());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(request.getStartDate());
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		RoomRequest roomRequest = new RoomRequest(cal.getTime(), request.getPatient().getId(), doctors, RoomRequestType.DOCTOR_OPER);
+		roomRequest.setStatus(RequestStatus.PENDING);
+		roomRequest.setAppType(type.getType());
+		roomRequest.setPrice(type.getPrice());
+		roomRequest.setClinic(doctor.getClinic());
+		service.save(roomRequest);
+		return new ResponseEntity<>(HttpStatus.OK);	
+	}
 	
 	
 	@PostMapping("/registrations/auth/{id}")
@@ -131,5 +200,35 @@ public class RequestController {
 		medicalService.save(mr);
 		
 		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
+	}
+	
+	private List<Doctor> getDoctors(RoomRequest r) {
+		Set<Doctor> docs = r.getDoctors();
+		List<Doctor> doctors = new ArrayList<>();
+		
+		Iterator<Doctor> it = docs.iterator();
+		while(it.hasNext()) {
+			Doctor d = doctorService.findOne(it.next().getId());
+			doctors.add(d);
+		}
+		
+		return doctors;
+	}
+	
+	private boolean checkDoctorsId(List<UserDTO> doctors) {
+		for (UserDTO doc : doctors) {
+			if (doc.getId() == 0)
+				return false;
+		}
+		return true;
+	}
+	
+	private Set<Doctor> convertDocsToSet(List<UserDTO> docs) {
+		Set<Doctor> doctors = new HashSet<>();
+		for (UserDTO doctor : docs) {
+			Doctor d = doctorService.findOne(doctor.getId());
+			doctors.add(d);
+		}
+		return doctors;
 	}
 }

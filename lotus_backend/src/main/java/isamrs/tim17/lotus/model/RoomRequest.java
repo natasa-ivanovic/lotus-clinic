@@ -7,10 +7,16 @@ package isamrs.tim17.lotus.model;
  ***********************************************************************/
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("ROOM")
@@ -19,21 +25,40 @@ public class RoomRequest extends Request {
 	private Date date;
 	@Column(name = "patient", nullable = true, unique = false)
 	private Long patient;
-	@Column(name = "doctor", nullable = true, unique = false)
-	private Long doctor;
+	
+	@Column(name="price", unique = false)
+	private double price;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private AppointmentType appType; // contains boolean operation
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Doctor> doctors = new HashSet<>();
+	
 	@Column(name = "type", nullable = true, unique = false)
 	private RoomRequestType type;
 	
 	public RoomRequest() {}
 		
-	public RoomRequest(Date date, Long patient, Long doctor, RoomRequestType type) {
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type, double price) {
 		super();
 		this.date = date;
 		this.patient = patient;
-		this.doctor = doctor;
+		this.doctors = doctors;
+		this.type = type;
+		this.price = price;
+	}
+	
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type) {
+		super();
+		this.date = date;
+		this.patient = patient;
+		this.doctors = doctors;
 		this.type = type;
 	}
-
+	
+	
+	
 	public Date getDate() {
 		return date;
 	}
@@ -46,11 +71,11 @@ public class RoomRequest extends Request {
 	public void setPatient(Long patient) {
 		this.patient = patient;
 	}
-	public Long getDoctor() {
-		return doctor;
+	public Set<Doctor> getDoctors() {
+		return doctors;
 	}
-	public void setDoctor(Long doctor) {
-		this.doctor = doctor;
+	public void setDoctor(Set<Doctor> doctors) {
+		this.doctors = doctors;
 	}
 	public RoomRequestType getType() {
 		return type;
@@ -58,6 +83,27 @@ public class RoomRequest extends Request {
 	public void setType(RoomRequestType type) {
 		this.type = type;
 	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public AppointmentType getAppType() {
+		return appType;
+	}
+
+	public void setAppType(AppointmentType appType) {
+		this.appType = appType;
+	}
+
+	public void setDoctors(Set<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+	
 	
 	
 }

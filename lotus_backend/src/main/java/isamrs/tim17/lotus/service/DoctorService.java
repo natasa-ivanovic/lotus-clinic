@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.repository.DoctorRepository;
 
@@ -25,6 +26,10 @@ public class DoctorService {
 	
 	public List<Doctor> findBySpecialty(AppointmentType specialty) {
 		return doctors.findBySpecialty(specialty.toString());
+	}
+	
+	public List<Doctor> findByClinic(Clinic clinic) {
+		return doctors.findAllByClinic(clinic);
 	}
 	
 	public Doctor save(Doctor doctor) {

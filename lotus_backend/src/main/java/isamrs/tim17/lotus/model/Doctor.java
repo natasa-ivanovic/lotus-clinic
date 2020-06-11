@@ -34,6 +34,9 @@ public class Doctor extends User {
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;
 	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<RoomRequest> requests = new HashSet<>();
+	
 	public Doctor() {}
 
 	public Doctor(UserDTO doctor) {
@@ -71,13 +74,15 @@ public class Doctor extends User {
 		this.reviews = reviews;
 	}
 
-	/*public Doctor(String email, String password, String name, String surname, String address, String city,
-			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
-			AppointmentType speciality, Operation operation, Clinic clinic) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender, clinic);
-		this.speciality = speciality;
-		this.operation = operation;
-	}*/
+	public Set<RoomRequest> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Set<RoomRequest> requests) {
+		this.requests = requests;
+	}
+
+	
 	
 	 
 

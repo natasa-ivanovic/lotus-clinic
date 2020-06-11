@@ -19,8 +19,6 @@ public class AppointmentTypeDTO {
 	public AppointmentTypeDTO(AppointmentType at) {
 		this.id = at.getId();
 		this.name = at.getName();
-		this.price = at.getPrice();
-		this.discount = at.getDiscount();	
 		this.setOperation(at.isOperation());
 	}
 

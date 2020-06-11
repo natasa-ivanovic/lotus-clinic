@@ -16,12 +16,22 @@
                                 v-for="(req, i) in requests"
                                 :key="i"
                                 >
-                                <v-list-item-content>
-                                    <v-list-item-title>New request</v-list-item-title>
+                                <v-list-item-content v-if="!req.operation">
+                                    <v-list-item-title>New appointment request</v-list-item-title>
                                     <v-list-item-content>
                                         Term: {{formatDate(req.startDate)}} <br/>
                                         Appointment type: {{req.type}} <br/>                                       
-                                        Doctor: {{req.doctor.name}}  {{req.doctor.surname}} <br/>
+                                        Doctor: {{req.doctors[0].name}}  {{req.doctors[0].surname}} <br/>
+                                        Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
+                                    </v-list-item-content>
+                                    
+                                </v-list-item-content>
+                                <v-list-item-content v-else>
+                                    <v-list-item-title>New operation request</v-list-item-title>
+                                    <v-list-item-content>
+                                        Term: {{formatDate(req.startDate)}} <br/>
+                                        Appointment type: {{req.type}} <br/> 
+                                        Doctors: {{req.doctors.map(d => d.name + " " + d.surname).join(", ")}} <br/>
                                         Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
                                     </v-list-item-content>
                                     

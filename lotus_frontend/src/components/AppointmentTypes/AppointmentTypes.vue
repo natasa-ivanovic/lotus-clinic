@@ -44,8 +44,6 @@ export default {
       headers: [
         {text: 'ID', value: 'id'},
         {text: 'Name', value: 'name'},
-        {text: 'Price', value: 'price'},
-        {text: 'Discount', value: 'discount'},
         {text: 'Operation', value: 'operation'},
         {text: 'Edit', value: 'edit', sortable: false},
         {text: 'Delete', value: 'delete', sortable: false}
