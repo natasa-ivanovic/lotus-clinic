@@ -1,7 +1,5 @@
 package isamrs.tim17.lotus.model;
 
-import java.util.ArrayList;
-
 /***********************************************************************
  * Module:  RoomRequest.java
  * Author:  Shejv
@@ -10,8 +8,6 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -30,15 +26,13 @@ public class RoomRequest extends Request {
 	@Column(name = "patient", nullable = true, unique = false)
 	private Long patient;
 	
-	@Column(name="price", unique = false, nullable = false)
+	@Column(name="price", unique = false)
 	private double price;
-	@Column(name="discount", unique = false, nullable = false)
-	private double discount;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private AppointmentType appType; // contains boolean operation
 
-	@ManyToMany(mappedBy="requests", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Doctor> doctors = new HashSet<>();
 	
 	@Column(name = "type", nullable = true, unique = false)
@@ -46,12 +40,13 @@ public class RoomRequest extends Request {
 	
 	public RoomRequest() {}
 		
-	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type) {
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type, double price) {
 		super();
 		this.date = date;
 		this.patient = patient;
 		this.doctors = doctors;
 		this.type = type;
+		this.price = price;
 	}
 	
 	
@@ -86,14 +81,6 @@ public class RoomRequest extends Request {
 
 	public void setPrice(double price) {
 		this.price = price;
-	}
-
-	public double getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(double discount) {
-		this.discount = discount;
 	}
 
 	public AppointmentType getAppType() {

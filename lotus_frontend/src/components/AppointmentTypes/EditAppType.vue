@@ -29,16 +29,6 @@
                     :rules="[rules.required]"
                     v-model="appType.name"
                     outlined />
-                  <v-text-field
-                    label="Price"
-                    :rules="[rules.required, rules.isNumber]"
-                    v-model="appType.price"
-                    outlined />
-                  <v-text-field
-                    label="Discount"
-                    :rules="[rules.required, rules.isNumber, rules/isBetween]"
-                    v-model="appType.discount"
-                    outlined />
                   <v-checkbox 
                     v-model="appType.operation"
                     label="Operation" />
@@ -65,9 +55,7 @@ export default {
         return {
             appType: {},
             rules: {
-                required: value => !!value || value === 0 || 'Field is required.',
-                isNumber: value => !isNaN(value) || 'Price must be a number.',
-                isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
+                required: value => !!value || value === 0 || 'Field is required.'
             },
             valid: true
         }

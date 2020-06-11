@@ -33,7 +33,7 @@ public class AppointmentTypeController {
 		if (appointmentDTO == null || "".equals(appointmentDTO.getName()) || appointmentDTO.getName() == null || appointmentDTO.getPrice() == 0)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
-		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.getPrice(), appointmentDTO.getDiscount(), appointmentDTO.isOperation());
+		AppointmentType at = new AppointmentType(appointmentDTO.getName(), appointmentDTO.isOperation());
 		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -87,8 +87,6 @@ public class AppointmentTypeController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		at.setName(newAppointmentType.getName());
-		at.setPrice(newAppointmentType.getPrice());
-		at.setDiscount(newAppointmentType.getDiscount());
 		at.setOperation(newAppointmentType.isOperation());
 		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);

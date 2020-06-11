@@ -318,7 +318,7 @@ public class PatientController {
 	 * @param request RoomRequestDTO object which contains all the necessary information for the appointment request.
 	 * @return ResponseEntity This returns the HTTP status code.
 	 */
-	@PostMapping("/patients/request/finish")
+	/*@PostMapping("/patients/request/finish")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
 		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
@@ -333,7 +333,7 @@ public class PatientController {
 		roomRequest.setStatus(RequestStatus.PENDING);
 		requestService.save(roomRequest);
 		return new ResponseEntity<>(HttpStatus.OK);	
-	}
+	}*/
 	
 	/**
 	 * This method is used to handle a rating for previous appointments.

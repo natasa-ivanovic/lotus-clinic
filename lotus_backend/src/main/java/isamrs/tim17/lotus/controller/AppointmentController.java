@@ -472,7 +472,8 @@ public class AppointmentController {
 		app.setStartDate(startDate);
 		app.setEndDate(endDate);
 		app.setAppointmentType(doctor.getSpecialty().getType());
-		app.setPrice(doctor.getSpecialty().getPrice());
+		app.setPrice(rr.getPrice()); // sacuvana cena iz requesta
+		app.setDiscount(0);
 		service.save(app);
 
 		CalendarEntry entry = new CalendarEntry(app);

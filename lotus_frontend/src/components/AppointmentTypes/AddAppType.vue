@@ -13,16 +13,6 @@
                 :rules="[rules.required]"
                 v-model="appointmentType.name"
                 required />
-                <v-text-field
-                label="Price"
-                :rules="[rules.required, rules.isNumber]"
-                v-model="appointmentType.price"
-                required />
-                <v-text-field
-                label="Discount"
-                :rules="[rules.required, rules.isNumber, rules.isBetween]"
-                v-model="appointmentType.discount"
-                required />
                 <v-checkbox 
                 v-model="appointmentType.operation"
                 label="Operation" />
@@ -45,14 +35,10 @@ export default {
       return {
         appointmentType: {
           name: '',
-          price: '',
-          discount: '',
           operation: false
         },
         rules: {
-          required: value => !!value || value === 0 || 'Field is required.',
-          isNumber: value => !isNaN(value) || 'Price must be a number.',
-          isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
+          required: value => !!value || value === 0 || 'Field is required.'
         },
         valid: true
       }

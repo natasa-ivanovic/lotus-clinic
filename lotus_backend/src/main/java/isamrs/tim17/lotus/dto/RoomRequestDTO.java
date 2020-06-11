@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,18 +17,23 @@ public class RoomRequestDTO {
 	private boolean operation;
 	
 	
-	public RoomRequestDTO() {}
+	public RoomRequestDTO() {
+		this.doctors = new ArrayList<>();
+		}
 	
 	public RoomRequestDTO(long id, Date date, Patient patient, Doctor doctor) {
+		this();
 		this.id = id;
 		this.startDate = date;
 		this.patient = new UserDTO(patient);
+		this.doctors = new ArrayList<>();
 		this.doctors.add(new UserDTO(doctor));
 		this.type = doctor.getSpecialty().getType().getName();
 		this.operation = false;
 	}
 	
 	public RoomRequestDTO(long id, Date date, Patient patient, List<Doctor> doctors) {
+		this();
 		this.id = id;
 		this.startDate = date;
 		this.patient = new UserDTO(patient);

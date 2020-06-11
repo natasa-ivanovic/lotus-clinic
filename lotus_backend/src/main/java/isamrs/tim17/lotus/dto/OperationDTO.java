@@ -20,13 +20,13 @@ public class OperationDTO {
 	public OperationDTO(Operation o) {
 		this.startDate = o.getStartDate();
 		this.endDate = o.getEndDate();
-		this.operationType = o.getType().getType().getName();
+		this.operationType = o.getType().getName();
 		this.roomName = o.getRoom().getName();
 		this.clinicName = o.getClinic().getName();
 		this.doctors = new ArrayList<>();
 		for (Doctor d : o.getDoctor())
 			doctors.add(d.getName() + " " + d.getSurname());
-		this.setPrice(o.getType().getPrice());
+		this.price = o.getPrice();
 	}
 
 	public Date getStartDate() {

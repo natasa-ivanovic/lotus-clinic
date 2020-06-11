@@ -1,3 +1,5 @@
+insert into clinical_centres (name) values ('Centre 1');
+
 insert into clinics (address, description, name) values ('Jevrejska 2', 'General clinic', 'Clinic1');
 insert into clinics (address, description, name) values ('Fruskogorska 12', 'Specialist clinic', 'Clinic2');
 
@@ -7,19 +9,19 @@ insert into rooms (name, clinic_id) values ('C2-Room 210', 2);
 insert into rooms (name, clinic_id) values ('C2-Room 230', 2);
 
 /* appointment types */
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Office visit', 200, 0, 1, false);
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Physical evaluation', 300, 50, 1, false);
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Dentist appointment', 400, 0, 2, false);
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Optometrist appointment', 500, 10, 2, false);
+insert into appointment_types (name, clinic_id, operation) values ('Office visit', 1, false);
+insert into appointment_types (name, clinic_id, operation) values ('Physical evaluation', 1, false);
+insert into appointment_types (name, clinic_id, operation) values ('Dentist appointment', 2, false);
+insert into appointment_types (name, clinic_id, operation) values ('Optometrist appointment', 2, false);
 
 /* operation types */
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Surgery with full anestethic', 5000, 0, 1, true);
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Surgery with local anestethic', 3500, 0, 1, true);
+insert into appointment_types (name, clinic_id, operation) values ('Surgery with full anestethic', 1, true);
+insert into appointment_types (name, clinic_id, operation) values ('Surgery with local anestethic', 1, true);
 
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Teeth repair with full anestethic', 2500, 0, 2, true);
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Teeth repair without anestethic', 1000, 0, 2, true);
+insert into appointment_types (name, clinic_id, operation) values ('Teeth repair with full anestethic', 2, true);
+insert into appointment_types (name, clinic_id, operation) values ('Teeth repair without anestethic', 2, true);
 
-insert into appointment_types (name, price, discount, clinic_id, operation) values ('Laser eye surgery', 15000, 0, 2, true);
+insert into appointment_types (name, clinic_id, operation) values ('Laser eye surgery',2, true);
 
 /* clinic 1 prices */
 insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1000, 1, 1);
@@ -39,9 +41,6 @@ insert into appointment_price (discount, price, clinic_id, type_id) values (0, 3
 insert into appointment_price (discount, price, clinic_id, type_id) values (0, 2500, 2, 7);
 insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1000, 2, 8);
 insert into appointment_price (discount, price, clinic_id, type_id) values (0, 15000, 2, 9);
-
-
-insert into clinical_centres (name) values ('Centre 1');
 
 /* patients */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date) values (12345678912, 'Novosadski put 17', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'patient1@gmail.com', 1, 'Packijento', '$2y$10$Hgm8RGydwLrN9vbZCP5SQ.Va7TTnA1RMH3W8FBERwO6tEISeIj9ee', '0699114909', 'Pacijentic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07');
@@ -151,11 +150,11 @@ insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);
 
 /* finished operations with their calendar entries */
 
-insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id) values (1, '2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 3, 1, 1, 7);
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (1, '2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 3, 1, 1, 5, 4000);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 4, 1);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 12, 1);
 
-insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id) values (2, '2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 3, 1, 3, 11);
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (2, '2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 3, 1, 3, 9, 5000);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 5, 2);
 
 /* doctors that were in operations that finished */

@@ -120,7 +120,7 @@ public class RequestController {
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
 		
 		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Error in request for room! All fields must be populated.", HttpStatus.BAD_REQUEST);
 		
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) a.getPrincipal();
@@ -129,10 +129,11 @@ public class RequestController {
 		doctors.add(doc);
 		RoomRequest roomRequest = null;
 		if (user.getRole().equals("PATIENT"))
-			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP);
-		else if (user.getRole().equals("DOCTOR"))
-			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors, RoomRequestType.DOCTOR_APP);
-		
+			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP, doc.getSpecialty().getPrice());
+		else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId())
+			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors, RoomRequestType.DOCTOR_APP, doc.getSpecialty().getPrice());
+		else 
+			return new ResponseEntity<>("Cannot request an appointment for another doctor!", HttpStatus.BAD_REQUEST);
 		roomRequest.setStatus(RequestStatus.PENDING);
 		service.save(roomRequest);
 		return new ResponseEntity<>(HttpStatus.OK);	
