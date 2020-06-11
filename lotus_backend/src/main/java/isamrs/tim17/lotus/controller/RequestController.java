@@ -115,7 +115,7 @@ public class RequestController {
 		return true;
 	}
 	
-	/*@PostMapping("/appointment")
+	@PostMapping("/appointment")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
 		
@@ -125,7 +125,7 @@ public class RequestController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) a.getPrincipal();
 		Set<Doctor> doctors = new HashSet<>();
-		Doctor doc = doctorService.findOne(request.getDoctor().getId());
+		Doctor doc = doctorService.findOne(request.getDoctors().get(0).getId());
 		doctors.add(doc);
 		RoomRequest roomRequest = null;
 		if (user.getRole().equals("PATIENT"))
@@ -136,18 +136,10 @@ public class RequestController {
 		roomRequest.setStatus(RequestStatus.PENDING);
 		service.save(roomRequest);
 		return new ResponseEntity<>(HttpStatus.OK);	
-	}*/
+	}
 	
-	/*@PostMapping("/operation")
-	@PreAuthorize("hasRole('DOCTOR)")
-	public ResponseEntity<Object> requestOperation(@RequestBody OperationRequestDTO request) {
+	
 		
-		
-	}*/
-	
-	
-	
-	
 	@PostMapping("/registrations/auth/{id}")
 	public ResponseEntity<Object> authenticateRegistration(@PathVariable("id") long id) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();

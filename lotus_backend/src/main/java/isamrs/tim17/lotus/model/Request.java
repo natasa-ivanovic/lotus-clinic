@@ -38,6 +38,8 @@ public abstract class Request {
 	private RequestStatus status;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClinicalCentreAdministrator admin;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Clinic clinic;
 	
 	public Long getId() {
 		return id;
@@ -56,6 +58,14 @@ public abstract class Request {
 	}
 	public void setAdmin(ClinicalCentreAdministrator admin) {
 		this.admin = admin;
+	}
+	
+	public Clinic getClinic() {
+		return clinic;
+	}
+	
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
 	}
 	
 }

@@ -12,6 +12,7 @@ public class AppointmentPriceDTO {
 	private long type_id;
 	private double price;
 	private double discount;
+	private boolean operation;
 	private Set<UserDTO> doctors = new HashSet<>();
 	
 	public AppointmentPriceDTO() {
@@ -28,6 +29,7 @@ public class AppointmentPriceDTO {
 		for(Doctor d : ap.getDoctors()) {
 			doctors.add(new UserDTO(d));
 		}	
+		this.setOperation(ap.getType().isOperation());
 	}
 
 	public long getId() {
@@ -76,5 +78,13 @@ public class AppointmentPriceDTO {
 
 	public void setDoctors(Set<UserDTO> doctors) {
 		this.doctors = doctors;
+	}
+
+	public boolean isOperation() {
+		return operation;
+	}
+
+	public void setOperation(boolean operation) {
+		this.operation = operation;
 	}
 }

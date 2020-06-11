@@ -2,9 +2,11 @@ package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,7 @@ import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
@@ -40,6 +43,7 @@ import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicReviewService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
@@ -75,6 +79,10 @@ public class PatientController {
 
 	@Autowired
 	private ClinicReviewService clinicReviewService;
+	
+	@Autowired
+	private CalendarEntryService calendarService;
+	
 	/**
 	 * This method is used for getting the list of patients.
 	 * 
@@ -217,6 +225,15 @@ public class PatientController {
 		return new ResponseEntity<>(p, HttpStatus.OK);
 	}
 
+	/**
+	 * This method is used to return a list of free terms for doctors which can do a specific
+	 * type of appointment. It returns either a list of doctors and their free terms
+	 * or a list of clinics which a list of doctors and their free terms.
+	 * 
+	 * @param pr Patient request object which contains the requestDate, appointmentType and 
+	 * a boolean which indicates whether the user wants to see clinics or just their doctors.
+	 * @return ResponseEntity This returns the HTTP status code along the objects that were requested.
+	 */
 	@PostMapping("/patients/request")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> requestList(@RequestBody PatientRequest pr) {
@@ -228,8 +245,6 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		try {
 			if (pr.isClinics()) {
-				// trebas vratiti listu klinika koja sadrzi barem jednog lekara koji moze da obavi pregled na taj dan
-				// lista clinic DTO objekata koji imaju liste DTO od 1+ lekar DTO sa bitnim stvarima
 				List<Clinic> clinics = clinicService.findAll();
 				ListIterator<Clinic> it = clinics.listIterator();
 				List<ClinicDTO> clinicList = new ArrayList<>();
@@ -245,11 +260,10 @@ public class PatientController {
 							docIt.remove();						
 							continue;
 						}									
-						List<Date> availableDates = DateUtil.getAllTerms(date);
+						List<Date> availableDates = DateUtil.getAllTerms(date, false);
 						Date endDate = DateUtil.endOfDay(date);
-						List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
-						// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
-						availableDates = DateUtil.removeOverlap(availableDates, appointments);
+						List<CalendarEntry> calendarEntries = calendarService.findByMedicalPersonAndDate(d, date, endDate);
+						availableDates = DateUtil.removeOverlap(availableDates, calendarEntries);
 						if (availableDates.isEmpty()) 
 							docIt.remove();						
 						 else {
@@ -272,21 +286,19 @@ public class PatientController {
 					return new ResponseEntity<>("Empty list of clinics", HttpStatus.BAD_REQUEST);
 				return new ResponseEntity<>(clinicList, HttpStatus.OK);
 			} else {
-				// trebas vratiti listu lekara koji mogu da obave pregled na taj dan, znaci nisu full 
 				List<Doctor> doctors = doctorService.findAll();
 				List<DoctorDTO> results = new ArrayList<>();
 				ListIterator<Doctor> it = doctors.listIterator();
 				while (it.hasNext()) {
 					Doctor d = it.next();
-					if (d.getSpecialty().getId() != type.getId()) {
+					if (d.getSpecialty().getType().getId() != type.getId()) {
 						it.remove();
 						continue;
 					}
-					List<Date> availableDates = DateUtil.getAllTerms(date);
+					List<Date> availableDates = DateUtil.getAllTerms(date, false);
 					Date endDate = DateUtil.endOfDay(date);
-					List<Appointment> appointments = appointmentService.findByDate(d, date, endDate);
-					// TODO later, appointments zameniti sa listom datuma iz radnog kalendara!
-					availableDates = DateUtil.removeOverlap(availableDates, appointments);
+					List<CalendarEntry> calendarEntries = calendarService.findByMedicalPersonAndDate(d, date, endDate);
+					availableDates = DateUtil.removeOverlap(availableDates, calendarEntries);
 					if (!availableDates.isEmpty()) {
 						 List<DoctorReview> ratingList = docReviewService.findAllByDoctor(d);
 						 double rating = RatingUtil.getAverageDoctorRating(ratingList);
@@ -300,6 +312,35 @@ public class PatientController {
 		}
 	}
 	
+	/**
+	 * This method is used to send a request for an appointment.
+	 * 
+	 * @param request RoomRequestDTO object which contains all the necessary information for the appointment request.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 */
+	@PostMapping("/patients/request/finish")
+	@PreAuthorize("hasRole('PATIENT')")
+	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
+		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Patient patient = (Patient) a.getPrincipal();
+		Set<Doctor> doctors = new HashSet<>();
+		Doctor doctor = doctorService.findOne(request.getDoctors().get(0).getId()); // appointment uvek ima 1 lekara
+		doctors.add(doctor); 
+		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), doctors, RoomRequestType.PATIENT_APP);
+		
+		roomRequest.setStatus(RequestStatus.PENDING);
+		requestService.save(roomRequest);
+		return new ResponseEntity<>(HttpStatus.OK);	
+	}
+	
+	/**
+	 * This method is used to handle a rating for previous appointments.
+	 * 
+	 * @param rating RatingDTO object which contains all the necessary information for the doctor and clinic rating.
+	 * @return ResponseEntity This returns the HTTP status code.
+	 */
 	@PostMapping("/patients/rate")
 	@PreAuthorize("hasRole('PATIENT')")
 	public ResponseEntity<Object> sendRating(@RequestBody RatingDTO rating) {
@@ -310,14 +351,20 @@ public class PatientController {
 		Doctor d = a.getDoctor();
 		DoctorReview docReview = new DoctorReview(rating.getDoctorRating(), d);
 		docReviewService.save(docReview);
-		// todo add za clinics
 		Clinic c = d.getClinic();
 		ClinicReview clinicReview = new ClinicReview(rating.getClinicRating(), c);
 		clinicReviewService.save(clinicReview);
-		// save new appointment data (rated = true)
 		a.setReviewed(true);
 		appointmentService.save(a);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	private boolean checkDoctorsId(List<UserDTO> doctors) {
+		for (UserDTO doc : doctors) {
+			if (doc.getId() == 0)
+				return false;
+		}
+		return true;
 	}
 
 

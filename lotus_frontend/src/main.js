@@ -30,8 +30,15 @@ Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 // keep on heroku for deploy and localhost for testing
 
 
+<<<<<<< HEAD
 //Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
 Vue.axios.defaults.baseURL = "http://localhost:9001";
+=======
+
+Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+// Vue.axios.defaults.baseURL = "http://localhost:9001";
+
+>>>>>>> master
 
 
 // all errors pass through this function before being catched in individual catch functions

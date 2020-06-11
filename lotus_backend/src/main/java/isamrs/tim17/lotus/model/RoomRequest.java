@@ -1,5 +1,7 @@
 package isamrs.tim17.lotus.model;
 
+import java.util.ArrayList;
+
 /***********************************************************************
  * Module:  RoomRequest.java
  * Author:  Shejv
@@ -8,6 +10,7 @@ package isamrs.tim17.lotus.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +20,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("ROOM")
@@ -25,9 +29,14 @@ public class RoomRequest extends Request {
 	private Date date;
 	@Column(name = "patient", nullable = true, unique = false)
 	private Long patient;
-	//@Column(name = "doctor", nullable = true, unique = false)
-	//private Long doctor;
 	
+	@Column(name="price", unique = false, nullable = false)
+	private double price;
+	@Column(name="discount", unique = false, nullable = false)
+	private double discount;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private AppointmentType appType; // contains boolean operation
 
 	@ManyToMany(mappedBy="requests", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Doctor> doctors = new HashSet<>();
@@ -44,7 +53,8 @@ public class RoomRequest extends Request {
 		this.doctors = doctors;
 		this.type = type;
 	}
-
+	
+	
 	public Date getDate() {
 		return date;
 	}
@@ -69,6 +79,35 @@ public class RoomRequest extends Request {
 	public void setType(RoomRequestType type) {
 		this.type = type;
 	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+
+	public AppointmentType getAppType() {
+		return appType;
+	}
+
+	public void setAppType(AppointmentType appType) {
+		this.appType = appType;
+	}
+
+	public void setDoctors(Set<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+	
 	
 	
 }

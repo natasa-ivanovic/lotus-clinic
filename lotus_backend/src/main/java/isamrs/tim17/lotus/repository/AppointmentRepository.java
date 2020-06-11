@@ -23,7 +23,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	List<Appointment> findByStatus(AppointmentStatus status);
 	List<Appointment> findByMedicalRecord(MedicalRecord id);
 	List<Appointment> findByDoctor(Doctor id);
+
 	
+	Page<Appointment> findAllByMedicalRecordAndStatus(MedicalRecord id, AppointmentStatus status, Pageable pageable);
+
 	@Query("SELECT a FROM Appointment a where a.doctor = :id AND (a.startDate BETWEEN :startDate AND :endDate) order by a.startDate")
 	List<Appointment> getAllBetweenDates(@Param("id") Doctor id, @Param("startDate") Date startDate, @Param("endDate") Date endDate); //Date start, Date end);
 	

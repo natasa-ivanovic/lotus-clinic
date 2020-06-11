@@ -5,8 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.CalendarEntry;
 
 public class DateUtil {
 
@@ -46,7 +45,15 @@ public class DateUtil {
 		return end;
 	}
 
-	public static List<Date> getAllTerms(Date day) {
+	/**
+	 * This method is used to get all available terms for a given day.
+	 * 
+	 * @param day Date object which represents the day.
+	 * @param startOnDayHour Boolean which specifies whether the terms should start from 
+	 * 		the earliest available (false) or from the Hour data from the day Date object (true)
+	 * @return List<Date> all available terms for the day.
+	 */
+	public static List<Date> getAllTerms(Date day, boolean startOnDayHour) {
 		List<Date> data = new ArrayList<Date>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(day);
@@ -55,26 +62,33 @@ public class DateUtil {
 		}
 		int workStart, workEnd, breakStart;
 		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			workStart = weekendWorkStart;
+			if (startOnDayHour)
+				workStart = cal.get(Calendar.HOUR_OF_DAY);
+			else
+				workStart = weekendWorkStart;
 			workEnd = weekendWorkEnd;
 			breakStart = weekendBreakStart;
 		} else {
-			workStart = weekdayWorkStart;
+			if (startOnDayHour)
+				workStart = cal.get(Calendar.HOUR_OF_DAY);
+			else
+				workStart = weekdayWorkStart;
 			workEnd = weekdayWorkEnd;
 			breakStart = weekdayBreakStart;
 		}
 		int currentTime = workStart;
 		cal.set(Calendar.HOUR_OF_DAY, currentTime);
-		cal.set(Calendar.MINUTE, 0);
+		if (!startOnDayHour)
+			cal.set(Calendar.MINUTE, 0);
 		int termDuration = 60 / termsPerHour;
-		// TODO: maybe change so term duration is flexible?
 		while (currentTime != workEnd) {
 			if (currentTime == breakStart) {
 				currentTime += breakDurationHours;
 				cal.add(Calendar.HOUR_OF_DAY, breakDurationHours);
 				continue;
 			}
-			for (int i = 0; i != termsPerHour; i++) {
+			int startMinutes = cal.get(Calendar.MINUTE) == 0 ? 0 : 1;
+			for (int i = startMinutes; i != termsPerHour; i++) {
 				Date newDate = cal.getTime();
 				data.add(newDate);
 				cal.add(Calendar.MINUTE, termDuration);
@@ -85,22 +99,18 @@ public class DateUtil {
 	}
 
 	/**
-	 * Removes all dates from accepted list that are in use by any appointments in
+	 * Removes all dates from accepted list that are in use by any calendar entries in
 	 * accepted list;
 	 * 
 	 * @param dates - list of dates to be removed from
-	 * @param apps  - list of appointments to be checked againts
+	 * @param apps  - list of appointments to be checked against
 	 * @return list<Date> of free dates for that day
 	 */
-	public static List<Date> removeOverlap(List<Date> dates, List<Appointment> apps) {
+	public static List<Date> removeOverlap(List<Date> dates, List<CalendarEntry> entries) {
 		Calendar startApp = Calendar.getInstance();
-		Calendar endApp = Calendar.getInstance();
 		Calendar startTerm = Calendar.getInstance();
-		for (Appointment a : apps) {
-			if (a.getStatus().equals(AppointmentStatus.PREMADE) || a.getStatus().equals(AppointmentStatus.CANCELED))
-				continue;
-			startApp.setTime(a.getStartDate());
-			endApp.setTime(a.getEndDate());
+		for (CalendarEntry c : entries) {
+			startApp.setTime(c.getStartDate());
 			for (Date d : dates) {
 				startTerm.setTime(d);
 				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme

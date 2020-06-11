@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.UserDTO;
-import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.Authority;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
@@ -31,6 +31,7 @@ import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AuthorityService;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.util.DateUtil;
@@ -45,7 +46,7 @@ public class DoctorController {
 	private ClinicService clinicService;
 	
 	@Autowired
-	private AppointmentService appointmentService;
+	private CalendarEntryService calendarService;
 	
 	@Autowired
 	private AppointmentPriceService appPriceService;
@@ -255,8 +256,8 @@ public class DoctorController {
 		long dateMili = Long.parseLong(date);
 		Date startDate = new Date(dateMili);
 		Date endDate = DateUtil.endOfDay(startDate);
-		List<Date> terms = DateUtil.getAllTerms(startDate);
-		List<Appointment> appointments = appointmentService.findByDate(doctor, startDate, endDate);
+		List<Date> terms = DateUtil.getAllTerms(startDate, false);
+		List<CalendarEntry> appointments = calendarService.findByMedicalPersonAndDate(doctor, startDate, endDate);
 		terms = DateUtil.removeOverlap(terms, appointments);
 		
 		return new ResponseEntity<>(terms, HttpStatus.OK);

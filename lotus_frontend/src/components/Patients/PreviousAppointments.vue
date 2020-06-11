@@ -13,20 +13,17 @@
                         <v-card>
                             <v-card-title>
                             Appointments
-                            <v-spacer></v-spacer>
-                            <v-text-field
-                                v-model="search"
-                                append-icon="mdi-magnify"
-                                label="Search"
-                                single-line
-                                hide-details
-                            ></v-text-field>
                             </v-card-title>
                             <v-data-table
                             :headers="headers"
                             :items="items"
-                            :search="search">
-                                <template v-slot:item.diagnosis="{ item }">
+                            :server-items-length="totalItems"
+                            :loading="loading"
+                            :options.sync="options"
+                            :footer-props="{
+                                itemsPerPageOptions: [1, 5, 10]
+                            }">
+                            <template v-slot:item.diagnosis="{ item }">
                                     <v-icon medium @click="showDiagnosis(item)">mdi-file-chart</v-icon>
                                 </template>
                                 <template v-slot:item.rate="{ item }">
@@ -54,7 +51,6 @@ export default {
     data() {
         return {
             items: [],
-            search: "",
             headers: [
                 {
                     text: 'Date',
@@ -98,26 +94,54 @@ export default {
             rating: false,
             diagnosis: false,
             ratedId: 0,
-            viewApp: {}
+            viewApp: {},
+            totalItems: 0,
+            loading: true,
+            options: {}
         }
     },
-    mounted() {
-        this.axios({url : apiURL, 
-            method: 'GET'
-          }).then(response => {
-            this.items = response.data;
-            this.items.forEach(item => {
-                item.doctor = item.doctorName + " " + item.doctorSurname;
-                item.date = this.getDateString(item.startDate, item.endDate);
-                if (item.recipes == null)
-                    item.recipes = ['No recipes prescribed.'];
-            })
-          }).catch((error) => {
-                console.log(error);
-                this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
-          });
+    watch: {
+        options: {
+            handler () {    
+                this.getDataFromApi();
+            },
+            deep: true,
+        },
     },
     methods: {
+        getDataFromApi: function() {
+            this.loading = true;
+            const { sortBy, sortDesc, page, itemsPerPage } = this.options
+            var requestUrl = apiURL + "?pageNo=" + (page - 1) + "&pageSize=" + itemsPerPage;
+            if (sortBy.length != 0) {
+                if (sortBy[0] == "date") 
+                    requestUrl = requestUrl + "&sortBy=startDate&descending=" + sortDesc[0];
+                else if (sortBy[0] == "doctor")
+                    requestUrl = requestUrl + "&sortBy=doctor.name&descending=" + sortDesc[0];
+                else if (sortBy[0] == "type")
+                    requestUrl = requestUrl + "&sortBy=appointmentType.name&descending=" + sortDesc[0];
+                else if (sortBy[0] == "roomName")
+                    requestUrl = requestUrl + "&sortBy=room.name&descending=" + sortDesc[0];
+                else if (sortBy[0] == "clinic")
+                    requestUrl = requestUrl + "&sortBy=clinic.name&descending=" + sortDesc[0];
+            }
+            console.log(requestUrl);
+            this.axios({url : requestUrl, 
+                method: 'GET'
+            }).then(response => {
+                this.loading = false;
+                this.items = response.data.content;
+                this.totalItems = response.data.totalElements;
+                this.items.forEach(item => {
+                    item.doctor = item.doctorName + " " + item.doctorSurname;
+                    item.date = this.getDateString(item.startDate, item.endDate);
+                    if (item.recipes == null)
+                        item.recipes = ['No recipes prescribed.'];
+                })
+            }).catch(() => {
+                this.loading = false;
+            });  
+        },
         showDiagnosis: function(app) {
             this.viewApp = app;
             this.diagnosis = true;

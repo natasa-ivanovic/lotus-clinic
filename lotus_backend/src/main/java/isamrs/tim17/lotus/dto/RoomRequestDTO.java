@@ -11,9 +11,10 @@ public class RoomRequestDTO {
 	private long id;
 	private Date startDate;
 	private UserDTO patient;
-	//private UserDTO doctor;
 	private List<UserDTO> doctors;
 	private String type;
+	private boolean operation;
+	
 	
 	public RoomRequestDTO() {}
 	
@@ -23,6 +24,7 @@ public class RoomRequestDTO {
 		this.patient = new UserDTO(patient);
 		this.doctors.add(new UserDTO(doctor));
 		this.type = doctor.getSpecialty().getType().getName();
+		this.operation = false;
 	}
 	
 	public RoomRequestDTO(long id, Date date, Patient patient, List<Doctor> doctors) {
@@ -32,7 +34,9 @@ public class RoomRequestDTO {
 		for (Doctor doctor : doctors) {
 			this.doctors.add(new UserDTO(doctor));
 		}
-		//this.type = doctor.getSpecialty().getType().getName();
+		this.operation = true;
+		//
+		
 	}
 
 	public String getType() {
@@ -73,6 +77,18 @@ public class RoomRequestDTO {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public boolean isOperation() {
+		return operation;
+	}
+
+	public void setOperation(boolean operation) {
+		this.operation = operation;
+	}
+
+	public void setDoctors(List<UserDTO> doctors) {
+		this.doctors = doctors;
 	}
 	
 	

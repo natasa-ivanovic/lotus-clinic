@@ -1,47 +1,85 @@
 <template>
-    <v-row>
-        <v-col>
-            <v-card>
-                <v-toolbar flat color="secondary" dark>
-                    <v-toolbar-title>Room requests</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text>
-                    <v-card-title v-if="requests.length == 0">
-                        No current appointment requests.
-                    </v-card-title>
-                    <v-list v-else>
-                        <v-list-item-group>
-                        <v-list-item
-                            v-for="(req, i) in requests"
-                            :key="i"
-                            >
-                            <v-list-item-content>
-                                <v-list-item-title>New request</v-list-item-title>
+    <div>
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-toolbar flat color="secondary" dark>
+                        <v-toolbar-title>Room requests</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-card-title v-if="requests.length == 0">
+                            No current appointment requests.
+                        </v-card-title>
+                        <v-list v-else>
+                            <v-list-item-group>
+                            <v-list-item
+                                v-for="(req, i) in requests"
+                                :key="i"
+                                >
                                 <v-list-item-content>
-                                    Term: {{formatDate(req.startDate)}} <br/>
-                                    Appointment type: {{req.type}} <br/>                                       
-                                    Doctor: {{req.doctor.name}}  {{req.doctor.surname}} <br/>
-                                    Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
+                                    <v-list-item-title>New request</v-list-item-title>
+                                    <v-list-item-content>
+                                        Term: {{formatDate(req.startDate)}} <br/>
+                                        Appointment type: {{req.type}} <br/>                                       
+                                        Doctor: {{req.doctor.name}}  {{req.doctor.surname}} <br/>
+                                        Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
+                                    </v-list-item-content>
+                                    
                                 </v-list-item-content>
-                                
-                            </v-list-item-content>
-                            <v-btn @click="approveRequest(req)" color="success">Approve</v-btn>
-                        </v-list-item>
-                        </v-list-item-group>
-                    </v-list>
-                </v-card-text>
-            </v-card>
-        </v-col>
-    </v-row>
-
+                                <v-btn @click="approveRequest(req)" color="success">Approve</v-btn>
+                            </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-toolbar flat color="secondary" dark>
+                        <v-toolbar-title>Vacation requests</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-card-title v-if="vacationRequests.length == 0">
+                            No current vacation requests.
+                        </v-card-title>
+                        <v-list v-else>
+                            <v-list-item-group>
+                            <v-list-item
+                                v-for="(req, i) in vacationRequests"
+                                :key="i"
+                                >
+                                <v-list-item-content>
+                                    <v-list-item-title>New request</v-list-item-title>
+                                    <v-list-item-content>
+                                        Start date: {{dateFormatJustDay(req.startDate)}} <br/>
+                                        End date: {{dateFormatJustDay(req.endDate)}} <br/>
+                                        From: {{req.name}} {{req.sureName}}
+                                    </v-list-item-content>
+                                    
+                                </v-list-item-content>
+                                <v-btn @click="processVacationRequest(req,i, true)" color="success">Approve</v-btn>
+                                <v-btn @click="processVacationRequest(req,i, false)" color="error">Reject</v-btn>
+                            </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script>
 const apiURL = "/api/requests/rooms";
+const vacationURL = "/api/vacation";
 export default {
     data() {
         return {
-            requests: []
+            requests: [],
+            vacationRequests: [],
+            toRemoveIdx: -1,
         }
     },
     mounted() {
@@ -54,6 +92,15 @@ export default {
             console.log(error);
             this.$store.commit('showSnackbar', {text: "Error in fetching room requests!", color: "error", })
         });
+        this.axios({
+            url: vacationURL,
+            method: "GET"
+        }).then(response => {
+            this.vacationRequests = response.data;
+        }).catch(error => {
+            console.log(error);
+            this.$store.commit('showSnackbar', {text: "Error in fetching vacation reqeuests!", color: "error", })
+        });
     },
     methods: {
         approveRequest(req) {
@@ -62,11 +109,37 @@ export default {
             this.$router.push({name: "freeRooms", params: {request: req}}); 
                     
         },
+        dateFormatJustDay: function(datestr) {
+          var date = new Date(datestr);
+          return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        },
         formatDate(date) {
             var d = new Date(date);
             var time = d.toTimeString().split(" ")[0];
-            var dateNew = d.toISOString().split("T")[0];
+            var dateNew = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
             return dateNew + " " + time;
+        },
+        processVacationRequest(req, idx, choice) {
+            var targeURL = "";
+            if(choice == true) {
+                targeURL = vacationURL+"/auth/" + req.id;
+            }
+            else {
+                targeURL = vacationURL+"/decline/" + req.id;
+            }
+            this.toRemoveIdx = idx
+            this.axios({
+            url: targeURL,
+            method: "POST"
+        }).then(response => {
+            console.log(response);
+            this.vacationRequests.splice(this.toRemoveIdx,1);
+
+        }).catch(error => {
+            console.log(error);
+            this.$store.commit('showSnackbar', {text: "Error in processing vacation reqeuests!", color: "error", })
+        });
+            
         }
     }
 }

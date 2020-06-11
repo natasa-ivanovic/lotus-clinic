@@ -32,72 +32,73 @@ import isamrs.tim17.lotus.service.PatientService;
 @RestController
 @RequestMapping("/api")
 public class MedicalRecordController {
-	
-	@Autowired private MedicalRecordService service;
-	@Autowired private PatientService patientService;
-	@Autowired private AppointmentService appService;
-	@Autowired private AllergyService allergyService;
+
+	@Autowired
+	private MedicalRecordService service;
+	@Autowired
+	private PatientService patientService;
+	@Autowired
+	private AppointmentService appService;
+	@Autowired
+	private AllergyService allergyService;
 
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> getMedicalRecord(@PathVariable("id") long id) {
 		Patient patient = patientService.findOne(id);
-		PatientDTO patientDto = new PatientDTO(patient); //patient, record
+		PatientDTO patientDto = new PatientDTO(patient); // patient, record
 		List<Appointment> finishedApps = appService.findFinished(patient.getMedicalRecord());
 		List<PremadeAppDTO> appDto = new ArrayList<>();
-		//appointmentDto
-		//operacije
-		//bolesti
-		for(Appointment app : finishedApps) {
+		// appointmentDto
+		// operacije
+		// bolesti
+		for (Appointment app : finishedApps) {
 			PremadeAppDTO a = new PremadeAppDTO(app);
 			appDto.add(a);
-			
+
 		}
 		HashMap<String, Object> response = new HashMap<>();
 		response.put("patient", patientDto);
 		response.put("appointments", appDto);
-		//response.put("operations", null);
+		// response.put("operations", null);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
-		
 	}
-	
+
+
 	@PutMapping("/medicalRecord")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<Object> updateMedicalRecord(@RequestBody MedicalRecordDTO medicalRecord) {
-		
+
 		if (isEmptyOrNull(medicalRecord))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		MedicalRecord mr = service.findOne(medicalRecord.getId());
 		if (mr == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		
+
 		mr.setHeight(medicalRecord.getHeight());
 		mr.setWeight(medicalRecord.getWeight());
-		
+
 		List<AllergyDTO> allergies = medicalRecord.getAllergies();
 		HashSet<Allergy> allergySet = new HashSet<>();
-		
+
 		for (AllergyDTO a : allergies) {
 			Allergy al = allergyService.findOne(a.getId());
 			allergySet.add(al);
 		}
-		
+
 		mr.setAllergies(allergySet);
 		mr.setBloodType(medicalRecord.getBloodType());
-		
+
 		service.save(mr);
 		return new ResponseEntity<>("Successfully updated medical record!", HttpStatus.OK);
-				
+
 	}
-	
+
 	private boolean isEmptyOrNull(MedicalRecordDTO mr) {
 		if (mr == null)
 			return true;
 		return (mr.getBloodType() == null || "".equals(mr.getBloodType()));
 	}
-	
-
-
 
 }

@@ -22,6 +22,10 @@ public class AppointmentTypeService {
 		return appointmentTypes.findAll();
 	}
 	
+	public List<AppointmentType> findAllAppointments() {
+		return appointmentTypes.findAllByOperation(false);
+	}
+	
 	public AppointmentType save(AppointmentType  at) {
 		return appointmentTypes.save(at);
 	}

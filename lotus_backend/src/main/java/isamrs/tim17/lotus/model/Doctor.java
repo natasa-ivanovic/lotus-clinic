@@ -20,8 +20,9 @@ public class Doctor extends User {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	private AppointmentPrice specialty;
-	//@Column(name = "operation", unique = false, nullable = true)
-	//public Operation operation;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	public Set<Operation> operations = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<>();

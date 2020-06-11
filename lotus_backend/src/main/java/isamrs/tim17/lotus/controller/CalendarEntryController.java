@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.CalendarEntryDTO;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 
 @RestController
@@ -26,11 +27,11 @@ public class CalendarEntryController {
 	private CalendarEntryService service;
 	
 	@GetMapping
-	@PreAuthorize("hasRole('DOCTOR')")
+	@PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
 	public ResponseEntity<List<CalendarEntryDTO>> getById() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		Doctor doctor = (Doctor) a.getPrincipal();
-		List<CalendarEntry> entries = service.findByMedicalPersonId(doctor);
+		User user = (User) a.getPrincipal();
+		List<CalendarEntry> entries = service.findByMedicalPersonId(user);
 		List<CalendarEntryDTO> entriesDTO = new ArrayList<>();
 		for(CalendarEntry entry : entries) {
 			entriesDTO.add(new CalendarEntryDTO(entry));

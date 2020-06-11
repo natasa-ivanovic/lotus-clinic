@@ -11,6 +11,7 @@ public class AppointmentTypeDTO {
 	private String name;
 	private double price;
 	private double discount;
+	private boolean operation;
 	private Set<UserDTO> doctors = new HashSet<>();
 	
 	public AppointmentTypeDTO() {}
@@ -20,6 +21,7 @@ public class AppointmentTypeDTO {
 		this.name = at.getName();
 		this.price = at.getPrice();
 		this.discount = at.getDiscount();	
+		this.setOperation(at.isOperation());
 	}
 
 	public String getName() {
@@ -60,6 +62,14 @@ public class AppointmentTypeDTO {
 
 	public void setDiscount(double discount) {
 		this.discount = discount;
+	}
+
+	public boolean isOperation() {
+		return operation;
+	}
+
+	public void setOperation(boolean operation) {
+		this.operation = operation;
 	}
 
 }
