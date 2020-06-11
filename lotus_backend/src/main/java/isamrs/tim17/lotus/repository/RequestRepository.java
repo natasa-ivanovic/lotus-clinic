@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
@@ -27,7 +28,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	Page<Request> findAll(Pageable pageable);
 
 	@Query("SELECT a FROM RoomRequest a where a.date = :date AND :doctor member of a.doctors")
-	RoomRequest findOneByDateAndDoctor(@Param("date") Date startDate, @Param("doctor") long doctor);
+	RoomRequest findOneByDateAndDoctor(@Param("date") Date startDate, @Param("doctor") Doctor doctor);
 	
 	List<VacationRequest> findByClinicAndStatus(Clinic clinic, RequestStatus status);
 }

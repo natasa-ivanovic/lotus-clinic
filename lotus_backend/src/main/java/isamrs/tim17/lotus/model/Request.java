@@ -46,7 +46,6 @@ public abstract class Request {
 	private Long version;
 	
 	public Request() {
-		this.version = 0L;
 	}
 	
 	public Long getId() {

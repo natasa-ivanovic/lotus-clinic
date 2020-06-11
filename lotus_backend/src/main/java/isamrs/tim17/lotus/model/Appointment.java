@@ -70,7 +70,6 @@ public class Appointment {
 	private Long version;
 	
 	public Appointment() {
-		this.version = 0L;
 	}
 
 	public Appointment(Date startDate, Date endDate, double price, double discount, AppointmentType appointmentType, Doctor doctor, Room room,

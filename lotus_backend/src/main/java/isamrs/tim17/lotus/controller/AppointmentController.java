@@ -60,7 +60,6 @@ import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
-import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.MedicineService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
@@ -91,8 +90,6 @@ public class AppointmentController {
 	private DiagnosisService diagnosisService;
 	@Autowired
 	private CalendarEntryService calendarService;
-	@Autowired
-	private MedicalRecordService mrService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -301,11 +298,6 @@ public class AppointmentController {
 			return new ResponseEntity<>("Cannot cancel appointment which starts in less than 24 hours!",
 					HttpStatus.BAD_REQUEST);
 		app.setStatus(AppointmentStatus.CANCELED);
-
-		// TODO kada bude kalendar, ovde nece vise trebati setRoom na null (trenutno je
-		// zbog Freerooms), nego izbaci ovu stavku iz kalendara
-		app.setRoom(null);
-		// mozda treba nesto jos za doktora, ali kada bude kalendar sigurno nece trebati
 		boolean success = calendarService.remove(app);
 		if (!success)
 			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
@@ -530,12 +522,15 @@ public class AppointmentController {
 		app.setAppointmentType(doctor.getSpecialty().getType());
 		app.setPrice(rr.getPrice()); // sacuvana cena iz requesta
 		app.setDiscount(0);
-		service.save(app);
-		
-		rr.setStatus(RequestStatus.APPROVED);
-		requestService.save(rr, doctor.getId());
 
 		CalendarEntry entry = new CalendarEntry(app);
+		rr.setStatus(RequestStatus.APPROVED);
+		
+		
+		requestService.save(rr, doctor.getId());
+
+		service.save(app);
+
 		calendarService.save(entry);
 
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname()

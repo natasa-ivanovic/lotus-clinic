@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Clinic;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
@@ -66,7 +66,7 @@ public class RequestService {
 		return requests.getAllRoomRequests();
 	}
 
-	public RoomRequest findByStartDateAndDoctor(Date startDate, long doctor) {
+	public RoomRequest findByStartDateAndDoctor(Date startDate, Doctor doctor) {
 		return requests.findOneByDateAndDoctor(startDate, doctor);
 	}
 	
