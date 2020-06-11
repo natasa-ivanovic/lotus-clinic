@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,14 +24,17 @@ public class Doctor extends User {
 	//public Operation operation;
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Appointment> appointments = new HashSet<Appointment>();
+	private Set<Appointment> appointments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-	private Set<DoctorReview> reviews = new HashSet<DoctorReview>();
+	private Set<DoctorReview> reviews = new HashSet<>();
 	
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Clinic clinic;
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<RoomRequest> requests = new HashSet<>();
 	
 	public Doctor() {}
 
@@ -69,13 +73,15 @@ public class Doctor extends User {
 		this.reviews = reviews;
 	}
 
-	/*public Doctor(String email, String password, String name, String surname, String address, String city,
-			String country, String phoneNumber, int id, UserType type, Date birthDate, Gender gender,
-			AppointmentType speciality, Operation operation, Clinic clinic) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, type, birthDate, gender, clinic);
-		this.speciality = speciality;
-		this.operation = operation;
-	}*/
+	public Set<RoomRequest> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Set<RoomRequest> requests) {
+		this.requests = requests;
+	}
+
+	
 	
 	 
 

@@ -7,10 +7,16 @@ package isamrs.tim17.lotus.model;
  ***********************************************************************/
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 
 @Entity
 @DiscriminatorValue("ROOM")
@@ -19,18 +25,23 @@ public class RoomRequest extends Request {
 	private Date date;
 	@Column(name = "patient", nullable = true, unique = false)
 	private Long patient;
-	@Column(name = "doctor", nullable = true, unique = false)
-	private Long doctor;
+	//@Column(name = "doctor", nullable = true, unique = false)
+	//private Long doctor;
+	
+
+	@ManyToMany(mappedBy="requests", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Doctor> doctors = new HashSet<>();
+	
 	@Column(name = "type", nullable = true, unique = false)
 	private RoomRequestType type;
 	
 	public RoomRequest() {}
 		
-	public RoomRequest(Date date, Long patient, Long doctor, RoomRequestType type) {
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type) {
 		super();
 		this.date = date;
 		this.patient = patient;
-		this.doctor = doctor;
+		this.doctors = doctors;
 		this.type = type;
 	}
 
@@ -46,11 +57,11 @@ public class RoomRequest extends Request {
 	public void setPatient(Long patient) {
 		this.patient = patient;
 	}
-	public Long getDoctor() {
-		return doctor;
+	public Set<Doctor> getDoctors() {
+		return doctors;
 	}
-	public void setDoctor(Long doctor) {
-		this.doctor = doctor;
+	public void setDoctor(Set<Doctor> doctors) {
+		this.doctors = doctors;
 	}
 	public RoomRequestType getType() {
 		return type;

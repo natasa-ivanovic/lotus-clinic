@@ -26,6 +26,7 @@ import isamrs.tim17.lotus.model.Authority;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentService;
@@ -95,16 +96,29 @@ public class DoctorController {
 	}
 
 	/**
-	 * This method is used for getting a list of doctors.
+	 * This method is used for getting a list of doctors in precised clinic.
 	 * 
 	 * @param Nothing.
 	 * @return ResponseEntity This returns the list of doctors and the HTTP status
 	 *         code.
 	 */
 	@GetMapping("/doctors")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
 	public ResponseEntity<List<UserDTO>> getAllDoctors() {
-		List<Doctor> doctors = service.findAll();
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		
+		Clinic clinic = null;
+		if (user.getRole().equals("ADMIN")) {
+			ClinicAdministrator admin = (ClinicAdministrator) user;
+			clinic = admin.getClinic();
+		}
+		else if (user.getRole().equals("DOCTOR")) {
+			Doctor doctor = (Doctor) user;
+			clinic = doctor.getClinic();
+		}
+		
+		List<Doctor> doctors = service.findByClinic(clinic);
 
 		// convert doctors to DTOs
 		List<UserDTO> doctorsDTO = new ArrayList<>();
@@ -225,6 +239,13 @@ public class DoctorController {
 		return new ResponseEntity<>(doctor, HttpStatus.OK);
 	}
 	
+	/**
+	 * This method returns list of free terms in day for a new requested appointment
+	 * during appointment
+	 * 
+	 * @param date This is the requested date for appointment
+	 * @return List<Date> This returns list of free terms
+	 */
 	@PostMapping("/doctors/newAppointment")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<Date>> getFreeTerms(@RequestBody String date) {
@@ -239,7 +260,6 @@ public class DoctorController {
 		terms = DateUtil.removeOverlap(terms, appointments);
 		
 		return new ResponseEntity<>(terms, HttpStatus.OK);
-		
 		
 	}
 

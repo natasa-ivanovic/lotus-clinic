@@ -3,7 +3,9 @@ package isamrs.tim17.lotus.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
+import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
@@ -72,37 +75,75 @@ public class RequestController {
 		List<Object> requests = new ArrayList<>();
 		
 		for (RoomRequest r : rr) {
-			Doctor doctor = doctorService.findOne(r.getDoctor());
-			if (doctor.getClinic().getId() == clinicId) {
-				Patient patient = patientService.findOne(r.getPatient());
-				Date startDate = r.getDate();
-				RoomRequestDTO dto = new RoomRequestDTO(r.getId(), startDate, patient, doctor);
-				requests.add(dto);
+			List<Doctor> doctors = getDoctors(r);
+			List<Doctor> clinicDoctors = new ArrayList<>();
+			Patient patient = patientService.findOne(r.getPatient());
+			Date startDate = r.getDate();
+			for (Doctor d : doctors) {
+				if (d.getClinic().getId() == clinicId) {
+					clinicDoctors.add(d);
+				}
 			}
+			RoomRequestDTO dto = null;
+			if (clinicDoctors.size() == 1)
+				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors.get(0));
+			else
+				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors);
+			requests.add(dto);
 		}
 		return new ResponseEntity<>(requests, HttpStatus.OK);
 	}
 	
-	@PostMapping("/appointment")
+	private List<Doctor> getDoctors(RoomRequest r) {
+		Set<Doctor> docs = r.getDoctors();
+		List<Doctor> doctors = new ArrayList<>();
+		
+		Iterator<Doctor> it = docs.iterator();
+		while(it.hasNext()) {
+			Doctor d = doctorService.findOne(it.next().getId());
+			doctors.add(d);
+		}
+		
+		return doctors;
+	}
+	
+	private boolean checkDoctorsId(List<UserDTO> doctors) {
+		for (UserDTO doc : doctors) {
+			if (doc.getId() == 0)
+				return false;
+		}
+		return true;
+	}
+	
+	/*@PostMapping("/appointment")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
 		
-		if (request.getStartDate().equals(new Date()) || request.getStartDate() == null || request.getDoctor() == null || 0 == request.getDoctor().getId())
+		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) a.getPrincipal();
-		
+		Set<Doctor> doctors = new HashSet<>();
+		Doctor doc = doctorService.findOne(request.getDoctor().getId());
+		doctors.add(doc);
 		RoomRequest roomRequest = null;
 		if (user.getRole().equals("PATIENT"))
-			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), request.getDoctor().getId(), RoomRequestType.PATIENT_APP);
+			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP);
 		else if (user.getRole().equals("DOCTOR"))
-			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), request.getDoctor().getId(), RoomRequestType.DOCTOR_APP);
+			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors, RoomRequestType.DOCTOR_APP);
 		
 		roomRequest.setStatus(RequestStatus.PENDING);
 		service.save(roomRequest);
 		return new ResponseEntity<>(HttpStatus.OK);	
-	}
+	}*/
+	
+	/*@PostMapping("/operation")
+	@PreAuthorize("hasRole('DOCTOR)")
+	public ResponseEntity<Object> requestOperation(@RequestBody OperationRequestDTO request) {
+		
+		
+	}*/
 	
 	
 	

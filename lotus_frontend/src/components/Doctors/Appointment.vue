@@ -106,6 +106,7 @@
                                                         :return-value.sync="appointmentDate"
                                                         persistent
                                                         :close-on-content-click="false"
+                                                        :close-on-click="false"
                                                         transition="scale-transition"
                                                         nudge-left="308">
                                                             <template v-slot:activator="{on, attrs}">
@@ -126,7 +127,7 @@
                                                         </v-menu>
                                                     </v-col>
                                                 </v-row>
-                                                    <v-row>
+                                                <v-row>
                                                     <v-col>
                                                         <v-autocomplete 
                                                             prepend-icon="mdi-clock" 
@@ -148,17 +149,21 @@
                             </v-col>
                             <v-col>
                                 <v-menu
+                                    @click:outside="turnOffOperation()" 
+                                    @keydown.esc="turnOffOperation()"
                                     v-model="menuOperation"
                                     :close-on-content-click="false"
+                                    :close-on-click="false"
                                     :nudge-width="50"
-                                    nudge-left="827"
+                                    nudge-left="830"
                                     elevation-10
                                     offset-x
                                 >
                                     <template v-slot:activator="{on, attrs}">
                                         <v-btn color="primary" 
                                                 v-bind="attrs" 
-                                                v-on="on" 
+                                                v-on="on"
+                                                @click="getDoctors()"
                                                 block>
                                                 Schedule operation
                                         </v-btn>
@@ -177,15 +182,58 @@
                                             <v-divider></v-divider>
                                             <v-form>
                                                 <v-row>
-                                                    <v-col><v-text-field label="Date"/></v-col>
-                                                    <v-col><v-text-field label="Time"/></v-col>
+                                                    <v-col>
+                                                        <v-menu
+                                                        @click:outside="turnOffOperation()" 
+                                                        @keydown.esc="turnOffOperation()"
+                                                        max-width="290px"
+                                                        min-width="290px"
+                                                        ref="dialogOperation"
+                                                        v-model="menuDatePickerOperation"
+                                                        :return-value.sync="operationDate"
+                                                        persistent
+                                                        :close-on-content-click="false"
+                                                        transition="scale-transition"
+                                                        nudge-right="468">
+                                                            <template v-slot:activator="{on, attrs}">
+                                                                <v-text-field
+                                                                prepend-icon="mdi-calendar"
+                                                                v-model="operationDate"
+                                                                label="Select date"
+                                                                v-bind="attrs"
+                                                                v-on="on"/>
+                                                            </template>
+                                                            <v-date-picker
+                                                                :min="getToday()"
+                                                                v-model="operationDate">
+                                                                <v-spacer></v-spacer>
+                                                                <v-btn text color="primary" @click="menuDatePickerOperation = false">Cancel</v-btn>
+                                                                <v-btn text color="primary" @click="$refs.dialogOperation.save(operationDate)">OK</v-btn>
+                                                            </v-date-picker>
+                                                        </v-menu>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col>
+                                                        <div id="stop">
+                                                        <v-autocomplete 
+                                                            prepend-icon="mdi-doctor" 
+                                                            label="Select doctors"
+                                                            v-model="operationDoctors"
+                                                            chips
+                                                            deletable-chips
+                                                            multiple
+                                                            allow-overflow="false"
+                                                            :items="formatDoctors()"/>
+                                                        </div>
+                                                    </v-col>
                                                 </v-row>
                                             </v-form>
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="error" text @click="menuOperation = false">Cancel</v-btn>
-                                            <v-btn color="primary" text @click="menuOperation = false">Save</v-btn>
+                                            <v-btn color="error" text @click="turnOffOperation()">Cancel</v-btn>
+                                            <v-btn color="primary" text @click="menuOperation = false">Schedule</v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-menu>
@@ -193,7 +241,7 @@
                         </v-row>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="success" block @click="endAppointment()">End appointment</v-btn>
+                        <v-btn color="success" block @click="endAppointment()">Finish appointment</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -228,11 +276,15 @@ export default {
             allMedicines: [],
             allDiagnosis: [],
             freeTerms: [],
+            doctors: [],
             appointmentDate: "",
             appointmentTerm: "",
+            operationDate: "",
+            operationDoctors: [],
             menuAppointment: false,
             menuOperation: false,
-            menuDatePickerApp: false
+            menuDatePickerApp: false,
+            menuDatePickerOperation: false
         }
     },
     mounted() {
@@ -266,6 +318,13 @@ export default {
             this.menuAppointment = false;
             this.appointmentDate = "";
             this.appointmentTerm = "";
+        },
+        turnOffOperation() {
+            this.menuDatePickerOperation = false;
+            this.menuOperation = false;
+            this.operationDate = "";
+            this.operationDoctors = [];
+        
         },
         getFreeTerms() {
             var date = new Date(this.appointmentDate);
@@ -321,8 +380,25 @@ export default {
             this.appointmentDate = "";
             this.appointmentTerm = "";
             this.freeTerms = [];
-
-
+        },
+        getDoctors() {
+            this.axios({
+                url: "/api/doctors",
+                method: "GET"
+            }).then(response => {
+                this.doctors = response.data
+            });
+        },
+        formatDoctors() {
+            var list = [];
+            this.doctors.forEach(doc => {
+                var d = {
+                    text: doc.name + " " + doc.surname,
+                    value: doc.id
+                };
+                list.push(d);
+            })
+            return list;
         }
 
     }
@@ -331,6 +407,10 @@ export default {
 </script>
 
 <style scoped>
+
+#stop {
+    width: 450px;
+}
 
 .spacerHeader {
     font-size: 1.25rem;

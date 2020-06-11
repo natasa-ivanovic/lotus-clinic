@@ -128,9 +128,9 @@ insert into diagnosis_appointments(diagnosis_id, appointments_id) values (2, 2);
 insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);
 
 /* requests */
-insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 10:00:00.508-07', 0, 5, 1);
+/*insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 10:00:00.508-07', 0, 5, 1);
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 16:00:00.508-07', 0, 5, 2);
-insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-07-19 17:00:00.508-07', 0, 5, 3);
+insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-07-19 17:00:00.508-07', 0, 5, 3);*/
 
 insert into requests(req_type, status, patient_id) values('REGISTRATION', 0, 16);
 
