@@ -48,6 +48,7 @@ import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Medicine;
+import isamrs.tim17.lotus.model.Nurse;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.Prescription;
 import isamrs.tim17.lotus.model.RequestStatus;
@@ -321,7 +322,7 @@ public class AppointmentController {
 	 * This method is used so doctors can get their appointments.
 	 * @param Nothing.
 	 * @return ResponseEntity Status code with the list of appointment dto's.
-	 */
+	 */ 
 	@GetMapping("/appointments/doctor")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<List<PremadeAppDTO>> getDoctorAppointments() {
@@ -385,6 +386,35 @@ public class AppointmentController {
 		}
 
 		return new ResponseEntity<>(finished, HttpStatus.OK);
+	}
+	
+	@GetMapping("appointments/nurse")
+	@PreAuthorize("hasRole('NURSE')")
+	public ResponseEntity<List<PremadeAppDTO>> getAppointmentsForNurse() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Nurse nurse = (Nurse) a.getPrincipal();
+		
+		List<Appointment> apps = service.findByClinicAndStatusAndReviewed(nurse.getClinic(), AppointmentStatus.FINISHED, false);
+		List<PremadeAppDTO> appsDtos = new ArrayList<>();
+		for(Appointment app : apps) {
+			appsDtos.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(appsDtos, HttpStatus.OK);
+	}
+	
+	@PostMapping("appointments/nurse")
+	@PreAuthorize("hasRole('NURSE')")
+	public ResponseEntity<Object> setAppointmentReview(@RequestBody String idstr) {
+		long id;
+		try {
+			id = Long.parseLong(idstr);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Appointment appointment = service.findOne(id);
+		appointment.setReviewed(true);
+		service.save(appointment);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	private HashMap<String, Date> getPeriod(long startDate) {
