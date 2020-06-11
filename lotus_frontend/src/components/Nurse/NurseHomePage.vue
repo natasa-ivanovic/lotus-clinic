@@ -20,7 +20,9 @@
                                 <v-list-item-content>
                                     Doctor: {{app.doctorName}} {{app.doctorSurname}} <br />
                                     Room: {{app.roomName}} <br />
-                                    Time: {{app.time}}
+                                    Time: {{app.time}} <br />
+                                    Diagnosis: {{constructDiagnosis(app)}} <br />
+                                    Medicine: {{constructMedicine(app)}}
                                     </v-list-item-content>
                             <v-btn v-on:click="approve(app)" block color="green">Verify</v-btn>
                             </v-list-item-content>
@@ -60,6 +62,14 @@ export default {
             var time1 = date1.toTimeString().split(" ")[0];
             var time2 = date2.toTimeString().split(" ")[0];
             return time1 + "-" + time2;
+        },
+        constructDiagnosis: function(app) {
+          console.log(app);
+          return app.diagnosis.join(', ');
+        },
+        constructMedicine: function(app) {
+          console.log(app);
+          return app.recipes.join(', ');
         },
         approve: function(app){
           this.axios({url: apiURL,

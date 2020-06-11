@@ -201,4 +201,9 @@ insert into doctor_review (grade, doctor_id) values (3.5, 13);
 insert into doctor_review (grade, doctor_id) values (3, 14);
 insert into doctor_review (grade, doctor_id) values (3, 15);
 
+/* prescriptions */
+insert into prescriptions (appointment_id, medicine_id)  values (1, 1);
+insert into prescriptions (appointment_id, medicine_id)  values (1, 2);
+insert into prescriptions (appointment_id, medicine_id)  values (3, 2);
+
 
