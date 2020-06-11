@@ -22,7 +22,9 @@
                                     Room: {{app.roomName}} <br />
                                     Time: {{app.time}}
                                 </v-list-item-content>
-                            <v-btn v-on:click="start(app)" block color="success">Start appointment</v-btn>
+                            <v-row>
+                                <v-btn v-on:click="start(app)" block color="success">Start appointment</v-btn>
+                            </v-row>
                             </v-list-item-content>
                         </v-list-item>
                         </v-list-item-group>
@@ -49,6 +51,7 @@
 
 <script>
 const apiURL = "/api/appointments/doctor/today";
+const cancelUrl = "/api/appointments/doctor/cancel";
 export default {
     data() {
         return {
@@ -88,6 +91,14 @@ export default {
         start: function(app) {
             console.log(app);
             this.$router.push({name: "startAppointment", params: {appointment: app}})
+        },
+        cancel: function(appointment) {
+            console.log(appointment);
+            this.axios({url: cancelUrl + "/" + appointment.id})
+            .then(() => {
+                this.appointments.splice(this.appointments.indexOf(appointment), 1);
+                this.$store.commit("showSnackbar", {text: "Successfully canceled appointment", color: "success"});
+            })
         }
 
     }

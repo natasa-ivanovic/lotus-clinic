@@ -316,6 +316,47 @@ public class AppointmentController {
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@GetMapping("/appointments/doctor/cancel/{id}")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> cancelAppointmentDoctor(@PathVariable("id") long id) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		Appointment app = service.findOne(id);
+		if (app == null)
+			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
+		
+		// ne moze da otkazuje preglede drugih lekara
+		if (app.getDoctor().getId() != id)
+			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
+		
+		Date now = new Date();
+		Date appDate = app.getStartDate();
+
+		if (appDate.getTime() - now.getTime() < 86400000)
+			return new ResponseEntity<>("Cannot cancel appointment which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
+		app.setStatus(AppointmentStatus.CANCELED);
+		app.setRoom(null);
+		boolean success = calendarService.remove(app);
+		if (!success)
+			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
+		service.save(app);
+		
+		String message = "Hello " + app.getMedicalRecord().getPatient().getName() + " " + app.getMedicalRecord().getPatient().getName()
+				+ "!\nAn existing appointment has been canceled.\n" + "The appointment was scheduled for "
+				+ app.getStartDate() + ".\n" + "The doctor's name is " + doctor.getName() + " " + doctor.getSurname()
+				+ " and the appointment type is " + doctor.getSpecialty().getType().getName() + ".\n"
+				+ "Lotus Clinic Staff";
+
+		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+
+		
+
+
+	}
 
 	/**
 	 * This method is used so doctors can get their appointments.
