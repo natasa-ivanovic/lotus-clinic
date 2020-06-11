@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class MedicineController {
 	}
 	
 	@PostMapping("/medicines")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<Object> addClinic(@RequestBody String name) {
 		if (name == null || "".equals(name))
 			return new ResponseEntity<>("Name cannot be empty!", HttpStatus.BAD_REQUEST);
@@ -47,6 +49,7 @@ public class MedicineController {
 	}
 	
 	@DeleteMapping("/medicines/{id}")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<Object> deleteRoom(@PathVariable("id") long id) {
 		Medicine medicine = service.findOne(id);
 
