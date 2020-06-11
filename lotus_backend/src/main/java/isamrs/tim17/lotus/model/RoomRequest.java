@@ -49,6 +49,15 @@ public class RoomRequest extends Request {
 		this.price = price;
 	}
 	
+	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type) {
+		super();
+		this.date = date;
+		this.patient = patient;
+		this.doctors = doctors;
+		this.type = type;
+	}
+	
+	
 	
 	public Date getDate() {
 		return date;

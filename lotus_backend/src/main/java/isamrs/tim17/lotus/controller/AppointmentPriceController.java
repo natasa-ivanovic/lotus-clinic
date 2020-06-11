@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.AppointmentPriceDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
+import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 
@@ -33,14 +35,20 @@ public class AppointmentPriceController {
 	private AppointmentTypeService typeService;
 	
 	@GetMapping("")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
 	public ResponseEntity<List<AppointmentPriceDTO>> getallAppointmentPrices() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
+		User user = (User) a.getPrincipal();
+		List<AppointmentPrice> priceList = new ArrayList<>();
 		
-		List<AppointmentPrice> priceList = service.findByClinicId(admin.getClinic());
+		if(user.getRole().equals("ADMIN"))
+			priceList = service.findByClinicId(((ClinicAdministrator) user).getClinic());
+		else if (user.getRole().equals("DOCTOR"))
+			priceList = service.findByClinicId(((Doctor) user).getClinic());
+		else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
 		List<AppointmentPriceDTO> priceListDTO = new ArrayList<>();
-		
 		for(AppointmentPrice ap : priceList)
 		{
 			priceListDTO.add(new AppointmentPriceDTO(ap));

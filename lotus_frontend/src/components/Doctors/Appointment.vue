@@ -212,11 +212,19 @@
                                                             </v-date-picker>
                                                         </v-menu>
                                                     </v-col>
+                                                    <v-col>
+                                                        <v-autocomplete 
+                                                            prepend-icon="mdi-needle" 
+                                                            label="Select operation type"
+                                                            v-model="operationType"
+                                                            allow-overflow="false"
+                                                            :items="formatOperations()"/>
+                                                    </v-col>
                                                 </v-row>
                                                 <v-row>
                                                     <v-col>
                                                         <div id="stop">
-                                                        <v-autocomplete 
+                                                        <v-autocomplete
                                                             prepend-icon="mdi-doctor" 
                                                             label="Select doctors"
                                                             v-model="operationDoctors"
@@ -233,7 +241,7 @@
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                             <v-btn color="error" text @click="turnOffOperation()">Cancel</v-btn>
-                                            <v-btn color="primary" text @click="menuOperation = false">Schedule</v-btn>
+                                            <v-btn color="primary" text @click="scheduleOperation()">Schedule</v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-menu>
@@ -277,9 +285,11 @@ export default {
             allDiagnosis: [],
             freeTerms: [],
             doctors: [],
+            operations: [],
             appointmentDate: "",
             appointmentTerm: "",
             operationDate: "",
+            operationType: "",
             operationDoctors: [],
             menuAppointment: false,
             menuOperation: false,
@@ -301,11 +311,17 @@ export default {
             this.allDiagnosis = response.data.diagnosis;
         }).catch(error =>{
             console.log(error);
+        });
+
+        this.axios({
+            url: "/api/appointmentPrices",
+            method: "GET"
+        }).then(response => {
+            this.operations = response.data;
         })
     },
     methods: {
         endAppointment() {
-
         },
         getToday() {
             var today = new Date()
@@ -374,12 +390,38 @@ export default {
                 method: 'POST',
                 data: roomRequest
             }).then(() => {
-                this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success", })
+                this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success"})
             });
             this.menuAppointment = false;
             this.appointmentDate = "";
             this.appointmentTerm = "";
             this.freeTerms = [];
+        },
+        scheduleOperation() {
+            // lista id doktora, id pacijenta, datum pocetka
+            var list = [];
+            var d = new Date(this.operationDate);
+            console.log(this.operationDoctors)
+            this.operationDoctors.forEach(el => {
+                var doc = { id: el };
+                list.push(doc);
+            });
+            var roomRequest = {
+                doctors: list,
+                patient: {
+                    id : this.appointment.patientId
+                },
+                startDate: d.getTime(),
+                type: this.operationType
+            };
+            this.axios({
+                url: "/api/requests/operation",
+                method: 'POST',
+                data: roomRequest
+            }).then(() => {
+                this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success"})
+            });
+            this.turnOffOperation();
         },
         getDoctors() {
             this.axios({
@@ -399,6 +441,19 @@ export default {
                 list.push(d);
             })
             return list;
+        },
+        formatOperations() {
+            var list = [];
+            this.operations.forEach(el => {
+                if(el.operation == true) {
+                    var item = {
+                    text: el.name,
+                    value: el.id
+                    }
+                    list.push(item);
+                }
+            });
+            return list;
         }
 
     }
@@ -409,7 +464,7 @@ export default {
 <style scoped>
 
 #stop {
-    width: 450px;
+    width: 500px;
 }
 
 .spacerHeader {

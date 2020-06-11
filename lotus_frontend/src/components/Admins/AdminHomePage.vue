@@ -16,7 +16,7 @@
                                 v-for="(req, i) in requests"
                                 :key="i"
                                 >
-                                <v-list-item-content v-if="!requests.operation">
+                                <v-list-item-content v-if="!req.operation">
                                     <v-list-item-title>New appointment request</v-list-item-title>
                                     <v-list-item-content>
                                         Term: {{formatDate(req.startDate)}} <br/>
@@ -27,7 +27,7 @@
                                     
                                 </v-list-item-content>
                                 <v-list-item-content v-else>
-                                    <v-list-item-title>New appointment request</v-list-item-title>
+                                    <v-list-item-title>New operation request</v-list-item-title>
                                     <v-list-item-content>
                                         Term: {{formatDate(req.startDate)}} <br/>
                                         Appointment type: {{req.type}} <br/> 

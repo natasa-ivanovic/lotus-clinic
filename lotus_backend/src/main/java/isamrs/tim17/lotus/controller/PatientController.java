@@ -2,11 +2,9 @@ package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +26,6 @@ import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
 import isamrs.tim17.lotus.dto.RatingDTO;
-import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentType;
@@ -38,9 +35,6 @@ import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.Patient;
-import isamrs.tim17.lotus.model.RequestStatus;
-import isamrs.tim17.lotus.model.RoomRequest;
-import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
@@ -49,7 +43,6 @@ import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.PatientService;
-import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.util.DateUtil;
 import isamrs.tim17.lotus.util.RatingUtil;
 
@@ -67,9 +60,6 @@ public class PatientController {
 	
 	@Autowired
 	private AppointmentTypeService typeService;
-
-	@Autowired
-	private RequestService requestService;
 	
 	@Autowired
 	private AppointmentService appointmentService;
@@ -313,29 +303,6 @@ public class PatientController {
 	}
 	
 	/**
-	 * This method is used to send a request for an appointment.
-	 * 
-	 * @param request RoomRequestDTO object which contains all the necessary information for the appointment request.
-	 * @return ResponseEntity This returns the HTTP status code.
-	 */
-	/*@PostMapping("/patients/request/finish")
-	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<Object> requestAppointment(@RequestBody RoomRequestDTO request) {
-		if (request.getStartDate().before(new Date()) || request.getStartDate() == null || request.getDoctors() == null || !checkDoctorsId(request.getDoctors()))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		Patient patient = (Patient) a.getPrincipal();
-		Set<Doctor> doctors = new HashSet<>();
-		Doctor doctor = doctorService.findOne(request.getDoctors().get(0).getId()); // appointment uvek ima 1 lekara
-		doctors.add(doctor); 
-		RoomRequest roomRequest = new RoomRequest(request.getStartDate(), patient.getId(), doctors, RoomRequestType.PATIENT_APP);
-		
-		roomRequest.setStatus(RequestStatus.PENDING);
-		requestService.save(roomRequest);
-		return new ResponseEntity<>(HttpStatus.OK);	
-	}*/
-	
-	/**
 	 * This method is used to handle a rating for previous appointments.
 	 * 
 	 * @param rating RatingDTO object which contains all the necessary information for the doctor and clinic rating.
@@ -359,13 +326,5 @@ public class PatientController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	private boolean checkDoctorsId(List<UserDTO> doctors) {
-		for (UserDTO doc : doctors) {
-			if (doc.getId() == 0)
-				return false;
-		}
-		return true;
-	}
-
 
 }

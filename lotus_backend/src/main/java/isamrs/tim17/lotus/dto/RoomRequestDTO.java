@@ -32,7 +32,7 @@ public class RoomRequestDTO {
 		this.operation = false;
 	}
 	
-	public RoomRequestDTO(long id, Date date, Patient patient, List<Doctor> doctors) {
+	public RoomRequestDTO(long id, Date date, Patient patient, List<Doctor> doctors, String type) {
 		this();
 		this.id = id;
 		this.startDate = date;
@@ -40,8 +40,8 @@ public class RoomRequestDTO {
 		for (Doctor doctor : doctors) {
 			this.doctors.add(new UserDTO(doctor));
 		}
+		this.type = type;
 		this.operation = true;
-		//
 		
 	}
 
