@@ -613,7 +613,7 @@ public class AppointmentController {
 
 		return period;
 	}
-
+	
 	@PostMapping("/appointments")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Appointment> addAppointment(@RequestBody AppointmentDTO app) {
@@ -705,8 +705,6 @@ public class AppointmentController {
 		long requestId = dto.getRequest();
 		Date startDate = new Date(dto.getStartDate());
 		Date endDate = DateUtil.addMinutes(startDate, 30);
-
-		// nadji rikvest i sobu, napravi appointment, setuj na zakazan, sacuvaj u bazu
 		Room room = roomService.findOne(roomId);
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
 		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
@@ -736,11 +734,12 @@ public class AppointmentController {
 		CalendarEntry entry = new CalendarEntry(app);
 		rr.setStatus(RequestStatus.APPROVED);
 
-		requestService.save(rr, doctor.getId());
-
-		service.save(app);
-
-		calendarService.save(entry);
+		try {
+			service.save(app, rr, entry);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("Room already scheduled!", HttpStatus.BAD_REQUEST);
+		}
 
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname()
 				+ "!\nIn response to your appointment request, we have created a term for you in our centre.\n"

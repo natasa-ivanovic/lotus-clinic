@@ -12,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import isamrs.tim17.lotus.dto.RatingDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Room;
+import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -32,6 +34,15 @@ public class AppointmentService {
 
 	@Autowired
 	private ClinicReviewService clinicReviewService;
+	
+	@Autowired
+	private RoomService roomService;
+	
+	@Autowired
+	private RequestService requestService;
+	
+	@Autowired
+	private CalendarEntryService calendarService;
 	
 	public Appointment findOne(long id) {
 		return appointments.findOneById(id);
@@ -108,6 +119,21 @@ public class AppointmentService {
 	
 	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status, Boolean reviewed) {
 		return appointments.findByClinicAndStatusAndReviewed(clinic, status, reviewed);
+	}
+
+	@Transactional(readOnly = false)
+	public void save(Appointment app, RoomRequest rr, CalendarEntry entry) throws Exception {
+		Room room = roomService.findOne(app.getRoom().getId());
+		CalendarEntry checkEntry = calendarService.findByDateAndRoom(room, rr.getDate());
+		if (checkEntry != null) throw new Exception();
+		// inace je sve ok
+		requestService.save(rr);
+		calendarService.save(entry);
+		Thread.sleep(5000);
+		room.setLastRequested(new Date());
+		appointments.save(app);
+		roomService.save(room);
+		
 	}
 
 }

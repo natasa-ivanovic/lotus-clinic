@@ -3,10 +3,10 @@ insert into clinical_centres (name) values ('Centre 1');
 insert into clinics (address, description, name) values ('Jevrejska 2', 'General clinic', 'Clinic1');
 insert into clinics (address, description, name) values ('Fruskogorska 12', 'Specialist clinic', 'Clinic2');
 
-insert into rooms (name, clinic_id) values ('C1-Room 100', 1);
-insert into rooms (name, clinic_id) values ('C1-Room 105', 1);
-insert into rooms (name, clinic_id) values ('C2-Room 210', 2);
-insert into rooms (name, clinic_id) values ('C2-Room 230', 2);
+insert into rooms (name, clinic_id, last_requested, version) values ('C1-Room 100', 1, '2020-06-12 17:25:00.508-07', 0);
+insert into rooms (name, clinic_id, last_requested, version) values ('C1-Room 105', 1, '2020-06-12 17:25:00.508-07', 0);
+insert into rooms (name, clinic_id, last_requested, version) values ('C2-Room 210', 2, '2020-06-12 17:25:00.508-07', 0);
+insert into rooms (name, clinic_id, last_requested, version) values ('C2-Room 230', 2, '2020-06-12 17:25:00.508-07', 0);
 
 /* appointment types */
 insert into appointment_types (name, clinic_id, operation) values ('Office visit', 1, false);

@@ -39,6 +39,9 @@ public class CalendarEntryService {
 		return calendarEntries.findBymedicalPerson(u);
 	}
 
+	public CalendarEntry findByDateAndRoom(Room r, Date d) {
+		return calendarEntries.findOneByRoomAndStartDate(r, d);
+	}
 
 	@Transactional(readOnly = false)
 	public CalendarEntry save(CalendarEntry entry) {
