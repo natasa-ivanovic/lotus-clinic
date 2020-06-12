@@ -49,6 +49,7 @@ import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
 import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
 import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
 import VacationRequest from "../components/Users/VacationRequest"
+import PationSearch from "../components/Doctors/PatientSearch"
 
 const routes = [
     {
@@ -273,6 +274,11 @@ const routes = [
         name: "vacationRequest",
         path: "/vacation_request"
     },
+    {
+      component: PationSearch,
+      name: "patientSearch",
+      path: "/patient_search"
+  },
     {
         path: "/*",
         redirect: "/home"
