@@ -6,8 +6,10 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Operation;
@@ -17,37 +19,47 @@ import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.repository.CalendarEntryRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class CalendarEntryService {
 
 	@Autowired
 	private CalendarEntryRepository calendarEntries;
-	
+
 	@Autowired
 	private OperationService operationService;
-	
+
+	@Autowired
+	private AppointmentService appointmentService;
+
 	public CalendarEntry findOne(long id) {
 		return calendarEntries.findOneById(id);
 	}
-	
+
 	public List<CalendarEntry> findByMedicalPersonId(User u) {
 		return calendarEntries.findBymedicalPerson(u);
 	}
-	
+
+
+	@Transactional(readOnly = false)
 	public CalendarEntry save(CalendarEntry entry) {
 		return calendarEntries.save(entry);
 	}
-	
 
-	public boolean remove(Appointment a) {
+	@Transactional(readOnly = false)
+	public void cancelAppointment(long appId) {
+		Appointment a = appointmentService.findOne(appId);
+		CalendarEntry c = calendarEntries.findOneByAppointment(a);
+		calendarEntries.deleteById(c.getId());
+		a.setStatus(AppointmentStatus.CANCELED);
 		try {
-			CalendarEntry c = calendarEntries.findOneByAppointment(a);
-			calendarEntries.deleteById(c.getId());			
-			return true;
-		} catch (Exception e) {
-			return false;
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+		appointmentService.save(a);
+
 	}
-	
+
 	public List<CalendarEntry> findByMedicalPersonAndDate(User u, Date startDate, Date endDate) {
 		return calendarEntries.getAllBetweenDatesForDoctor(u, startDate, endDate);
 	}
@@ -56,10 +68,11 @@ public class CalendarEntryService {
 		return calendarEntries.getAllBetweenDatesForRoom(r, d, endDate);
 	}
 
+	@Transactional(readOnly = false)
 	public void cancel(long id) {
 		Operation operation = operationService.findOne(id);
 		Set<Doctor> doctors = operation.getDoctor();
-		for(Doctor d : doctors) {
+		for (Doctor d : doctors) {
 			// pronaci za svakog doktora calendar entry i skloniti
 			CalendarEntry ce = calendarEntries.findOneByOperationAndMedicalPerson(operation, d);
 			calendarEntries.deleteById(ce.getId());

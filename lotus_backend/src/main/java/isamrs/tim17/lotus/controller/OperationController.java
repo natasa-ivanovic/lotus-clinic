@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.OperationDTO;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Operation;
 import isamrs.tim17.lotus.model.OperationStatus;
@@ -45,6 +46,8 @@ public class OperationController {
 	private PatientService patientService;
 	@Autowired
 	private CalendarEntryService calendarService;
+	@Autowired
+	private MailSenderModel mailService;
 	
 	@GetMapping("/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
@@ -140,24 +143,22 @@ public class OperationController {
 		if (appDate.getTime() - now.getTime() < 86400000)
 			return new ResponseEntity<>("Cannot cancel operation which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
 		
-		try {
-		calendarService.cancel(operation.getId()); 
-		} catch (Exception e) {
-			return new ResponseEntity<>("Operation already canceled", HttpStatus.BAD_REQUEST);			
-		}
-		List<Doctor> doctors = new ArrayList<>(operation.getDoctor());
-		String names = doctorsNames(doctors);
-		String message = "Hello " + operation.getMedicalRecord().getPatient().getName() + " " + operation.getMedicalRecord().getPatient().getName()
-				+ "!\nAn existing operation has been canceled.\n" + "The operation was scheduled for "
-				+ operation.getStartDate() + ".\n" + "The doctors' names are: " + names
-				+ " and the operation type is " + operation.getType().getName() + ".\n"
-				+ "Lotus Clinic Staff";
-		
-		// TODO srediti mejlove
-		//mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
+        try {
+            calendarService.cancel(operation.getId());
+        } catch (Exception e) {
+            return new ResponseEntity<>("Operation already canceled", HttpStatus.BAD_REQUEST);
+        }
+        List<Doctor> doctors = new ArrayList<>(operation.getDoctor());
+        String names = doctorsNames(doctors);
+ 
+        String patient = operation.getMedicalRecord().getPatient().getName() + " "
+                + operation.getMedicalRecord().getPatient().getName();
+        for (Doctor d : operation.getDoctor())
+            mailService.sendDoctorOperationCanceled(d.getUsername(), patient, operation.getType().getName(), names,
+                    operation.getStartDate().toString());
+ 
+        return new ResponseEntity<>(HttpStatus.OK);
 
-		return new ResponseEntity<>(HttpStatus.OK);
-	
 	}
 	
 	private String doctorsNames(List<Doctor> docs) {
