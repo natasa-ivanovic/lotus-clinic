@@ -105,5 +105,9 @@ public class AppointmentService {
 		a = appointments.save(a);
 		return a;
 	}
+	
+	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status, Boolean reviewed) {
+		return appointments.findByClinicAndStatusAndReviewed(clinic, status, reviewed);
+	}
 
 }
