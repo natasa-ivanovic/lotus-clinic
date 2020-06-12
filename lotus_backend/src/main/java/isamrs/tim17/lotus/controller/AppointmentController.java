@@ -60,7 +60,6 @@ import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;
 import isamrs.tim17.lotus.service.DiagnosisService;
 import isamrs.tim17.lotus.service.DoctorService;
-import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.MedicineService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
@@ -91,8 +90,6 @@ public class AppointmentController {
 	private DiagnosisService diagnosisService;
 	@Autowired
 	private CalendarEntryService calendarService;
-	@Autowired
-	private MedicalRecordService mrService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -327,8 +324,14 @@ public class AppointmentController {
 		if (app == null)
 			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
 		
-		// ne moze da otkazuje preglede drugih lekara
-		if (app.getDoctor().getId() != id)
+		// ne moze da otkazuje preglede drugih lekara, provera da li postoji taj app 
+		Set<Appointment> apps = app.getDoctor().getAppointments();
+		Iterator<Appointment> it = apps.iterator();
+		List<Long> ids = new ArrayList<>();
+		while(it.hasNext()) {
+			ids.add(it.next().getId());
+		}
+		if (!ids.contains(id))
 			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
 		
 		Date now = new Date();

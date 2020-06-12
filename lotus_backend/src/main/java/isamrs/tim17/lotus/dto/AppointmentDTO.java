@@ -7,6 +7,7 @@ import isamrs.tim17.lotus.model.MedicalRecord;
 
 public class AppointmentDTO {
 	
+	private long appId;
 	private long endDateLong;
 	private long doctor;
 	private long appointmentType;
@@ -22,6 +23,7 @@ public class AppointmentDTO {
 	public AppointmentDTO() {}
 	
 	public AppointmentDTO(AppointmentDTO app) {
+		this.appId = app.getAppId();
 		this.startDate = app.getStartDate();
 		this.endDate = app.getEndDate();
 		this.doctor = app.getDoctor();
@@ -32,6 +34,7 @@ public class AppointmentDTO {
 	}
 	
 	public AppointmentDTO(Appointment app) {
+		this.appId = app.getId();
 		MedicalRecord record = app.getMedicalRecord();
 		if(record != null) {
 			this.patient = new PatientDTO(app.getMedicalRecord().getPatient());
@@ -126,5 +129,15 @@ public class AppointmentDTO {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
+
+	public long getAppId() {
+		return appId;
+	}
+
+	public void setAppId(long appId) {
+		this.appId = appId;
+	}
+	
+	
 
 }

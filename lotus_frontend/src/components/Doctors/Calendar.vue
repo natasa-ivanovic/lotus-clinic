@@ -73,18 +73,19 @@
             >
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
+              <v-btn light icon @click ="selectedOpen = false"><v-icon>mdi-close</v-icon></v-btn>
             </v-toolbar>
             <v-card-text>
               <div v-if="selectedEvent.room">Room: {{selectedEvent.room}}</div>
               <div v-if="selectedEvent.patientName">Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
             </v-card-text>
             <v-card-actions>
-              <v-btn
+              <v-btn v-if="selectedEvent.cancel"
                 text
-                color="secondary"
-                @click="selectedOpen = false"
+                color="error"
+                @click="cancelAppointment(selectedEvent.id)"
               >
-                Cancel
+                Cancel appointment
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -164,6 +165,7 @@ const apiURL = "/api/calendarentries"
             var room = '';
             var patientName = '';
             var patientSurname = '';
+            var appId = '';
             for(var i = 0; i < this.appointments.length; i++)
             {
               if(this.appointments[i].appointment != null)
@@ -171,6 +173,7 @@ const apiURL = "/api/calendarentries"
                 color = 'blue';
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
+                appId = this.appointments[i].appointment.appId;
                 if(this.appointments[i].appointment.patient != null) {
                   patientName = this.appointments[i].appointment.patient.patient.name;
                   patientSurname = this.appointments[i].appointment.patient.patient.surname;
@@ -190,12 +193,14 @@ const apiURL = "/api/calendarentries"
               }
               this.events.push({
                 name: name,
+                id: appId,
                 start: this.formatDate(new Date(this.appointments[i].startDate), true),
                 end: this.formatDate(new Date(this.appointments[i].endDate), true),
                 color: color,
                 room: room,
                 patientName: patientName,
                 patientSurname: patientSurname,
+                cancel  : this.checkTime(this.appointments[i])
               })
             }
         }).catch(error => {
@@ -277,6 +282,27 @@ const apiURL = "/api/calendarentries"
           ? `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
           : `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`
       },
-    },
+      checkTime: function(appointment) {
+        console.log(appointment);
+        var day = new Date(appointment.startDate)
+        var appTime = day.getTime();
+        var today = new Date();
+        var now = today.getTime();
+
+        if (appTime - now < 86400000)
+            return false;
+        return true;
+      },
+      cancelAppointment: function(id) {
+        console.log(id);
+        this.axios({
+          url: "/api/appointments/doctor/cancel/" + id,
+          method: "GET"
+        }).then(() => {
+          this.$store.commit('showSnackbar', {text: "Successfully canceled appointment!", color: "success" });
+          this.$forceUpdate();
+        })
+      }
+    }
   }
 </script>
