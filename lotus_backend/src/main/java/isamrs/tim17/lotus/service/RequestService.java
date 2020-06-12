@@ -75,4 +75,8 @@ public class RequestService {
 	{
 		return requests.findByClinicAndStatus(clinic, status);
 	}
+
+	public List<RoomRequest> findByDateRangeAndDoctor(Doctor d, Date startDate, Date endDate) {
+		return requests.findByDateRangeAndDoctor(d, startDate, endDate);
+	}
 }

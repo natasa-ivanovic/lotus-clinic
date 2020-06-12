@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.CalendarEntryDTO;
 import isamrs.tim17.lotus.model.CalendarEntry;
-import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 

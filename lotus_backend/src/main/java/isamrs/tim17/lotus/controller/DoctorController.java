@@ -29,7 +29,6 @@ import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.security.CustomUserDetailsService;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
-import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AuthorityService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.ClinicService;

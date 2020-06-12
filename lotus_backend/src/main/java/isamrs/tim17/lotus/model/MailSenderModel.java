@@ -26,4 +26,10 @@ public class MailSenderModel {
 		message.setText(content);
 		emailSender.send(message);
 	}
+	
+	public void sendAdminNotificationAppointment(String recipient, String patient, String type, String doctor) {
+		String content = "Hello\nYou have a new appointment request pending for room assignation.\nPatient with the name " + patient 
+				+ "requested an appointment of type " + type + ", for doctor " + doctor + ".\nLotus Clinic Staff";
+		sendMsg(recipient, "New request pending", content);
+	}
 }
