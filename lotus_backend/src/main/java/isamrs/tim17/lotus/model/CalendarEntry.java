@@ -25,7 +25,7 @@ public class CalendarEntry {
 	private User medicalPerson;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Appointment appointment;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Operation operation;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Vacation vacation;

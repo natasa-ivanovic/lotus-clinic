@@ -16,8 +16,10 @@ public class OperationDTO {
 	private List<String> doctors;
 	private String clinicName;
 	private double price;
+	private PatientDTO patient;
 	
 	public OperationDTO(Operation o) {
+		this.patient = new PatientDTO(o.getMedicalRecord().getPatient());
 		this.startDate = o.getStartDate();
 		this.endDate = o.getEndDate();
 		this.operationType = o.getType().getName();
@@ -84,6 +86,15 @@ public class OperationDTO {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
+	public PatientDTO getPatient() {
+		return patient;
+	}
+
+	public void setPatient(PatientDTO patient) {
+		this.patient = patient;
+	}
+	
 	
 	
 

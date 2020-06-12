@@ -320,18 +320,17 @@ public class AppointmentController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		
-		Appointment app = service.findOne(id);
+		CalendarEntry ce = calendarService.findOne(id);
+		
+		if (ce == null)
+			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
+		
+		Appointment app = ce.getAppointment();
 		if (app == null)
 			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
 		
-		// ne moze da otkazuje preglede drugih lekara, provera da li postoji taj app 
-		Set<Appointment> apps = app.getDoctor().getAppointments();
-		Iterator<Appointment> it = apps.iterator();
-		List<Long> ids = new ArrayList<>();
-		while(it.hasNext()) {
-			ids.add(it.next().getId());
-		}
-		if (!ids.contains(id))
+		// ne moze da otkazuje preglede drugih lekara
+		if (app.getDoctor().getId() != doctor.getId())
 			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
 		
 		Date now = new Date();
@@ -340,7 +339,6 @@ public class AppointmentController {
 		if (appDate.getTime() - now.getTime() < 86400000)
 			return new ResponseEntity<>("Cannot cancel appointment which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
 		app.setStatus(AppointmentStatus.CANCELED);
-		app.setRoom(null);
 		boolean success = calendarService.remove(app);
 		if (!success)
 			return new ResponseEntity<>("Something went wrong while canceling the appointment. Cannot cancel the appointment.", HttpStatus.BAD_REQUEST);
@@ -355,11 +353,11 @@ public class AppointmentController {
 		mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
 
 		return new ResponseEntity<>(HttpStatus.OK);
-
-		
+	
 
 
 	}
+	
 
 	/**
 	 * This method is used so doctors can get their appointments.

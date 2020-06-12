@@ -163,6 +163,16 @@ insert into operations_doctor (operation_id, doctor_id) values (1, 4);
 insert into operations_doctor (operation_id, doctor_id) values (1, 12);
 insert into operations_doctor (operation_id, doctor_id) values (2, 5);
 
+/* scheduled operations with their calendar entries */
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (2, '2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 0, 1, 3, 8, 4000);
+insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 5, 3);
+insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 13, 3);
+
+
+insert into operations_doctor (operation_id, doctor_id) values (3, 5);
+insert into operations_doctor (operation_id, doctor_id) values (3, 13);
+
+
 /* requests */
 /*insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 10:00:00.508-07', 0, 5, 1);
 insert into requests(req_type, status, date, type, doctor, patient) values('ROOM', 0, '2020-05-19 16:00:00.508-07', 0, 5, 2);

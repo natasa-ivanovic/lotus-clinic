@@ -8,16 +8,18 @@ public class CalendarEntryDTO {
 	private Date startDate;
 	private Date endDate;
 	private AppointmentDTO appointment;
-	//private OperationDTO operation;
+	private OperationDTO operation;
 	private VacationDTO vacation;
+	private long id;
 	
 	public CalendarEntryDTO() {}
 	
 	public CalendarEntryDTO(CalendarEntry entry) {
+		this.id = entry.getId();
 		this.startDate = entry.getStartDate();
 		this.endDate = entry.getEndDate();
 		this.appointment = entry.getAppointment() != null ? new AppointmentDTO(entry.getAppointment()) : null;
-		//this.operation = 
+		this.operation = entry.getOperation() != null ? new OperationDTO(entry.getOperation()) : null;
 		this.vacation = entry.getVacation() != null ? new VacationDTO(entry.getVacation()) : null;
 	}
 
@@ -52,4 +54,22 @@ public class CalendarEntryDTO {
 	public void setVacation(VacationDTO vacation) {
 		this.vacation = vacation;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public OperationDTO getOperation() {
+		return operation;
+	} 
+
+	public void setOperation(OperationDTO operation) {
+		this.operation = operation;
+	}
+	
+	
 }

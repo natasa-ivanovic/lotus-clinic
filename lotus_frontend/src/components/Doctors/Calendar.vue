@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="64">
@@ -44,6 +44,7 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
+          :key="componentKey"
           ref="calendar"
           v-model="focus"
           color="primary"
@@ -83,7 +84,7 @@
               <v-btn v-if="selectedEvent.cancel"
                 text
                 color="error"
-                @click="cancelAppointment(selectedEvent.id)"
+                @click="cancelAppointment(selectedEvent)"
               >
                 Cancel appointment
               </v-btn>
@@ -100,6 +101,7 @@ const apiURL = "/api/calendarentries"
   export default {
     data() {
         return {
+      componentKey: 0,
       focus: '',
       type: 'month',
       appointments: [],
@@ -166,6 +168,8 @@ const apiURL = "/api/calendarentries"
             var patientName = '';
             var patientSurname = '';
             var appId = '';
+            var cancel = false;
+            var operation = false;
             for(var i = 0; i < this.appointments.length; i++)
             {
               if(this.appointments[i].appointment != null)
@@ -173,7 +177,8 @@ const apiURL = "/api/calendarentries"
                 color = 'blue';
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
-                appId = this.appointments[i].appointment.appId;
+                appId = this.appointments[i].id;
+                cancel = this.checkTime(this.appointments[i]);
                 if(this.appointments[i].appointment.patient != null) {
                   patientName = this.appointments[i].appointment.patient.patient.name;
                   patientSurname = this.appointments[i].appointment.patient.patient.surname;
@@ -181,28 +186,40 @@ const apiURL = "/api/calendarentries"
                   patientName = 'not available';
                   patientSurname = '';
                 }
-              } else if (this.appointments[i].operation != null)
-              {
-                //add operation parameters here
+              } else if (this.appointments[i].operation != null) {
+                operation = true;
+                color = 'orange';
+                name = 'Operation';
+                room = this.appointments[i].operation.roomName;
+                appId = this.appointments[i].id;
+                cancel = this.checkTime(this.appointments[i]);
+                if(this.appointments[i].operation.patient != null) {
+                  patientName = this.appointments[i].operation.patient.patient.name;
+                  patientSurname = this.appointments[i].operation.patient.patient.surname;
+                } else {
+                  patientName = 'not available';
+                  patientSurname = '';
+                }              
               } else if (this.appointments[i].vacation != null) {
                 color = 'green';
-                name = 'vacation'
+                name = 'Vacation'
                 room = '';
                 patientName = '';
                 patientSurname = '';
+                cancel = false;
               }
-              this.events.push({
+              this.events.push(Object.assign({}, {
                 name: name,
                 id: appId,
+                operation: operation,
                 start: this.formatDate(new Date(this.appointments[i].startDate), true),
                 end: this.formatDate(new Date(this.appointments[i].endDate), true),
                 color: color,
                 room: room,
                 patientName: patientName,
                 patientSurname: patientSurname,
-                cancel  : this.checkTime(this.appointments[i])
-              })
-            }
+                cancel : cancel
+              }))}
         }).catch(error => {
           alert(error)
             console.log(error.request);
@@ -293,16 +310,29 @@ const apiURL = "/api/calendarentries"
             return false;
         return true;
       },
-      cancelAppointment: function(id) {
-        console.log(id);
+      cancelAppointment: function(calendarEntry) {
+        var url = "";
+        if (!calendarEntry.operation) 
+          url = "/api/appointments/doctor/cancel/" + calendarEntry.id;
+        else
+          url = "/api/operations/cancel/" + calendarEntry.id;
         this.axios({
-          url: "/api/appointments/doctor/cancel/" + id,
+          url:  url,
           method: "GET"
         }).then(() => {
-          this.$store.commit('showSnackbar', {text: "Successfully canceled appointment!", color: "success" });
-          this.$forceUpdate();
+          this.$store.commit('showSnackbar', {text: "Successfully canceled!", color: "success" });
+          //izbrisi ga iz liste
+          for (var i = 0; i < this.events.length; i++) {
+            if (this.events[i].id == calendarEntry.id) {
+              this.events.splice(i, 1);
+              break;
+            } 
+          }
+        this.selectedOpen = false;
+        this.componentKey += 1;
         })
       }
+      
     }
   }
 </script>
