@@ -6,6 +6,7 @@ import java.util.List;
 
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Operation;
+import isamrs.tim17.lotus.model.OperationStatus;
 
 public class OperationDTO {
 
@@ -16,8 +17,12 @@ public class OperationDTO {
 	private List<String> doctors;
 	private String clinicName;
 	private double price;
+	private PatientDTO patient;
+	private OperationStatus status;
 	
 	public OperationDTO(Operation o) {
+		this.status = o.getStatus();
+		this.patient = new PatientDTO(o.getMedicalRecord().getPatient());
 		this.startDate = o.getStartDate();
 		this.endDate = o.getEndDate();
 		this.operationType = o.getType().getName();
@@ -84,6 +89,25 @@ public class OperationDTO {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
+	public PatientDTO getPatient() {
+		return patient;
+	}
+
+	public void setPatient(PatientDTO patient) {
+		this.patient = patient;
+	}
+
+	public OperationStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OperationStatus status) {
+		this.status = status;
+	}
+	
+	
+	
 	
 	
 

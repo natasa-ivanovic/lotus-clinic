@@ -22,7 +22,7 @@
                                     Room: {{app.roomName}} <br />
                                     Time: {{app.time}}
                                     </v-list-item-content>
-                            <v-btn v-on:click="cancel(app)" block color="error">Cancel appointment</v-btn>
+                            <v-btn v-if="checkTime(app)" v-on:click="cancel(app)" block color="error">Cancel appointment</v-btn>
                             </v-list-item-content>
                         </v-list-item>
                         </v-list-item-group>
@@ -84,6 +84,16 @@ export default {
                     this.appointments.splice(this.appointments.indexOf(appointment), 1);
                     this.$store.commit("showSnackbar", {text: "Successfully canceled appointment", color: "success"});
                 })
+        },
+        checkTime: function(appointment) {
+            var day = new Date(appointment.startDate)
+            var appTime = day.getTime();
+            var today = new Date();
+            var now = today.getTime();
+
+            if (appTime - now < 86400000)
+                return false;
+            return true;
         }
     }
 }

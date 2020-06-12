@@ -9,13 +9,16 @@ import org.springframework.data.repository.query.Param;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.CalendarEntry;
+import isamrs.tim17.lotus.model.Operation;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.User;
 
 public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Long> {
 	CalendarEntry findOneById(Long id);
 	List<CalendarEntry> findBymedicalPerson(User u);
-
+	
+	CalendarEntry findOneByOperationAndMedicalPerson(Operation o, User u);
+	
 	CalendarEntry findOneByAppointment(Appointment a);
 
 	@Query("SELECT c FROM CalendarEntry c where c.medicalPerson = :id AND (c.startDate BETWEEN :startDate AND :endDate) order by c.startDate")

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Diagnosis;
 import isamrs.tim17.lotus.model.Prescription;
 
@@ -29,6 +30,7 @@ public class PremadeAppDTO {
 	private String description;
 	private double price;
 	private double discount;
+	private AppointmentStatus status;
 	
 	public PremadeAppDTO() {
 	}
@@ -69,6 +71,7 @@ public class PremadeAppDTO {
 			}
 		}
 		
+		this.status = app.getStatus();
 		this.rated = app.isReviewed();
 		this.setDescription(app.getInformation());
 		this.clinic = app.getClinic().getName();
@@ -229,6 +232,18 @@ public class PremadeAppDTO {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
+
+	public AppointmentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AppointmentStatus status) {
+		this.status = status;
+	}
+	
+
+	
+	
 	
 	
 	
