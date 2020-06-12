@@ -8,6 +8,7 @@ package isamrs.tim17.lotus.model;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +44,7 @@ public class Operation {
 	private MedicalRecord medicalRecord;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Room room;
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Doctor> doctor;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;

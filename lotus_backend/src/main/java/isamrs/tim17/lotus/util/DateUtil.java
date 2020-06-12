@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import isamrs.tim17.lotus.model.CalendarEntry;
+import isamrs.tim17.lotus.model.RoomRequest;
 
 public class DateUtil {
 
@@ -111,9 +112,11 @@ public class DateUtil {
 		Calendar startTerm = Calendar.getInstance();
 		for (CalendarEntry c : entries) {
 			startApp.setTime(c.getStartDate());
+			if (c.getVacation() != null) 
+				if (c.getStartDate().before(dates.get(0)) && c.getEndDate().after(dates.get(0)))
+					return new ArrayList<Date>();
 			for (Date d : dates) {
 				startTerm.setTime(d);
-				// pretpostavka - uvek je ista duzina pregleda i pocetak je u isto vreme
 				if (startApp.get(Calendar.HOUR_OF_DAY) == startTerm.get(Calendar.HOUR_OF_DAY)
 						&& startApp.get(Calendar.MINUTE) == startTerm.get(Calendar.MINUTE)) {
 					dates.remove(d);
@@ -134,5 +137,22 @@ public class DateUtil {
 			days.add(newDate);
 		}
 		return days;
+	}
+
+	public static List<Date> removeOverlapRequests(List<Date> dates, List<RoomRequest> entries) {
+		Calendar startApp = Calendar.getInstance();
+		Calendar startTerm = Calendar.getInstance();
+		for (RoomRequest r : entries) {
+			startApp.setTime(r.getDate());
+			for (Date d : dates) {
+				startTerm.setTime(d);
+				if (startApp.get(Calendar.HOUR_OF_DAY) == startTerm.get(Calendar.HOUR_OF_DAY)
+						&& startApp.get(Calendar.MINUTE) == startTerm.get(Calendar.MINUTE)) {
+					dates.remove(d);
+					break;					
+				}
+			}
+		}
+		return dates;
 	}
 }

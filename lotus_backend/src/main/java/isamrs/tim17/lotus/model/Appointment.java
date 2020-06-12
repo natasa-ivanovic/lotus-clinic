@@ -23,6 +23,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
 
 
 @Entity
@@ -64,11 +66,15 @@ public class Appointment {
 	@Column(name="reviewed", unique = false, nullable=false)
 	private boolean reviewed;
 	
-	public Appointment() {}
+	@Version
+	private Long version;
+	
+	public Appointment() {
+	}
 
 	public Appointment(Date startDate, Date endDate, double price, double discount, AppointmentType appointmentType, Doctor doctor, Room room,
 			Clinic clinic) {
-		super();
+		this();
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.appointmentType = appointmentType;
@@ -207,6 +213,7 @@ public class Appointment {
 
 	public void setDiscount(double discount) {
 		this.discount = discount;
-	}	
+	}
+
 
 }

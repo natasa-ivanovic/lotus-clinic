@@ -19,7 +19,7 @@
                                 <v-list-item-content v-if="!req.operation">
                                     <v-list-item-title>New appointment request</v-list-item-title>
                                     <v-list-item-content>
-                                        Term: {{formatDate(req.startDate)}} <br/>
+                                        Term: {{formatDate(req.startDate, true)}} <br/>
                                         Appointment type: {{req.type}} <br/>                                       
                                         Doctor: {{req.doctors[0].name}}  {{req.doctors[0].surname}} <br/>
                                         Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
@@ -29,8 +29,8 @@
                                 <v-list-item-content v-else>
                                     <v-list-item-title>New operation request</v-list-item-title>
                                     <v-list-item-content>
-                                        Term: {{formatDate(req.startDate)}} <br/>
-                                        Appointment type: {{req.type}} <br/> 
+                                        Term: {{formatDate(req.startDate, false)}} <br/>
+                                        Operation type: {{req.type}} <br/> 
                                         Doctors: {{req.doctors.map(d => d.name + " " + d.surname).join(", ")}} <br/>
                                         Patient: {{req.patient.name}} {{req.patient.surname}} <br/>
                                     </v-list-item-content>
@@ -123,11 +123,14 @@ export default {
           var date = new Date(datestr);
           return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
         },
-        formatDate(date) {
+        formatDate(date, includeTime) {
             var d = new Date(date);
             var time = d.toTimeString().split(" ")[0];
             var dateNew = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-            return dateNew + " " + time;
+            if (includeTime)
+                return dateNew + " " + time;
+            else
+                return dateNew;
         },
         processVacationRequest(req, idx, choice) {
             var targeURL = "";

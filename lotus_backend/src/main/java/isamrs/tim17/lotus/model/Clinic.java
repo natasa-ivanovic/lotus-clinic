@@ -51,7 +51,7 @@ public class Clinic {
 	private Set<AppointmentPrice> pricelist = new HashSet<>();
 
 
-	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ClinicReview> reviews = new HashSet<>();
 	
 	

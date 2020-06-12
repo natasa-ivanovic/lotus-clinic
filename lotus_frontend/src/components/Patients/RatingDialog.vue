@@ -109,10 +109,7 @@ export default {
                     this.$store.commit('showSnackbar', {text: "Successfully rated!", color: "success", })
                     this.$emit('rate-app', this.app);
                     this.$emit('update:dialog', false);
-                }).catch(error => {
-                    console.log(error);
-                    this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error", })
-                });
+                })
         },
         handleClick: function(event) {
             alert(event);
