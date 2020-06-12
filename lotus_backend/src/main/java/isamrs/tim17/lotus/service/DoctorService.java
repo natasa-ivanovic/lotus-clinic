@@ -25,6 +25,7 @@ public class DoctorService {
 	public List<Doctor> findAll() {
 		return doctors.findAll();
 	}
+
 	
 	public List<Doctor> findBySpecialty(AppointmentType specialty) {
 		return doctors.findBySpecialty(specialty.toString());

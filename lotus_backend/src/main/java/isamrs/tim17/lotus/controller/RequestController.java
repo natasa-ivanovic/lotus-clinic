@@ -25,6 +25,7 @@ import isamrs.tim17.lotus.dto.RegistrationRequestDTO;
 import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.UserDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
@@ -126,13 +127,16 @@ public class RequestController {
 
 		doctors.add(doc);
 		RoomRequest roomRequest = null;
-		if (user.getRole().equals("PATIENT"))
+		String patient = null;
+		if (user.getRole().equals("PATIENT")) {
+			patient = user.getName() + " " + user.getSurname();
 			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP,
 					doc.getSpecialty().getPrice(), doc.getSpecialty().getType());
-		else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId())
+		} else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId()) {
+			patient = doc.getName() + " " + doc.getSurname();
 			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors,
 					RoomRequestType.DOCTOR_APP, doc.getSpecialty().getPrice(), doc.getSpecialty().getType());
-		else
+		} else
 			return new ResponseEntity<>("Cannot request an appointment for another doctor!", HttpStatus.BAD_REQUEST);
 		roomRequest.setStatus(RequestStatus.PENDING);
 		try {
@@ -140,6 +144,11 @@ public class RequestController {
 		} catch (Exception e) {
 			return new ResponseEntity<>("Someone already requested the selected doctor in selected term!",
 					HttpStatus.BAD_REQUEST);
+		}
+		Clinic c = doc.getClinic();
+		for (ClinicAdministrator admin : c.getClinicAdministrators()) {
+			mailSender.sendAdminNotificationAppointment(admin.getUsername(), patient,
+					doc.getSpecialty().getType().getName(), doc.getName() + " " + doc.getSurname());
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -199,7 +208,8 @@ public class RequestController {
 		RegistrationRequest rgReq = (RegistrationRequest) req;
 		req.setStatus(RequestStatus.REJECTED);
 
-		String content = message;
+		String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is invalid.\nThe reason your request was declined is:\n"
+				+ message + "\nWe hope we may be of service another time.\nLotus Clinic Staff";
 		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		service.save(req);
 		return new ResponseEntity<>(HttpStatus.OK);

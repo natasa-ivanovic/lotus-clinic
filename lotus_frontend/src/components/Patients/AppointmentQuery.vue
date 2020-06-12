@@ -60,7 +60,7 @@
 
 <script>
 const apiAppTypes = "/api/appointmentTypes/appointments";
-const apiRequest = "/api/patients/request";
+const apiRequest = "/api/appointments/request";
 
 export default {
     data() {
