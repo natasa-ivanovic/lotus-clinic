@@ -3,10 +3,12 @@ package isamrs.tim17.lotus.dto;
 import java.util.Date;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.MedicalRecord;
 
 public class AppointmentDTO {
 	
+	private long appId;
 	private long endDateLong;
 	private long doctor;
 	private long appointmentType;
@@ -18,10 +20,12 @@ public class AppointmentDTO {
 	private double discount;
 	private PatientDTO patient;
 	private String roomName;
+	private AppointmentStatus status;
 
 	public AppointmentDTO() {}
 	
 	public AppointmentDTO(AppointmentDTO app) {
+		this.appId = app.getAppId();
 		this.startDate = app.getStartDate();
 		this.endDate = app.getEndDate();
 		this.doctor = app.getDoctor();
@@ -32,11 +36,13 @@ public class AppointmentDTO {
 	}
 	
 	public AppointmentDTO(Appointment app) {
+		this.appId = app.getId();
 		MedicalRecord record = app.getMedicalRecord();
 		if(record != null) {
 			this.patient = new PatientDTO(app.getMedicalRecord().getPatient());
 		}
 		this.roomName = app.getRoom().getName();
+		this.status = app.getStatus();
 	}
 	
 	public String getRoomName() {
@@ -126,5 +132,24 @@ public class AppointmentDTO {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
+
+	public long getAppId() {
+		return appId;
+	}
+
+	public void setAppId(long appId) {
+		this.appId = appId;
+	}
+
+	public AppointmentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AppointmentStatus status) {
+		this.status = status;
+	}
+	
+	
+	
 
 }

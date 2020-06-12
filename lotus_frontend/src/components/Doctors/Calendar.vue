@@ -1,4 +1,5 @@
-<template>
+<template >
+<v-container>
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="64">
@@ -44,6 +45,7 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
+          :key="componentKey"
           ref="calendar"
           v-model="focus"
           color="primary"
@@ -73,16 +75,24 @@
             >
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
+              <v-btn light icon @click ="selectedOpen = false"><v-icon>mdi-close</v-icon></v-btn>
             </v-toolbar>
             <v-card-text>
               <div v-if="selectedEvent.room">Room: {{selectedEvent.room}}</div>
               <div v-if="selectedEvent.patientName">Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
             </v-card-text>
             <v-card-actions>
-              <v-btn
+              <v-btn v-if="selectedEvent.startApp"
                 text
-                color="secondary"
-                @click="selectedOpen = false"
+                color="success"
+                @click="startAppointment(selectedEvent)" 
+              >
+                Start appointment
+              </v-btn>
+              <v-btn v-if="selectedEvent.cancel"
+                text
+                color="error"
+                @click="cancelAppointment(selectedEvent)"
               >
                 Cancel
               </v-btn>
@@ -92,6 +102,7 @@
       </v-sheet>
     </v-col>
   </v-row>
+</v-container>
 </template>
 
 <script>
@@ -99,6 +110,7 @@ const apiURL = "/api/calendarentries"
   export default {
     data() {
         return {
+      componentKey: 0,
       focus: '',
       type: 'month',
       appointments: [],
@@ -159,45 +171,79 @@ const apiURL = "/api/calendarentries"
                     method: 'GET'
         }).then(response => {
             this.appointments = response.data;
+            var startApp = false;
             var color = '';
             var name = '';
             var room = '';
             var patientName = '';
             var patientSurname = '';
+            var appId = '';
+            var cancel = false;
+            var appointment = false;
+          
             for(var i = 0; i < this.appointments.length; i++)
             {
               if(this.appointments[i].appointment != null)
               {
+                startApp = this.appointments[i].start;
+                cancel = this.checkTime(this.appointments[i]);
                 color = 'blue';
+                if(!startApp) {
+                  color = 'grey';
+                  cancel = false;
+                  
+                }
+                appointment = true;
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
+                appId = this.appointments[i].id;
                 if(this.appointments[i].appointment.patient != null) {
                   patientName = this.appointments[i].appointment.patient.patient.name;
                   patientSurname = this.appointments[i].appointment.patient.patient.surname;
                 } else {
-                  patientName = 'not available';
+                  patientName = 'Not scheduled yet';
                   patientSurname = '';
                 }
-              } else if (this.appointments[i].operation != null)
-              {
-                //add operation parameters here
+              } else if (this.appointments[i].operation != null) {
+                appointment = false;
+                color = 'orange';
+                cancel = this.checkTime(this.appointments[i]);
+                startApp = false;
+                if(!this.appointments[i].start) {
+                  color = 'grey';
+                  cancel = false;
+                }
+                name = 'Operation';
+                room = this.appointments[i].operation.roomName;
+                appId = this.appointments[i].id;
+                if(this.appointments[i].operation.patient != null) {
+                  patientName = this.appointments[i].operation.patient.patient.name;
+                  patientSurname = this.appointments[i].operation.patient.patient.surname;
+                } else {
+                  patientName = 'not available';
+                  patientSurname = '';
+                }              
               } else if (this.appointments[i].vacation != null) {
                 color = 'green';
-                name = 'vacation'
+                name = 'Vacation'
                 room = '';
                 patientName = '';
                 patientSurname = '';
+                cancel = false;
               }
-              this.events.push({
+              this.events.push(Object.assign({}, {
                 name: name,
+                id: appId,
+                appointment: appointment,
                 start: this.formatDate(new Date(this.appointments[i].startDate), true),
                 end: this.formatDate(new Date(this.appointments[i].endDate), true),
                 color: color,
                 room: room,
                 patientName: patientName,
                 patientSurname: patientSurname,
-              })
-            }
+                cancel : cancel,
+                startApp : startApp
+              }))}
         }).catch(error => {
           alert(error)
             console.log(error.request);
@@ -277,6 +323,49 @@ const apiURL = "/api/calendarentries"
           ? `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
           : `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`
       },
-    },
+      checkTime: function(appointment) {
+        console.log(appointment);
+        var day = new Date(appointment.startDate)
+        var appTime = day.getTime();
+        var today = new Date();
+        var now = today.getTime();
+
+        if (appTime - now < 86400000)
+            return false;
+        return true;
+      },
+      cancelAppointment: function(calendarEntry) {
+        var url = "";
+        if (calendarEntry.appointment) 
+          url = "/api/appointments/doctor/cancel/" + calendarEntry.id;
+        else
+          url = "/api/operations/cancel/" + calendarEntry.id;
+        this.axios({
+          url:  url,
+          method: "GET"
+        }).then(() => {
+          this.$store.commit('showSnackbar', {text: "Successfully canceled!", color: "success" });
+          //izbrisi ga iz liste
+          for (var i = 0; i < this.events.length; i++) {
+            if (this.events[i].id == calendarEntry.id) {
+              this.events.splice(i, 1);
+              break;
+            } 
+          }
+        this.selectedOpen = false;
+        this.componentKey += 1;
+        })
+      },
+      startAppointment(selectedEvent) {
+        this.axios({
+            url:"/api/calendarentries/startAppointment/" + selectedEvent.id,
+            method: "GET"
+        }).then(response => {
+            var app = response.data;
+            this.$router.push({name: "startAppointment", params: {appointment: app}})
+        })
+      }
+      
+    }
   }
 </script>

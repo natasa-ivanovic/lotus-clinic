@@ -1,5 +1,10 @@
 package isamrs.tim17.lotus.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +25,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.OperationDTO;
+import isamrs.tim17.lotus.model.CalendarEntry;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Operation;
 import isamrs.tim17.lotus.model.OperationStatus;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.OperationService;
 import isamrs.tim17.lotus.service.PatientService;
 
@@ -35,6 +43,8 @@ public class OperationController {
 	private OperationService service;
 	@Autowired
 	private PatientService patientService;
+	@Autowired
+	private CalendarEntryService calendarService;
 	
 	@GetMapping("/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
@@ -90,6 +100,79 @@ public class OperationController {
 			}
 		});
 		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/cancel/{id}")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> cancelOperation(@PathVariable("id") long id) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+	
+		CalendarEntry ce = calendarService.findOne(id);
+		
+		if (ce == null)
+			return new ResponseEntity<>("Operation not found!", HttpStatus.BAD_REQUEST);
+		
+		Operation operation = ce.getOperation();
+		if (operation == null)
+			return new ResponseEntity<>("Operation not found!", HttpStatus.BAD_REQUEST);
+		
+		boolean check = false;
+		Set<Doctor> docs = operation.getDoctor();
+		Iterator<Doctor> it = docs.iterator();
+		while(it.hasNext()) {
+			if (it.next().getId() == doctor.getId()) {
+				check = true;
+				break;
+			}
+		}
+		
+		if (!check)
+			return new ResponseEntity<>("Cannot cancel other doctor's operation!", HttpStatus.BAD_REQUEST);
+		
+		if (!operation.getStatus().equals(OperationStatus.SCHEDULED))
+			return new ResponseEntity<>("Operation already canceled or finished!", HttpStatus.BAD_REQUEST);
+			
+		
+		Date now = new Date();
+		Date appDate = operation.getStartDate();
+
+		if (appDate.getTime() - now.getTime() < 86400000)
+			return new ResponseEntity<>("Cannot cancel operation which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
+		
+		try {
+		calendarService.cancel(operation.getId()); 
+		} catch (Exception e) {
+			return new ResponseEntity<>("Operation already canceled", HttpStatus.BAD_REQUEST);			
+		}
+		List<Doctor> doctors = new ArrayList<>(operation.getDoctor());
+		String names = doctorsNames(doctors);
+		String message = "Hello " + operation.getMedicalRecord().getPatient().getName() + " " + operation.getMedicalRecord().getPatient().getName()
+				+ "!\nAn existing operation has been canceled.\n" + "The operation was scheduled for "
+				+ operation.getStartDate() + ".\n" + "The doctors' names are: " + names
+				+ " and the operation type is " + operation.getType().getName() + ".\n"
+				+ "Lotus Clinic Staff";
+		
+		// TODO srediti mejlove
+		//mailSender.sendMsg(app.getDoctor().getUsername(), "Appointment canceled notification", message);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	
+	}
+	
+	private String doctorsNames(List<Doctor> docs) {
+		StringBuilder sb  = new StringBuilder();
+		for (int i = 0; i < docs.size(); i++) {
+			String s = docs.get(i).getName() + " " + docs.get(i).getSurname();
+			if (i == docs.size() - 1) {
+				sb.append(s);
+			}
+			else {
+				sb.append(s);
+				sb.append(", ");
+			}
+		}
+		return sb.toString();
 	}
 	
 }
