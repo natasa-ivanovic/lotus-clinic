@@ -78,10 +78,7 @@ export default {
                 console.log(response);
                 this.$store.commit('showSnackbar', {text: "Successfully scheduled appointment!", color: "success", })
                 this.apps.splice(this.apps.indexOf(app), 1);
-            }).catch(error => {
-                console.log(error.request);          
-                this.$store.commit('showSnackbar', {text: "Something went wrong! Please try again.", color: "error", })
-            });
+            })
         },
         dateFormat: function(date1, date2) {
             var date = date1.toISOString().split("T")[0];

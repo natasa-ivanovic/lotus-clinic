@@ -19,6 +19,7 @@
                     <PatientPage v-if="this.$role == 'PATIENT'" />
                     <AdminPage v-if="this.$role == 'ADMIN'" />
                     <DoctorPage v-if="this.$role == 'DOCTOR'" />
+                    <NursePage v-if="this.$role == 'NURSE'" />
                 </v-card-text>
             </v-card>
           </v-col>
@@ -32,12 +33,14 @@
 import PatientPage from "../components/Patients/PatientHomePage"
 import AdminPage from "../components/Admins/AdminHomePage"
 import DoctorPage from "../components/Doctors/DoctorHomePage"
+import NursePage from "../components/Nurse/NurseHomePage"
 
 export default {
     components: {
         PatientPage,
         AdminPage,
-        DoctorPage
+        DoctorPage,
+        NursePage
     },
     methods: {
         checkRole: function(role) {

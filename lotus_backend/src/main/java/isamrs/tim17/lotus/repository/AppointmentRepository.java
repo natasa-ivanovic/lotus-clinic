@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Room;
@@ -23,6 +24,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	List<Appointment> findByStatus(AppointmentStatus status);
 	List<Appointment> findByMedicalRecord(MedicalRecord id);
 	List<Appointment> findByDoctor(Doctor id);
+	List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status, Boolean reviewed);
 
 	
 	Page<Appointment> findAllByMedicalRecordAndStatus(MedicalRecord id, AppointmentStatus status, Pageable pageable);
