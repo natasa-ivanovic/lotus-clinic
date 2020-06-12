@@ -23,7 +23,7 @@ public class CalendarEntry {
 	private Date endDate;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User medicalPerson;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Appointment appointment;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Operation operation;

@@ -2,7 +2,9 @@ package isamrs.tim17.lotus.dto;
 
 import java.util.Date;
 
+import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.CalendarEntry;
+import isamrs.tim17.lotus.model.OperationStatus;
 
 public class CalendarEntryDTO {
 	private Date startDate;
@@ -11,6 +13,7 @@ public class CalendarEntryDTO {
 	private OperationDTO operation;
 	private VacationDTO vacation;
 	private long id;
+	private boolean start; //
 	
 	public CalendarEntryDTO() {}
 	
@@ -18,11 +21,29 @@ public class CalendarEntryDTO {
 		this.id = entry.getId();
 		this.startDate = entry.getStartDate();
 		this.endDate = entry.getEndDate();
-		this.appointment = entry.getAppointment() != null ? new AppointmentDTO(entry.getAppointment()) : null;
-		this.operation = entry.getOperation() != null ? new OperationDTO(entry.getOperation()) : null;
 		this.vacation = entry.getVacation() != null ? new VacationDTO(entry.getVacation()) : null;
+		
+		if (entry.getAppointment() != null) {
+			this.appointment = new AppointmentDTO(entry.getAppointment());
+			if (this.appointment.getStatus().equals(AppointmentStatus.SCHEDULED))
+				this.start = true;
+			else if (this.appointment.getStatus().equals(AppointmentStatus.FINISHED) || this.appointment.getStatus().equals(AppointmentStatus.PREMADE))
+				this.start = false;
+		} else {
+			this.appointment = null;
+		}
+		
+		if (entry.getOperation() != null) {
+			this.operation = new OperationDTO(entry.getOperation());
+			if (this.operation.getStatus().equals(OperationStatus.SCHEDULED))
+				this.start = true;
+			else if (this.operation.getStatus().equals(OperationStatus.FINISHED))
+				this.start = false;
+		} else {
+			this.operation = null;
+		}
 	}
-
+	
 	public AppointmentDTO getAppointment() {
 		return appointment;
 	}
@@ -70,6 +91,15 @@ public class CalendarEntryDTO {
 	public void setOperation(OperationDTO operation) {
 		this.operation = operation;
 	}
+
+	public boolean isStart() {
+		return start;
+	}
+
+	public void setStart(boolean start) {
+		this.start = start;
+	}
+	
 	
 	
 }

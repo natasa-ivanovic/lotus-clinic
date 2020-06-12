@@ -1,4 +1,5 @@
 <template >
+<v-container>
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="64">
@@ -81,12 +82,19 @@
               <div v-if="selectedEvent.patientName">Patient: {{selectedEvent.patientName}} {{selectedEvent.patientSurname}} </div>
             </v-card-text>
             <v-card-actions>
+              <v-btn v-if="selectedEvent.startApp"
+                text
+                color="success"
+                @click="startAppointment(selectedEvent)" 
+              >
+                Start appointment
+              </v-btn>
               <v-btn v-if="selectedEvent.cancel"
                 text
                 color="error"
                 @click="cancelAppointment(selectedEvent)"
               >
-                Cancel appointment
+                Cancel
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -94,6 +102,7 @@
       </v-sheet>
     </v-col>
   </v-row>
+</v-container>
 </template>
 
 <script>
@@ -162,6 +171,7 @@ const apiURL = "/api/calendarentries"
                     method: 'GET'
         }).then(response => {
             this.appointments = response.data;
+            var startApp = false;
             var color = '';
             var name = '';
             var room = '';
@@ -169,30 +179,43 @@ const apiURL = "/api/calendarentries"
             var patientSurname = '';
             var appId = '';
             var cancel = false;
-            var operation = false;
+            var appointment = false;
+          
             for(var i = 0; i < this.appointments.length; i++)
             {
               if(this.appointments[i].appointment != null)
               {
+                startApp = this.appointments[i].start;
+                cancel = this.checkTime(this.appointments[i]);
                 color = 'blue';
+                if(!startApp) {
+                  color = 'grey';
+                  cancel = false;
+                  
+                }
+                appointment = true;
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
                 appId = this.appointments[i].id;
-                cancel = this.checkTime(this.appointments[i]);
                 if(this.appointments[i].appointment.patient != null) {
                   patientName = this.appointments[i].appointment.patient.patient.name;
                   patientSurname = this.appointments[i].appointment.patient.patient.surname;
                 } else {
-                  patientName = 'not available';
+                  patientName = 'Not scheduled yet';
                   patientSurname = '';
                 }
               } else if (this.appointments[i].operation != null) {
-                operation = true;
+                appointment = false;
                 color = 'orange';
+                cancel = this.checkTime(this.appointments[i]);
+                startApp = false;
+                if(!this.appointments[i].start) {
+                  color = 'grey';
+                  cancel = false;
+                }
                 name = 'Operation';
                 room = this.appointments[i].operation.roomName;
                 appId = this.appointments[i].id;
-                cancel = this.checkTime(this.appointments[i]);
                 if(this.appointments[i].operation.patient != null) {
                   patientName = this.appointments[i].operation.patient.patient.name;
                   patientSurname = this.appointments[i].operation.patient.patient.surname;
@@ -211,14 +234,15 @@ const apiURL = "/api/calendarentries"
               this.events.push(Object.assign({}, {
                 name: name,
                 id: appId,
-                operation: operation,
+                appointment: appointment,
                 start: this.formatDate(new Date(this.appointments[i].startDate), true),
                 end: this.formatDate(new Date(this.appointments[i].endDate), true),
                 color: color,
                 room: room,
                 patientName: patientName,
                 patientSurname: patientSurname,
-                cancel : cancel
+                cancel : cancel,
+                startApp : startApp
               }))}
         }).catch(error => {
           alert(error)
@@ -312,7 +336,7 @@ const apiURL = "/api/calendarentries"
       },
       cancelAppointment: function(calendarEntry) {
         var url = "";
-        if (!calendarEntry.operation) 
+        if (calendarEntry.appointment) 
           url = "/api/appointments/doctor/cancel/" + calendarEntry.id;
         else
           url = "/api/operations/cancel/" + calendarEntry.id;
@@ -330,6 +354,15 @@ const apiURL = "/api/calendarentries"
           }
         this.selectedOpen = false;
         this.componentKey += 1;
+        })
+      },
+      startAppointment(selectedEvent) {
+        this.axios({
+            url:"/api/calendarentries/startAppointment/" + selectedEvent.id,
+            method: "GET"
+        }).then(response => {
+            var app = response.data;
+            this.$router.push({name: "startAppointment", params: {appointment: app}})
         })
       }
       
