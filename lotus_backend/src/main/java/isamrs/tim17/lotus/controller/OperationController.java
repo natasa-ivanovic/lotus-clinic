@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.OperationDTO;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Operation;
 import isamrs.tim17.lotus.model.OperationStatus;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.CalendarEntryService;
+import isamrs.tim17.lotus.service.MailSenderService;
 import isamrs.tim17.lotus.service.OperationService;
 import isamrs.tim17.lotus.service.PatientService;
 
@@ -47,7 +47,7 @@ public class OperationController {
 	@Autowired
 	private CalendarEntryService calendarService;
 	@Autowired
-	private MailSenderModel mailService;
+	private MailSenderService mailService;
 	
 	@GetMapping("/patient/past")
 	@PreAuthorize("hasRole('PATIENT')")
@@ -143,6 +143,7 @@ public class OperationController {
 		if (appDate.getTime() - now.getTime() < 86400000)
 			return new ResponseEntity<>("Cannot cancel operation which starts in less than 24 hours!", HttpStatus.BAD_REQUEST);
 		
+
         try {
             calendarService.cancel(operation.getId());
         } catch (Exception e) {

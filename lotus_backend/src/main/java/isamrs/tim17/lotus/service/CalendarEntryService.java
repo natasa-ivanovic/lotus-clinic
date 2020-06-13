@@ -34,7 +34,7 @@ public class CalendarEntryService {
 	public CalendarEntry findOne(long id) {
 		return calendarEntries.findOneById(id);
 	}
-
+	
 	public List<CalendarEntry> findByMedicalPersonId(User u) {
 		return calendarEntries.findBymedicalPerson(u);
 	}
@@ -70,12 +70,12 @@ public class CalendarEntryService {
 		return calendarEntries.getAllBetweenDatesForRoom(r, d, endDate);
 	}
 	
-	//TODO ovo je cancel za operacije
+
 	@Transactional(readOnly = false)
 	public void cancel(long id) {
 		Operation operation = operationService.findOne(id);
 		Set<Doctor> doctors = operation.getDoctor();
-		for (Doctor d : doctors) {
+		for(Doctor d : doctors) {
 			// pronaci za svakog doktora calendar entry i skloniti
 			CalendarEntry ce = calendarEntries.findOneByOperationAndMedicalPerson(operation, d);
 			calendarEntries.deleteById(ce.getId());

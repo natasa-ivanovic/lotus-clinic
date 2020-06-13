@@ -61,7 +61,7 @@ import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
 import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
 import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
 import VacationRequest from "../components/Users/VacationRequest"
-
+import ConfirmAppointment from "../components/Patients/ConfirmAppointment"
 const routes = [
     {
         component: Login,
@@ -284,6 +284,12 @@ const routes = [
         component: VacationRequest,
         name: "vacationRequest",
         path: "/vacation_request"
+    },
+    {
+        component: ConfirmAppointment,
+        name: "confirmAppointment",
+        path: "/confirm/:key",
+        props: true
     },
     {
         path: "/*",

@@ -109,7 +109,7 @@ public class LoginController {
 		}
 		Patient patient = new Patient(p);
 		patient.setEnabled(false);
-		patient.setPassword(userDetailsService.encodePassword(patient.getPassword()));
+		patient.setPassword(userDetailsService.encodePassword(p.getPassword()));
 		ArrayList<Authority> auth = new ArrayList<>();
 		auth.add(authorityService.findByName("ROLE_PATIENT"));
 		patient.setAuthorities(auth);
