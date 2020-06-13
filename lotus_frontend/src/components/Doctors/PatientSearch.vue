@@ -2,18 +2,16 @@
     <v-row>
       <v-col cols="2">
         <v-container>
-        <v-text-field
-          label="Name"
-          @input="filter()"
-          v-model="name" />
-        <v-text-field
-          label="Surname"
-          @input="filter()"
-          v-model="surname" />
-        <v-text-field
-          label="Insurance ID"
-          @input="filter()"
-          v-model="ssid" />
+          <v-text-field
+            label="Name"
+            v-model="name" />
+          <v-text-field
+            label="Surname"
+            v-model="surname" />
+          <v-text-field
+            label="Insurance ID"
+            v-model="ssid" />
+          <v-btn color="primary" @click="searchClikc()">Search</v-btn>
         </v-container>
       </v-col>
       <v-col cols="10">
@@ -22,6 +20,11 @@
             :items="users"
             item-key="email"
             class="elevation-1"
+            :options.sync="options"
+            :server-items-length="totalItems"
+            :footer-props="{
+              itemsPerPageOptions: [1, 5, 10]
+            }"
         >
             <template v-slot:top>
                 <v-toolbar flat color="white">
@@ -46,7 +49,6 @@ const apiURL = "/api/patients"
 export default {
   data() {
     return {
-      unfilteredUserd: [],
       users: [],
       headers: [
         {text: 'Email', value: 'username'},
@@ -61,28 +63,35 @@ export default {
       ],
       name: "",
       surname: "",
-      ssid: ""
+      ssid: "",
+      totalItems: 0,
+      options: {}
     }
   },
-  mounted() {
-    this.axios({url : apiURL, 
-                    method: 'GET'
-        }).then(response => {
-          this.unfilteredUserd = response.data;
-          this.users = this.unfilteredUserd;
-        }).catch(error => {
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
-        });
-  },
+  watch: {
+        options: {
+            handler () {    
+                this.filter();
+            },
+            deep: true,
+        },
+    },
   methods: {
+    searchClikc: function() {
+      this.options.page = 1;
+      this.filter();
+    },
     filter: function() {
-      this.users = [];
-      this.unfilteredUserd.forEach(user => {
-        if(user.name.toLowerCase().includes(this.name.toLowerCase()) &&
-          user.surname.toLowerCase().includes(this.surname.toLowerCase()) &&
-          user.ssid.toString().includes(this.ssid))
-          this.users.push(user)
+      console.log(this.options.page)
+      var tailoredURL = apiURL + "?name=" + this.name + "&surname=" + this.surname + "&ssid=" + this.ssid + "&pageSize=" + this.options.itemsPerPage + "&pageNo=" + (this.options.page - 1);
+        this.axios({url : tailoredURL, 
+                  method: 'GET'
+      }).then(response => {
+        this.users = response.data.content;
+        this.totalItems = response.data.totalElements;
+      }).catch(error => {
+          console.log(error.request);
+          this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
       });
     },
     editPatient: function(item) {

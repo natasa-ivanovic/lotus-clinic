@@ -3,6 +3,8 @@ package isamrs.tim17.lotus.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.Patient;
@@ -36,6 +38,10 @@ public class PatientService {
 
 	public void remove(long id) {
 		patients.deleteById(id);
+	}
+	
+	public Page<Patient> findPatients(String name, String surname, String ssid, Pageable pageable) {
+		return patients.findByNameContainsAndSurnameContainsAndSsidContainsAllIgnoringCase(name, surname, ssid, pageable);
 	}
 
 }

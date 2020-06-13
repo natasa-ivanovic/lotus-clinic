@@ -15,7 +15,7 @@ public class ClinicAdminDTO {
 	private String city;
 	private String country;
 	private String phoneNumber; 
-	private Long ssid;
+	private String ssid;
 	private Long clinicId;
 	
 	public ClinicAdminDTO() {
@@ -82,10 +82,10 @@ public class ClinicAdminDTO {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public Long getSsid() {
+	public String getSsid() {
 		return ssid;
 	}
-	public void setSsid(Long ssid) {
+	public void setSsid(String ssid) {
 		this.ssid = ssid;
 	}
 	public Long getClinicId() {

@@ -30,13 +30,6 @@ public class Patient extends User {
 	private MedicalRecord medicalRecord;
 
 	public Patient() {}
-	
-	public Patient(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, long id, Date birthDate, Gender gender, ClinicalCentre clinicalCentre) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);
-		this.clinicalCentre = clinicalCentre;
-	}
-
 
 	public Patient(UserDTO p) {
 		super(p);

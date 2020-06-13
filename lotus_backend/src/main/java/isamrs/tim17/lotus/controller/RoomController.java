@@ -186,7 +186,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		ClinicAdministrator admin = new ClinicAdministrator((ClinicAdministrator) a.getPrincipal());
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 
 		long dateMili = Long.parseLong(date);
 		Date startDate = new Date(dateMili);
