@@ -111,6 +111,11 @@ const routes = [
         props: true
     },
     {
+        component: EditClinic,
+        name: "my_clinic",
+        path: "/clinics/edit"
+    },
+    {
         component: AppointmentTypes,
         name: "appointmentTypes",
         path: "/appointment_types"
