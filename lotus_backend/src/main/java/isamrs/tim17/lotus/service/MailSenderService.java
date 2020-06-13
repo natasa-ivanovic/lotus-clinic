@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.RegistrationRequest;
 
 @Component
 public class MailSenderService {
@@ -131,6 +130,15 @@ public class MailSenderService {
 				+ "https://lotus-clinic.herokuapp.com/registrations/" + key + " \nLotus Clinic Staff";
 		sendMsg(username, "Lotus Clinic - Confirm registration", content);
 		
+	}
+	
+	@Async
+	public void sendDoctorOperationCanceled(String recipient, String patient, String type, String doctors,
+			String date) {
+		String content = "Hello\nOne of your operations has been canceled.\nThe operation was scheduled for " + date
+				+ ".\nPatient's name was " + patient + " and the operation type was " + type
+				+ ".\nThe doctors that were on this operation are: " + doctors + "\nLotus Clinic Staff";
+		sendMsg(recipient, "Operation canceled", content);
 	}
 
 }

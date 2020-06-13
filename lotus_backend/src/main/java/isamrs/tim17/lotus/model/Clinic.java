@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import isamrs.tim17.lotus.dto.ClinicDTO;
 
@@ -53,6 +54,9 @@ public class Clinic {
 
 	@OneToMany(mappedBy = "clinic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ClinicReview> reviews = new HashSet<>();
+	
+	@Version
+	private long version;
 	
 	
 	public Clinic() {}

@@ -12,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import isamrs.tim17.lotus.dto.RatingDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicReview;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Room;
+import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.repository.AppointmentRepository;
 
 @Service
@@ -26,13 +28,19 @@ public class AppointmentService {
 
 	@Autowired
 	private AppointmentRepository appointments;
-	
+
 	@Autowired
 	private DoctorReviewService docReviewService;
 
 	@Autowired
 	private ClinicReviewService clinicReviewService;
-	
+
+	@Autowired
+	private RequestService requestService;
+
+	@Autowired
+	private CalendarEntryService calendarService;
+
 	public Appointment findOne(long id) {
 		return appointments.findOneById(id);
 	}
@@ -50,7 +58,7 @@ public class AppointmentService {
 	public Appointment save(Appointment app) {
 		return appointments.save(app);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public Appointment saveRatings(Appointment app, RatingDTO rating) {
 		Doctor d = app.getDoctor();
@@ -71,11 +79,10 @@ public class AppointmentService {
 	public List<Appointment> findByMedicalRecord(MedicalRecord record) {
 		return appointments.findByMedicalRecord(record);
 	}
-	
+
 	public Page<Appointment> findByMedicalRecord(MedicalRecord record, AppointmentStatus status, Pageable p) {
 		return appointments.findAllByMedicalRecordAndStatus(record, status, p);
 	}
-	
 
 	public List<Appointment> findByDoctor(Doctor record) {
 		return appointments.findByDoctor(record);
@@ -105,13 +112,23 @@ public class AppointmentService {
 		a = appointments.save(a);
 		return a;
 	}
-	
-	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status, Boolean reviewed) {
+
+	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status,
+			Boolean reviewed) {
 		return appointments.findByClinicAndStatusAndReviewed(clinic, status, reviewed);
+	}
+
+	@Transactional(readOnly = false)
+	public void save(Appointment app, RoomRequest rr, CalendarEntry entry) {
+
+		requestService.save(rr);
+		calendarService.save(entry);
+		appointments.save(app);
 	}
 
 	public Appointment findByKey(String key) {
 		return appointments.findByRegKey(key);
+
 	}
 
 }
