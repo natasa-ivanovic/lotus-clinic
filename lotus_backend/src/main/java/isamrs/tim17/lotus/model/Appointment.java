@@ -66,6 +66,9 @@ public class Appointment {
 	@Column(name="reviewed", unique = false, nullable=false)
 	private boolean reviewed;
 	
+	@Column(name="reg_key", unique = true, nullable=true)
+	private String regKey;
+	
 	@Version
 	private Long version;
 	
@@ -213,6 +216,14 @@ public class Appointment {
 
 	public void setDiscount(double discount) {
 		this.discount = discount;
+	}
+
+	public String getRegKey() {
+		return regKey;
+	}
+
+	public void setRegKey(String regKey) {
+		this.regKey = regKey;
 	}
 
 
