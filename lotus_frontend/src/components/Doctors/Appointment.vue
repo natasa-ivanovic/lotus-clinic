@@ -295,18 +295,6 @@ export default {
             menuDatePickerOperation: false
         }
     },
-    beforeMount() {
-      this.axios({
-            url: "/api/appointments/start",
-            method: 'POST',
-            data: this.appointment.id,
-            headers: {
-              'Content-Type': 'text/plain'
-            }
-        }).catch(error =>{
-            console.log(error);
-        });
-    },
     mounted() {
         console.log("PROVERA");
         console.log(this.appointment);

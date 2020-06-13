@@ -1,6 +1,9 @@
 package isamrs.tim17.lotus.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +36,7 @@ import isamrs.tim17.lotus.service.AllergyService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
+import javassist.Loader.Simple;
 
 @RestController
 @RequestMapping("/api")
@@ -60,9 +64,9 @@ public class MedicalRecordController {
 			}
 		}
 		else {
-			List<Appointment> ongoingApps = appService.findByDoctorAndStatusAndMedicalRecord((Doctor)user, AppointmentStatus.ONGOING, patient.getMedicalRecord());
-			List<Appointment> finishedApps = appService.findByDoctorAndStatusAndMedicalRecord((Doctor)user, AppointmentStatus.FINISHED, patient.getMedicalRecord());
-			if(ongoingApps.isEmpty() && finishedApps.isEmpty()) {
+			List<Appointment> apps = appService.findByDoctorAndMedicalRecord((Doctor) user, patient.getMedicalRecord());
+
+			if(apps.isEmpty()) {
 				response.put("show", false);
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}

@@ -611,21 +611,7 @@ public class AppointmentController {
 		calendarService.save(entry);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	@PostMapping("/appointments/start")
-	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<Object> startAppointmetn(@RequestBody String idstr) {
-		long id = 0;
-		try {
-			id = Long.parseLong(idstr);
-		}catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		Appointment appointment = service.findOne(id);
-		appointment.setStatus(AppointmentStatus.ONGOING);
-		service.save(appointment);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+
 	
 	@PostMapping("/appointments/finish")
 	@PreAuthorize("hasRole('DOCTOR')")
@@ -782,6 +768,21 @@ public class AppointmentController {
 		}
 		
 		return doctors;
+	}
+	
+	@GetMapping("/appointments/doctor/patient/{id}")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<PremadeAppDTO>> getAppointmentDoctorPatient(@PathVariable("id") long id){
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		Patient patient = patientService.findOne(id);
+		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.SCHEDULED, patient.getMedicalRecord());
+		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
+		for(Appointment app : appointments) {
+			appointmentDTOs.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
 	}
 
 }
