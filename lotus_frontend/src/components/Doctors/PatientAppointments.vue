@@ -89,3 +89,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.spacerHeader {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>
