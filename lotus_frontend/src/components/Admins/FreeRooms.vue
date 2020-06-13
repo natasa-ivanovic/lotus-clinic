@@ -1,5 +1,6 @@
 <template>
     <v-container fluid>
+        <RoomCalendar v-bind:overlay.sync="overlay" v-bind:id.sync="selectedId" />
         <v-row align="center" justify="center">
             <v-col cols="7">
                 <v-card class="elevation-3">
@@ -29,8 +30,8 @@
                                     <template v-slot:item.schedule="{item}">
                                         <v-icon medium @click="sendNotification(item)">mdi-calendar-arrow-right</v-icon>
                                     </template>
-                                    <template v-slot:item.calendar>
-                                        <v-icon medium :loading="waiting" >mdi-calendar-today</v-icon>
+                                    <template v-slot:item.calendar="{item}">
+                                        <v-icon medium @click="selectedId = item.id; overlay = true;" >mdi-calendar-today</v-icon>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -43,11 +44,15 @@
 </template>
 
 <script>
+import RoomCalendar from "../Rooms/RoomCalendar"
 const apiTerms = "/api/rooms/terms";
 const apiFinish = "/api/appointments/notification";
 export default {
     name: "freeRooms",
     props: ['request'],
+    components: {
+        RoomCalendar
+    },
     data() {
         return {
             header: [
@@ -57,7 +62,9 @@ export default {
                 { text: "Schedule", value: "schedule", sortable: false}
             ],
             rooms: [],
-            waiting: false
+            waiting: false,
+            overlay: false,
+            selectedId: 0
         }
     },
     mounted() {
@@ -84,7 +91,7 @@ export default {
         sendNotification(item) {
             //posalji id sobe i id requesta na bekend, napravi app i posalji mejl
             if (this.waiting) {
-                this.$store.commit('showSnackbar', {text: "Request alreay sent!", color: "error" })
+                this.$store.commit('showSnackbar', {text: "Request already sent!", color: "error" })
                 return;
             }
             console.log(item);
@@ -103,12 +110,10 @@ export default {
                     console.log(response);
                     this.$store.commit('showSnackbar', {text: "Successfully assigned a room to the appointment!", color: "success" })
                     this.$router.push({name: "home"}); 
-                }).catch(error => {
-                    this.$store.commit('showSnackbar', {text: "An error has occurred!", color: "error" })
-                    console.log(error);
+                }).catch(() => {
+                    this.waiting = false;
                 })
             this.waiting = true;
-            this.$store.commit('showSnackbar', {text: "Please wait while the emails send!", color: "info" })
         }
     }
     

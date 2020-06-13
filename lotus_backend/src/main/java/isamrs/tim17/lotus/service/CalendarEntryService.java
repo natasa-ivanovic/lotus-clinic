@@ -42,6 +42,10 @@ public class CalendarEntryService {
 	public CalendarEntry findByDateAndRoom(Room r, Date d) {
 		return calendarEntries.findOneByRoomAndStartDate(r, d);
 	}
+	
+	public List<CalendarEntry> findByRoom(Room r) {
+		return calendarEntries.findAllByRoom(r);
+	}
 
 	@Transactional(readOnly = false)
 	public CalendarEntry save(CalendarEntry entry) {

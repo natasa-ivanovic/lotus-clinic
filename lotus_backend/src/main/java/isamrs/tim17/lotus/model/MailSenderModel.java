@@ -26,6 +26,7 @@ public class MailSenderModel {
 		emailSender.send(message);
 	}
 
+	@Async
 	public void sendAdminNotificationAppointment(String recipient, String patient, String type, String doctor) {
 		String content = "Hello\nYou have a new appointment request pending for room assignation.\nPatient with the name "
 				+ patient + "requested an appointment of type " + type + ", for doctor " + doctor
@@ -33,6 +34,7 @@ public class MailSenderModel {
 		sendMsg(recipient, "New request pending", content);
 	}
 
+	@Async
 	public void sendDoctorOperationCanceled(String recipient, String patient, String type, String doctors,
 			String date) {
 		String content = "Hello\nOne of your operations has been canceled.\nThe operation was scheduled for " + date

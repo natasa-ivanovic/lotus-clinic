@@ -1,5 +1,6 @@
 <template>
     <div>
+        <RoomCalendar v-bind:overlay.sync="overlay" v-bind:id.sync="selectedId" />
         <v-data-table
           :headers="headers"
           :items="rooms"
@@ -39,55 +40,62 @@
 </template>
 
 <script>
+import RoomCalendar from "../Rooms/RoomCalendar"
 const apiURL = "/api/rooms";
 export default {
     name: "rooms",
-  data() {
-    return {
-      rooms: [],
-      headers: [
-          {text: 'ID', value: 'id'},
-          {text: 'Name', value: 'name'},
-          {text: 'Details', value: 'details'},
-          {text: 'Edit', value: 'edit', sortable: false},
-          {text: 'Delete', value: 'delete', sortable: false}
-      ]
-    }
-  },
-  mounted() {
-    this.axios({url : apiURL, 
-                    method: 'GET'
+    components: {
+        RoomCalendar
+    },
+    data() {
+            return {
+                rooms: [],
+                headers: [
+                    {text: 'ID', value: 'id'},
+                    {text: 'Name', value: 'name'},
+                    {text: 'Details', value: 'details'},
+                    {text: 'Edit', value: 'edit', sortable: false},
+                    {text: 'Delete', value: 'delete', sortable: false}
+                ],
+                selectedId: 0,
+                overlay: false
+            }
+    },
+    mounted() {
+        this.axios({url : apiURL, 
+                        method: 'GET'
+            }).then(response =>   {
+                this.rooms = response.data;
+            }).catch(error => {
+                console.log(error.request);
+                this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+            });
+    },
+    methods: {
+        deleteRoom: function(room) {
+        this.axios({url : apiURL + "/" + room.id, 
+                    method: 'DELETE'
         }).then(response =>   {
-            this.rooms = response.data;
+                console.log(response);
+                this.rooms.splice(this.rooms.indexOf(room), 1);
+                this.$store.commit('showSnackbar', {text: "Successfully deleted room.", color: "success", })
         }).catch(error => {
             console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
+            // navesti razlog errora
+            this.$store.commit('showSnackbar', {text: "Couldn't delete room!", color: "error", })
         });
-  },
-  methods: {
-    deleteRoom: function(room) {
-      this.axios({url : apiURL + "/" + room.id, 
-                  method: 'DELETE'
-      }).then(response =>   {
-            console.log(response);
-            this.rooms.splice(this.rooms.indexOf(room), 1);
-            this.$store.commit('showSnackbar', {text: "Successfully deleted room.", color: "success", })
-      }).catch(error => {
-          console.log(error.request);
-          // navesti razlog errora
-          this.$store.commit('showSnackbar', {text: "Couldn't delete room!", color: "error", })
-      });
-    },
-    editRoom: function(editId) {
-      this.$router.push({name: "editRoom", params: {id : editId}});
-    },
-    getDetails: function(id) {
-        return id; //TODO
-    },
-    addRoom: function() {
-      this.$router.push({name: "addRoom"})
+        },
+        editRoom: function(editId) {
+        this.$router.push({name: "editRoom", params: {id : editId}});
+        },
+        getDetails: function(id) {
+            this.selectedId = id; 
+            this.overlay = true;
+        },
+        addRoom: function() {
+        this.$router.push({name: "addRoom"})
+        }
     }
-  }
     
 }
 </script>

@@ -28,5 +28,6 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
 	List<CalendarEntry> getAllBetweenDatesForRoom(@Param("room") Room r, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 	
 	CalendarEntry findOneByRoomAndStartDate(Room r, Date d);
+	List<CalendarEntry> findAllByRoom(Room r);
 	
 }
