@@ -54,11 +54,6 @@ public class CalendarEntryService {
 		CalendarEntry c = calendarEntries.findOneByAppointment(a);
 		calendarEntries.deleteById(c.getId());
 		a.setStatus(AppointmentStatus.CANCELED);
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		appointmentService.save(a);
 
 	}
@@ -70,7 +65,8 @@ public class CalendarEntryService {
 	public List<CalendarEntry> findByRoomAndDate(Room r, Date d, Date endDate) {
 		return calendarEntries.getAllBetweenDatesForRoom(r, d, endDate);
 	}
-
+	
+	//TODO ovo je cancel za operacije
 	@Transactional(readOnly = false)
 	public void cancel(long id) {
 		Operation operation = operationService.findOne(id);

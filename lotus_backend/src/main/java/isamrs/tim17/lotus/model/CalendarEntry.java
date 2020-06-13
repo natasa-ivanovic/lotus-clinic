@@ -10,9 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "calendar")
+@Table(name = "calendar", uniqueConstraints = {@UniqueConstraint(columnNames = {"startDate", "room_id"})})
 public class CalendarEntry {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class CalendarEntry {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Operation operation;
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Vacation vacation;
+	private Vacation vacation; 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Room room;
 	

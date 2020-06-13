@@ -41,23 +41,13 @@ public class Room {
 	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
 	
-	@Column(name="lastRequested", unique = false, nullable = false)
-	private Date lastRequested;
-	
-	@Version
-	private long version;
-	 
-	public Room() {
-		this.lastRequested = new Date();
-	}
+	public Room() {}
 	
 	public Room(String name) {
-		this();
 		this.name = name;
 	}
 
 	public Room(String name, Long id) {
-		this();
 		this.name = name;
 		this.id = id;
 	}
@@ -98,14 +88,6 @@ public class Room {
 
 	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
-	}
-
-	public Date getLastRequested() {
-		return lastRequested;
-	}
-
-	public void setLastRequested(Date lastRequested) {
-		this.lastRequested = lastRequested;
 	}
 	
 

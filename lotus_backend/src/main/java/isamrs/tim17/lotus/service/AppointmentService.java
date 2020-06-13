@@ -36,9 +36,6 @@ public class AppointmentService {
 	private ClinicReviewService clinicReviewService;
 	
 	@Autowired
-	private RoomService roomService;
-	
-	@Autowired
 	private RequestService requestService;
 	
 	@Autowired
@@ -122,17 +119,11 @@ public class AppointmentService {
 	}
 
 	@Transactional(readOnly = false)
-	public void save(Appointment app, RoomRequest rr, CalendarEntry entry) throws Exception {
-		Room room = roomService.findOne(app.getRoom().getId());
-		CalendarEntry checkEntry = calendarService.findByDateAndRoom(room, rr.getDate());
-		if (checkEntry != null) throw new Exception();
-		// inace je sve ok
+	public void save(Appointment app, RoomRequest rr, CalendarEntry entry) {
+		
 		requestService.save(rr);
 		calendarService.save(entry);
-		Thread.sleep(5000);
-		room.setLastRequested(new Date());
 		appointments.save(app);
-		roomService.save(room);
 		
 	}
 

@@ -699,7 +699,7 @@ public class AppointmentController {
 		Date today = new Date();
 		if (dto.getRequest() == 0 || dto.getRoom() == 0 || dto.getStartDate() == 0
 				|| dto.getStartDate() < (today.getTime()))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("All fields should be filled!", HttpStatus.BAD_REQUEST);
 
 		long roomId = dto.getRoom();
 		long requestId = dto.getRequest();
@@ -708,9 +708,9 @@ public class AppointmentController {
 		Room room = roomService.findOne(roomId);
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
 		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Request already approved or declined!", HttpStatus.BAD_REQUEST);
 		if (rr.getType().equals(RoomRequestType.DOCTOR_OPER))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Allowed only for appointment requests!", HttpStatus.BAD_REQUEST);
 
 		List<Doctor> doctors = getDoctors(rr);
 		Doctor doctor = doctors.get(0);
@@ -735,10 +735,9 @@ public class AppointmentController {
 		rr.setStatus(RequestStatus.APPROVED);
 
 		try {
-			service.save(app, rr, entry);
+			service.save(app, rr, entry); // pokusavamo sve da sacuvamo
 		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>("Room already scheduled!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Room already scheduled for selected term!", HttpStatus.BAD_REQUEST);
 		}
 
 		String contentPatient = "Hello " + patient.getName() + " " + patient.getSurname()
