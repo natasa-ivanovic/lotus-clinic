@@ -123,8 +123,11 @@ export default {
     },
   methods: {
     searchClikc: function() {
+      var oldPage = this.options.page;
       this.options.page = 1;
-      this.filter();
+      if(oldPage===this.options.page){
+        this.filter()
+      }
     },
     filter: function() {
       console.log(this.options.page)

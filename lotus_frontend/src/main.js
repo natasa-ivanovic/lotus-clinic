@@ -45,8 +45,8 @@ Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 
 
-Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-//Vue.axios.defaults.baseURL = "http://localhost:9001";
+//Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+Vue.axios.defaults.baseURL = "http://localhost:9001";
 
 
 // all errors pass through this function before being catched in individual catch functions
