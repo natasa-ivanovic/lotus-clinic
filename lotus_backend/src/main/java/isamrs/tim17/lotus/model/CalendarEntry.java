@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -24,7 +25,7 @@ public class CalendarEntry {
 	private Date endDate;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User medicalPerson;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER)
 	private Appointment appointment;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Operation operation;
