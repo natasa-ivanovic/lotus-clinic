@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "rooms")
@@ -38,17 +40,14 @@ public class Room {
 	
 	@OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();
-	 
-	public Room() {
-	}
+	
+	public Room() {}
 	
 	public Room(String name) {
 		this.name = name;
-		this.id = this.getId();
 	}
 
 	public Room(String name, Long id) {
-		super();
 		this.name = name;
 		this.id = id;
 	}
@@ -90,6 +89,7 @@ public class Room {
 	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
 	}
+	
 
 	
 

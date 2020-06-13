@@ -1,5 +1,6 @@
 <template>
     <v-container fluid>
+      <Map v-bind:overlay.sync="overlay" v-bind:address.sync="address" />
         <v-row align="center" justify="center">
           <v-col cols="9">
             <v-card class="elevation-3">
@@ -30,6 +31,9 @@
                                 <template v-slot:item.schedule="{ item }">
                                     <v-icon medium @click="scheduleApp(item)">mdi-calendar-arrow-right</v-icon>
                                 </template>
+                                <template v-slot:item.clinic.address="{ item } ">
+                                    {{ item.clinic.address }} <v-icon medium @click="showMap(item.clinic.address)">mdi-map-marker</v-icon>
+                                </template>
                                 <template v-slot:item.terms="{ item }">
                                     <v-autocomplete 
                                         v-model="item.selectedDate"
@@ -52,8 +56,12 @@
 </template>
 
 <script>
+import Map from "../Clinics/Map";
 const apiURL = "/api/requests/appointment";
 export default {
+    components: {
+        Map
+    },
     data() {
         return {
             items: this.doctorList,
@@ -101,7 +109,9 @@ export default {
                     value: 'schedule',
                     align: "center"
                 }
-            ]
+            ],
+            overlay: false,
+            address: ""
         }
     },
     props: {
@@ -146,6 +156,10 @@ export default {
             var timeString = time.toTimeString().substring(0, 5) + " " + time.toDateString();
             console.log(time);
             return timeString;
+        },
+        showMap(addr) {
+            this.address = addr;
+            this.overlay = true;
         }
     }
 }

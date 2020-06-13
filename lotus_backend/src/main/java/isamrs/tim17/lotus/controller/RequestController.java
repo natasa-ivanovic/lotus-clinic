@@ -29,7 +29,6 @@ import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.ClinicalCentreAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.MailSenderModel;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.RegistrationRequest;
@@ -41,9 +40,11 @@ import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.DoctorService;
+import isamrs.tim17.lotus.service.MailSenderService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
+import isamrs.tim17.lotus.service.UserService;
 import isamrs.tim17.lotus.util.RandomUtil;
 
 @RestController
@@ -53,7 +54,7 @@ public class RequestController {
 	@Autowired
 	private RequestService service;
 	@Autowired
-	public MailSenderModel mailSender;
+	public MailSenderService mailSender;
 	@Autowired
 	public PatientService patientService;
 	@Autowired
@@ -64,6 +65,8 @@ public class RequestController {
 	public AppointmentPriceService appPriceService;
 	@Autowired
 	public MedicalRecordService medicalService;
+	@Autowired	
+	public UserService userService;
 
 	@GetMapping("/registrations")
 	public ResponseEntity<List<RegistrationRequestDTO>> getRegistrations() {
@@ -98,10 +101,10 @@ public class RequestController {
 				}
 			}
 			RoomRequestDTO dto = null;
-			if (clinicDoctors.size() == 1)
-				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors.get(0));
-			else
+			if (r.getType().equals(RoomRequestType.DOCTOR_OPER))
 				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors, r.getAppType().getName());
+			else
+				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors.get(0));
 			requests.add(dto);
 		}
 		return new ResponseEntity<>(requests, HttpStatus.OK);
@@ -189,16 +192,15 @@ public class RequestController {
 		ClinicalCentreAdministrator admin = (ClinicalCentreAdministrator) a.getPrincipal();
 		Request req = service.findOne(id);
 		RegistrationRequest rgReq = (RegistrationRequest) req;
-		req.setStatus(RequestStatus.APPROVED);
-		req.setAdmin(admin);
+		rgReq.setStatus(RequestStatus.APPROVED);
+		rgReq.setAdmin(admin);
 
 		String generatedString = RandomUtil.buildAuthString();
 
-		String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is valid.\nPlease follow this link to activate your account:\n"
-				+ "https://lotus-clinic.herokuapp.com/registrations/" + generatedString + " \nLotus Clinic Staff";
-		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		rgReq.setKey(generatedString);
-		service.save(req);
+		service.save(rgReq);
+		
+		mailSender.sendPatientConfirmRegistration(rgReq.getPatient().getUsername(), generatedString);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -208,10 +210,9 @@ public class RequestController {
 		RegistrationRequest rgReq = (RegistrationRequest) req;
 		req.setStatus(RequestStatus.REJECTED);
 
-		String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is invalid.\nThe reason your request was declined is:\n"
-				+ message + "\nWe hope we may be of service another time.\nLotus Clinic Staff";
-		mailSender.sendMsg(rgReq.getPatient().getUsername(), "Account registration", content);
 		service.save(req);
+		userService.remove(rgReq.getPatient().getId());
+		mailSender.sendPatientInvalidRegistration(rgReq.getPatient().getUsername(), message);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -232,6 +233,7 @@ public class RequestController {
 		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
 	}
 
+	
 	private List<Doctor> getDoctors(RoomRequest r) {
 		Set<Doctor> docs = r.getDoctors();
 		List<Doctor> doctors = new ArrayList<>();

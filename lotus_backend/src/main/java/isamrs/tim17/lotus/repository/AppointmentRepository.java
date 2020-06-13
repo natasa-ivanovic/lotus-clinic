@@ -40,4 +40,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	//0 - premade, 1 - scheduled, 3 - ongoing
 	@Query("SELECT a FROM Appointment a JOIN Room r on a.room=r.id where a.room=:id AND (a.status = 0 OR a.status = 1 OR a.status = 3) AND (a.startDate BETWEEN :startDate AND :endDate) order by a.startDate")
 	List<Appointment> getAppointmentsByRoomAndDate(@Param("id") Room id, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	
+	Appointment findByRegKey(String key);
 }

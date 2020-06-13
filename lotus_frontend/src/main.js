@@ -7,6 +7,19 @@ import router from "./router/index"
 import vuetify from './plugins/vuetify';
 import { store } from "./store/store"
 
+import 'leaflet/dist/leaflet.css';
+
+import {Icon} from 'leaflet';
+
+delete Icon.Default.prototype._getIconUrl;
+
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
+
+
 // global variables
 // role is neccessary to be a global variable to enable menu bar reactivity
 
@@ -31,9 +44,9 @@ Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 
 
-//Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-Vue.axios.defaults.baseURL = "http://localhost:9001";
 
+Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+//Vue.axios.defaults.baseURL = "http://localhost:9001";
 
 
 // all errors pass through this function before being catched in individual catch functions

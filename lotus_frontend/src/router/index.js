@@ -1,6 +1,19 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+import 'leaflet/dist/leaflet.css';
+
+import 'leaflet/dist/leaflet.css';
+
+import { Icon } from 'leaflet';
+
+delete Icon.Default.prototype._getIconUrl;
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -31,7 +44,6 @@ import PredefinedApps from "../components/Patients/PredefinedApps"
 import AddPredefinedApps from "../components/Admins/AddPredefinedApps"
 import ProfilePage from "../components/Users/ProfilePage"
 import Calendar from "../components/Doctors/Calendar"
-import MyClinic from "../components/Clinics/MyClinic"
 import AppointmentQuery from "../components/Patients/AppointmentQuery"
 import Diagnosis from "../components/Diagnosis/Diagnosis"
 import AddDiagnosis from "../components/Diagnosis/AddDiagnosis"
@@ -51,6 +63,7 @@ import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointment
 import VacationRequest from "../components/Users/VacationRequest"
 import PationSearch from "../components/Doctors/PatientSearch"
 import PatientAppointments from "../components/Doctors/PatientAppointments"
+import ConfirmAppointment from "../components/Patients/ConfirmAppointment"
 
 const routes = [
     {
@@ -111,6 +124,11 @@ const routes = [
         name: "editClinic",
         path: "/clinics/edit/:id",
         props: true
+    },
+    {
+        component: EditClinic,
+        name: "my_clinic",
+        path: "/clinics/edit"
     },
     {
         component: AppointmentTypes,
@@ -197,11 +215,6 @@ const routes = [
         path: "/users/doctors/calendar"
     },
     {
-        component: MyClinic,
-        name: "my_clinic",
-        path: "/my_clinic"
-    },
-    {
         component: Diagnosis,
         name: "diagnoses",
         path: "/diagnoses/"
@@ -286,6 +299,12 @@ const routes = [
       name: "patientAppointments",
       path: "/patient_appointments",
       props: true
+    },
+    {
+        component: ConfirmAppointment,
+        name: "confirmAppointment",
+        path: "/confirm/:key",
+        props: true
     },
     {
         path: "/*",
