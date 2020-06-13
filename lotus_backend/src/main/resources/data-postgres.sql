@@ -1,7 +1,7 @@
 insert into clinical_centres (name) values ('Centre 1');
 
-insert into clinics (address, description, name) values ('Jevrejska 2', 'General clinic', 'Clinic1');
-insert into clinics (address, description, name) values ('Fruskogorska 12', 'Specialist clinic', 'Clinic2');
+insert into clinics (address, description, name, version) values ('Jevrejska 2', 'General clinic', 'Clinic1', 0);
+insert into clinics (address, description, name, version) values ('Fruskogorska 12', 'Specialist clinic', 'Clinic2', 0);
 
 insert into rooms (name, clinic_id) values ('C1-Room 100', 1);
 insert into rooms (name, clinic_id) values ('C1-Room 105', 1);

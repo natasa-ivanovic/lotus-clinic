@@ -106,7 +106,7 @@ public class ClinicController {
 		// ako admin klinike apdejtuje, id je 0 - zato ovo u else
 		else if (user.getRole().equals("CENTRE_ADMIN")) {
 			if(id != newClinic.getId())
-				return new ResponseEntity<>("Incopatible clinic and id!", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Incompatible clinic and id!", HttpStatus.BAD_REQUEST);
 			clinic = service.findOne(id);
 		}
 		
@@ -116,7 +116,11 @@ public class ClinicController {
 		clinic.setName(newClinic.getName());
 		clinic.setAddress(newClinic.getAddress());
 		clinic.setDescription(newClinic.getDescription());
-		service.save(clinic);
+		try {
+			service.save(clinic);		
+		} catch (Exception e) {
+			return new ResponseEntity<>("Clinic was updated by somebody else!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
