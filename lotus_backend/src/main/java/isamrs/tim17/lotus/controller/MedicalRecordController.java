@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,8 +24,11 @@ import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.PremadeAppDTO;
 import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.AppointmentStatus;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.service.AllergyService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
@@ -45,7 +50,24 @@ public class MedicalRecordController {
 	@GetMapping("/medicalRecord/{id}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
 	public ResponseEntity<Object> getMedicalRecord(@PathVariable("id") long id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) auth.getPrincipal();
+		HashMap<String, Object> response = new HashMap<>();
 		Patient patient = patientService.findOne(id);
+		if(user.getRole().equals("PATIENT")) {
+			if(user.getId() != id) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		else {
+			List<Appointment> ongoingApps = appService.findByDoctorAndStatusAndMedicalRecord((Doctor)user, AppointmentStatus.ONGOING, patient.getMedicalRecord());
+			List<Appointment> finishedApps = appService.findByDoctorAndStatusAndMedicalRecord((Doctor)user, AppointmentStatus.FINISHED, patient.getMedicalRecord());
+			if(ongoingApps.isEmpty() && finishedApps.isEmpty()) {
+				response.put("show", false);
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+		}
+		
 		PatientDTO patientDto = new PatientDTO(patient); // patient, record
 		List<Appointment> finishedApps = appService.findFinished(patient.getMedicalRecord());
 		List<PremadeAppDTO> appDto = new ArrayList<>();
@@ -57,7 +79,8 @@ public class MedicalRecordController {
 			appDto.add(a);
 
 		}
-		HashMap<String, Object> response = new HashMap<>();
+		
+		response.put("show", true);
 		response.put("patient", patientDto);
 		response.put("appointments", appDto);
 		// response.put("operations", null);

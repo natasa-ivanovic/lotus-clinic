@@ -612,6 +612,21 @@ public class AppointmentController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@PostMapping("/appointments/start")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<Object> startAppointmetn(@RequestBody String idstr) {
+		long id = 0;
+		try {
+			id = Long.parseLong(idstr);
+		}catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Appointment appointment = service.findOne(id);
+		appointment.setStatus(AppointmentStatus.ONGOING);
+		service.save(appointment);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	@PostMapping("/appointments/finish")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<Object> finishAppointment(@RequestBody PremadeAppDTO app) {

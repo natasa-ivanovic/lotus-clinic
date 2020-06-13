@@ -25,6 +25,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 	List<Appointment> findByMedicalRecord(MedicalRecord id);
 	List<Appointment> findByDoctor(Doctor id);
 	List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status, Boolean reviewed);
+	List<Appointment> findByDoctorAndStatusAndMedicalRecord(Doctor doctor, AppointmentStatus status, MedicalRecord medicalRecord);
 
 	
 	Page<Appointment> findAllByMedicalRecordAndStatus(MedicalRecord id, AppointmentStatus status, Pageable pageable);

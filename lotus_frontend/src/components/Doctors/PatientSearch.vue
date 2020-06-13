@@ -85,8 +85,8 @@ export default {
           this.users.push(user)
       });
     },
-    editPatient: function() {
-      console.log("e")
+    editPatient: function(item) {
+      this.$router.push({ name: "patientAppointments", params: {id: item.id} });
     }
   }
 }

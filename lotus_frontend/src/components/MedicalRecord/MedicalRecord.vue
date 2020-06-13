@@ -1,5 +1,6 @@
 <template>
     <v-form>
+      <div v-if="!unauthorized">
         <Overlay v-bind:overlay.sync="overlay" :title="this.title" :headers="this.headerOverlay" :id="this.id"/>
         <v-card class="elevation-4">
             <v-toolbar flat color="secondary" dark>
@@ -79,6 +80,10 @@
                 <v-btn v-if="this.isEditing==true" @click="saveChanges()" block color="success" height="50">Save changes</v-btn>
             </v-card-actions>
         </v-card>
+      </div>
+      <div v-else>
+        <h1>Unauthorized</h1>
+      </div>
     </v-form>
 </template>
 
@@ -95,8 +100,7 @@ export default {
         },
         edit: {
             type: Boolean
-        }
-
+        },
     },
     components: {
         Overlay
@@ -114,7 +118,8 @@ export default {
             overlay: false,
             headerOverlay: [],
             itemsOverlay: [],
-            title: ''
+            title: '',
+            unauthorized: false,
         }
     },
     mounted() {
@@ -122,6 +127,10 @@ export default {
             url: apiURL + "/" + this.id,
             method: 'GET'
         }).then(response => {
+            if(response.data.show === false) {
+              this.unauthorized = true;
+              return;
+            }
             this.record = response.data.patient.record;
             this.appointments = response.data.appointments;
             this.cachedRecord = Object.assign({}, response.data.patient.record);

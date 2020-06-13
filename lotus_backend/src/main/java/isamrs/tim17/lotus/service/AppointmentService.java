@@ -45,6 +45,10 @@ public class AppointmentService {
 	public List<Appointment> findAll() {
 		return appointments.findAll();
 	}
+	
+	public List<Appointment> findByDoctorAndStatusAndMedicalRecord(Doctor doctor, AppointmentStatus status, MedicalRecord medicalRecord) {
+		return appointments.findByDoctorAndStatusAndMedicalRecord(doctor, status, medicalRecord);
+	}
 
 	@Transactional(readOnly = false)
 	public Appointment save(Appointment app) {
