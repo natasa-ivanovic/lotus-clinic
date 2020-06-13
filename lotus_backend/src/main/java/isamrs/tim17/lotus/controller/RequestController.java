@@ -84,7 +84,7 @@ public class RequestController {
 
 		// getuj samo rikvestove za adminovu kliniku
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		ClinicAdministrator admin = new ClinicAdministrator((ClinicAdministrator) a.getPrincipal());
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 		long clinicId = admin.getClinic().getId();
 
 		List<RoomRequest> rr = service.getRoomRequests();

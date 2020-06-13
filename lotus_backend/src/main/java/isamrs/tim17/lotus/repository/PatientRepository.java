@@ -14,8 +14,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 	Patient findOneByUsername(String username);
 	Page<Patient> findAll(Pageable pageable);
 	List<Patient> findAllBySurname(String surname);
-	List<Patient> findByNameAndSurnameAllIgnoringCase(String name, String surname);
+	Page<Patient> findByNameContainsAndSurnameContainsAndSsidContainsAllIgnoringCase(String name, String surname, String ssid, Pageable pageable);
 	List<Patient> findAllByEnabled(boolean enabled);
+	
 	
 
 }

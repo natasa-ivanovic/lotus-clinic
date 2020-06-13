@@ -6,7 +6,7 @@
                     <v-expansion-panel>
                         <v-expansion-panel-header style="background:#424242;color:white" class="spacerHeader">Medical record</v-expansion-panel-header>
                         <v-expansion-panel-content eager >
-                            <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true" class="mt-4"/>
+                            <MedicalRecord :id="this.appointment.patientId.toString()" :edit="true" class="mt-4" />
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>

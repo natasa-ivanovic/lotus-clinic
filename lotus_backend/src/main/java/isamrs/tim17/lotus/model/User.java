@@ -71,7 +71,7 @@ public abstract class User implements UserDetails {
 	@Column(name = "gender", unique = false, nullable = false)
 	private Gender gender;
 	@Column(name = "ssid", unique = true, nullable = false)
-	private Long ssid;
+	private String ssid;
 	
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
@@ -97,7 +97,7 @@ public abstract class User implements UserDetails {
 	}
 	
 	public User(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, long ssid, Date birthDate, Gender gender) {
+			String phoneNumber, String ssid, Date birthDate, Gender gender) {
 		super();
 		this.username = email;
 		this.password = password;
@@ -216,11 +216,11 @@ public abstract class User implements UserDetails {
 		this.gender = gender;
 	}
 
-	public Long getSsid() {
+	public String getSsid() {
 		return ssid;
 	}
 
-	public void setSsid(Long ssid) {
+	public void setSsid(String ssid) {
 		this.ssid = ssid;
 	}
 
