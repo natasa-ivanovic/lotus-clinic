@@ -110,4 +110,8 @@ public class AppointmentService {
 		return appointments.findByClinicAndStatusAndReviewed(clinic, status, reviewed);
 	}
 
+	public Appointment findByKey(String key) {
+		return appointments.findByRegKey(key);
+	}
+
 }

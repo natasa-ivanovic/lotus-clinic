@@ -27,7 +27,7 @@ public class CalendarEntryDTO {
 			this.appointment = new AppointmentDTO(entry.getAppointment());
 			if (this.appointment.getStatus().equals(AppointmentStatus.SCHEDULED))
 				this.start = true;
-			else if (this.appointment.getStatus().equals(AppointmentStatus.FINISHED) || this.appointment.getStatus().equals(AppointmentStatus.PREMADE))
+			else
 				this.start = false;
 		} else {
 			this.appointment = null;
