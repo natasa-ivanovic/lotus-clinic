@@ -200,7 +200,7 @@ public class RequestController {
 		rgReq.setKey(generatedString);
 		service.save(rgReq);
 		
-		mailSender.sendPatientConfirmRegistration(rgReq);
+		mailSender.sendPatientConfirmRegistration(rgReq.getPatient().getUsername(), generatedString);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

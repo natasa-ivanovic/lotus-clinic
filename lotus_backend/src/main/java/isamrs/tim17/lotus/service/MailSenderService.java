@@ -126,10 +126,10 @@ public class MailSenderService {
 	}
 
 	@Async
-	public void sendPatientConfirmRegistration(RegistrationRequest rgReq) {
+	public void sendPatientConfirmRegistration(String username, String key) {
 		String content = "Hello\nWe at Lotus Clinic have reviewed your registration request and decided it is valid.\nPlease follow this link to activate your account:\n"
-				+ "https://lotus-clinic.herokuapp.com/registrations/" + rgReq.getKey() + " \nLotus Clinic Staff";
-		sendMsg(rgReq.getPatient().getUsername(), "Lotus Clinic - Confirm registration", content);
+				+ "https://lotus-clinic.herokuapp.com/registrations/" + key + " \nLotus Clinic Staff";
+		sendMsg(username, "Lotus Clinic - Confirm registration", content);
 		
 	}
 
