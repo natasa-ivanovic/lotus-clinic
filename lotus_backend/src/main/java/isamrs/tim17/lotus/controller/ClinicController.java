@@ -35,7 +35,7 @@ public class ClinicController {
 		
 	
 	@GetMapping("/clinics")
-	@PreAuthorize("hasRole('CENTRE_ADMIN)")
+	@PreAuthorize("hasRole('CENTRE_ADMIN')")
 	public ResponseEntity<List<ClinicDTO>> getAllClinics() {
 		List<Clinic> clinics = service.findAll();
 		List<ClinicDTO> clinicsDTO = new ArrayList<>();

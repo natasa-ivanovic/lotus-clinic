@@ -1,9 +1,10 @@
 <template>
   <div>
-  <v-container
+    <v-container
       class="fill-height"
       fluid
     >
+      <Map v-bind:overlay.sync="overlay" v-bind:address.sync="address" />
       <v-row
         align="center"
         justify="center"
@@ -18,29 +19,49 @@
                 </v-toolbar>
               
                 <v-form v-model="valid" ref="form">
-                  <v-text-field
-                    label="Name"
-                    :rules="[rules.required]"
-                    v-model="clinic.name"
-                    :readonly="!isEditing"
-                    outlined />
-                  <v-text-field
-                    label="Address"
-                    :rules="[rules.required]"
-                    v-model="clinic.address"
-                    :readonly="!isEditing"
-                    outlined />
-                    <v-textarea
-                      outlined
-                      label="Description"
-                      :rules="[rules.required]"
-                      :readonly="!isEditing"
-                      v-model="clinic.description"/>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        label="Name"
+                        :rules="[rules.required]"
+                        v-model="clinic.name"
+                        :readonly="!isEditing"
+                        dense
+                        />
+                    </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-text-field
+                          label="Address"
+                          :rules="[rules.required]"
+                          v-model="clinic.address"
+                          :readonly="!isEditing">
+                      <template v-slot:append>
+                          <v-btn v-on:click="showMap(clinic.address)" icon><v-icon large>mdi-map-marker</v-icon></v-btn>
+                      </template>
+                      </v-text-field>
+                      </v-col>
+                     </v-row>
+                     <v-row>
+                       <v-col>
+                          <v-textarea
+                            label="Description"
+                            :rules="[rules.required]"
+                            :readonly="!isEditing"
+                            v-model="clinic.description"/>
+                       </v-col>
+                     </v-row>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-btn v-if="!isEditing" v-on:click="editClinic()" color="primary" block>Edit</v-btn>
+                <v-col>
                 <v-btn v-if="isEditing" v-on:click="saveClinic()" color="success" block>Save changes</v-btn>
+                </v-col>
+                <v-col>
+                <v-btn v-if="isEditing" v-on:click="cancel()" color="error" block>Cancel</v-btn>
+                </v-col>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -50,11 +71,14 @@
 </template>
 
 <script>
-
+import Map from "../Clinics/Map";
 const apiURL = "/api/clinics";
 
 export default {
     name: "editClinic",
+    components: {
+        Map
+    },
     props: {
       id: {
             type: Number,
@@ -67,7 +91,10 @@ export default {
             required: value => !!value || 'Field is required.'
           },
           valid: true,
-          isEditing: false
+          isEditing: false,
+          overlay: false,
+          address: "",
+          cachedClinic: {}
         }
     },
     mounted() {
@@ -78,12 +105,14 @@ export default {
             method: "GET"
           }).then(response => {
             this.clinic = response.data;
+            this.cachedClinic = Object.assign({}, this.clinic);
           });
         } else { //admin klinickog centra
           this.axios({url : apiURL + "/" + this.id, 
                       method: 'GET'
           }).then(response =>   {
               this.clinic = response.data;
+              this.cachedClinic = Object.assign({}, this.clinic);
           }).catch(error => {
               console.log(error.request);
               this.$store.commit('showSnackbar', {text: "Couldn't fetch clinic!", color: "error", })
@@ -108,13 +137,19 @@ export default {
                 this.$store.commit('showSnackbar', {text: "Successfully updated clinic.", color: "success", })
                 if(this.$role == "CENTRE_ADMIN")
                   this.$router.push({name :"clinics"});
-                else
-                  this.$router.push({name: "home"});
             }).catch(error => {
                 console.log(error.request.responseText);
                 // tip errora
                 this.$store.commit('showSnackbar', {text: "Couldn't update clinic!", color: "error", })
             });
+            this.isEditing = false;
+        },
+        showMap(addr) {
+            this.address = addr;
+            this.overlay = true;
+        },
+        cancel() {
+            this.clinic = Object.assign({}, this.cachedClinic);
             this.isEditing = false;
         }
     }
