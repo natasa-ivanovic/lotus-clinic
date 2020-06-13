@@ -14,7 +14,7 @@
           <v-btn color="primary" @click="searchClikc()">Search</v-btn>
         </v-container>
       </v-col>
-      <v-col cols="10">
+      <v-col v-if="this.editable" cols="10">
         <v-data-table
             :headers="headers"
             :items="users"
@@ -40,33 +40,78 @@
                 </v-icon>
             </template>
         </v-data-table>
-        </v-col>
+      </v-col>
+      <v-col v-else cols="10">
+        <v-data-table
+            :headers="headers"
+            :items="users"
+            item-key="email"
+            class="elevation-1"
+            :options.sync="options"
+            :server-items-length="totalItems"
+            :footer-props="{
+              itemsPerPageOptions: [1, 5, 10]
+            }"
+        >
+            <template v-slot:top>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>List of Patients</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                </v-toolbar>
+            </template>
+        </v-data-table>
+      </v-col>
     </v-row>
 </template>
 
 <script>
 const apiURL = "/api/patients"
 export default {
-  data() {
-    return {
-      users: [],
-      headers: [
-        {text: 'Email', value: 'username'},
-        {text: 'Insurance ID', value: 'ssid'},
-        {text: 'Name', value: 'name'},
-        {text: 'Surname', value: 'surname'},
-        {text: 'Address', value: 'address'},
-        {text: 'City', value: 'city'},
-        {text: 'Country', value: 'country'},
-        {text: 'Phone number', value: 'phoneNumber'},
-        {text: 'Edit', value: 'edit', sortable: false},
-      ],
-      name: "",
-      surname: "",
-      ssid: "",
-      totalItems: 0,
-      options: {}
+  props: {
+    editable: {
+      type: Boolean,
     }
+  },
+  data() {
+    if(this.editable)
+      return {
+        users: [],
+        headers: [
+          {text: 'Email', value: 'username'},
+          {text: 'Insurance ID', value: 'ssid'},
+          {text: 'Name', value: 'name'},
+          {text: 'Surname', value: 'surname'},
+          {text: 'Address', value: 'address'},
+          {text: 'City', value: 'city'},
+          {text: 'Country', value: 'country'},
+          {text: 'Phone number', value: 'phoneNumber'},
+          {text: 'Edit', value: 'edit', sortable: false},
+        ],
+        name: "",
+        surname: "",
+        ssid: "",
+        totalItems: 0,
+        options: {}
+      }
+    else
+      return {
+        users: [],
+        headers: [
+          {text: 'Email', value: 'username'},
+          {text: 'Insurance ID', value: 'ssid'},
+          {text: 'Name', value: 'name'},
+          {text: 'Surname', value: 'surname'},
+          {text: 'Address', value: 'address'},
+          {text: 'City', value: 'city'},
+          {text: 'Country', value: 'country'},
+          {text: 'Phone number', value: 'phoneNumber'},
+        ],
+        name: "",
+        surname: "",
+        ssid: "",
+        totalItems: 0,
+        options: {}
+      }
   },
   watch: {
         options: {

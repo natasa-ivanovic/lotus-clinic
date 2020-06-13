@@ -278,7 +278,8 @@ const routes = [
     {
       component: PationSearch,
       name: "patientSearch",
-      path: "/patient_search"
+      path: "/patient_search",
+      props: true
     },
     {
       component: PatientAppointments,
