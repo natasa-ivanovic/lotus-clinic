@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.repository;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -29,5 +30,10 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
 	
 	CalendarEntry findOneByRoomAndStartDate(Room r, Date d);
 	List<CalendarEntry> findAllByRoom(Room r);
+	
+	List<CalendarEntry> findByRoomIn(Collection<Room> rooms);
+	@Query("SELECT c FROM CalendarEntry c where c.room in :rooms AND (c.startDate BETWEEN :startDate AND :endDate)")
+	List<CalendarEntry> findByRoomAndDate(@Param("rooms") Collection<Room> rooms, @Param("startDate") Date start, @Param("endDate") Date end);
+	
 
 }

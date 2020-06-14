@@ -9,7 +9,7 @@ public class DoctorDTO {
 	private Long id;
 	private String name;
 	private String surname;
-	private double rating;	
+	private double rating;	// prosecna ocena 
 	private List<Date> availableTimes;
 	private ClinicDTO clinic;
 	private String type;
@@ -27,6 +27,12 @@ public class DoctorDTO {
 		this.setClinic(new ClinicDTO(d.getClinic()));
 		this.setType(d.getSpecialty().getType().getName());
 		this.setPrice(d.getSpecialty().getPrice());
+	}
+
+	public DoctorDTO(Doctor d, double average) {
+		this.name = d.getName();
+		this.surname = d.getSurname();
+		this.rating = average;
 	}
 
 	public String getName() {

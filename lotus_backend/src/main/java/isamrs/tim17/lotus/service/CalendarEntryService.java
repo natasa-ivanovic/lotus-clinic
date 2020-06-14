@@ -1,5 +1,6 @@
 package isamrs.tim17.lotus.service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import isamrs.tim17.lotus.dto.ProfitDatesDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.CalendarEntry;
@@ -82,5 +84,14 @@ public class CalendarEntryService {
 		}
 		operation.setStatus(OperationStatus.CANCELED);
 		operationService.save(operation);
+	}
+	
+	
+	public List<CalendarEntry> findAllByClinic(Collection<Room> rooms) {
+		return calendarEntries.findByRoomIn(rooms);
+	}
+
+	public List<CalendarEntry> findAllByRoomsAndDate(Collection<Room> rooms, ProfitDatesDTO dates) {
+		return calendarEntries.findByRoomAndDate(rooms, dates.getStartDate(), dates.getEndDate());
 	}
 }

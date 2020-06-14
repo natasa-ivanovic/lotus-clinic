@@ -30,13 +30,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import isamrs.tim17.lotus.dto.AppointmentDTO;
+import isamrs.tim17.lotus.dto.BusinessReportDTO;
+import isamrs.tim17.lotus.dto.CalendarEntryDTO;
 import isamrs.tim17.lotus.dto.ClinicDTO;
 import isamrs.tim17.lotus.dto.DiagnosisDTO;
 import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.MedicineDTO;
 import isamrs.tim17.lotus.dto.MedicineDiagnosisDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
-import isamrs.tim17.lotus.dto.AppointmentDTO;
+import isamrs.tim17.lotus.dto.ProfitDatesDTO;
+import isamrs.tim17.lotus.dto.ProfitResultsDTO;
 import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentPrice;
@@ -851,6 +855,61 @@ public class AppointmentController {
 			appointmentDTOs.add(new AppointmentDTO(app));
 		}
 		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
+	}
+	
+	@PostMapping("/profit")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> profitRequest(@RequestBody ProfitDatesDTO dates) {
+		if (dates.getStartDate().after(dates.getEndDate()))
+			return new ResponseEntity<>("Invalid date range!", HttpStatus.BAD_REQUEST);			
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) auth.getPrincipal();
+		Collection<Room> rooms = roomService.findByClinic(admin.getClinic());
+		List<CalendarEntry> calendarEntries = calendarService.findAllByRoomsAndDate(rooms, dates);
+		double averagePrice = 0;
+		double totalProfit = 0;
+		double totalCount = 0;
+		for (CalendarEntry c : calendarEntries) {
+			if (c.getAppointment() != null) {
+				if (c.getAppointment().getStatus().equals(AppointmentStatus.FINISHED)) {
+					totalCount++;
+					totalProfit += c.getAppointment().getPrice() * (100 - c.getAppointment().getDiscount()) / 100;
+				}
+			}
+		}
+		if (totalCount != 0)
+			averagePrice = totalProfit / totalCount;
+		ProfitResultsDTO res = new ProfitResultsDTO(averagePrice, totalProfit, totalCount);
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("/report")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> businessReport() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) auth.getPrincipal();
+		List<ClinicReview> reviews = clinicReviewService.findAllByClinic(admin.getClinic());
+		double averageRating = RatingUtil.getAverageClinicRating(reviews);
+		double averageDoctorRating = 0;
+		List<DoctorDTO> doctorList = new ArrayList<>();
+		List<Doctor> doctors = doctorService.findByClinic(admin.getClinic());
+		for (Doctor d : doctors) {
+			List<DoctorReview> docReviews = doctorReviewService.findAllByDoctor(d);
+			double average = RatingUtil.getAverageDoctorRating(docReviews);
+			averageDoctorRating += average;
+			doctorList.add(new DoctorDTO(d, average));
+		}
+		if (doctors.size() != 0) {
+			averageDoctorRating = averageDoctorRating / doctors.size();			
+		}
+		Collection<Room> rooms = roomService.findByClinic(admin.getClinic());
+		List<CalendarEntry> calendarEntries = calendarService.findAllByClinic(rooms);
+		List<CalendarEntryDTO> calendarDTOs = new ArrayList<>();
+		for (CalendarEntry c : calendarEntries)
+			calendarDTOs.add(new CalendarEntryDTO(c));
+
+		BusinessReportDTO res = new BusinessReportDTO(averageRating, averageDoctorRating, doctorList, calendarDTOs);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 }
