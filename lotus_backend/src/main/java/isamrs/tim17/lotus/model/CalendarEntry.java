@@ -14,7 +14,9 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "calendar", uniqueConstraints = {@UniqueConstraint(columnNames = {"startDate", "room_id"})})
+@Table(name = "calendar", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"startDate", "room_id"}),
+		@UniqueConstraint(columnNames = {"startDate", "medical_person_id"})})
 public class CalendarEntry {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
