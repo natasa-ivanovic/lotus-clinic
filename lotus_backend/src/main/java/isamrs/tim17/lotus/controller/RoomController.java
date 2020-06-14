@@ -1,14 +1,18 @@
 package isamrs.tim17.lotus.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,12 +25,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RoomDTO;
 import isamrs.tim17.lotus.dto.RoomDateDTO;
 import isamrs.tim17.lotus.dto.RoomTermDTO;
-import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
@@ -80,6 +84,39 @@ public class RoomController {
 			roomsDTO.add(new RoomDTO(r));
 		}
 		return new ResponseEntity<>(roomsDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/rooms/pages")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> getAllRoomsPage(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "true") String descending) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
+		
+		Pageable paging;
+		if (descending.equals("true"))
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.DESC, sortBy));
+		else
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(Direction.ASC, sortBy));
+		Page<Room> rooms = null;
+		try {
+			rooms = service.findByClinic(admin.getClinic(), paging);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>("Error in forwarded arguments for sort!", HttpStatus.BAD_REQUEST);
+		}
+		if (rooms == null)
+			return new ResponseEntity<>("Something went wrong. Please try again later.", HttpStatus.BAD_REQUEST);
+		Page<RoomDTO> dto = rooms.map(new Function<Room, RoomDTO>() {
+			@Override
+			public RoomDTO apply(Room room) {
+				return new RoomDTO(room);
+			}
+		});
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+
+	
 	}
 
 	/**

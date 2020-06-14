@@ -478,7 +478,7 @@ public class AppointmentController {
 			return new ResponseEntity<>("Appointment not found", HttpStatus.BAD_REQUEST);
 
 		// ne moze da otkazuje preglede drugih lekara
-		if (app.getDoctor().getId() != doctor.getId())
+		if (!app.getDoctor().getId().equals(doctor.getId()))
 			return new ResponseEntity<>(
 					"Something went wrong while canceling the appointment. Cannot cancel the appointment.",
 					HttpStatus.BAD_REQUEST);
@@ -806,7 +806,7 @@ public class AppointmentController {
 		Appointment a = service.findByKey(key);
 		if (a == null)
 			return new ResponseEntity<>("Appointment with specified key not found!", HttpStatus.BAD_REQUEST);
-		if (a.getMedicalRecord().getPatient().getId() != p.getId())
+		if (!a.getMedicalRecord().getPatient().getId().equals(p.getId()))
 			return new ResponseEntity<>("Cannot confirm another patient's appointment!", HttpStatus.BAD_REQUEST);
 		a.setRegKey(null);
 		a.setStatus(AppointmentStatus.SCHEDULED);

@@ -8,9 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.Request;
-import isamrs.tim17.lotus.model.User;
-import isamrs.tim17.lotus.model.Vacation;
 import isamrs.tim17.lotus.model.VacationRequest;
 
 @Component

@@ -4,6 +4,12 @@
         <v-data-table
           :headers="headers"
           :items="rooms"
+          :server-items-length="totalItems"
+          :loading="loading"
+          :options.sync="options"
+          :footer-props="{
+              itemsPerPageOptions : [1, 5, 10]
+          }"
           item-key="id"
           class="elevation-1"
         >
@@ -53,25 +59,47 @@ export default {
                 headers: [
                     {text: 'ID', value: 'id'},
                     {text: 'Name', value: 'name'},
-                    {text: 'Details', value: 'details'},
+                    {text: 'Details', value: 'details', sortable: false},
                     {text: 'Edit', value: 'edit', sortable: false},
                     {text: 'Delete', value: 'delete', sortable: false}
                 ],
                 selectedId: 0,
-                overlay: false
+                overlay: false,
+                loading: true,
+                totalItems: 0,
+                options: {}
+
             }
     },
-    mounted() {
-        this.axios({url : apiURL, 
-                        method: 'GET'
-            }).then(response =>   {
-                this.rooms = response.data;
-            }).catch(error => {
-                console.log(error.request);
-                this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
-            });
+    watch: {
+        options: {
+            handler () {    
+                this.getDataFromApi();
+            },
+            deep: true,
+        }
     },
     methods: {
+        getDataFromApi() {
+            this.loading = true;
+            const { sortBy, sortDesc, page, itemsPerPage } = this.options
+            var requestUrl = apiURL + "/pages" + "?pageNo=" + (page - 1) + "&pageSize=" + itemsPerPage;
+            if (sortBy.length != 0) {
+                if (sortBy[0] == "id") 
+                    requestUrl = requestUrl + "&sortBy=id&descending=" + sortDesc[0];
+                else if (sortBy[0] == "name")
+                    requestUrl = requestUrl + "&sortBy=name&descending=" + sortDesc[0];
+            }
+            this.axios({url :requestUrl, 
+                        method: 'GET'
+            }).then(response =>   {
+                this.rooms = response.data.content;
+                this.totalItems = response.data.totalElements;
+                this.loading = false;
+            }).catch(() => {
+                this.loading = false;
+            });
+        },
         deleteRoom: function(room) {
         this.axios({url : apiURL + "/" + room.id, 
                     method: 'DELETE'

@@ -3,6 +3,8 @@ package isamrs.tim17.lotus.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import isamrs.tim17.lotus.model.AppointmentPrice;
@@ -32,6 +34,10 @@ public class AppointmentPriceService {
 	}
 
 	public void remove(AppointmentPrice at) {
-		appointmentPrices.deleteById(at.getId());		
+		appointmentPrices.deleteById(at.getId());	
+	}
+
+	public Page<AppointmentPrice> findByClinicId(Clinic clinic, Pageable paging) {
+		return appointmentPrices.findAllByClinic(clinic, paging);
 	}
 }

@@ -15,7 +15,6 @@ import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
-import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.model.VacationRequest;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
