@@ -123,11 +123,13 @@ export default {
     },
   methods: {
     searchClikc: function() {
+      var oldPage = this.options.page;
       this.options.page = 1;
-      this.filter();
+      if(oldPage===this.options.page){
+        this.filter()
+      }
     },
     filter: function() {
-      console.log(this.options.page)
       var tailoredURL = apiURL + "?name=" + this.name + "&surname=" + this.surname + "&ssid=" + this.ssid + "&pageSize=" + this.options.itemsPerPage + "&pageNo=" + (this.options.page - 1);
         this.axios({url : tailoredURL, 
                   method: 'GET'

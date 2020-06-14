@@ -121,9 +121,9 @@ public class AppointmentService {
 		return a;
 	}
 
-	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status,
-			Boolean reviewed) {
-		return appointments.findByClinicAndStatusAndReviewed(clinic, status, reviewed);
+	public List<Appointment> findByClinicAndStatusAndReceptApproved(Clinic clinic, AppointmentStatus status,
+			Boolean receptApproved) {
+		return appointments.findByClinicAndStatusAndReceptApproved(clinic, status, receptApproved);
 	}
 
 	@Transactional(readOnly = false)

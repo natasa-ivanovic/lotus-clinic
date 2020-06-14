@@ -64,6 +64,8 @@ public class Appointment {
 	private Set<Prescription> prescriptions = new HashSet<>();
 	@Column(name="reviewed", unique = false, nullable=false)
 	private boolean reviewed;
+	@Column(name="recept_approved", unique = false, nullable=false)
+	private boolean receptApproved;
 	
 	@Column(name="reg_key", unique = true, nullable=true)
 	private String regKey;
@@ -87,13 +89,16 @@ public class Appointment {
 		this.status = AppointmentStatus.PREMADE; //IZMENITI
 		this.clinic = clinic;
 		this.reviewed = false;
+		this.receptApproved = false;
 	}
 
 	@Override
 	public String toString() {
 		return "Appointment [id=" + id + ", information=" + information + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", status=" + status + ", patient=" + medicalRecord + ", doctor=" + doctor + ", room=" + room
-				+ ", type=" + appointmentType + ", diagnosis=" + diagnosis + "]";
+				+ endDate + ", status=" + status + ", price=" + price + ", discount=" + discount + ", medicalRecord="
+				+ medicalRecord + ", doctor=" + doctor + ", room=" + room + ", clinic=" + clinic + ", appointmentType="
+				+ appointmentType + ", diagnosis=" + diagnosis + ", prescriptions=" + prescriptions + ", reviewed="
+				+ reviewed + ", receptApproved=" + receptApproved + ", regKey=" + regKey + ", version=" + version + "]";
 	}
 
 	public long getId() {
@@ -223,6 +228,14 @@ public class Appointment {
 
 	public void setRegKey(String regKey) {
 		this.regKey = regKey;
+	}
+
+	public boolean isReceptApproved() {
+		return receptApproved;
+	}
+
+	public void setReceptApproved(boolean receptApproved) {
+		this.receptApproved = receptApproved;
 	}
 
 

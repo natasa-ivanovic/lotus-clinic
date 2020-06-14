@@ -72,7 +72,7 @@
                                     @keydown.esc="turnOffAppointment()"
                                 >
                                     <template v-slot:activator="{on, attrs}">
-                                        <v-btn color="primary" 
+                                        <v-btn v-if="this.edit" color="primary" 
                                                 v-bind="attrs" 
                                                 v-on="on" 
                                                 block>
@@ -158,7 +158,7 @@
                                     offset-x
                                 >
                                     <template v-slot:activator="{on, attrs}">
-                                        <v-btn color="primary" 
+                                        <v-btn v-if="this.edit" color="primary" 
                                                 v-bind="attrs" 
                                                 v-on="on"
                                                 @click="getDoctors()"
@@ -247,7 +247,8 @@
                         </v-row>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="success" block @click="endAppointment()">Finish appointment</v-btn>
+                        <v-btn v-if="this.edit" color="success" block @click="endAppointment()">Finish appointment</v-btn>
+                        <v-btn v-else color="success" block @click="endAppointment()">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -268,6 +269,10 @@ export default {
         appointment: {
             type: Object,
             default: () => {}
+        },
+        edit: {
+          type: Boolean,
+          default: false
         }
     },
     components: {
@@ -296,6 +301,7 @@ export default {
         }
     },
     mounted() {
+      
         console.log("PROVERA");
         console.log(this.appointment);
         if (this.appointment == {})
@@ -307,9 +313,25 @@ export default {
         }).then(response => {
             this.allMedicines = response.data.medicines;
             this.allDiagnosis = response.data.diagnosis;
+            this.appointment.diagnosis.forEach(diag => {
+              this.allDiagnosis.forEach(d => {
+                if(d.name === diag){
+                  this.diagnosis.push(d.id);
+                }
+              })
+            });
+            this.appointment.recipes.forEach(recipe => {
+              this.allMedicines.forEach(r => {
+                console.log(r.name)
+                if(r.name === recipe){
+                  this.medicine.push(r.id);
+                }
+              })
+            });   
         }).catch(error =>{
             console.log(error);
         });
+        this.info = this.appointment.description;
 
         this.axios({
             url: "/api/appointmentPrices",
@@ -326,12 +348,18 @@ export default {
                 recipes: this.medicine,
                 description: this.info
             }
+            console.log(app)
             this.axios({
                 url: "/api/appointments/finish",
                 method: "POST",
                 data: app
             }).then(() => {
-                this.$store.commit('showSnackbar', {text: "Successfully finished appointment!", color: "success"});
+                if(this.edit){
+                    this.$store.commit('showSnackbar', {text: "Successfully finished appointment!", color: "success"});
+                }
+                else {
+                    this.$store.commit('showSnackbar', {text: "Successfully edited appointment!", color: "success"});
+                }
                 this.$router.push({name: "home"});
                 this.medicine = "";
                 this.diagnosis = "";

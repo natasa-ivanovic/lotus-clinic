@@ -350,7 +350,6 @@ public class AppointmentController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * This method is used to return a list of free terms for doctors which can do a
 	 * specific type of appointment. It returns either a list of doctors and their
 	 * free terms or a list of clinics which a list of doctors and their free terms.
@@ -385,11 +384,6 @@ public class AppointmentController {
 	 * This method is used to get free terms for all doctors in forwarded collection
 	 * for a specific day and type.
 	 * 
-=======
-	 * This method is used to get free terms for all doctors in forwarded collection
-	 * for a specific day and type.
-	 * 
->>>>>>> master
 	 * @param doctors   Collection<Doctor> which is iterated through and checked for
 	 *                  equality with requested appointment type
 	 * @param type      AppointmentType which was requested by the patient
@@ -586,7 +580,7 @@ public class AppointmentController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Nurse nurse = (Nurse) a.getPrincipal();
 
-		List<Appointment> apps = service.findByClinicAndStatusAndReviewed(nurse.getClinic(), AppointmentStatus.FINISHED,
+		List<Appointment> apps = service.findByClinicAndStatusAndReceptApproved(nurse.getClinic(), AppointmentStatus.FINISHED,
 				false);
 
 		List<AppointmentDTO> appsDtos = new ArrayList<>();
@@ -607,7 +601,7 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Appointment appointment = service.findOne(id);
-		appointment.setReviewed(true);
+		appointment.setReceptApproved(true);
 		service.save(appointment);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -840,6 +834,21 @@ public class AppointmentController {
 		List<AppointmentDTO> appointmentDTOs = new ArrayList<>();
 		for(Appointment app : appointments) {
 			appointmentDTOs.add(new AppointmentDTO(app));
+		}
+		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
+	}
+	
+	@GetMapping("/appointments/doctor/patient/{id}/past")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<PremadeAppDTO>> getPastAppointments(@PathVariable("id") long id) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		Patient patient = patientService.findOne(id);
+		
+		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.FINISHED, patient.getMedicalRecord());
+		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
+		for(Appointment app : appointments) {
+			appointmentDTOs.add(new PremadeAppDTO(app));
 		}
 		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
 	}
