@@ -79,4 +79,8 @@ public class RequestService {
 	public List<RoomRequest> findByDateRangeAndDoctor(Doctor d, Date startDate, Date endDate) {
 		return requests.findByDateRangeAndDoctor(d, startDate, endDate);
 	}
+
+	public List<RoomRequest> findByDateRangeApps(Date start, Date end) {
+		return requests.findByDateRangeAndType(start, end);
+	}
 }

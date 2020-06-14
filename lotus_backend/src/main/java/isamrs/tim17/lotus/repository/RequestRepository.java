@@ -15,6 +15,7 @@ import isamrs.tim17.lotus.model.RegistrationRequest;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.RoomRequest;
+import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.model.VacationRequest;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
@@ -33,4 +34,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	List<VacationRequest> findByClinicAndStatus(Clinic clinic, RequestStatus status);
 	@Query("SELECT a FROM RoomRequest a where :doctor member of a.doctors AND (a.date BETWEEN :startDate AND :endDate) order by a.date")
 	List<RoomRequest> findByDateRangeAndDoctor(@Param("doctor") Doctor d, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	
+	//getuje samo requestove za appointmente
+	@Query("SELECT a FROM RoomRequest a where (a.type = 0 OR a.type = 1) AND (a.date BETWEEN :startDate AND :endDate)")
+	List<RoomRequest> findByDateRangeAndType(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

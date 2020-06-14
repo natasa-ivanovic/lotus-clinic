@@ -11,6 +11,9 @@ import 'leaflet/dist/leaflet.css';
 
 import {Icon} from 'leaflet';
 
+import utilFun from './util'
+// leaflet maps
+
 delete Icon.Default.prototype._getIconUrl;
 
 Icon.Default.mergeOptions({
@@ -34,6 +37,16 @@ Object.defineProperty(Vue.prototype, '$role', {
   }
 })
 
+// date utility functions for convenience 
+
+const util = Vue.observable({ util: utilFun })
+
+Object.defineProperty(Vue.prototype, '$util', {
+  get () {
+    return util.util;
+  }
+})
+
 // axios config
 Vue.use(VueAxios, Axios);
 
@@ -41,10 +54,6 @@ Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
 Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 // keep on heroku for deploy and localhost for testing
-
-
-
-
 Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
 //Vue.axios.defaults.baseURL = "http://localhost:9001";
 
