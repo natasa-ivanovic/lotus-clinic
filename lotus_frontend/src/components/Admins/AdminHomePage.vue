@@ -61,7 +61,7 @@
                                 :key="i"
                                 >
                                 <v-list-item-content>
-                                    <v-list-item-title>New request</v-list-item-title>
+                                    <v-list-item-title>New vacation request</v-list-item-title>
                                     <v-list-item-content>
                                         Start date: {{dateFormatJustDay(req.startDate)}} <br/>
                                         End date: {{dateFormatJustDay(req.endDate)}} <br/>
@@ -147,6 +147,7 @@ export default {
         }).then(response => {
             console.log(response);
             this.vacationRequests.splice(this.toRemoveIdx,1);
+            this.$store.commit('showSnackbar', {text: "Successfully approved vacation request!", color: "success"});
 
         }).catch(error => {
             console.log(error);

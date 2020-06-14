@@ -130,7 +130,26 @@ export default {
       }
     },
     filter: function() {
+      const { sortBy, sortDesc } = this.options
       var tailoredURL = apiURL + "?name=" + this.name + "&surname=" + this.surname + "&ssid=" + this.ssid + "&pageSize=" + this.options.itemsPerPage + "&pageNo=" + (this.options.page - 1);
+      if (sortBy.length != 0) {
+          if (sortBy[0] == "username") 
+              tailoredURL = tailoredURL + "&sortBy=username&descending=" + sortDesc[0];
+          else if (sortBy[0] == "ssid")
+              tailoredURL = tailoredURL + "&sortBy=ssid&descending=" + sortDesc[0];
+          else if (sortBy[0] == "name")
+              tailoredURL = tailoredURL + "&sortBy=name&descending=" + sortDesc[0];
+          else if (sortBy[0] == "surname")
+              tailoredURL = tailoredURL + "&sortBy=surname&descending=" + sortDesc[0];
+          else if (sortBy[0] == "address")
+              tailoredURL = tailoredURL + "&sortBy=address&descending=" + sortDesc[0];
+          else if (sortBy[0] == "city")
+              tailoredURL = tailoredURL + "&sortBy=city&descending=" + sortDesc[0];
+          else if (sortBy[0] == "country")
+              tailoredURL = tailoredURL + "&sortBy=country&descending=" + sortDesc[0];
+          else if (sortBy[0] == "phoneNumber")
+              tailoredURL = tailoredURL + "&sortBy=phoneNumber&descending=" + sortDesc[0];
+      }
         this.axios({url : tailoredURL, 
                   method: 'GET'
       }).then(response => {

@@ -67,14 +67,9 @@ export default {
       this.axios({url : apiURL + "/" + type.id, 
                     method: 'DELETE'
         }).then(() =>   {
-           // test this
            this.appPrices.splice(this.appPrices.indexOf(type), 1);
            this.$store.commit('showSnackbar', {text: "Successfully deleted appointment type.", color: "success", })
-        }).catch(error => {
-            console.log(error.request);
-            // navesti razlog errora
-            this.$store.commit('showSnackbar', {text: "Couldn't delete appointment type!", color: "error", })
-        });
+        })
     },
     editAppPrice: function(type) {
       this.$router.push({name: "editAppointmentPrice", params: {id : type.id}});

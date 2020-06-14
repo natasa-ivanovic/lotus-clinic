@@ -25,6 +25,9 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
 	@Query("SELECT c FROM CalendarEntry c where c.medicalPerson = :id AND ((c.startDate BETWEEN :startDate AND :endDate) OR c.vacation IS NOT NULL) order by c.startDate")
 	List<CalendarEntry> getAllBetweenDatesForDoctor(@Param("id") User id, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 	
+	@Query("SELECT c FROM CalendarEntry c where c.medicalPerson = :id AND ((c.startDate BETWEEN :startDate AND :endDate)) order by c.startDate")
+	List<CalendarEntry> getAllBetweenDatesForDoctorNoVacation(@Param("id") User id, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	
 	@Query("SELECT c FROM CalendarEntry c where c.room = :room AND (c.startDate BETWEEN :startDate AND :endDate) order by c.startDate")
 	List<CalendarEntry> getAllBetweenDatesForRoom(@Param("room") Room r, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 	

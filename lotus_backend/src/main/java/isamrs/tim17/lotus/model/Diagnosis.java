@@ -29,7 +29,7 @@ public class Diagnosis {
 	private Long id;
 	@Column(name="name", unique=true, nullable=false)
 	private String name;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ClinicalCentre clinicalCentre;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments = new HashSet<Appointment>();

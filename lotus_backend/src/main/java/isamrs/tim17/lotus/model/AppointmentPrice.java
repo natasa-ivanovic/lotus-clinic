@@ -28,7 +28,7 @@ public class AppointmentPrice {
 	private AppointmentType type;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
-	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY)
 	private Set<Doctor> doctors = new HashSet<>();
 
 	public long getId() {

@@ -15,7 +15,7 @@ public class MedicalRecordDTO {
 	private long id;
 	private float height;
 	private float weight;
-	private List<AllergyDTO> allergies;
+	private List<AllergyDTO> allergies = new ArrayList<>();
 	private String bloodType;
 	
 	private Set<AppointmentDTO> apps = new HashSet<>();

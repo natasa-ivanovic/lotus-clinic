@@ -94,4 +94,8 @@ public class CalendarEntryService {
 	public List<CalendarEntry> findAllByRoomsAndDate(Collection<Room> rooms, ProfitDatesDTO dates) {
 		return calendarEntries.findByRoomAndDate(rooms, dates.getStartDate(), dates.getEndDate());
 	}
+
+	public List<CalendarEntry> getAllBetweenDatesForDoctorNoVacation(User user, Date startDate, Date endDate) {
+		return calendarEntries.getAllBetweenDatesForDoctorNoVacation(user, startDate, endDate);
+	}
 }

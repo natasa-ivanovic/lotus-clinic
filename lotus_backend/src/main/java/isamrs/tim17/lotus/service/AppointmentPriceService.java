@@ -30,4 +30,8 @@ public class AppointmentPriceService {
 	public List<AppointmentPrice> findByClinicId(Clinic c) {
 		return appointmentPrices.findByClinicId(c.getId());
 	}
+
+	public void remove(AppointmentPrice at) {
+		appointmentPrices.deleteById(at.getId());		
+	}
 }

@@ -55,10 +55,7 @@ export default {
                     method: 'GET'
         }).then(response =>   {
             this.appTypes = response.data;
-        }).catch(error => {
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
-        });
+        })
   },
   methods: {
     deleteAppType: function(type) {
@@ -68,11 +65,7 @@ export default {
            // test this
            this.appTypes.splice(this.appTypes.indexOf(type), 1);
            this.$store.commit('showSnackbar', {text: "Successfully deleted appointment type.", color: "success", })
-        }).catch(error => {
-            console.log(error.request);
-            // navesti razlog errora
-            this.$store.commit('showSnackbar', {text: "Couldn't delete appointment type!", color: "error", })
-        });
+        })
     },
     editAppType: function(editId) {
       this.$router.push({name: "editAppointmentType", params: {id : editId}});
