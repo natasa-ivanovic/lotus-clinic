@@ -130,7 +130,6 @@ export default {
       }
     },
     filter: function() {
-      console.log(this.options.page)
       var tailoredURL = apiURL + "?name=" + this.name + "&surname=" + this.surname + "&ssid=" + this.ssid + "&pageSize=" + this.options.itemsPerPage + "&pageNo=" + (this.options.page - 1);
         this.axios({url : tailoredURL, 
                   method: 'GET'

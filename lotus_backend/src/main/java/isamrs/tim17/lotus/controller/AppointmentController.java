@@ -546,7 +546,7 @@ public class AppointmentController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Nurse nurse = (Nurse) a.getPrincipal();
 
-		List<Appointment> apps = service.findByClinicAndStatusAndReviewed(nurse.getClinic(), AppointmentStatus.FINISHED,
+		List<Appointment> apps = service.findByClinicAndStatusAndReceptApproved(nurse.getClinic(), AppointmentStatus.FINISHED,
 				false);
 		List<PremadeAppDTO> appsDtos = new ArrayList<>();
 		for (Appointment app : apps) {
@@ -626,8 +626,8 @@ public class AppointmentController {
 	@PostMapping("/appointments/finish")
 	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<Object> finishAppointment(@RequestBody PremadeAppDTO app) {
-		if (app == null || app.getId() <= 0 || app.getDiagnosis().isEmpty() || app.getDiagnosis() == null
-				|| app.getRecipes() == null || app.getRecipes().isEmpty() || app.getDescription() == null
+		if (app == null || app.getId() <= 0 || app.getDiagnosis() == null || app.getDiagnosis().isEmpty()
+				|| app.getDescription() == null
 				|| "".equals(app.getDescription())) {
 			return new ResponseEntity<>("Fill in all required fields!", HttpStatus.BAD_REQUEST);
 		}
@@ -796,6 +796,21 @@ public class AppointmentController {
 		
 		Patient patient = patientService.findOne(id);
 		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.SCHEDULED, patient.getMedicalRecord());
+		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
+		for(Appointment app : appointments) {
+			appointmentDTOs.add(new PremadeAppDTO(app));
+		}
+		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
+	}
+	
+	@GetMapping("/appointments/doctor/patient/{id}/past")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<PremadeAppDTO>> getPastAppointments(@PathVariable("id") long id) {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		Patient patient = patientService.findOne(id);
+		
+		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.FINISHED, patient.getMedicalRecord());
 		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
 		for(Appointment app : appointments) {
 			appointmentDTOs.add(new PremadeAppDTO(app));

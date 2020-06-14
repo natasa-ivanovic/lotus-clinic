@@ -46,6 +46,40 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row align="center" justify="center">
+      <v-col cols="6">
+        <v-card class="elevation-3">
+          <v-toolbar flat color="secondary" dark>
+            <v-toolbar-title >Previous Appointments</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-card-title v-if="previousAppointments.length == 0">
+              No previous appointments!
+            </v-card-title>
+            <v-list v-else>
+              <v-list-item-group>
+                <v-list-item
+                  v-for="(app, i) in previousAppointments"
+                  :key="i"
+                  >
+                  <v-list-item-content>
+                    <v-list-item-title>{{app.type}} on {{app.date}}</v-list-item-title>
+                    <v-list-item-content>
+                      Patient: {{app.patientName}} {{app.patientSurname}} <br />
+                      Room: {{app.roomName}} <br />
+                      Time: {{app.time}}
+                    </v-list-item-content>
+                    <v-row>
+                      <v-btn v-on:click="change(app)" block color="success">Review appointment</v-btn>
+                    </v-row>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -59,7 +93,8 @@ export default {
   props: ['id'],
   data() {
     return {
-      appointments: []
+      appointments: [],
+      previousAppointments: []
     }
   },
   mounted() {
@@ -75,17 +110,29 @@ export default {
     }).catch(error =>{
       console.log(error);
     });
+    this.axios({
+      url: apiURL + "/" + this.id + "/past",
+      method: 'GET'
+    }).then(response => {
+      this.previousAppointments = response.data;
+      this.previousAppointments.forEach(app => {
+        app.date = app.startDate.split("T")[0]
+        app.time = this.dateFormat(new Date(app.startDate), new Date(app.endDate)); 
+      })
+    })
   },
   methods: {
     start: function(app) {
-      console.log(app);
-      this.$router.push({name: "startAppointment", params: {appointment: app}})
+      this.$router.push({name: "startAppointment", params: {appointment: app, edit: true}})
     },
     dateFormat: function(date1, date2) {
             var time1 = date1.toTimeString().split(" ")[0];
             var time2 = date2.toTimeString().split(" ")[0];
             return time1 + "-" + time2;
     },
+    change: function(app) {
+      this.$router.push({name: "startAppointment", params: {appointment: app, edit: false}})
+    }
   }
 }
 </script>

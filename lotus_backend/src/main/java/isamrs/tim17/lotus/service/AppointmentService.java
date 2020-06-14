@@ -121,7 +121,7 @@ public class AppointmentService {
 		return a;
 	}
 
-	public List<Appointment> findByClinicAndStatusAndReviewed(Clinic clinic, AppointmentStatus status,
+	public List<Appointment> findByClinicAndStatusAndReceptApproved(Clinic clinic, AppointmentStatus status,
 			Boolean receptApproved) {
 		return appointments.findByClinicAndStatusAndReceptApproved(clinic, status, receptApproved);
 	}
