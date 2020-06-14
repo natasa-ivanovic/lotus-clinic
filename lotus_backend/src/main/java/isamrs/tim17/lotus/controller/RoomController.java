@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.RoomDTO;
 import isamrs.tim17.lotus.dto.RoomDateDTO;
+import isamrs.tim17.lotus.dto.RoomRequestDTO;
 import isamrs.tim17.lotus.dto.RoomTermDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.CalendarEntry;
@@ -174,8 +175,21 @@ public class RoomController {
 
 	@PostMapping("/rooms/terms")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Object> getTermsForRooms(@RequestBody String date) {
-
+	public ResponseEntity<Object> getTermsForRooms(@RequestBody RoomRequestDTO request) {
+		if(request.isOperation()) {
+			return getTermsForRoomsAppointment(request);
+		}
+		else {
+			return getTermsForRoomsOperation(request);
+		}
+	}
+	
+	public ResponseEntity<Object> getTermsForRoomsOperation(RoomRequestDTO request) {
+		return null;
+	}
+	
+	public ResponseEntity<Object> getTermsForRoomsAppointment(RoomRequestDTO request) {
+		String date = request.getStartDate().getTime() + "";
 		if (date == null || "".equals(date))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 

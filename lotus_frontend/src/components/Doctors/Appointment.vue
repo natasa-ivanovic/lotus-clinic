@@ -72,7 +72,7 @@
                                     @keydown.esc="turnOffAppointment()"
                                 >
                                     <template v-slot:activator="{on, attrs}">
-                                        <v-btn v-if="this.edit" color="primary" 
+                                        <v-btn v-if="edit" color="primary" 
                                                 v-bind="attrs" 
                                                 v-on="on" 
                                                 block>
@@ -158,7 +158,7 @@
                                     offset-x
                                 >
                                     <template v-slot:activator="{on, attrs}">
-                                        <v-btn v-if="this.edit" color="primary" 
+                                        <v-btn v-if="edit" color="primary" 
                                                 v-bind="attrs" 
                                                 v-on="on"
                                                 @click="getDoctors()"
@@ -247,7 +247,7 @@
                         </v-row>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn v-if="this.edit" color="success" block @click="endAppointment()">Finish appointment</v-btn>
+                        <v-btn v-if="edit" color="success" block @click="endAppointment()">Finish appointment</v-btn>
                         <v-btn v-else color="success" block @click="endAppointment()">Save</v-btn>
                     </v-card-actions>
                 </v-card>

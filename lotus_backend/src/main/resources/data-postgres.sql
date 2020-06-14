@@ -185,12 +185,16 @@ insert into requests(req_type, status, date, type, doctor, patient, version) val
 insert into requests(req_type, status, date, type, doctor, patient, version) values('ROOM', 0, '2020-05-19 16:00:00.508-07', 0, 5, 2, 0);
 insert into requests(req_type, status, date, type, doctor, patient, version) values('ROOM', 0, '2020-07-19 17:00:00.508-07', 0, 5, 3, 0);*/
 
+
 insert into requests(req_type, status, patient_id, version) values('REGISTRATION', 0, 16, 0);
 
 insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id, version) 
 values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6, 0);
 insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id, version) 
 values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6, 0);
+
+insert into requests(req_type, status, date, patient, price, type, app_type_id, version) values ('ROOM', 0, '2020-06-29 10:00:00.508-07', 1, 1000, 0, 1, 0);
+insert into requests_doctors(room_request_id, doctors_id) values (4,4);
 
 
 /* vacation */

@@ -68,13 +68,11 @@ export default {
         }
     },
     mounted() {
-        var date = new Date(this.request.startDate);
-        var milli = date.getTime();
         this.axios({
-            headers: {'Content-Type' : 'text/plain'},
+            headers: { 'Content-Type': 'application/json'},
             url: apiTerms,
             method: "POST",
-            data: milli
+            data: this.request
         }).then(response => {
             this.rooms = response.data
         }).catch(error => {
