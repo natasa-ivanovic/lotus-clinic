@@ -64,6 +64,7 @@ import VacationRequest from "../components/Users/VacationRequest"
 import PationSearch from "../components/Doctors/PatientSearch"
 import PatientAppointments from "../components/Doctors/PatientAppointments"
 import ConfirmAppointment from "../components/Patients/ConfirmAppointment"
+import Report from "../components/Admins/Report"
 
 const routes = [
     {
@@ -305,6 +306,11 @@ const routes = [
         name: "confirmAppointment",
         path: "/confirm/:key",
         props: true
+    },
+    {
+        component: Report,
+        name: "report",
+        path: "/report"
     },
     {
         path: "/*",
