@@ -36,7 +36,6 @@ import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.CalendarEntryService;

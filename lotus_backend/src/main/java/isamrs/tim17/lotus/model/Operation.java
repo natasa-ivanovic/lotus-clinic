@@ -21,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "operations")
@@ -44,10 +45,13 @@ public class Operation {
 	private MedicalRecord medicalRecord;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Room room;
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	private Set<Doctor> doctor;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Clinic clinic;
+	
+	@Version
+	private Long version;
 	
 	
 	@Override
