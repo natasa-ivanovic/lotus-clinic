@@ -38,10 +38,7 @@
                 </v-toolbar-items>
                 <v-spacer />
                 <v-toolbar-items v-if="!checkRole(null)">
-<<<<<<< HEAD
                     <v-btn text :to="{ name: 'report'}" v-if="checkRole('ADMIN')">Report</v-btn>
-=======
->>>>>>> master
                     <v-btn text :to="{ name: 'my_clinic'}" v-if="checkRole('ADMIN')">My clinic</v-btn>
                     <v-btn text :to="{ name: 'profile'}">Profile</v-btn>
                     <v-btn text v-on:click="logout()">Logout</v-btn>

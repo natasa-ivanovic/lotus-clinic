@@ -11,12 +11,9 @@ import 'leaflet/dist/leaflet.css';
 
 import {Icon} from 'leaflet';
 
-<<<<<<< HEAD
 import utilFun from './util'
 // leaflet maps
 
-=======
->>>>>>> master
 delete Icon.Default.prototype._getIconUrl;
 
 Icon.Default.mergeOptions({
@@ -57,18 +54,9 @@ Vue.axios.defaults.headers['Authorization'] = localStorage.getItem('authKey');
 Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 // keep on heroku for deploy and localhost for testing
-
-
-
-<<<<<<< HEAD
-// Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-Vue.axios.defaults.baseURL = "http://localhost:9001";
-=======
-
 Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
 //Vue.axios.defaults.baseURL = "http://localhost:9001";
 
->>>>>>> master
 
 // all errors pass through this function before being catched in individual catch functions
 Vue.axios.interceptors.response.use(response => {
