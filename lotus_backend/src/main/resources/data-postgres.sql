@@ -159,11 +159,11 @@ insert into diagnosis_appointments(diagnosis_id, appointments_id) values (3, 3);
 
 /* finished operations with their calendar entries */
 
-insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (1, '2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 3, 1, 1, 5, 4000);
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price, version) values (1, '2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 3, 1, 1, 5, 4000, 0);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 4, 1);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-14 17:00:00.508-07', '2020-05-14 17:30:00.508-07', 12, 1);
 
-insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (2, '2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 3, 1, 3, 9, 5000);
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price, version) values (2, '2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 3, 1, 3, 9, 5000, 0);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-05-20 12:00:00.508-07', '2020-05-20 12:30:00.508-07', 5, 2);
 
 /* doctors that were in operations that finished */
@@ -173,7 +173,7 @@ insert into operations_doctor (operation_id, doctor_id) values (1, 12);
 insert into operations_doctor (operation_id, doctor_id) values (2, 5);
 
 /* scheduled operations with their calendar entries */
-insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price) values (2, '2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 0, 1, 3, 8, 4000);
+insert into operations (clinic_id, start_date, end_date, status, medical_record_patient_id, room_id, type_id, price, version) values (2, '2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 0, 1, 3, 8, 4000, 0);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 5, 3);
 insert into calendar (start_date, end_date, medical_person_id, operation_id) values('2020-06-25 17:00:00.508-07', '2020-06-25 17:30:00.508-07', 13, 3);
 

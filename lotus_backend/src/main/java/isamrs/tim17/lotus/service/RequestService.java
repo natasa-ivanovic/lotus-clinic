@@ -91,4 +91,8 @@ public class RequestService {
 	public List<RoomRequest> findByDateRangeApps(Date start, Date end) {
 		return requests.findByDateRangeAndType(start, end);
 	}
+	
+	public List<RoomRequest> findByStatus(RequestStatus status) {
+		return requests.findByStatus(status);
+	}
 }

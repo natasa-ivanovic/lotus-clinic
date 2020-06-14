@@ -796,7 +796,7 @@ public class AppointmentController {
 			rr.setStatus(RequestStatus.APPROVED);
 			
 			try {
-				operationService.save(operation, calendarEntries);
+				operationService.save(operation, calendarEntries, rr);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Room already scheduled for selected term!", HttpStatus.BAD_REQUEST);

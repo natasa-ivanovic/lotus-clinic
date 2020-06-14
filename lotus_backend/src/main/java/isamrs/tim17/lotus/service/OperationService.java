@@ -8,12 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ser.std.CalendarSerializer;
-
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Operation;
 import isamrs.tim17.lotus.model.OperationStatus;
+import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.repository.OperationRepository;
 
 @Service
@@ -23,6 +22,8 @@ public class OperationService {
 	OperationRepository operations;
 	@Autowired
 	CalendarEntryService calendarService;
+	@Autowired
+	RequestService requestService;
 	
 	public Operation findOne(long id) {
 		return operations.findOneById(id);
@@ -43,7 +44,8 @@ public class OperationService {
 	}
 
 	@Transactional(readOnly = false)
-	public Operation save(Operation opp, List<CalendarEntry> entries) {
+	public Operation save(Operation opp, List<CalendarEntry> entries, RoomRequest rr) {
+		requestService.save(rr);
 		for (CalendarEntry entry : entries) {
 			calendarService.save(entry);
 		}

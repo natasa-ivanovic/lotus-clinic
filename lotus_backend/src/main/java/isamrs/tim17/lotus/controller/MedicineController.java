@@ -44,7 +44,11 @@ public class MedicineController {
 			return new ResponseEntity<>("Name cannot be empty!", HttpStatus.BAD_REQUEST);
 		
 		Medicine medicine = new Medicine(name);
-		service.save(medicine);
+		try {
+			service.save(medicine);
+		}catch (Exception e) {
+			return new ResponseEntity<>("Someone saved at the same time!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
 	
@@ -55,7 +59,11 @@ public class MedicineController {
 
 		if (medicine == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		service.remove(id);
+		try {
+			service.remove(id);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Someone deleted at the same time!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(medicine, HttpStatus.OK);
 	}
 	

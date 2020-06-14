@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +19,10 @@ import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.Operation;
+import isamrs.tim17.lotus.model.OperationStatus;
 import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
@@ -43,6 +50,9 @@ public class Scheduler {
 	
 	@Autowired
 	public MailSenderService mailSender;
+	
+	@Autowired
+	public OperationService operationService;
 
 	/*
 	 * @Scheduled(fixedRate = 1000) public void test() { SimpleDateFormat sdf = new
@@ -53,7 +63,7 @@ public class Scheduler {
 	 */
 
 	// metoda za automatsko dodeljivanje sale
-	@Scheduled(cron = "59 59 23 * * *")
+	@Scheduled(cron = "00 00 23 * * *")
 	public void scheduleAppointments() {
 		// getuj sve requestove za taj dan koji nisu approved
 		// patient app i doctor app
@@ -61,11 +71,14 @@ public class Scheduler {
 		Date startDate = period.get("start");
 		Date endDate = period.get("end");
 		Date tomorrow = period.get("tomorrow");
-		List<RoomRequest> requests = requestService.findByDateRangeApps(startDate, endDate);
+		List<RoomRequest> requests = requestService.findByStatus(RequestStatus.PENDING);
 
 		// za svaki uradi zakazivanje i posalji mejl
 		for (RoomRequest rr : requests) {
 			// get sve sobe iz klinike
+			if(rr.getAppType().isOperation()) {
+				continue;
+			}
 			List<Doctor> doctors = new ArrayList<>(rr.getDoctors());
 			Doctor doc = doctors.get(0);
 			Patient pat = patientService.findOne(rr.getPatient().getId());
@@ -109,6 +122,56 @@ public class Scheduler {
 					mailSender.sendDoctorNotification(app);
 
 
+				}
+			}
+		}
+		
+		doOperationSchedule();
+	}
+	
+	private void doOperationSchedule() {
+		
+		HashMap<String, Date> period = getPeriod();
+		Date startDate = period.get("start");
+		Date endDate = period.get("end");
+		Date tomorrow = period.get("tomorrow");
+		List<RoomRequest> requests = requestService.findByStatus(RequestStatus.PENDING);
+		for(RoomRequest rr : requests) {
+			if(!rr.getAppType().isOperation()) {
+				continue;
+			}
+			
+			List<Room> rooms = roomService.findByClinic(rr.getClinic());
+			for(Room r : rooms) {
+				Date term = findFirstTerm(r, tomorrow);
+				if(term != null) {
+					Operation operation = new Operation();
+					operation.setStatus(OperationStatus.SCHEDULED);
+					operation.setRoom(r);
+					operation.setClinic(rr.getClinic());
+					Set<Doctor> doctors2 = new HashSet<>();
+					for (Doctor doc : rr.getDoctors()) {
+						doctors2.add(doc);
+					}
+					operation.setDoctor(doctors2);
+					operation.setMedicalRecord(rr.getPatient().getMedicalRecord());
+					operation.setStartDate(term);
+					operation.setEndDate(DateUtil.addMinutes(term, 30));
+					operation.setType(rr.getAppType());
+					operation.setPrice(rr.getPrice());
+					
+					List<CalendarEntry> calendarEntries = new ArrayList<>();
+					for (Doctor doc : rr.getDoctors()) {
+						calendarEntries.add(new CalendarEntry(operation, doc));
+					}
+					Request re = requestService.findOne(rr.getId());
+					re.setStatus(RequestStatus.APPROVED);
+					try {
+						operationService.save(operation, calendarEntries, (RoomRequest)re);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				}
 			}
 		}
