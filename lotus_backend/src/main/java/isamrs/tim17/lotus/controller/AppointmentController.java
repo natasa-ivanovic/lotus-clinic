@@ -840,15 +840,15 @@ public class AppointmentController {
 	
 	@GetMapping("/appointments/doctor/patient/{id}/past")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getPastAppointments(@PathVariable("id") long id) {
+	public ResponseEntity<List<AppointmentDTO>> getPastAppointments(@PathVariable("id") long id) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		Patient patient = patientService.findOne(id);
 		
 		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.FINISHED, patient.getMedicalRecord());
-		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
+		List<AppointmentDTO> appointmentDTOs = new ArrayList<>();
 		for(Appointment app : appointments) {
-			appointmentDTOs.add(new PremadeAppDTO(app));
+			appointmentDTOs.add(new AppointmentDTO(app));
 		}
 		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
 	}
