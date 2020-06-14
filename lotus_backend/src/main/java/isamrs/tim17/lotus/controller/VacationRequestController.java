@@ -28,7 +28,9 @@ import isamrs.tim17.lotus.model.RequestStatus;
 import isamrs.tim17.lotus.model.Vacation;
 import isamrs.tim17.lotus.model.VacationRequest;
 import isamrs.tim17.lotus.service.CalendarEntryService;
+import isamrs.tim17.lotus.service.MailSenderService;
 import isamrs.tim17.lotus.service.RequestService;
+import isamrs.tim17.lotus.service.UserService;
 import isamrs.tim17.lotus.service.VacationService;
 
 @RestController
@@ -38,6 +40,7 @@ public class VacationRequestController {
 	@Autowired RequestService service;
 	@Autowired VacationService vacationService;
 	@Autowired CalendarEntryService calendarEntryService;
+	@Autowired MailSenderService mailSender;
 
 	@PostMapping("")
 	@PreAuthorize("hasRole('NURSE')")
@@ -87,6 +90,7 @@ public class VacationRequestController {
 		service.save(req);
 		VacationRequest vacationRequest = (VacationRequest) req;
 		Vacation vacation = new Vacation(vacationRequest);
+		mailSender.sendVacationAccept(vacationRequest, vacationRequest.getMedicalPerson().getUsername());
 		vacationService.save(vacation);
 		CalendarEntry entry = new CalendarEntry(vacation);
 		calendarEntryService.save(entry);
@@ -97,7 +101,9 @@ public class VacationRequestController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> rejectVacation(@PathVariable("id") long id) {
 		Request req = service.findOne(id);
+		VacationRequest vacationreq = (VacationRequest) req;
 		req.setStatus(RequestStatus.REJECTED);
+		mailSender.sendVacationDecline(vacationreq, vacationreq.getMedicalPerson().getUsername());
 		service.save(req);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

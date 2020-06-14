@@ -8,6 +8,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import isamrs.tim17.lotus.model.Appointment;
+import isamrs.tim17.lotus.model.Request;
+import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.model.Vacation;
+import isamrs.tim17.lotus.model.VacationRequest;
 
 @Component
 public class MailSenderService {
@@ -30,6 +34,18 @@ public class MailSenderService {
 				+ patient + "requested an appointment of type " + type + ", for doctor " + doctor
 				+ ".\nLotus Clinic Staff";
 		sendMsg(recipient, "Lotus Clinic - New request pending", content);
+	}
+	
+	@Async
+	public void sendVacationAccept(VacationRequest request, String username) {
+		String content = "Hello\nYour request for a vacation from " + request.getStartDate() + " to " + request.getEndDate() + " was approved.\nLotus Clinic Staff";
+		sendMsg(username, "Lotus Clinic - Vacation", content);
+	}	
+	
+	@Async
+	public void sendVacationDecline(VacationRequest request, String username) {
+		String content = "Hello\nYour request for a vacation from " + request.getStartDate() + " to " + request.getEndDate() + " was declined.\nLotus Clinic Staff";
+		sendMsg(username, "Lotus Clinic - Vacation", content);
 	}
 
 	@Async
