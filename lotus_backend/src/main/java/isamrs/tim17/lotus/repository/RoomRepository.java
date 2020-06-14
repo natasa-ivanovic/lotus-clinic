@@ -19,4 +19,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	
 	@Query("SELECT a FROM Room a where a.clinic = :id")
 	List<Room> findAllByClinic(Clinic id);
+	Page<Room> findAllByClinic(Clinic clinic, Pageable paging);
 }

@@ -3,6 +3,8 @@ package isamrs.tim17.lotus.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,10 @@ public class RoomService {
 
 	public List<Room> findByClinic(Clinic id) {
 		return rooms.findAllByClinic(id);
+	}
+
+	public Page<Room> findByClinic(Clinic clinic, Pageable paging) {
+		return rooms.findAllByClinic(clinic, paging);
 	}
 	
 	
