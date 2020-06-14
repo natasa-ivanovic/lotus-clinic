@@ -156,7 +156,7 @@
 
 <script>
 const apiClinics = "/api/clinics";
-const apiAppTypes = "/api/appointmentTypes";
+const apiAppTypes = "/api/appointmentPrices/apps";
 export default {
     name: "AddUser",
     data() {

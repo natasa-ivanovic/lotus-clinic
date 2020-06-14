@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentPriceDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
-import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.User;
@@ -38,7 +37,7 @@ public class AppointmentPriceController {
 	
 	@GetMapping("")
 	@PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
-	public ResponseEntity<List<AppointmentPriceDTO>> getallAppointmentPrices() {
+	public ResponseEntity<List<AppointmentPriceDTO>> getAllAppointmentPrices() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) a.getPrincipal();
 		List<AppointmentPrice> priceList = new ArrayList<>();
@@ -54,6 +53,29 @@ public class AppointmentPriceController {
 		for(AppointmentPrice ap : priceList)
 		{
 			priceListDTO.add(new AppointmentPriceDTO(ap));
+		}
+		return new ResponseEntity<>(priceListDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/apps")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<AppointmentPriceDTO>> getAllAppointmentPricesNoOperation() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		List<AppointmentPrice> priceList = new ArrayList<>();
+		
+		if(user.getRole().equals("ADMIN"))
+			priceList = service.findByClinicId(((ClinicAdministrator) user).getClinic());
+		else if (user.getRole().equals("DOCTOR"))
+			priceList = service.findByClinicId(((Doctor) user).getClinic());
+		else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		List<AppointmentPriceDTO> priceListDTO = new ArrayList<>();
+		for(AppointmentPrice ap : priceList)
+		{
+			if (!ap.getType().isOperation())
+				priceListDTO.add(new AppointmentPriceDTO(ap));
 		}
 		return new ResponseEntity<>(priceListDTO, HttpStatus.OK);
 	}
