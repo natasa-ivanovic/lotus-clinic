@@ -22,15 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.VacationRequestDTO;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
+import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.Nurse;
 import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.RequestStatus;
+import isamrs.tim17.lotus.model.User;
 import isamrs.tim17.lotus.model.Vacation;
 import isamrs.tim17.lotus.model.VacationRequest;
 import isamrs.tim17.lotus.service.CalendarEntryService;
 import isamrs.tim17.lotus.service.MailSenderService;
 import isamrs.tim17.lotus.service.RequestService;
-import isamrs.tim17.lotus.service.UserService;
 import isamrs.tim17.lotus.service.VacationService;
 
 @RestController
@@ -43,10 +44,10 @@ public class VacationRequestController {
 	@Autowired MailSenderService mailSender;
 
 	@PostMapping("")
-	@PreAuthorize("hasRole('NURSE')")
+	@PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
 	public ResponseEntity<Object> addRequest(@RequestBody Dates dates) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		Nurse nurse = (Nurse) a.getPrincipal();
+		User user = (User) a.getPrincipal();
 		
 		Date startDate = null;
 		Date endDate = null;
@@ -55,15 +56,38 @@ public class VacationRequestController {
 			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dates.endDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Error in date format!", HttpStatus.BAD_REQUEST);
+		}
+		Date today = new Date();
+		if (startDate.before(today) || endDate.before(today) || endDate.before(startDate)) {
+			return new ResponseEntity<>("Error in date format!", HttpStatus.BAD_REQUEST);
 		}
 		
 		VacationRequest request = new VacationRequest();
-		request.setStartDate(startDate);
-		request.setEndDate(endDate);
-		request.setClinic(nurse.getClinic());
-		request.setStatus(RequestStatus.PENDING);
-		request.setMedicalPerson(nurse);
+		
+		if (user.getRole().equals("NURSE")) {
+			Nurse nurse = (Nurse) user;
+			request.setStartDate(startDate);
+			request.setEndDate(endDate);
+			request.setClinic(nurse.getClinic());
+			request.setStatus(RequestStatus.PENDING);
+			request.setMedicalPerson(nurse);
+			
+		} else {
+			Doctor doctor = (Doctor) user;
+			// provera da li trazi godisnji, a ima obaveze
+			List<CalendarEntry> work = calendarEntryService.findByMedicalPersonAndDate(user, startDate, endDate);
+			if (!work.isEmpty())
+				return new ResponseEntity<>("You have scheduled appointments and/or operations in this period of time!", HttpStatus.BAD_REQUEST);
+			request.setStartDate(startDate);
+			request.setEndDate(endDate);
+			request.setClinic(doctor.getClinic());
+			request.setStatus(RequestStatus.PENDING);
+			request.setMedicalPerson(doctor);
+			
+		}
+		
+		
 		service.save(request);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
