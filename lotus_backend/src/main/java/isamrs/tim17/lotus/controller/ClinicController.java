@@ -32,7 +32,6 @@ public class ClinicController {
 
 	@Autowired
 	private ClinicService service;
-		
 	
 	@GetMapping("/clinics")
 	@PreAuthorize("hasRole('CENTRE_ADMIN')")

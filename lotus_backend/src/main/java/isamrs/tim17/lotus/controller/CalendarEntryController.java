@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.CalendarEntryDTO;
-import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.CalendarEntry;
@@ -82,7 +82,7 @@ public class CalendarEntryController {
 			return new ResponseEntity<>("Unable to start appointment!", HttpStatus.BAD_REQUEST);
 		} 
 		
-		PremadeAppDTO pa = new PremadeAppDTO(a);
+		AppointmentDTO pa = new AppointmentDTO(a);
 		return new ResponseEntity<>(pa, HttpStatus.OK);
 		
 	}

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import isamrs.tim17.lotus.dto.AllergyDTO;
 import isamrs.tim17.lotus.dto.MedicalRecordDTO;
 import isamrs.tim17.lotus.dto.PatientDTO;
-import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.MedicalRecord;
@@ -48,12 +48,12 @@ public class MedicalRecordController {
 		Patient patient = patientService.findOne(id);
 		PatientDTO patientDto = new PatientDTO(patient); // patient, record
 		List<Appointment> finishedApps = appService.findFinished(patient.getMedicalRecord());
-		List<PremadeAppDTO> appDto = new ArrayList<>();
+		List<AppointmentDTO> appDto = new ArrayList<>();
 		// appointmentDto
 		// operacije
 		// bolesti
 		for (Appointment app : finishedApps) {
-			PremadeAppDTO a = new PremadeAppDTO(app);
+			AppointmentDTO a = new AppointmentDTO(app);
 			appDto.add(a);
 
 		}

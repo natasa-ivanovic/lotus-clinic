@@ -18,7 +18,7 @@ public class MedicalRecordDTO {
 	private List<AllergyDTO> allergies;
 	private String bloodType;
 	
-	private Set<PremadeAppDTO> apps = new HashSet<>();
+	private Set<AppointmentDTO> apps = new HashSet<>();
 	
 	public MedicalRecordDTO() {}
 
@@ -41,7 +41,7 @@ public class MedicalRecordDTO {
 		for (Appointment a : m.getAppointments()) {
 			if (a.getStatus().equals(AppointmentStatus.CANCELED))
 				continue;
-			apps.add(new PremadeAppDTO(a));
+			apps.add(new AppointmentDTO(a));
 		}
 	}
 
@@ -85,11 +85,11 @@ public class MedicalRecordDTO {
 		this.bloodType = bloodType;
 	}
 
-	public Set<PremadeAppDTO> getApps() {
+	public Set<AppointmentDTO> getApps() {
 		return apps;
 	}
 
-	public void setApps(Set<PremadeAppDTO> apps) {
+	public void setApps(Set<AppointmentDTO> apps) {
 		this.apps = apps;
 	}
 	

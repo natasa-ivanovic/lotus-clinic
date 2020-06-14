@@ -4,6 +4,7 @@ public class PatientRequest {
 	private long requestDate;
 	private long appointmentType;
 	private boolean clinics;
+	private long doctorId;
 	
 	public PatientRequest() {}
 	
@@ -36,6 +37,14 @@ public class PatientRequest {
 	public String toString() {
 		return "PatientRequest [requestDate=" + requestDate + ", appointmentType=" + appointmentType + ", clinics="
 				+ clinics + "]";
+	}
+
+	public long getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(long doctorId) {
+		this.doctorId = doctorId;
 	}
 	
 	

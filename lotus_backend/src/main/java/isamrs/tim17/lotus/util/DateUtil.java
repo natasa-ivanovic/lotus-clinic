@@ -120,11 +120,21 @@ public class DateUtil {
 				if (startApp.get(Calendar.HOUR_OF_DAY) == startTerm.get(Calendar.HOUR_OF_DAY)
 						&& startApp.get(Calendar.MINUTE) == startTerm.get(Calendar.MINUTE)) {
 					dates.remove(d);
-					break;					
+					break;
 				}
 			}
 		}
 		return dates;
+	}
+	
+	public static Date cleanDate(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
 	}
 	
 	public static List<Date> getSevenDays(Date startDate) {

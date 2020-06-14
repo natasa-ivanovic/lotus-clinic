@@ -11,6 +11,9 @@ import 'leaflet/dist/leaflet.css';
 
 import {Icon} from 'leaflet';
 
+import utilFun from './util'
+// leaflet maps
+
 delete Icon.Default.prototype._getIconUrl;
 
 Icon.Default.mergeOptions({
@@ -34,6 +37,16 @@ Object.defineProperty(Vue.prototype, '$role', {
   }
 })
 
+// date utility functions for convenience 
+
+const util = Vue.observable({ util: utilFun })
+
+Object.defineProperty(Vue.prototype, '$util', {
+  get () {
+    return util.util;
+  }
+})
+
 // axios config
 Vue.use(VueAxios, Axios);
 
@@ -44,8 +57,8 @@ Vue.axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 
 
-Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
-//Vue.axios.defaults.baseURL = "http://localhost:9001";
+// Vue.axios.defaults.baseURL = "https://lotus-clinic-api.herokuapp.com"
+Vue.axios.defaults.baseURL = "http://localhost:9001";
 
 // all errors pass through this function before being catched in individual catch functions
 Vue.axios.interceptors.response.use(response => {

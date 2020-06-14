@@ -4,8 +4,8 @@
       <v-col cols="6">
         <v-stepper v-model="e1" vertical>
           
-          <v-stepper-step :editable="true" :rules="[() => this.step1]" :complete="e1 > 1" step="1">Date and time
-            <small v-if="!this.step1">Please enter date and time.</small></v-stepper-step>
+          <v-stepper-step :editable="true" :rules="[() => this.step1]" :complete="e1 > 1" step="1">Date
+            <small v-if="!this.step1">Please enter the date.</small></v-stepper-step>
             <v-stepper-content step="1">
               <v-card
                 class="mb-12"
@@ -37,32 +37,6 @@
                         </v-dialog>
                       </v-col>
                     </v-row>
-                    <v-row>
-                      <v-col>
-                        <v-dialog
-                          ref="dialogTime"
-                          v-model="time"
-                          :return-value.sync="startTime"
-                          persistent
-                          width="290px"
-                        >
-                        <template v-slot:activator="{on}">
-                        <v-text-field
-                          label="Start time"
-                          v-model="startTime"
-                          readonly
-                          prepend-icon="mdi-clock"
-                          required
-                          v-on="on"/>
-                        </template>
-                        <v-time-picker v-model="startTime" scrollable>
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="time = false">Cancel</v-btn>
-                          <v-btn text color="primary" @click="$refs.dialogTime.save(startTime)">OK</v-btn>
-                        </v-time-picker>
-                        </v-dialog>
-                      </v-col>
-                    </v-row>
                   </v-container>
                   <v-btn color="primary" @click="getAppTypes()" class="ml-10" width="100">Continue</v-btn>
                 </v-card>
@@ -79,7 +53,7 @@
                     <v-row>
                     <v-autocomplete
                     class="mt-0"
-                    v-model="appointment.appointmentType"
+                    v-model="appointment.type"
                     :items="this.types"
                     dense
                     prepend-icon="mdi-pill"
@@ -103,7 +77,7 @@
                   <v-row>
                   <v-autocomplete
                   class="mt-0"
-                  v-model="appointment.doctor"
+                  v-model="appointment.doctorId"
                   :items="this.doctors"
                   dense
                   prepend-icon="mdi-doctor"
@@ -111,13 +85,32 @@
                   ></v-autocomplete>
                   </v-row>
                 </v-container>
+                <v-btn color="primary" @click="getTerms()" class="ml-8" width="100">Continue</v-btn>
+              </v-card>
+            </v-stepper-content>
+
+            <v-stepper-step :editable="true" :rules="[() => this.step4]" :complete="e1 > 4" step="4">Time
+              <small v-if="!this.step4">Please select a term.</small></v-stepper-step>
+            <v-stepper-content step="4">
+              <v-card
+                class="mb-12"
+                color="white"
+                elevation="0"
+              >
+                <v-container>
+                    <v-row>
+                      <v-col>
+                        <v-autocomplete v-model="startTime" :items="allTerms" label="Term"/> 
+                      </v-col>
+                    </v-row>
+                </v-container>
                 <v-btn color="primary" @click="getRooms()" class="ml-8" width="100">Continue</v-btn>
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true"  :rules="[() => this.step4]" :complete="e1 > 4" step="4">Room
-            <small v-if="!this.step4">Please select a room.</small></v-stepper-step>
-            <v-stepper-content step="4">
+            <v-stepper-step :editable="true"  :rules="[() => this.step5]" :complete="e1 > 5" step="5">Room
+            <small v-if="!this.step5">Please select a room.</small></v-stepper-step>
+            <v-stepper-content step="5">
               <v-card
                 class="mb-12"
                 color="white"
@@ -127,7 +120,7 @@
                   <v-row>
                   <v-autocomplete
                   class="mt-0"
-                  v-model="appointment.room"
+                  v-model="appointment.roomId"
                   :items="this.rooms"
                   dense
                   prepend-icon="mdi-hospital-building"
@@ -139,9 +132,9 @@
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step :editable="true"  :rules="[() => this.step5]" :complete="e1 > 5" step="5">Discount
-            <small v-if="!this.step5">Please enter a discount.</small></v-stepper-step>
-            <v-stepper-content step="5">
+            <v-stepper-step :editable="true"  :rules="[() => this.step6]" :complete="e1 > 6" step="6">Discount
+            <small v-if="!this.step6">Please enter a discount.</small></v-stepper-step>
+            <v-stepper-content step="6">
               <v-card
                 class="mb-12"
                 color="white"
@@ -161,8 +154,8 @@
               </v-card>
             </v-stepper-content>
 
-            <v-stepper-step step="6" >Review</v-stepper-step>
-            <v-stepper-content step="6">
+            <v-stepper-step step="7" >Review</v-stepper-step>
+            <v-stepper-content step="7">
               <v-card
                 class="mt-n2"
                 color="white"
@@ -172,13 +165,11 @@
                   <v-list-item-content>
                   <div class="overline mb-4">YOU CAN CHANGE PREVIOUS STEPS</div>
                   <v-list-item-title class="headline mb-1">Appointment</v-list-item-title>
-                  <v-list-item-subtitle>Time: {{this.appointment.startDateString}} - {{this.formattedEndDate}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>Time: {{ this.formattedDate}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Appointment type: {{this.aType}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Doctor: {{this.doc}}</v-list-item-subtitle>
                   <v-list-item-subtitle>Room: {{this.room}}</v-list-item-subtitle>
-                  <!--v-list-item-subtitle>Price: {{this.price}}</v-list-item-subtitle-->
                   <v-list-item-subtitle>Discount: {{this.appointment.discount}} %</v-list-item-subtitle>
-                  <!--v-list-item-subtitle>Price with discount: {{this.price}}</v-list-item-subtitle-->
                   </v-list-item-content>
                 </v-list-item>
                 <v-btn color="primary" class="ml-4" width="100" @click="finishAppointment()">Finish</v-btn>
@@ -191,23 +182,21 @@
 </template>
 
 <script>
-
   const apiTypes = "/api/appointmentPrices";
+  const apiTerms = "/api/appointments/free_doctors"
   const apiRooms = "/api/rooms/free";
-  const apiAddApp = "/api/appointments";
+  const apiAddApp = "/api/appointments";  
 
   export default {
     data () {
       return {
         e1: 1,
         date: false,
-        time: false,
         appointment : {
-          startDateString: "",  
-          endDateLong: "",
-          appointmentType: "",
-          doctor: "",
-          room: "",
+          startDate: new Date(),
+          type: "",
+          doctorId: "",
+          roomId: "",
           discount: "0"
         },
         appTypes: [],
@@ -216,8 +205,9 @@
         rooms: [],
         doctors: [],
         startDate: "",
+        allTerms: [],
         startTime: "",
-        formattedEndDate: "",
+        formattedDate: "",
         aType: "",
         doc: "",
         room: "",
@@ -225,8 +215,9 @@
           step1: () => this.step1, //date and time
           step2: () => this.step2, //appointment type
           step3: () => this.step3, //doctor
-          step4: () => this.step4, //room
-          step5: () => this.step5,  //price
+          step4: () => this.step4, //time
+          step5: () => this.step5,  //room
+          step6: () => this.step6,  //price
           required: value => !!value || value === 0 || 'Field is required.',
           isNumber: value => !isNaN(value) || 'Price must be a number.',
           isBetween: value => (parseInt(value) >= 0 && parseInt(value) <= 100) || 'Discount must be between 0 and 100'
@@ -236,6 +227,7 @@
         step3: true,
         step4: true,
         step5: true,
+        step6: true,
       }
     },
     mounted() {
@@ -243,9 +235,6 @@
                     method: 'GET'
         }).then(response =>   {
             this.appTypes = response.data;
-        }).catch(error => {
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
         });
     },
     methods: {
@@ -254,13 +243,12 @@
         return today.toISOString();
       },
       getAppTypes: function() {
-        if (this.startDate == "" || this.startTime == "") {
+        if (this.startDate == "") {
           this.step1 = false;
           return;
         }
         this.step1 = true;
         var data = [];
-        //get prices for app type
         this.appTypes.forEach(el => {
           var type = {}
           if (el.doctors.length != 0) {
@@ -275,16 +263,16 @@
         this.e1 = 2;
       },
       getDoctors: function() {
-        if (this.appointment.appointmentType == "") {
+        if (this.appointment.type == "") {
           this.step2 = false;
           return;
         }
         this.step2 = true;
         var docs = [];
-        console.log(this.appointment.appointmentType);
+        console.log(this.appointment.type);
         this.appTypes.forEach(el => {
           console.log(el.id);
-          if (this.appointment.appointmentType == el.id) {
+          if (this.appointment.type == el.id) {
             this.appointment.discount = el.discount;
             el.doctors.forEach(doc => {
               var doctor = {
@@ -298,21 +286,43 @@
         this.doctors = docs;
         this.e1 = 3;
       },
-      getRooms: function() {
-        if (this.appointment.doctor == "") {
+      getTerms: function() {
+        if (this.appointment.doctorId == "") {
           this.step3 = false;
           return;
         }
         this.step3 = true;
-        this.appointment.startDateString = this.startDate + " " + this.startTime;
-        //console.log(date);
         this.e1 = 4;
-        this.axios({url : apiRooms, 
+        var queryData = {
+            requestDate: new Date(this.startDate).getTime(),
+            appointmentType: this.appointment.type,
+            doctorId: this.appointment.doctorId
+        };
+        this.axios({url : apiTerms, 
                     method: 'POST',
-                    data:  this.appointment.startDateString,
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    }
+                    data:  queryData
+        }).then(response =>   {
+            this.allTerms = [];
+            response.data.forEach(d => {
+              var date = new Date(d);
+              this.allTerms.push({
+                text: this.$util.dateToTerm(date),
+                value: date.getTime()
+              })
+            })
+        })
+      },
+
+      getRooms: function() {
+        if (this.startTime == "") {
+          this.step4 = false;
+          return;
+        }
+        this.step4 = true;
+        this.appointment.startDate = new Date(this.startTime);
+        this.e1 = 5;
+        this.axios({url : apiRooms + "/" + this.appointment.startDate.getTime(), 
+                    method: 'POST',
         }).then(response =>   {
             var rooms = response.data;
             var r = [];
@@ -325,38 +335,32 @@
             })
             this.freeRooms = rooms.rooms;
             this.rooms = r;
-            this.appointment.endDateLong = new Date(rooms.endDate);
-        }).catch(error => {
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
-        });
+        })
       },
       convertEndDate: function() {
-        if (this.appointment.room == "") {
-          this.step4 = false;
-          return;
-        }
-        this.step4 = true;
-        var date = this.appointment.endDateLong.toString();
-        var elem = date.split(" ")[4];
-        this.formattedEndDate = elem.substring(0, 5);
-        this.getAppInfo();
-        this.e1 = 5;
-      },
-      checkDiscount: function() {
-        if (this.appointment.discount === "") {
+        if (this.appointment.roomId == "") {
           this.step5 = false;
           return;
         }
         this.step5 = true;
+        this.getAppInfo();
         this.e1 = 6;
+      },
+      checkDiscount: function() {
+        if (this.appointment.discount === "") {
+          this.step6 = false;
+          return;
+        }
+        this.step6 = true;
+        this.e1 = 7;
+        this.formattedDate = this.$util.dateToFullTerm(this.appointment.startDate);
       },
       getAppInfo: function() {
         this.appTypes.forEach(el => {
-          if (el.id == this.appointment.appointmentType) {
+          if (el.id == this.appointment.type) {
             this.aType = el.name;
             el.doctors.forEach(doc => {
-              if (doc.id == this.appointment.doctor) {
+              if (doc.id == this.appointment.doctorId) {
                 this.doc = doc.name + " " + doc.surname;
               }
             });
@@ -364,29 +368,22 @@
         });
 
         this.freeRooms.forEach(el => {
-          if (el.id == this.appointment.room) {
+          if (el.id == this.appointment.roomId) {
             this.room = el.name;
           }
         });
       },
       finishAppointment: function() {
-        console.log(this.appointment);
-        this.appointment.endDateLong = this.appointment.endDateLong.getTime();
-        // ako bude bacao error proveri stringify za appointment al ne bi trebalo
         this.axios({url : apiAddApp, 
                     method: 'POST',
                     data:  this.appointment
-        }).then(response =>   {
-            console.log(response);
+        }).then(() =>   {
             this.$store.commit('showSnackbar', {text: "Appointment is successfully created!", color: "success", })
             this.$router.push({name : "home"}); 
-        }).catch(error => {
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "Couldn't add appointment! Please try again later.", color: "error", })
         });
       },
       redirect: function() {
-        this.$router.push({name : "home"}); //TODO ASK YES OR NO
+        this.$router.push({name : "home"});
       }
     }
 
@@ -396,11 +393,6 @@
 <style scoped>
 
 .my-datepicker {
-  width: 100%;
-  height: 30px;
-}
-
-.my-timepicker {
   width: 100%;
   height: 30px;
 }

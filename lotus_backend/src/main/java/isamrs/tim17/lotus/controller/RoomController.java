@@ -148,31 +148,25 @@ public class RoomController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
-	@PostMapping("/rooms/free")
+	@PostMapping("/rooms/free/{date}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<RoomDateDTO> getFreeRooms(@RequestBody String date) {
-		Date startDate = null;
-		try {
-			startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public ResponseEntity<Object> getFreeRooms(@PathVariable Long date) {
+		if (date == 0)
+			return new ResponseEntity<>("Invalid date for room terms!", HttpStatus.BAD_REQUEST);
+		Date startDate = new Date(date);
 
 		Date endDate = DateUtil.addMinutes(startDate, 30);
 
-		List<Room> rooms = service.findAll();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ClinicAdministrator admin = (ClinicAdministrator) auth.getPrincipal();
+		
+		List<Room> rooms = service.findByClinic(admin.getClinic());
 		List<RoomDTO> dto = new ArrayList<>();
 
 		for (Room r : rooms) {
-			boolean free = true;
-			for (Appointment a : r.getAppointments()) {
-				if (DateUtil.overlap(startDate, endDate, a.getStartDate(), a.getEndDate())) {
-					free = false;
-				}
-			}
-			if (free) {
+			CalendarEntry c = calService.findByDateAndRoom(r, startDate);
+			if (c == null)
 				dto.add(new RoomDTO(r));
-			}
 		}
 		RoomDateDTO roomDto = new RoomDateDTO(dto, endDate.getTime());
 		return new ResponseEntity<>(roomDto, HttpStatus.OK);

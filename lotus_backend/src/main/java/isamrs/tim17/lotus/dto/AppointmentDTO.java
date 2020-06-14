@@ -1,104 +1,107 @@
 package isamrs.tim17.lotus.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentStatus;
-import isamrs.tim17.lotus.model.MedicalRecord;
+import isamrs.tim17.lotus.model.Diagnosis;
+import isamrs.tim17.lotus.model.Prescription;
 
 public class AppointmentDTO {
-	
-	private long appId;
-	private long endDateLong;
-	private long doctor;
-	private long appointmentType;
-	private long room;
-	private Date endDate;
+	private long id;
 	private Date startDate;
-	private String startDateString;
+	private Date endDate;
+	private long doctorId;
+	private String doctorName;
+	private String doctorSurname;
+	private long roomId;
+	private String roomName;
+	private String type;
+	private long patientId;
+	private String patientName;
+	private String patientSurname;
+	private String clinic;
+	private List<String> diagnosis;
+	private List<String> recipes;
+	private boolean rated;
+	private String description;
 	private double price;
 	private double discount;
-	private PatientDTO patient;
-	private String roomName;
 	private AppointmentStatus status;
-
-	public AppointmentDTO() {}
 	
-	public AppointmentDTO(AppointmentDTO app) {
-		this.appId = app.getAppId();
+	public AppointmentDTO() {
+	}
+
+	public AppointmentDTO(Appointment app) {
+		this.setId(app.getId());
 		this.startDate = app.getStartDate();
 		this.endDate = app.getEndDate();
-		this.doctor = app.getDoctor();
-		this.appointmentType = app.getAppointmentType();
-		this.room = app.getRoom();
-		this.price = app.price;
-		this.discount = app.discount;
-	}
-	
-	public AppointmentDTO(Appointment app) {
-		this.appId = app.getId();
-		MedicalRecord record = app.getMedicalRecord();
-		if(record != null) {
-			this.patient = new PatientDTO(app.getMedicalRecord().getPatient());
+		this.doctorId = app.getDoctor().getId();
+		this.doctorName = app.getDoctor().getName();
+		this.doctorSurname = app.getDoctor().getSurname();
+		this.price = app.getPrice();
+		this.discount = app.getDiscount();
+		this.roomId = app.getRoom().getId();
+		this.roomName = app.getRoom().getName();		
+		this.setType(app.getAppointmentType().getName());
+		if (app.getMedicalRecord() != null) {
+			this.patientName = app.getMedicalRecord().getPatient().getName();
+			this.patientSurname = app.getMedicalRecord().getPatient().getSurname();
+			this.patientId = app.getMedicalRecord().getId();
+		} else {
+			this.patientName = "Not scheduled yet";
+			this.patientSurname = "";
 		}
-		this.roomName = app.getRoom().getName();
+		
+		this.recipes = new ArrayList<>();
+		if (!app.getPrescriptions().isEmpty()) {
+			Iterator<Prescription> it = app.getPrescriptions().iterator();
+			while (it.hasNext()) {
+				Prescription p = it.next();
+				recipes.add(p.getMedicine().getName());
+			}
+		}
+		
+		this.diagnosis = new ArrayList<>();
+		if (!app.getDiagnosis().isEmpty()) {
+			Iterator<Diagnosis> it = app.getDiagnosis().iterator();
+			while (it.hasNext()) {
+				Diagnosis d = it.next();
+				diagnosis.add(d.getName());
+			}
+		}
+		
 		this.status = app.getStatus();
-	}
-	
-	public String getRoomName() {
-		return roomName;
-	}
-
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+		this.rated = app.isReviewed();
+		this.setDescription(app.getInformation());
+		this.clinic = app.getClinic().getName();
 	}
 
-	public PatientDTO getPatient() {
-		return patient;
+	public String getPatientName() {
+		return patientName;
 	}
 
-	public void setPatient(PatientDTO patient) {
-		this.patient = patient;
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
 	}
 
-	public String getStartDateString() {
-		return startDateString;
+	public String getPatientSurname() {
+		return patientSurname;
 	}
 
-	public void setStartDateString(String startDateString) {
-		this.startDateString = startDateString;
+	public void setPatientSurname(String patientSurname) {
+		this.patientSurname = patientSurname;
 	}
 
-	public long getEndDateLong() {
-		return endDateLong;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setEndDateLong(long endDateLong) {
-		this.endDateLong = endDateLong;
-	}
-
-	public long getDoctor() {
-		return doctor;
-	}
-
-	public void setDoctor(long doctor) {
-		this.doctor = doctor;
-	}
-
-	public long getAppointmentType() {
-		return appointmentType;
-	}
-
-	public void setAppointmentType(long appointmentType) {
-		this.appointmentType = appointmentType;
-	}
-
-	public long getRoom() {
-		return room;
-	}
-
-	public void setRoom(long room) {
-		this.room = room;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 	public Date getEndDate() {
@@ -109,12 +112,112 @@ public class AppointmentDTO {
 		this.endDate = endDate;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public long getDoctorId() {
+		return doctorId;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setDoctorId(long doctorId) {
+		this.doctorId = doctorId;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getDoctorSurname() {
+		return doctorSurname;
+	}
+
+	public void setDoctorSurname(String doctorSurname) {
+		this.doctorSurname = doctorSurname;
+	}
+
+	public long getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(long roomId) {
+		this.roomId = roomId;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(String clinic) {
+		this.clinic = clinic;
+	}
+
+	public List<String> getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(List<String> diagnosis) {
+		this.diagnosis = diagnosis;
+	}
+
+	public List<String> getRecipes() {
+		return recipes;
+	}
+
+	public void setRecipes(List<String> recipes) {
+		this.recipes = recipes;
+	}
+
+	public boolean isRated() {
+		return rated;
+	}
+
+	public void setRated(boolean rated) {
+		this.rated = rated;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public double getPrice() {
@@ -133,14 +236,6 @@ public class AppointmentDTO {
 		this.discount = discount;
 	}
 
-	public long getAppId() {
-		return appId;
-	}
-
-	public void setAppId(long appId) {
-		this.appId = appId;
-	}
-
 	public AppointmentStatus getStatus() {
 		return status;
 	}
@@ -148,6 +243,10 @@ public class AppointmentDTO {
 	public void setStatus(AppointmentStatus status) {
 		this.status = status;
 	}
+	
+
+	
+	
 	
 	
 	
