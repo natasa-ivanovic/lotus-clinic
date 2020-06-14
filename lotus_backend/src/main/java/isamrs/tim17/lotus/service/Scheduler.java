@@ -68,7 +68,7 @@ public class Scheduler {
 			// get sve sobe iz klinike
 			List<Doctor> doctors = new ArrayList<>(rr.getDoctors());
 			Doctor doc = doctors.get(0);
-			Patient pat = patientService.findOne(rr.getPatient());
+			Patient pat = patientService.findOne(rr.getPatient().getId());
 			Clinic c = doc.getClinic();
 			List<Room> rooms = roomService.findByClinic(c);
 			for (Room r : rooms) {

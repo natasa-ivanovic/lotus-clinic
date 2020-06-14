@@ -52,6 +52,8 @@ import isamrs.tim17.lotus.model.DoctorReview;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Medicine;
 import isamrs.tim17.lotus.model.Nurse;
+import isamrs.tim17.lotus.model.Operation;
+import isamrs.tim17.lotus.model.OperationStatus;
 import isamrs.tim17.lotus.model.Patient;
 import isamrs.tim17.lotus.model.Prescription;
 import isamrs.tim17.lotus.model.RequestStatus;
@@ -70,6 +72,7 @@ import isamrs.tim17.lotus.service.DoctorReviewService;
 import isamrs.tim17.lotus.service.DoctorService;
 import isamrs.tim17.lotus.service.MailSenderService;
 import isamrs.tim17.lotus.service.MedicineService;
+import isamrs.tim17.lotus.service.OperationService;
 import isamrs.tim17.lotus.service.PatientService;
 import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.service.RoomService;
@@ -109,6 +112,8 @@ public class AppointmentController {
 	private DoctorReviewService doctorReviewService;
 	@Autowired
 	private AppointmentPriceService priceService;
+	@Autowired
+	private OperationService operationService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -723,48 +728,78 @@ public class AppointmentController {
 		RoomRequest rr = (RoomRequest) requestService.findOne(requestId);
 		if (room == null || rr == null || !rr.getStatus().equals(RequestStatus.PENDING))
 			return new ResponseEntity<>("Request already approved or declined!", HttpStatus.BAD_REQUEST);
-		if (rr.getType().equals(RoomRequestType.DOCTOR_OPER))
-			return new ResponseEntity<>("Allowed only for appointment requests!", HttpStatus.BAD_REQUEST);
+
 
 		List<Doctor> doctors = getDoctors(rr);
 		Doctor doctor = doctors.get(0);
-		Patient patient = patientService.findOne(rr.getPatient());
+		Patient patient = patientService.findOne(rr.getPatient().getId());
 		Clinic clinic = doctor.getClinic();
 
-		Appointment app = new Appointment();
-		if (rr.getType().equals(RoomRequestType.PATIENT_APP)) {
-			app.setRegKey(RandomUtil.buildAuthString());
-			app.setStatus(AppointmentStatus.UNCONFIRMED);
+		if(!rr.getType().equals(RoomRequestType.DOCTOR_OPER)) {
+			Appointment app = new Appointment();
+			if (rr.getType().equals(RoomRequestType.PATIENT_APP)) {
+				app.setRegKey(RandomUtil.buildAuthString());
+				app.setStatus(AppointmentStatus.UNCONFIRMED);
+			}
+			else
+				app.setStatus(AppointmentStatus.SCHEDULED);
+	
+			app.setRoom(room);
+			app.setClinic(clinic);
+			app.setDoctor(doctor);
+			app.setMedicalRecord(patient.getMedicalRecord());
+			app.setStartDate(startDate);
+			app.setEndDate(endDate);
+			app.setAppointmentType(doctor.getSpecialty().getType());
+			app.setPrice(rr.getPrice()); // sacuvana cena iz requesta
+			app.setDiscount(0);
+	
+			CalendarEntry entry = new CalendarEntry(app);
+			rr.setStatus(RequestStatus.APPROVED);
+	
+			try {
+				service.save(app, rr, entry); // pokusavamo sve da sacuvamo
+			} catch (Exception e) {
+				return new ResponseEntity<>("Room already scheduled for selected term!", HttpStatus.BAD_REQUEST);
+			}
+	
+			if (rr.getType().equals(RoomRequestType.PATIENT_APP))
+				mailSender.sendPatientRequest(app);
+			else
+				mailSender.sendPatientNotification(app);
+			mailSender.sendDoctorNotification(app); 
 		}
-		else
-			app.setStatus(AppointmentStatus.SCHEDULED);
-
-		app.setRoom(room);
-		app.setClinic(clinic);
-		app.setDoctor(doctor);
-		app.setMedicalRecord(patient.getMedicalRecord());
-		app.setStartDate(startDate);
-		app.setEndDate(endDate);
-		app.setAppointmentType(doctor.getSpecialty().getType());
-		app.setPrice(rr.getPrice()); // sacuvana cena iz requesta
-		app.setDiscount(0);
-
-		CalendarEntry entry = new CalendarEntry(app);
-		rr.setStatus(RequestStatus.APPROVED);
-
-		try {
-			service.save(app, rr, entry); // pokusavamo sve da sacuvamo
-		} catch (Exception e) {
-			return new ResponseEntity<>("Room already scheduled for selected term!", HttpStatus.BAD_REQUEST);
+		else {
+			Operation operation = new Operation();
+			operation.setStatus(OperationStatus.SCHEDULED);
+			operation.setRoom(room);
+			operation.setClinic(clinic);
+			Set<Doctor> doctors2 = new HashSet<>();
+			for (Doctor doc : rr.getDoctors()) {
+				doctors2.add(doc);
+			}
+			operation.setDoctor(doctors2);
+			operation.setMedicalRecord(patient.getMedicalRecord());
+			operation.setStartDate(startDate);
+			operation.setEndDate(endDate);
+			operation.setType(rr.getAppType());
+			operation.setPrice(rr.getPrice());
+			
+			List<CalendarEntry> calendarEntries = new ArrayList<>();
+			for (Doctor doc : rr.getDoctors()) {
+				calendarEntries.add(new CalendarEntry(operation, doc));
+			}
+			rr.setStatus(RequestStatus.APPROVED);
+			
+			try {
+				operationService.save(operation, calendarEntries);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Room already scheduled for selected term!", HttpStatus.BAD_REQUEST);
+			}
 		}
 
-		if (rr.getType().equals(RoomRequestType.PATIENT_APP))
-			mailSender.sendPatientRequest(app);
-		else
-			mailSender.sendPatientNotification(app);
-		mailSender.sendDoctorNotification(app);
-
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK); 
 
 	}
 

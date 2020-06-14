@@ -1,7 +1,5 @@
 package isamrs.tim17.lotus.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,8 +29,12 @@ import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.CalendarEntry;
 import isamrs.tim17.lotus.model.Clinic;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
+import isamrs.tim17.lotus.model.Doctor;
+import isamrs.tim17.lotus.model.Request;
 import isamrs.tim17.lotus.model.Room;
+import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.service.CalendarEntryService;
+import isamrs.tim17.lotus.service.RequestService;
 import isamrs.tim17.lotus.service.RoomService;
 import isamrs.tim17.lotus.util.DateUtil;
 
@@ -44,6 +46,8 @@ public class RoomController {
 	private RoomService service;
 	@Autowired
 	private CalendarEntryService calService;
+	@Autowired
+	private RequestService requestSevice;
 
 	/**
 	 * This method is used for adding a room.
@@ -176,28 +180,17 @@ public class RoomController {
 	@PostMapping("/rooms/terms")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getTermsForRooms(@RequestBody RoomRequestDTO request) {
-		if(request.isOperation()) {
-			return getTermsForRoomsAppointment(request);
-		}
-		else {
-			return getTermsForRoomsOperation(request);
-		}
+		return getTermsForRoomsAppointment(request);
 	}
 	
-	public ResponseEntity<Object> getTermsForRoomsOperation(RoomRequestDTO request) {
-		return null;
-	}
 	
 	public ResponseEntity<Object> getTermsForRoomsAppointment(RoomRequestDTO request) {
-		String date = request.getStartDate().getTime() + "";
-		if (date == null || "".equals(date))
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
-
-		long dateMili = Long.parseLong(date);
-		Date startDate = new Date(dateMili);
+		
+		RoomRequest req = requestSevice.findRoomOneById(request.getId());
+		Date startDate = request.getStartDate();
 
 		List<Date> allDays = DateUtil.getSevenDays(startDate);
 
@@ -223,6 +216,10 @@ public class RoomController {
 				List<Date> allTermsInDay = DateUtil.getAllTerms(d, true);
 				// pronadji prvi slobodan termin za tu sobu tog dana
 				List<Date> clearTerms = DateUtil.removeOverlap(allTermsInDay, entries);
+				for(Doctor doctor : req.getDoctors()) {
+					entries = calService.findByMedicalPersonAndDate(doctor, currentDate, endDate);
+					clearTerms = DateUtil.removeOverlap(clearTerms, entries);
+				}
 				Date firstTerm = !clearTerms.isEmpty() ? clearTerms.get(0) : null;
 				if (firstTerm != null) {
 					roomInfo.add(new RoomTermDTO(r, firstTerm));

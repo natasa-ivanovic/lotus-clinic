@@ -40,6 +40,10 @@ public class RequestService {
 		return requests.save(request);
 	}
 	
+	public RoomRequest findRoomOneById(Long id) {
+		return requests.findRoomOneById(id);
+	}
+	
 	public List<RegistrationRequest> findRegistrations() {
 		return requests.getAllRegistrations();
 	}
@@ -73,7 +77,11 @@ public class RequestService {
 	
 	public List<VacationRequest> getVacationRequests(Clinic clinic, RequestStatus status)
 	{
-		return requests.findByClinicAndStatus(clinic, status);
+		return requests.findVacationByClinicAndStatus(clinic, status);
+	}
+	
+	public List<RoomRequest> getRoomRequests(Clinic clinic, RequestStatus status) {
+		return requests.findRoomByClinicAndStatus(clinic, status);
 	}
 
 	public List<RoomRequest> findByDateRangeAndDoctor(Doctor d, Date startDate, Date endDate) {

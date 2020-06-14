@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import isamrs.tim17.lotus.model.Doctor;
-import isamrs.tim17.lotus.model.Patient;
+import isamrs.tim17.lotus.model.RoomRequest;
 
 public class RoomRequestDTO {
 	
@@ -21,28 +21,17 @@ public class RoomRequestDTO {
 		this.doctors = new ArrayList<>();
 		}
 	
-	public RoomRequestDTO(long id, Date date, Patient patient, Doctor doctor) {
+	public RoomRequestDTO(RoomRequest request) {
 		this();
-		this.id = id;
-		this.startDate = date;
-		this.patient = new UserDTO(patient);
+		this.id = request.getId();
+		this.startDate = request.getDate();
+		this.patient = new UserDTO(request.getPatient());
 		this.doctors = new ArrayList<>();
-		this.doctors.add(new UserDTO(doctor));
-		this.type = doctor.getSpecialty().getType().getName();
-		this.operation = false;
-	}
-	
-	public RoomRequestDTO(long id, Date date, Patient patient, List<Doctor> doctors, String type) {
-		this();
-		this.id = id;
-		this.startDate = date;
-		this.patient = new UserDTO(patient);
-		for (Doctor doctor : doctors) {
-			this.doctors.add(new UserDTO(doctor));
+		for(Doctor doctor : request.getDoctors()) {
+			doctors.add(new UserDTO(doctor));
 		}
-		this.type = type;
-		this.operation = true;
-		
+		this.type = request.getAppType().getName();
+		this.operation = request.getAppType().isOperation();
 	}
 
 	public String getType() {

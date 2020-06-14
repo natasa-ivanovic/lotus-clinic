@@ -98,7 +98,8 @@ export default {
             var el = {
                 room: item.id,
                 request: this.request.id,
-                startDate: millis
+                startDate: millis,
+                operation: this.request.operation
             }
             this.axios({
                 url: apiFinish,

@@ -23,8 +23,9 @@ import javax.persistence.ManyToOne;
 public class RoomRequest extends Request {
 	@Column(name = "date", nullable = true, unique = false)
 	private Date date;
-	@Column(name = "patient", nullable = true, unique = false)
-	private Long patient;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Patient patient;
 	
 	@Column(name="price", unique = false)
 	private double price;
@@ -40,7 +41,7 @@ public class RoomRequest extends Request {
 	
 	public RoomRequest() {}
 		
-	public RoomRequest(Date date, Long patient, Set<Doctor> doctors, RoomRequestType type, double price, AppointmentType appType) {
+	public RoomRequest(Date date, Patient patient, Set<Doctor> doctors, RoomRequestType type, double price, AppointmentType appType) {
 		super();
 		this.date = date;
 		this.patient = patient;
@@ -58,10 +59,10 @@ public class RoomRequest extends Request {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public Long getPatient() {
+	public Patient getPatient() {
 		return patient;
 	}
-	public void setPatient(Long patient) {
+	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
 	public Set<Doctor> getDoctors() {
