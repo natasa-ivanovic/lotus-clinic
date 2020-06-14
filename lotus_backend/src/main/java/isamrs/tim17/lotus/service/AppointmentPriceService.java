@@ -33,6 +33,10 @@ public class AppointmentPriceService {
 		return appointmentPrices.findByClinicId(c.getId());
 	}
 
+	public void remove(AppointmentPrice at) {
+		appointmentPrices.deleteById(at.getId());	
+	}
+
 	public Page<AppointmentPrice> findByClinicId(Clinic clinic, Pageable paging) {
 		return appointmentPrices.findAllByClinic(clinic, paging);
 	}

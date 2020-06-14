@@ -54,7 +54,7 @@ public class CalendarEntryController {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator user = (ClinicAdministrator) a.getPrincipal();
 		Room r = roomService.findOne(id);
-		if (r.getClinic().getId() !=  user.getClinic().getId()) 
+		if (!r.getClinic().getId().equals(user.getClinic().getId())) 
 			return new ResponseEntity<>("Cannot view another clinic's rooms calendar entries!", HttpStatus.BAD_REQUEST);
 		
 		List<CalendarEntry> entries = service.findByRoom(r);

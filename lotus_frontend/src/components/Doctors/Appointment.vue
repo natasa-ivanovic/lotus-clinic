@@ -320,6 +320,7 @@ export default {
                 }
               })
             });
+            this.medicine = [];
             this.appointment.recipes.forEach(recipe => {
               this.allMedicines.forEach(r => {
                 console.log(r.name)

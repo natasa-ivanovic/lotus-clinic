@@ -1,6 +1,5 @@
 package isamrs.tim17.lotus.model;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 @Entity
 @Table(name = "rooms")

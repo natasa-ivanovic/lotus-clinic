@@ -114,7 +114,7 @@ public class RequestController {
 			patient = user.getName() + " " + user.getSurname();
 			roomRequest = new RoomRequest(request.getStartDate(), (Patient)user, doctors, RoomRequestType.PATIENT_APP,
 					doc.getSpecialty().getPrice(), doc.getSpecialty().getType());
-		} else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId()) {
+		} else if (user.getRole().equals("DOCTOR") && user.getId().equals(doc.getId())) {
 			patient = doc.getName() + " " + doc.getSurname();
 			Patient pata = patientService.findOne(request.getPatient().getId());
 			roomRequest = new RoomRequest(request.getStartDate(),pata, doctors,

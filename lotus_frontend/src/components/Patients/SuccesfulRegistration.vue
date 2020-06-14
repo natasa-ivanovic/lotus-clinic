@@ -9,6 +9,13 @@
                 <v-card-text>
                 {{this.msg}}
                 </v-card-text>
+                <v-card-actions>
+                <v-row>
+                    <v-col>
+                    <v-btn color="success" @click="login()" block height=55>Login</v-btn>
+                    </v-col>
+                </v-row>
+                </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -26,7 +33,6 @@ export default {
             }).then(() =>   {                
                 this.msg = "Your request has been approved by our administrators. Please log in using the button on the top right."
             }).catch(() => {
-                // todo dodati da se zna tacno sta je
                 this.msg = "An error has occurred. Your request may have already been approved, or your request is invalid."
             });
     },
@@ -35,5 +41,10 @@ export default {
             msg: ""
         }
     },
+    methods: {    
+        login() {
+        this.$router.push({ name: "login"});
+        }
+    }
 }
 </script>

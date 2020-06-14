@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.AppointmentPriceDTO;
-import isamrs.tim17.lotus.dto.AppointmentTypeDTO;
 import isamrs.tim17.lotus.model.AppointmentPrice;
-import isamrs.tim17.lotus.model.AppointmentType;
 import isamrs.tim17.lotus.model.ClinicAdministrator;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.User;
@@ -45,7 +44,7 @@ public class AppointmentPriceController {
 	
 	@GetMapping("")
 	@PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
-	public ResponseEntity<List<AppointmentPriceDTO>> getallAppointmentPrices() {
+	public ResponseEntity<List<AppointmentPriceDTO>> getAllAppointmentPrices() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) a.getPrincipal();
 		List<AppointmentPrice> priceList = new ArrayList<>();
@@ -65,6 +64,29 @@ public class AppointmentPriceController {
 		return new ResponseEntity<>(priceListDTO, HttpStatus.OK);
 	}
 	
+	@GetMapping("/apps")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<AppointmentPriceDTO>> getAllAppointmentPricesNoOperation() {
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) a.getPrincipal();
+		List<AppointmentPrice> priceList = new ArrayList<>();
+		
+		if(user.getRole().equals("ADMIN"))
+			priceList = service.findByClinicId(((ClinicAdministrator) user).getClinic());
+		else if (user.getRole().equals("DOCTOR"))
+			priceList = service.findByClinicId(((Doctor) user).getClinic());
+		else
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		List<AppointmentPriceDTO> priceListDTO = new ArrayList<>();
+		for(AppointmentPrice ap : priceList)
+		{
+			if (!ap.getType().isOperation())
+				priceListDTO.add(new AppointmentPriceDTO(ap));
+		}
+		return new ResponseEntity<>(priceListDTO, HttpStatus.OK);
+	}
+		
 	@GetMapping("/pages")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getAllAppointmentPrices(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -97,9 +119,6 @@ public class AppointmentPriceController {
 			}
 		});
 		return new ResponseEntity<>(dto, HttpStatus.OK);
-
-		
-		
 	}
 	
 	@PostMapping("")
@@ -145,5 +164,20 @@ public class AppointmentPriceController {
 		at.setDiscount(newAppointmentPrice.getDiscount());
 		service.save(at);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> deleteType(@PathVariable("id") long id) {
+		AppointmentPrice at = service.findOne(id);
+
+		if (at == null)
+			return new ResponseEntity<>("Appointment type not found!", HttpStatus.BAD_REQUEST);
+		try { 
+			service.remove(at);			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Appointment price is in use!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(at, HttpStatus.OK);
 	}
 }

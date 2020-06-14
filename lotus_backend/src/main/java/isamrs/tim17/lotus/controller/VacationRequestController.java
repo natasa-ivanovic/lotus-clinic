@@ -76,7 +76,7 @@ public class VacationRequestController {
 		} else {
 			Doctor doctor = (Doctor) user;
 			// provera da li trazi godisnji, a ima obaveze
-			List<CalendarEntry> work = calendarEntryService.findByMedicalPersonAndDate(user, startDate, endDate);
+			List<CalendarEntry> work = calendarEntryService.getAllBetweenDatesForDoctorNoVacation(user, startDate, endDate);
 			if (!work.isEmpty())
 				return new ResponseEntity<>("You have scheduled appointments and/or operations in this period of time!", HttpStatus.BAD_REQUEST);
 			request.setStartDate(startDate);

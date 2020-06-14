@@ -83,6 +83,7 @@ export default {
       this.axios({url : requestUrl, 
                     method: 'GET'
         }).then(response =>   {
+            this.appTypes = response.data;
             this.appTypes = response.data.content;
             this.totalItems = response.data.totalElements;
             this.loading = false;
@@ -97,11 +98,7 @@ export default {
            // test this
            this.appTypes.splice(this.appTypes.indexOf(type), 1);
            this.$store.commit('showSnackbar', {text: "Successfully deleted appointment type.", color: "success", })
-        }).catch(error => {
-            console.log(error.request);
-            // navesti razlog errora
-            this.$store.commit('showSnackbar', {text: "Couldn't delete appointment type!", color: "error", })
-        });
+        })
     },
     editAppType: function(editId) {
       this.$router.push({name: "editAppointmentType", params: {id : editId}});

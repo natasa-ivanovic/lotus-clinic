@@ -1,9 +1,6 @@
 package isamrs.tim17.lotus.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +24,6 @@ import isamrs.tim17.lotus.dto.PatientDTO;
 import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.model.Allergy;
 import isamrs.tim17.lotus.model.Appointment;
-import isamrs.tim17.lotus.model.AppointmentStatus;
 import isamrs.tim17.lotus.model.Doctor;
 import isamrs.tim17.lotus.model.MedicalRecord;
 import isamrs.tim17.lotus.model.Patient;
@@ -36,7 +32,6 @@ import isamrs.tim17.lotus.service.AllergyService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.MedicalRecordService;
 import isamrs.tim17.lotus.service.PatientService;
-import javassist.Loader.Simple;
 
 @RestController
 @RequestMapping("/api")

@@ -1,7 +1,5 @@
 package isamrs.tim17.lotus.model;
 
-import java.util.Date;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

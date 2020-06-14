@@ -124,7 +124,7 @@ public class OperationController {
 		Set<Doctor> docs = operation.getDoctor();
 		Iterator<Doctor> it = docs.iterator();
 		while(it.hasNext()) {
-			if (it.next().getId() == doctor.getId()) {
+			if (it.next().getId().equals(doctor.getId())) {
 				check = true;
 				break;
 			}

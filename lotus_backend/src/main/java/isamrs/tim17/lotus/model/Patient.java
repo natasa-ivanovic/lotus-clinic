@@ -5,7 +5,6 @@ package isamrs.tim17.lotus.model;
  * Purpose: Defines the Class Patient
  ***********************************************************************/
 
-import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;

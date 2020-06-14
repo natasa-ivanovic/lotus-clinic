@@ -1,6 +1,5 @@
 package isamrs.tim17.lotus.model;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 

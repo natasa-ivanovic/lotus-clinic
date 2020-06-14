@@ -2,6 +2,7 @@
   <div>
     <v-container>
       <v-row align="center" justify="center">
+        <v-col cols="6">
         <v-card class="elevation-3">
           <v-toolbar flat color="white" >
             <v-toolbar-title>Add appointment type</v-toolbar-title>
@@ -32,6 +33,7 @@
             </v-card-actions>
           </v-card-text>
         </v-card>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -39,7 +41,7 @@
 
 <script>
 const apiURL = "/api/appointmentPrices";
-const apiTypes = "/api/appointmentTypes";
+const apiTypes = "/api/appointmentTypes/available";
 export default {
     name: "addAppointmentPrice",
     data() {
