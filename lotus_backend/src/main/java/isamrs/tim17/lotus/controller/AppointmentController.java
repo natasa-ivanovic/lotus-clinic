@@ -565,7 +565,7 @@ public class AppointmentController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Appointment appointment = service.findOne(id);
-		appointment.setReviewed(true);
+		appointment.setReceptApproved(true);
 		service.save(appointment);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
