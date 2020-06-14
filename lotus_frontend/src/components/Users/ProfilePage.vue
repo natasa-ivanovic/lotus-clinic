@@ -110,7 +110,6 @@
 </template>
 
 <script>
-import {util} from '../../util.js'
 import MedicalRecord from '../MedicalRecord/MedicalRecord'
 
 const apiURL = "/api";
@@ -152,11 +151,11 @@ export default {
                 this.user = res.data.patient;
                 this.id = res.data.patient.id;
                 this.record = res.data.record;
-                this.dateString = util.dateToString(res.data.patient.birthDate);
+                this.dateString = this.$util.dateToPickerString(new Date(res.data.patient.birthDate));
                 this.selectedGender = res.data.patient.gender.charAt(0) + res.data.patient.gender.slice(1).toLowerCase();
             } else {
                 this.user= res.data;
-                this.dateString = util.dateToString(res.data.birthDate);
+                this.dateString = this.$util.dateToPickerString(new Date(res.data.birthDate));
                 this.selectedGender = res.data.gender.charAt(0) + res.data.gender.slice(1).toLowerCase();
             }
         }).catch(error => {

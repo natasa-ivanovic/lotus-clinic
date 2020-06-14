@@ -1,7 +1,5 @@
 package isamrs.tim17.lotus.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -32,14 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.ClinicDTO;
 import isamrs.tim17.lotus.dto.DiagnosisDTO;
 import isamrs.tim17.lotus.dto.DoctorDTO;
 import isamrs.tim17.lotus.dto.MedicineDTO;
 import isamrs.tim17.lotus.dto.MedicineDiagnosisDTO;
 import isamrs.tim17.lotus.dto.PatientRequest;
-import isamrs.tim17.lotus.dto.PremadeAppDTO;
+import isamrs.tim17.lotus.dto.AppointmentDTO;
 import isamrs.tim17.lotus.dto.RoomAndRequestDTO;
 import isamrs.tim17.lotus.model.Appointment;
 import isamrs.tim17.lotus.model.AppointmentPrice;
@@ -62,6 +59,7 @@ import isamrs.tim17.lotus.model.Room;
 import isamrs.tim17.lotus.model.RoomRequest;
 import isamrs.tim17.lotus.model.RoomRequestType;
 import isamrs.tim17.lotus.model.User;
+import isamrs.tim17.lotus.service.AppointmentPriceService;
 import isamrs.tim17.lotus.service.AppointmentService;
 import isamrs.tim17.lotus.service.AppointmentTypeService;
 import isamrs.tim17.lotus.service.CalendarEntryService;
@@ -109,6 +107,8 @@ public class AppointmentController {
 	private ClinicReviewService clinicReviewService;
 	@Autowired
 	private DoctorReviewService doctorReviewService;
+	@Autowired
+	private AppointmentPriceService priceService;
 
 	@GetMapping("/appointments")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
@@ -137,13 +137,13 @@ public class AppointmentController {
 	 */
 	@GetMapping("/appointments/premade")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<List<PremadeAppDTO>> getPremadeApps() {
+	public ResponseEntity<List<AppointmentDTO>> getPremadeApps() {
 		List<Appointment> app = service.findByStatus(AppointmentStatus.PREMADE);
 		if (app == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		List<PremadeAppDTO> dto = new ArrayList<>();
+		List<AppointmentDTO> dto = new ArrayList<>();
 		for (Appointment a : app) {
-			dto.add(new PremadeAppDTO(a));
+			dto.add(new AppointmentDTO(a));
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
@@ -184,17 +184,17 @@ public class AppointmentController {
 	 */
 	@GetMapping("/appointments/patient")
 	@PreAuthorize("hasRole('PATIENT')")
-	public ResponseEntity<List<PremadeAppDTO>> getMyAppointments() {
+	public ResponseEntity<List<AppointmentDTO>> getMyAppointments() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Patient patient = (Patient) a.getPrincipal();
 
 		List<Appointment> apps = service.findByMedicalRecord(patient.getMedicalRecord());
 		if (apps == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		List<PremadeAppDTO> dto = new ArrayList<>();
+		List<AppointmentDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 			if (app.getStatus().equals(AppointmentStatus.SCHEDULED))
-				dto.add(new PremadeAppDTO(app));
+				dto.add(new AppointmentDTO(app));
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
@@ -291,10 +291,10 @@ public class AppointmentController {
 		}
 		if (apps == null)
 			return new ResponseEntity<>("Something went wrong. Please try again later.", HttpStatus.BAD_REQUEST);
-		Page<PremadeAppDTO> dto = apps.map(new Function<Appointment, PremadeAppDTO>() {
+		Page<AppointmentDTO> dto = apps.map(new Function<Appointment, AppointmentDTO>() {
 			@Override
-			public PremadeAppDTO apply(Appointment app) {
-				return new PremadeAppDTO(app);
+			public AppointmentDTO apply(Appointment app) {
+				return new AppointmentDTO(app);
 			}
 		});
 		return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -350,9 +350,46 @@ public class AppointmentController {
 	}
 
 	/**
+<<<<<<< HEAD
+	 * This method is used to return a list of free terms for doctors which can do a
+	 * specific type of appointment. It returns either a list of doctors and their
+	 * free terms or a list of clinics which a list of doctors and their free terms.
+	 * 
+	 * @param pr Patient request object which contains the requestDate,
+	 *           appointmentType and a boolean which indicates whether the user
+	 *           wants to see clinics or just their doctors.
+	 * @return ResponseEntity This returns the HTTP status code along the objects
+	 *         that were requested.
+	 */
+	@PostMapping("/appointments/free_doctors")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> doctorTerms(@RequestBody PatientRequest pr) {
+		if (pr.getRequestDate() == 0)
+			return new ResponseEntity<>("No date specified!", HttpStatus.BAD_REQUEST);
+		Date date = new Date(pr.getRequestDate());
+		AppointmentPrice price = priceService.findOne(pr.getAppointmentType());
+		if (price == null)
+			return new ResponseEntity<>("No appointment type specified!", HttpStatus.BAD_REQUEST);
+		Doctor doctor = doctorService.findOne(pr.getDoctorId());
+		List<Doctor> doctors = new ArrayList<>();
+		doctors.add(doctor);
+		List<DoctorDTO> results = getDoctorTerms(doctors, price.getType(), date);
+		if (results.isEmpty())
+			return new ResponseEntity<>("Doctor has no free terms that day!", HttpStatus.BAD_REQUEST);
+		List<Date> availableTimes = results.get(0).getAvailableTimes();
+		return new ResponseEntity<>(availableTimes, HttpStatus.OK);
+	}
+	
+	
+	/**
 	 * This method is used to get free terms for all doctors in forwarded collection
 	 * for a specific day and type.
 	 * 
+=======
+	 * This method is used to get free terms for all doctors in forwarded collection
+	 * for a specific day and type.
+	 * 
+>>>>>>> master
 	 * @param doctors   Collection<Doctor> which is iterated through and checked for
 	 *                  equality with requested appointment type
 	 * @param type      AppointmentType which was requested by the patient
@@ -363,12 +400,15 @@ public class AppointmentController {
 	private List<DoctorDTO> getDoctorTerms(Collection<Doctor> doctors, AppointmentType type, Date startDate) {
 		Iterator<Doctor> docIt = doctors.iterator();
 		List<DoctorDTO> results = new ArrayList<>();
+		startDate = DateUtil.cleanDate(startDate);
 		while (docIt.hasNext()) {
 			Doctor d = docIt.next();
 			if (d.getSpecialty().getType().getId() != type.getId()) {
 				continue;
 			}
 			List<Date> availableDates = DateUtil.getAllTerms(startDate, false);
+			if (availableDates.isEmpty())
+				continue;
 			Date endDate = DateUtil.endOfDay(startDate);
 			List<CalendarEntry> calendarEntries = calendarService.findByMedicalPersonAndDate(d, startDate, endDate);
 			availableDates = DateUtil.removeOverlap(availableDates, calendarEntries);
@@ -477,20 +517,20 @@ public class AppointmentController {
 	 */
 	@GetMapping("/appointments/doctor")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getDoctorAppointments() {
+	public ResponseEntity<List<AppointmentDTO>> getDoctorAppointments() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 
 		List<Appointment> apps = service.findByDoctor(doctor);
 		if (apps == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		List<PremadeAppDTO> dto = new ArrayList<>();
+		List<AppointmentDTO> dto = new ArrayList<>();
 		for (Appointment app : apps) {
 
 			// TODO check if premade appointments should be here
 			if (app.getStatus() == AppointmentStatus.PREMADE || app.getStatus() == AppointmentStatus.CANCELED)
 				continue;
-			PremadeAppDTO newDTO = new PremadeAppDTO(app);
+			AppointmentDTO newDTO = new AppointmentDTO(app);
 			dto.add(newDTO);
 		}
 		return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -498,7 +538,7 @@ public class AppointmentController {
 
 	@PostMapping("/appointments/doctor/today")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getTodaysAppointment(@RequestBody String startDate) {
+	public ResponseEntity<List<AppointmentDTO>> getTodaysAppointment(@RequestBody String startDate) {
 		// TODO mozda promeniti ovo da bude long ipak
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
@@ -509,10 +549,10 @@ public class AppointmentController {
 		Date end = period.get("end");
 
 		List<Appointment> apps = service.findByDate(doctor, start, end);
-		List<PremadeAppDTO> info = new ArrayList<>();
+		List<AppointmentDTO> info = new ArrayList<>();
 		for (Appointment app : apps) {
 			if (app.getStatus() == AppointmentStatus.SCHEDULED) {
-				PremadeAppDTO dto = new PremadeAppDTO(app);
+				AppointmentDTO dto = new AppointmentDTO(app);
 				info.add(dto);
 
 			}
@@ -522,7 +562,7 @@ public class AppointmentController {
 
 	@GetMapping("appointments/finished")
 	@PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getFinishedAppointments(@RequestBody String patientId) {
+	public ResponseEntity<List<AppointmentDTO>> getFinishedAppointments(@RequestBody String patientId) {
 
 		if (patientId == null || "".equals(patientId))
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -531,9 +571,9 @@ public class AppointmentController {
 		Patient patient = patientService.findOne(id);
 
 		List<Appointment> apps = service.findFinished(patient.getMedicalRecord());
-		List<PremadeAppDTO> finished = new ArrayList<>();
+		List<AppointmentDTO> finished = new ArrayList<>();
 		for (Appointment app : apps) {
-			PremadeAppDTO dto = new PremadeAppDTO(app);
+			AppointmentDTO dto = new AppointmentDTO(app);
 			finished.add(dto);
 		}
 
@@ -542,15 +582,17 @@ public class AppointmentController {
 
 	@GetMapping("appointments/nurse")
 	@PreAuthorize("hasRole('NURSE')")
-	public ResponseEntity<List<PremadeAppDTO>> getAppointmentsForNurse() {
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsForNurse() {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Nurse nurse = (Nurse) a.getPrincipal();
 
 		List<Appointment> apps = service.findByClinicAndStatusAndReviewed(nurse.getClinic(), AppointmentStatus.FINISHED,
 				false);
-		List<PremadeAppDTO> appsDtos = new ArrayList<>();
+
+		List<AppointmentDTO> appsDtos = new ArrayList<>();
 		for (Appointment app : apps) {
-			appsDtos.add(new PremadeAppDTO(app));
+			appsDtos.add(new AppointmentDTO(app));
+
 		}
 		return new ResponseEntity<>(appsDtos, HttpStatus.OK);
 	}
@@ -595,25 +637,24 @@ public class AppointmentController {
 	
 	@PostMapping("/appointments")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Appointment> addAppointment(@RequestBody AppointmentDTO app) {
+	public ResponseEntity<Object> addAppointment(@RequestBody AppointmentDTO app) {
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
 
-		SimpleDateFormat sdfStart = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date start = null;
-		Date end = new Date(app.getEndDateLong());
-		try {
-			start = sdfStart.parse(app.getStartDateString());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Room room = roomService.findOne(app.getRoom());
+		Date start = app.getStartDate();
+		Room room = roomService.findOne(app.getRoomId());
+		if (room == null)
+			return new ResponseEntity<>("Room isn't selected!", HttpStatus.BAD_REQUEST);
+		Doctor doc = doctorService.findOne(app.getDoctorId());
+		if (doc == null)
+			return new ResponseEntity<>("Doctor isn't selected!", HttpStatus.BAD_REQUEST);
 
-		Doctor doc = doctorService.findOne(app.getDoctor());
-
+		
 		AppointmentPrice at = doc.getSpecialty();
 
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
+
+		Date end = DateUtil.addMinutes(start, 30);
 
 		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room,
 				clinic);
@@ -625,7 +666,7 @@ public class AppointmentController {
 
 	@PostMapping("/appointments/finish")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<Object> finishAppointment(@RequestBody PremadeAppDTO app) {
+	public ResponseEntity<Object> finishAppointment(@RequestBody AppointmentDTO app) {
 		if (app == null || app.getId() <= 0 || app.getDiagnosis().isEmpty() || app.getDiagnosis() == null
 				|| app.getRecipes() == null || app.getRecipes().isEmpty() || app.getDescription() == null
 				|| "".equals(app.getDescription())) {
@@ -790,15 +831,15 @@ public class AppointmentController {
 	
 	@GetMapping("/appointments/doctor/patient/{id}")
 	@PreAuthorize("hasRole('DOCTOR')")
-	public ResponseEntity<List<PremadeAppDTO>> getAppointmentDoctorPatient(@PathVariable("id") long id){
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentDoctorPatient(@PathVariable("id") long id){
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
 		Doctor doctor = (Doctor) a.getPrincipal();
 		
 		Patient patient = patientService.findOne(id);
 		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.SCHEDULED, patient.getMedicalRecord());
-		List<PremadeAppDTO> appointmentDTOs = new ArrayList<>();
+		List<AppointmentDTO> appointmentDTOs = new ArrayList<>();
 		for(Appointment app : appointments) {
-			appointmentDTOs.add(new PremadeAppDTO(app));
+			appointmentDTOs.add(new AppointmentDTO(app));
 		}
 		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
 	}

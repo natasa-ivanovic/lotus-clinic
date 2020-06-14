@@ -122,6 +122,7 @@ insert into allergies_medical_records (allergies_id, medical_records_patient_id)
 insert into allergies_medical_records (allergies_id, medical_records_patient_id) values (4, 3);
 
 /* appointments and calendar entries */
+
 insert into appointments (start_date, end_date, price, discount, status, appointment_type_id, room_id, doctor_id, clinic_id, medical_record_patient_id, reviewed, information, version) values ('2020-06-12 17:25:00.508-07', '2020-06-12 17:55:00.508-07', 100, 0, 4, 1, 1, 4, 1, 1, false, 'Patient reports coughing up blood, chest pains for over a week and night sweats.', 0);
 insert into calendar (start_date, end_date, medical_person_id, appointment_id, room_id) values('2020-06-12 17:25:00.508-07', '2020-06-12 17:55:00.508-07', 4, 1, 1);
 

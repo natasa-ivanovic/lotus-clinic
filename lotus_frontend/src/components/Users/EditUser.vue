@@ -110,8 +110,6 @@
 </template>
 
 <script>
-import {util} from '../../util.js'
-
 const apiURL = "/api";
 
 export default {
@@ -163,11 +161,11 @@ export default {
           if (this.$role == "PATIENT") {
                 this.user = user.patient;
                 this.record = user.record;
-                this.dateString = util.dateToString(user.patient.birthDate);
+                this.dateString = this.$util.dateToPickerString(new Date(user.patient.birthDate));
                 this.selectedGender = user.patient.gender.charAt(0) + user.patient.gender.slice(1).toLowerCase();
           } else {
               this.user = user;
-              this.dateString = util.dateToString(user.birthDate);
+              this.dateString = this.$util.dateToPickerString(new Date(user.birthDate));
               this.selectedGender = user.gender.charAt(0) + user.gender.slice(1).toLowerCase();
           }
         }).catch(error => {

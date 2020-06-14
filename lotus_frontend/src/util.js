@@ -1,32 +1,23 @@
-export const util = {
-    dateToString: (date) => {
-        return date.split("T")[0];
-    },
-    /*refreshToken: () => {
-        fetch(this.$apiURL + "/auth/refresh", {headers: {'Authorization': this.$authKey }})
-            .then(response => {
-                return response.json();
-            })
-            .then(response => {
-                if (response.status == 200) {
-                    this.$authKey = response.accesToken;
-                    return true;
-                } else 
-                    return false;
-            })
-            .except(()) => {
-                return false;
-            })
-    },*/
-    /*logout: function() {
-        console.log(this.$role);
-        console.log(this.$authKey);
-        this.$role = null;
-        this.$authKey = null;
-        console.log(this.$role);
-        console.log(this.$authKey);
-        localStorage.removeItem('authKey');
-        localStorage.removeItem('role');
-        router.push({ name: "login" })
-      }*/
+const dateToString = (date) => {
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        month =  (month < 10)? "0" + month.toString() : month.toString();
+        day = (day < 10)? "0" + day.toString() : day.toString();
+        var year = date.getFullYear();
+        return day + "-" + month + "-" + year;
+    };
+
+const dateToTerm = (date) => {
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        hour =  (hour < 10)? "0" + hour.toString() : hour.toString();
+        minute = (minute < 10)? "0" + minute.toString() : minute.toString();
+        return hour + ":" + minute;        
+    };
+const dateToFullTerm = (date) => {
+        return dateToTerm(date) + " " + dateToString(date); 
+    };
+const dateToPickerString = (date) => {
+    return date.toISOString().split("T")[0];
 }
+export default {dateToString, dateToTerm, dateToFullTerm, dateToPickerString};

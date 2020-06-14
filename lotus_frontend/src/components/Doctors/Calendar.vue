@@ -180,7 +180,6 @@ const apiURL = "/api/calendarentries"
             var appId = '';
             var cancel = false;
             var appointment = false;
-          
             for(var i = 0; i < this.appointments.length; i++)
             {
               if(this.appointments[i].appointment != null)
@@ -191,19 +190,13 @@ const apiURL = "/api/calendarentries"
                 if(!startApp) {
                   color = 'grey';
                   cancel = false;
-                  
                 }
                 appointment = true;
                 name = 'Appointment';
                 room = this.appointments[i].appointment.roomName;
                 appId = this.appointments[i].id;
-                if(this.appointments[i].appointment.patient != null) {
-                  patientName = this.appointments[i].appointment.patient.patient.name;
-                  patientSurname = this.appointments[i].appointment.patient.patient.surname;
-                } else {
-                  patientName = 'Not scheduled yet';
-                  patientSurname = '';
-                }
+                patientName = this.appointments[i].appointment.patientName;
+                patientSurname = this.appointments[i].appointment.patientSurname;
               } else if (this.appointments[i].operation != null) {
                 appointment = false;
                 color = 'orange';
@@ -230,6 +223,7 @@ const apiURL = "/api/calendarentries"
                 patientName = '';
                 patientSurname = '';
                 cancel = false;
+                startApp = false;
               }
               this.events.push(Object.assign({}, {
                 name: name,
@@ -244,11 +238,7 @@ const apiURL = "/api/calendarentries"
                 cancel : cancel,
                 startApp : startApp
               }))}
-        }).catch(error => {
-          alert(error)
-            console.log(error.request);
-            this.$store.commit('showSnackbar', {text: "An error has occurred! Please try again later.", color: "error", })
-        });
+        })
     },
     methods: {
       viewDay ({ date }) {
