@@ -1,7 +1,9 @@
-# lotus_frontend
+# lotus_clinic
 
 ## Potrebno je imati instaliran Node Package Manager
-
+```
+https://nodejs.org/en/download/package-manager/
+```
 ## Instaliranje svih zavisnosti
 ```
 npm install
