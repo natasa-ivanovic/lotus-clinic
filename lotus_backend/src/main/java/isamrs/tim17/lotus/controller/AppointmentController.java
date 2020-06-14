@@ -1,7 +1,5 @@
 package isamrs.tim17.lotus.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -352,6 +350,7 @@ public class AppointmentController {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * This method is used to return a list of free terms for doctors which can do a
 	 * specific type of appointment. It returns either a list of doctors and their
 	 * free terms or a list of clinics which a list of doctors and their free terms.
@@ -386,6 +385,11 @@ public class AppointmentController {
 	 * This method is used to get free terms for all doctors in forwarded collection
 	 * for a specific day and type.
 	 * 
+=======
+	 * This method is used to get free terms for all doctors in forwarded collection
+	 * for a specific day and type.
+	 * 
+>>>>>>> master
 	 * @param doctors   Collection<Doctor> which is iterated through and checked for
 	 *                  equality with requested appointment type
 	 * @param type      AppointmentType which was requested by the patient
@@ -584,9 +588,11 @@ public class AppointmentController {
 
 		List<Appointment> apps = service.findByClinicAndStatusAndReviewed(nurse.getClinic(), AppointmentStatus.FINISHED,
 				false);
+
 		List<AppointmentDTO> appsDtos = new ArrayList<>();
 		for (Appointment app : apps) {
 			appsDtos.add(new AppointmentDTO(app));
+
 		}
 		return new ResponseEntity<>(appsDtos, HttpStatus.OK);
 	}
@@ -647,7 +653,9 @@ public class AppointmentController {
 		AppointmentPrice at = doc.getSpecialty();
 
 		Clinic clinic = clinicService.findOne(admin.getClinic().getId());
+
 		Date end = DateUtil.addMinutes(start, 30);
+
 		Appointment newApp = new Appointment(start, end, at.getPrice(), app.getDiscount(), at.getType(), doc, room,
 				clinic);
 		service.save(newApp);
@@ -819,6 +827,21 @@ public class AppointmentController {
 		}
 
 		return doctors;
+	}
+	
+	@GetMapping("/appointments/doctor/patient/{id}")
+	@PreAuthorize("hasRole('DOCTOR')")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentDoctorPatient(@PathVariable("id") long id){
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		Doctor doctor = (Doctor) a.getPrincipal();
+		
+		Patient patient = patientService.findOne(id);
+		List<Appointment> appointments = service.findByDoctorAndStatusAndMedicalRecord(doctor, AppointmentStatus.SCHEDULED, patient.getMedicalRecord());
+		List<AppointmentDTO> appointmentDTOs = new ArrayList<>();
+		for(Appointment app : appointments) {
+			appointmentDTOs.add(new AppointmentDTO(app));
+		}
+		return new ResponseEntity<>(appointmentDTOs, HttpStatus.OK);
 	}
 
 }

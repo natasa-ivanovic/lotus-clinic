@@ -29,5 +29,5 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
 	
 	CalendarEntry findOneByRoomAndStartDate(Room r, Date d);
 	List<CalendarEntry> findAllByRoom(Room r);
-		
+
 }

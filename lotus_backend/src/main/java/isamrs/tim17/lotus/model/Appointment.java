@@ -62,7 +62,6 @@ public class Appointment {
 	private Set<Diagnosis> diagnosis = new HashSet<>();
 	@OneToMany(mappedBy="appointment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Prescription> prescriptions = new HashSet<>();
-	
 	@Column(name="reviewed", unique = false, nullable=false)
 	private boolean reviewed;
 	

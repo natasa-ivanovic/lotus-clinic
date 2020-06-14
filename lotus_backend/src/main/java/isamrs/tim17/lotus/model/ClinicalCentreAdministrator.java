@@ -26,12 +26,6 @@ public class ClinicalCentreAdministrator extends User {
 	private Set<Request> requests = new HashSet<>();
 	
 	public ClinicalCentreAdministrator() {}
-	
-	public ClinicalCentreAdministrator(String email, String password, String name, String surname, String address, String city, String country,
-			String phoneNumber, long id, Date birthDate, Gender gender, ClinicalCentre clinicalCentre) {
-		super(email, password, name, surname, address, city, country, phoneNumber, id, birthDate, gender);
-		this.clinicalCentre = clinicalCentre;
-	}
 
 	public ClinicalCentre getClinicalCentre() {
 		return clinicalCentre;

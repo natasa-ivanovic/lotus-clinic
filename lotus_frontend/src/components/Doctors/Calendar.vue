@@ -51,7 +51,7 @@
           color="primary"
           :events="events"
           :event-color="getEventColor"
-          :now="today"
+
           :type="type"
           @click:event="showEvent"
           @click:more="viewDay"

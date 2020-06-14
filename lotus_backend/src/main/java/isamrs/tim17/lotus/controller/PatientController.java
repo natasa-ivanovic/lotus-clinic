@@ -2,8 +2,12 @@ package isamrs.tim17.lotus.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import isamrs.tim17.lotus.dto.PatientDTO;
@@ -45,13 +50,18 @@ public class PatientController {
 	 */
 	@GetMapping("/patients")
 	@PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
-	public ResponseEntity<List<UserDTO>> getPatients() {
-		List<Patient> patients = service.findAll();
-		List<UserDTO> patientsDTO = new ArrayList<>();
-		for (Patient p : patients) {
-			patientsDTO.add(new UserDTO(p));
-		}
-		return new ResponseEntity<>(patientsDTO, HttpStatus.OK);
+	public ResponseEntity<Page<UserDTO>> getPatients(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10")Integer pageSize,@RequestParam(defaultValue = "") String name,
+			@RequestParam(defaultValue = "") String surname, @RequestParam(defaultValue = "")String ssid) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Patient> patients = service.findPatients(name, surname, ssid, paging);
+		Page<UserDTO> patientDtos = patients.map(new Function<Patient, UserDTO>() {
+			@Override
+			public UserDTO apply(Patient patient) {
+				return new UserDTO(patient);
+			}
+		});
+		return new ResponseEntity<Page<UserDTO>>(patientDtos, HttpStatus.OK);
 	}
 
 	/**

@@ -61,7 +61,10 @@ import AppointmentPrice from "../components/AppointmentTypes/AppointmentPrice"
 import AddAppointmentPrice from "../components/AppointmentTypes/AddAppointmentPrice"
 import EditAppointmentPrice from "../components/AppointmentTypes/EditAppointmentPrice"
 import VacationRequest from "../components/Users/VacationRequest"
+import PationSearch from "../components/Doctors/PatientSearch"
+import PatientAppointments from "../components/Doctors/PatientAppointments"
 import ConfirmAppointment from "../components/Patients/ConfirmAppointment"
+
 const routes = [
     {
         component: Login,
@@ -284,6 +287,18 @@ const routes = [
         component: VacationRequest,
         name: "vacationRequest",
         path: "/vacation_request"
+    },
+    {
+      component: PationSearch,
+      name: "patientSearch",
+      path: "/patient_search",
+      props: true
+    },
+    {
+      component: PatientAppointments,
+      name: "patientAppointments",
+      path: "/patient_appointments",
+      props: true
     },
     {
         component: ConfirmAppointment,
