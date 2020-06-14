@@ -1,4 +1,4 @@
-# lotus_clinic
+# lotus-clinic
 
 ## Potrebno je imati instaliran Node Package Manager
 ```
