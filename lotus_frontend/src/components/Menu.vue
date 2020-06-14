@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-toolbar color="indigo" dark>
+        <v-toolbar v-if="!checkRole(null)" color="indigo" dark>
             <v-toolbar-title color="white">Lotus Clinic</v-toolbar-title>
             <v-spacer />
             <template v-slot:extension>

@@ -144,6 +144,9 @@
               <v-btn v-if="this.userType != 'patients'" block v-on:click="addUser()" color="success" height=60>Add</v-btn>
               <v-btn v-else block v-on:click="addUser()" color="success" height=60>Register</v-btn>
             </v-card-actions>
+            <v-card-actions v-if="this.userType == 'patients'">
+                <v-btn block v-on:click="$router.push({name:'login'})" color="info" height=60>Return</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -201,10 +204,12 @@ export default {
     },
     props: {
         userType: {
-            type: String
+            type: String,
+            default: "patients"
         },
         header: {
-          type: String
+          type: String,
+          default: "Register"
         }
     },
     methods: {

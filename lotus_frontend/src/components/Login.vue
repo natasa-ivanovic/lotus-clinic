@@ -4,10 +4,8 @@
      fluid>
      <v-row align="center" justify="center">
        <v-col cols="12" sm="8" md="4">
-          <v-card class="elevation-12">
-            <v-toolbar color="secondary" dark flat>
-              <v-toolbar-title>Login</v-toolbar-title>
-            </v-toolbar>
+            <v-img src="https://i.imgur.com/DY0CR2k.png" />
+          <v-card class="elevation-6">
             <v-card-text >
               <v-form v-model="valid" ref="form">
                 <v-text-field
@@ -34,7 +32,7 @@
               <v-card-actions>
               <v-row>
                 <v-col>
-                  <v-alert v-model="error" type="error" dismissible>Authentification error</v-alert>
+                  <v-btn color="info" @click="register()" block height=55>Register</v-btn>
                 </v-col>
               </v-row>
             </v-card-actions>
@@ -82,6 +80,9 @@ export default {
             this.axios.defaults.headers['Authorization'] = "Bearer " + response.data.accessToken;
             this.$router.push({ name: "home" })
         });
+    },
+    register() {
+      this.$router.push({ name: "register"});
     }
   }
     
