@@ -131,6 +131,10 @@ export default {
         id: {
             type: Number,
             default: 0
+        },
+        entries: {
+            type: Array,
+            default: () => []
         }
     },
     watch: {
@@ -141,13 +145,13 @@ export default {
                     url: apiURL + this.id
                 }).then(response => {
                     response.data.forEach(entry => {
-                        var name = (entry.operation != null) ? "Operation" : "Appointment";
-                        var color = (entry.operation != null) ? "orange" : "blue";
-                        var room = (entry.operation != null) ? entry.operation.roomName : entry.appointment.roomName;
-                        var patientName = (entry.operation != null) ? entry.operation.patient.patient.name 
-                                    : entry.appointment.patient.patient.name;
-                        var patientSurname = (entry.operation != null) ? entry.operation.patient.patient.surname 
-                                    : entry.appointment.patient.patient.surname;
+                        var name = entry.operation != null ? "Operation" : "Appointment";
+                        var color = entry.operation != null ? "orange" : "blue";
+                        var room = entry.operation != null ? entry.operation.roomName : entry.appointment.roomName;
+                        var patientName = entry.operation != null ? entry.operation.patient.patient.name 
+                                    : entry.appointment.patientName;
+                        var patientSurname = entry.operation != null ? entry.operation.patient.patient.surname 
+                                    : entry.appointment.patientSurname;
                         this.events.push(Object.assign({}, {
                             name: name,
                             start: this.formatDate(new Date(entry.startDate), true),
@@ -158,6 +162,26 @@ export default {
                             patientSurname: patientSurname
                         }))
                     })
+                })
+            } else if (this.entries.length != 0) {
+                this.events = [];
+                this.entries.forEach(entry => {
+                    var name = entry.operation != null ? "Operation" : "Appointment";
+                    var color = entry.operation != null ? "orange" : "blue";
+                    var room = entry.operation != null ? entry.operation.roomName : entry.appointment.roomName;
+                    var patientName = entry.operation != null ? entry.operation.patient.patient.name 
+                                : entry.appointment.patientName;
+                    var patientSurname = entry.operation != null ? entry.operation.patient.patient.surname 
+                                : entry.appointment.patientSurname;
+                    this.events.push(Object.assign({}, {
+                        name: name,
+                        start: this.formatDate(new Date(entry.startDate), true),
+                        end: this.formatDate(new Date(entry.endDate), true),
+                        color: color,
+                        room: room,
+                        patientName: patientName,
+                        patientSurname: patientSurname
+                    }))
                 })
             }
         }

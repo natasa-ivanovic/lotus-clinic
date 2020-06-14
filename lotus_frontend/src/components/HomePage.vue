@@ -14,6 +14,8 @@
                         :src="item.src"
                         reverse-transition="fade-transition"
                         transition="fade-transition"
+                        hide-delimiters
+                        hide-delimiter-background
                         ></v-carousel-item>
                     </v-carousel>
                     <PatientPage v-if="this.$role == 'PATIENT'" />
@@ -64,11 +66,8 @@ export default {
                     src: 'https://www.omstuff.com/content/2018/07/dark-pink-lotus-flower-and-lillypads-wallpaper.jpg',
                 },
                 {
-                    src: 'http://sussexlaserlipo.co.uk/wp-content/uploads/2013/11/Smiling-doctors-Sussex-Laser-Lipo.jpeg',
-                },
-                {
-                    src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-                },
+                    src: 'https://www.floraqueen.com/blog/wp-content/uploads/2020/01/shutterstock_1006750006.jpg',
+                }
             ],
         }
     }
