@@ -111,6 +111,11 @@ const routes = [
         props: true
     },
     {
+        component: AddUser,
+        name: "register",
+        path: "/register"
+    },
+    {
         component: Clinics,
         name: "clinics",
         path: "/clinics/"
