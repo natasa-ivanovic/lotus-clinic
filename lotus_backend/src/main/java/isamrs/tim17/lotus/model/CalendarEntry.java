@@ -49,7 +49,15 @@ public class CalendarEntry {
 		this.endDate = vacation.getEndDate();
 		this.medicalPerson = vacation.getMedicalPerson();
 		this.vacation = vacation;
-    this.room = null;
+		this.room = null;
+	}
+	
+	public CalendarEntry(Operation operation, Doctor doctor) {
+		this.startDate = operation.getStartDate();
+		this.endDate = operation.getEndDate();
+		this.medicalPerson = doctor;
+		this.operation = operation;
+		this.room = operation.getRoom();
 	}
   
 	public Room getRoom() {

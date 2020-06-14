@@ -27,15 +27,19 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	@Query("SELECT a FROM RoomRequest a where a.status = 0")
 	List<RoomRequest> getAllRoomRequests();
 	Page<Request> findAll(Pageable pageable);
+	RoomRequest findRoomOneById(Long id);
 
 	@Query("SELECT a FROM RoomRequest a where a.date = :date AND :doctor member of a.doctors")
 	RoomRequest findOneByDateAndDoctor(@Param("date") Date startDate, @Param("doctor") Doctor doctor);
 	
-	List<VacationRequest> findByClinicAndStatus(Clinic clinic, RequestStatus status);
+	List<VacationRequest> findVacationByClinicAndStatus(Clinic clinic, RequestStatus status);
+	List<RoomRequest> findRoomByClinicAndStatus(Clinic clinic, RequestStatus status);
+	
 	@Query("SELECT a FROM RoomRequest a where :doctor member of a.doctors AND (a.date BETWEEN :startDate AND :endDate) order by a.date")
 	List<RoomRequest> findByDateRangeAndDoctor(@Param("doctor") Doctor d, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 	
 	//getuje samo requestove za appointmente
 	@Query("SELECT a FROM RoomRequest a where (a.type = 0 OR a.type = 1) AND (a.date BETWEEN :startDate AND :endDate)")
 	List<RoomRequest> findByDateRangeAndType(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	
 }

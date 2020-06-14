@@ -46,6 +46,7 @@ insert into appointment_price (discount, price, clinic_id, type_id) values (0, 1
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date, version) values (12345678912, 'Novosadski put 17', '1998-09-23 02:00:00', 'Subotica', 'Srbija', 'patient1@gmail.com', 1, 'Packijento', '$2y$10$Hgm8RGydwLrN9vbZCP5SQ.Va7TTnA1RMH3W8FBERwO6tEISeIj9ee', '0699114909', 'Pacijentic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07', 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date, version) values (23456789012, 'Bulevar oslobodjenja 182', '1998-05-01 02:00:00', 'Novi Sad', 'Srbija', 'patient2@gmail.com', 0, 'Pacijenta', '$2y$10$rOD92NoFS6CAv90TTa4u7uqLIOKL8qm0P2WCbAVAnUv6GGHBIDhQC', '066124909', 'Pacijentanovic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07', 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date, version) values (51927654821, 'Puskinova 13', '1997-01-05 02:00:00', 'Novi Sad', 'Srbija', 'patient3@gmail.com', 0, 'Pacijenta', '$2y$10$Wrm.29pcasDLrhgZ.ZNfIetGo8RUX/tGEdT.MF7uJqnSTb859bn8K', '066124909', 'Pacijentanovic', 1, 'PATIENT', true, '2020-04-30 16:00:00.508-07', 0);
+
 /* doctors */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id, version) values (42367854326, 'Fruskogorska 66', '1995-02-22 02:00:00', 'Novi Sad', 'Srbija', 'doctor1@gmail.com', 1, 'Doktorko', '$2y$10$z8hfS/qHY011xAZ4qpMutOdAVRufZbPYVQyXOsO37InW4nwqTA6V2', '0699114909', 'Dokic', 1, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 1, 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, specialty_id, version) values (53451231231, 'Bulevar Cara Lazara 15', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'doctor2@gmail.com', 0, 'Doktorka', '$2y$10$0Z7PPfPQ94jhjz5j.6UAt.JQxw5w7RdvCr.LdMhenZWnu4vJW.s1y', '0699114909', 'Dakic', 2, 'DOCTOR', true, '2020-04-30 16:00:00.508-07', 4, 0);
@@ -53,9 +54,11 @@ insert into users (ssid, address, birth_date, city, country, username, gender, n
 /* nurses */
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, version) values (65451231354, 'Novosadski put 17', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'nurse1@gmail.com', 1, 'Medinka', '$2a$10$t7KnHQ52xqsAdt7m.WXYs.1GdxOOMbPcbLJBBmFzhVaiCKkp9OKGu', '0699114909', 'Sestric', 1, 'NURSE', true, '2020-04-30 16:00:00.508-07', 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, version) values (54326162342, 'Futoska 5', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'nurse2@gmail.com', 0, 'Medinko', '$2a$10$lIe3MF.s.bJ801yZMnyMn.xvi2KJEOT9Z3b.V0Kx2piI2zaiaEWqO', '0699114909', 'Bratic', 2, 'NURSE', true, '2020-04-30 16:00:00.508-07', 0);
+
 /* clinic admin*/
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, version) values (39845792020, 'Fruskogorska 13', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'admin1@gmail.com', 1, 'Admin1', '$2a$10$6ofB7GAQD./9NBiw1G/gXeX/T6HJxZOJwRImL.iSFlenlq/pJN7AW', '0699114909', 'Sestric', 1, 'ADMIN', true, '2020-04-30 16:00:00.508-07', 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinic_id, role, enabled, last_password_reset_date, version) values (02384556392, 'Bulevar Kralja Petra', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'admin2@gmail.com', 0, 'Admin2', '$2a$10$1nLp9miNCMRxUqBP9GD6geDdJweGwzanlC9LSuOLogua4qQHTw9NW', '0699114909', 'Bratic', 2, 'ADMIN', true, '2020-04-30 16:00:00.508-07', 0);
+
 /*centre admin*/
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date, version) values (19475395694, 'Fruskogorska 13', '1997-02-22 02:00:00', 'Novi Sad', 'Srbija', 'cadmin1@gmail.com', 1, 'Adminac1', '$2a$10$AVLSu/VvFmH8Y..pb/w.ke9Vikpen4OCjjYE.CHOyqE7Mu.HU8WvG', '0699114909', 'Sestric', 1, 'CENTRE_ADMIN', true, '2020-04-30 16:00:00.508-07', 0);
 insert into users (ssid, address, birth_date, city, country, username, gender, name, password, phone_number, surname, clinical_centre_id, role, enabled, last_password_reset_date, version) values (20572038573, 'Bulevar Kralja Petra', '1996-01-15 02:00:00', 'Novi Sad', 'Srbija', 'cadmin2@gmail.com', 0, 'Adminac2', '$2a$10$7T98siUqqzPjKqHENnHOyeSf9FaRN404vBH44r7As38GOCxUwtBle', '0699114909', 'Bratic', 1, 'CENTRE_ADMIN', true, '2020-04-30 16:00:00.508-07', 0);
@@ -185,12 +188,17 @@ insert into requests(req_type, status, date, type, doctor, patient, version) val
 insert into requests(req_type, status, date, type, doctor, patient, version) values('ROOM', 0, '2020-05-19 16:00:00.508-07', 0, 5, 2, 0);
 insert into requests(req_type, status, date, type, doctor, patient, version) values('ROOM', 0, '2020-07-19 17:00:00.508-07', 0, 5, 3, 0);*/
 
+
 insert into requests(req_type, status, patient_id, version) values('REGISTRATION', 0, 16, 0);
 
 insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id, version) 
 values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6, 0);
 insert into requests(req_type, status, start_date, end_date, clinic_id, medical_person_id, version) 
 values('VACATION', 0, '2020-06-11 00:00:00.000-00', '2020-06-11 00:00:00.000-00', 1, 6, 0);
+
+
+insert into requests(req_type, status, date, patient_id, price, type, app_type_id, clinic_id, version) values ('ROOM', 0, '2020-06-29 10:00:00.508-07', 1, 1000, 2, 5, 1, 0);
+insert into requests_doctors(room_request_id, doctors_id) values (4,4);
 
 
 /* vacation */

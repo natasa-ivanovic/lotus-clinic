@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -82,32 +81,12 @@ public class RequestController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Object> getRoomRequests() {
 
-		// getuj samo rikvestove za adminovu kliniku
-		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		ClinicAdministrator admin = (ClinicAdministrator) a.getPrincipal();
-		long clinicId = admin.getClinic().getId();
-
-		List<RoomRequest> rr = service.getRoomRequests();
-		List<Object> requests = new ArrayList<>();
-
-		for (RoomRequest r : rr) {
-			List<Doctor> doctors = getDoctors(r);
-			List<Doctor> clinicDoctors = new ArrayList<>();
-			Patient patient = patientService.findOne(r.getPatient());
-			Date startDate = r.getDate();
-			for (Doctor d : doctors) {
-				if (d.getClinic().getId() == clinicId) {
-					clinicDoctors.add(d);
-				}
-			}
-			RoomRequestDTO dto = null;
-			if (r.getType().equals(RoomRequestType.DOCTOR_OPER))
-				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors, r.getAppType().getName());
-			else
-				dto = new RoomRequestDTO(r.getId(), startDate, patient, clinicDoctors.get(0));
-			requests.add(dto);
+		List<RoomRequest> requests = service.getRoomRequests();
+		List<RoomRequestDTO> requsetDTOs = new ArrayList<>();
+		for(RoomRequest req : requests) {
+			requsetDTOs.add(new RoomRequestDTO(req));
 		}
-		return new ResponseEntity<>(requests, HttpStatus.OK);
+		return new ResponseEntity<>(requsetDTOs, HttpStatus.OK);
 	}
 
 	@PostMapping("/appointment")
@@ -133,11 +112,12 @@ public class RequestController {
 		String patient = null;
 		if (user.getRole().equals("PATIENT")) {
 			patient = user.getName() + " " + user.getSurname();
-			roomRequest = new RoomRequest(request.getStartDate(), user.getId(), doctors, RoomRequestType.PATIENT_APP,
+			roomRequest = new RoomRequest(request.getStartDate(), (Patient)user, doctors, RoomRequestType.PATIENT_APP,
 					doc.getSpecialty().getPrice(), doc.getSpecialty().getType());
 		} else if (user.getRole().equals("DOCTOR") && user.getId() == doc.getId()) {
 			patient = doc.getName() + " " + doc.getSurname();
-			roomRequest = new RoomRequest(request.getStartDate(), request.getPatient().getId(), doctors,
+			Patient pata = patientService.findOne(request.getPatient().getId());
+			roomRequest = new RoomRequest(request.getStartDate(),pata, doctors,
 					RoomRequestType.DOCTOR_APP, doc.getSpecialty().getPrice(), doc.getSpecialty().getType());
 		} else
 			return new ResponseEntity<>("Cannot request an appointment for another doctor!", HttpStatus.BAD_REQUEST);
@@ -178,7 +158,8 @@ public class RequestController {
 		cal.setTime(request.getStartDate());
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MINUTE, 0);
-		RoomRequest roomRequest = new RoomRequest(cal.getTime(), request.getPatient().getId(), doctors,
+		Patient patient = patientService.findOne(request.getPatient().getId());
+		RoomRequest roomRequest = new RoomRequest(cal.getTime(), patient, doctors,
 				RoomRequestType.DOCTOR_OPER, type.getPrice(), type.getType());
 		roomRequest.setStatus(RequestStatus.PENDING);
 		roomRequest.setClinic(doctor.getClinic());
@@ -231,20 +212,6 @@ public class RequestController {
 		medicalService.save(mr);
 
 		return new ResponseEntity<>(new RegistrationRequestDTO(rgReq), HttpStatus.OK);
-	}
-
-	
-	private List<Doctor> getDoctors(RoomRequest r) {
-		Set<Doctor> docs = r.getDoctors();
-		List<Doctor> doctors = new ArrayList<>();
-
-		Iterator<Doctor> it = docs.iterator();
-		while (it.hasNext()) {
-			Doctor d = doctorService.findOne(it.next().getId());
-			doctors.add(d);
-		}
-
-		return doctors;
 	}
 
 	private boolean checkDoctorsId(List<UserDTO> doctors) {

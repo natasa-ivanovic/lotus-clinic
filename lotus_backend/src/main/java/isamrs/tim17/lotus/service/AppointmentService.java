@@ -109,7 +109,7 @@ public class AppointmentService {
 	}
 
 	@Transactional(readOnly = false)
-	public Appointment schedule(long id, MedicalRecord medicalRecord) throws InterruptedException {
+	public Appointment schedule(long id, MedicalRecord medicalRecord) {
 		Appointment a = appointments.findOneById(id);
 		if (a == null)
 			return a;
